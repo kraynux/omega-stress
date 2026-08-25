@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>Rapport omega-stress — {{ summary.run_id }}</title>
+<style>
+  :root {
+    --bg: {{ palette.background }};
+    --surface: {{ palette.surface }};
+    --panel: {{ palette.panel }};
+    --fg: {{ palette.foreground }};
+    --accent: {{ palette.accent }};
+    --secondary: {{ palette.secondary }};
+    --success: {{ palette.success }};
+    --warning: {{ palette.warning }};
+    --error: {{ palette.error }};
+  }
+  body {
+    background: var(--bg);
+    color: var(--fg);
+    font-family: ui-monospace, "Cascadia Code", "SFMono-Regular", Consolas, monospace;
+    padding: 2rem;
+    max-width: 960px;
+    margin: 0 auto;
+  }
+  h1 { color: var(--accent); border-bottom: 1px solid var(--secondary); padding-bottom: 0.5rem; }
+  h2 { color: var(--secondary); margin-top: 0; }
+  .box {
+    background: var(--surface);
+    border: 1px solid var(--panel);
+    border-radius: 6px;
+    padding: 1rem 1.25rem;
+    margin-bottom: 1.25rem;
+  }
+  table { border-collapse: collapse; width: 100%; }
+  th, td { text-align: left; padding: 0.35rem 0.6rem; border-bottom: 1px solid var(--panel); }
+  th { width: 40%; color: var(--secondary); font-weight: normal; }
+  .verdict { font-weight: bold; font-size: 1.1rem; }
+  .verdict-success { color: var(--success); }
+  .verdict-degraded { color: var(--warning); }
+  .verdict-auto_stopped { color: var(--warning); }
+  .verdict-failed { color: var(--error); }
+  ul { margin: 0.5rem 0 0; padding-left: 1.25rem; }
+  .timeline { max-height: 480px; overflow-y: auto; }
+  .timeline table { table-layout: fixed; }
+  .timeline th, .timeline td { padding: 0.15rem 0.6rem; font-size: 0.85rem; }
+  .timeline th:first-child, .timeline td:first-child { width: 4rem; }
+  .bar-cell { width: 30%; }
+  .bar-track { background: var(--panel); border-radius: 3px; height: 0.7rem; overflow: hidden; }
+  .bar-fill { background: var(--error); height: 100%; }
+</style>
+</head>
+<body>
+  <h1>Rapport de test — {{ summary.run_id }}</h1>
+
+  <div class="box">
+    <h2>Resume</h2>
+    <table>
+      <tr><th>Cible</th><td>{{ summary.target_address }}</td></tr>
+      <tr><th>Type de test</th><td>{{ summary.family.value }}</td></tr>
+      <tr><th>Intensite</th><td>{{ summary.level.value }}</td></tr>
+      <tr><th>Debut</th><td>{{ summary.started_at }}</td></tr>
+      <tr><th>Fin</th><td>{{ summary.finished_at }}</td></tr>
+      <tr><th>Duree</th><td>{{ "%.1f"|format(summary.duration_minutes) }} min</td></tr>
+    </table>
+  </div>
+
+  <div class="box">
+    <h2>Verdict</h2>
+    <p class="verdict verdict-{{ result.verdict.value }}">{{ result.verdict.value }}</p>
+  </div>
+
+  <div class="box">
+    <h2>Metriques</h2>
+    <table>
+      <tr><th>Debit demande</th><td>{{ result.requested_rate_per_minute }} req/min</td></tr>
+      <tr><th>Debit observe</th><td>{{ result.observed_rate_per_minute }} req/min</td></tr>
+      <tr><th>Latence p50</th><td>{{ result.p50_latency_ms }} ms</td></tr>
+      <tr><th>Latence p95</th><td>{{ result.p95_latency_ms }} ms</td></tr>
+      <tr><th>Latence p99</th><td>{{ result.p99_latency_ms }} ms</td></tr>
+      <tr><th>Erreurs</th><td>{{ result.error_count }} / {{ result.total_requests }}</td></tr>
+    </table>
+  </div>
+
+  {% if result.samples %}
+  <div class="box">
+    <h2>Chronologie ({{ result.samples|length }} mesures)</h2>
+    <div class="timeline">
+      <table>
+        <tr>
+          <th>Seconde</th><th>Debit (req/min)</th><th>p50</th><th>p95</th><th>p99</th>
+          <th class="bar-cell">Erreurs</th>
+        </tr>
+        {% for sample in result.samples %}
+        <tr>
+          <td>{{ "%.0f"|format(sample.at_second) }}</td>
+          <td>{{ "%.0f"|format(sample.observed_rate_per_minute) }}</td>
+          <td>{{ "%.0f"|format(sample.p50_latency_ms) }}</td>
+          <td>{{ "%.0f"|format(sample.p95_latency_ms) }}</td>
+          <td>{{ "%.0f"|format(sample.p99_latency_ms) }}</td>
+          <td class="bar-cell">
+            {% set error_ratio = (sample.error_count / sample.request_count * 100) if sample.request_count else 0 %}
+            <div class="bar-track">
+              <div class="bar-fill" style="width: {{ "%.0f"|format(error_ratio) }}%"></div>
+            </div>
+            {{ sample.error_count }} / {{ sample.request_count }}
+          </td>
+        </tr>
+        {% endfor %}
+      </table>
+    </div>
+  </div>
+  {% endif %}
+
+  <div class="box">
+    <h2>Diagnostic</h2>
+    <p>{{ diagnostic.headline }}</p>
+    {% if diagnostic.recommendations %}
+    <ul>
+      {% for recommendation in diagnostic.recommendations %}
+      <li>{{ recommendation }}</li>
+      {% endfor %}
+    </ul>
+    {% endif %}
+  </div>
+</body>
+</html>

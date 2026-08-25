@@ -1,0 +1,15 @@
+/* Profil `standard` : theme standard, widgets et tableaux normaux
+ * (voir plan produit, "Profils de rendu"). */
+
+.omega-panel {
+    border: round $panel;
+}
+
+DataTable {
+    border: solid $panel;
+}
+
+.omega-badge {
+    background: $panel;
+    color: $primary;
+}

@@ -1,0 +1,20 @@
+/* Profil `mono` : UI minimaliste, lisibilite maximale, peu ou pas de
+ * couleur (voir plan produit, "Profils de rendu"). La palette elle-meme
+ * est deja convertie en niveaux de gris par domain/theme/policies.py::
+ * mono_palette() — ce fichier ne fait que retirer les derniers ornements
+ * structurels (bordures, fonds distincts). */
+
+.omega-panel {
+    border: none;
+    padding: 0;
+    background: $background;
+}
+
+DataTable {
+    border: none;
+}
+
+.omega-badge {
+    background: $background;
+    color: $foreground;
+}

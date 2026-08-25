@@ -1,0 +1,17 @@
+/* Profil `complete` : bordures completes, couleurs etendues, live complet
+ * (voir plan produit, "Profils de rendu"). */
+
+.omega-panel {
+    border: heavy $panel;
+    border-title-color: $primary;
+}
+
+DataTable {
+    border: round $panel;
+}
+
+.omega-badge {
+    background: $panel;
+    color: $primary;
+    padding: 0 1;
+}

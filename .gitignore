@@ -1,0 +1,36 @@
+# Environnement Python
+venv/
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.import_linter_cache/
+*.egg-info/
+
+# État runtime généré localement (recréé automatiquement au démarrage)
+var/db/*
+var/exports/*
+var/screenshots/*
+var/settings.json
+var/*.log
+var/*.jsonl
+!var/db/.gitkeep
+!var/exports/.gitkeep
+!var/screenshots/.gitkeep
+
+# Archives de release (générées, pas du code source)
+
+
+# Secrets locaux
+.env
+
+# Éditeurs
+*~
+*.bak
+*.swp
+
+# Couverture de tests
+.coverage
+htmlcov/

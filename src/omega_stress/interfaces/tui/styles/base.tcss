@@ -1,0 +1,532 @@
+/* Regles structurelles communes aux 4 profils de rendu (ARCHITECTURE.md §2.4).
+ * Toujours chargee avant le fichier du profil : ce fichier ne fait aucune
+ * hypothese de richesse visuelle (pas de bordure ici), seulement de la mise
+ * en page. */
+
+Screen {
+    background: $background;
+    color: $foreground;
+}
+
+/* Cadre complet facon console (2026-08-24, remplace un simple texte
+ * colore peu visible) : le texte lui-meme est deja mis en MAJUSCULES cote
+ * Python (Textual n'a pas de text-transform), voir chaque ecran.
+ * border: round (2026-08-25, remplace "heavy" — demande reelle : "garde
+ * cette meme logique de contour arrondi des boutons et applique pour les
+ * titres des actions, actuellement contour bold et carres a transformer
+ * en bold arrondis") : meme forme de contour que ".omega-actions
+ * Button"/".omega-confirm-buttons Button" (voir plus bas) — "bold" reste
+ * porte par text-style (le texte du titre), pas par l'epaisseur du
+ * contour, Textual n'a pas de style de bordure "epais + arrondi"
+ * combine. */
+.omega-title {
+    text-style: bold;
+    color: $primary;
+    border: round $accent;
+    padding: 0 1;
+    width: auto;
+    margin: 1 0;
+}
+
+.omega-subtitle {
+    color: $secondary;
+}
+
+.omega-panel {
+    background: $surface;
+    padding: 1 2;
+    margin: 1 0;
+    overflow-y: auto;
+}
+
+.omega-field-row {
+    height: 3;
+    align: left middle;
+}
+
+.omega-field-label {
+    width: 24;
+}
+
+Button {
+    margin: 0 1 0 0;
+}
+
+/* Textual degrade le focus d'un Button "par defaut" (sans variant, la
+ * grande majorite des boutons de ce projet, notamment tout le menu de
+ * screens/home.py) vers son propre reglage interne
+ * $button-focus-text-style = "b reverse" (textual/theme.py) : la
+ * selection apparaissait donc en video inverse (fond blanc, texte noir),
+ * sans aucun rapport avec la couleur du theme actif — bug reel rapporte
+ * ("le theme omega-base c'est censé etre en cyan, la il est fonce en
+ * surlignage... fond blanc et police noir"). $primary est notre couleur
+ * d'accent (voir interfaces/tui/rendering/textual_theme_builder.py,
+ * primary <- palette.accent) : un cadre colore dans cette teinte,
+ * coherent avec le style deja utilise par les boutons variant="primary"
+ * (bordures colorees), remplace l'inversion generique. Regle globale
+ * (pas seulement screens/home.py) : le meme "reverse" par defaut de
+ * Textual s'appliquait deja partout ailleurs (ex. "Retour"/"Voir le
+ * detail"), simplement moins visible la ou la plupart des boutons voisins
+ * sont deja en variant="primary" (toujours cyan, focus ou non). */
+Button:focus {
+    text-style: bold;
+    border-top: tall $primary;
+    border-bottom: tall $primary;
+}
+
+/* Barre d'actions horizontale (2026-08-25, bug reel rapporte : "les
+ * boutons des actions (et pas du menu) sont toujours l'un sur l'autre a
+ * la verticale... il faudrait pouvoir les mettre cote a cote, que ca
+ * donne l'impression d'une barre de navigation"). PAS le menu d'accueil
+ * (screens/home.py, ".omega-home-menu") : celui-ci reste une liste de
+ * navigation VERTICALE (une colonne, jamais reorganisee en barre
+ * horizontale) — seule cette DISPOSITION reste hors-scope, le style
+ * "contour" ci-dessous s'applique desormais aux DEUX (voir
+ * ".omega-home-menu Button" plus bas, demande de suite le meme jour :
+ * "garde cette meme logique de contour... applique pour les boutons du
+ * menu principal"). Les boutons d'ACTION de chaque autre ecran
+ * (Lancer/Arreter/Retour, Exporter, purges Reglages...) sont regroupes
+ * dans un Horizontal(classes="omega-actions") a la place d'une suite de
+ * `yield Button(...)` directement dans le Vertical parent. overflow-x:
+ * auto : filet de securite sur un terminal etroit avec des libelles
+ * longs (ex. screens/profiles.py, "Supprimer le profil selectionne")
+ * plutot que renommer les boutons ou les laisser se chevaucher/deborder
+ * du cadre. */
+.omega-actions {
+    height: auto;
+    align: left middle;
+    overflow-x: auto;
+}
+
+.omega-actions Button {
+    min-width: 10;
+}
+
+/* Frame de bordure reutilisable (2026-08-25, deploiement general — voir
+ * ".omega-home-menu Button" plus bas pour l'historique complet du
+ * probleme/correctif) : un Container qui porte SEUL le contour "round",
+ * jamais modifie par :hover/:focus — chaque Button qu'il enveloppe passe
+ * a "border: none" (voir regles ".omega-actions Button"/
+ * ".omega-confirm-buttons Button" ci-dessous et ".omega-home-menu
+ * Button" plus bas) : plus aucun anneau de bordure propre au Button, donc
+ * plus aucun risque qu'un remplissage de fond au focus ne deborde dans
+ * la bordure. width/height: auto (par defaut, PAS le "1fr" par defaut de
+ * Container, cf. textual/containers.py) : le frame doit se dimensionner
+ * sur le Button qu'il contient (largeurs variables selon le libelle,
+ * ".omega-actions Button" reste "min-width: 10" ci-dessus) — seul
+ * ".omega-home-menu" (plus bas) a besoin d'une largeur/hauteur FIXE
+ * (boutons tous egaux), donc surchargee localement la-bas.
+ * IMPORTANT — Button interne SANS "width: 100%"/"height: 100%" ici
+ * (contrairement a ".omega-home-menu Button" plus bas) : bug reel
+ * rapporte au premier deploiement general sur les autres ecrans — "les
+ * boutons invisibles... apparaissent boutons + contours mais sans texte,
+ * le texte et le focus apparaissent lorsqu'ils sont appeles" + "le
+ * contour de bouton est pas complet". Reproduit et confirme par
+ * introspection directe (Button.region) : avec un frame "auto" ET un
+ * Button enfant en pourcentage, Textual resout parfois ce Button a une
+ * region 0x0 des le tout premier layout (avant toute interaction) —
+ * dependance circulaire (le frame "auto" a besoin de la taille du Button
+ * pour se dimensionner, le Button en "%" a besoin de la taille du frame
+ * deja resolue) que Textual ne garantit pas de resoudre au premier
+ * rendu ; un re-layout ulterieur (focus, resize) la corrige, d'ou le
+ * symptome "apparait seulement quand on interagit". Les regions 0x0
+ * cassaient aussi le flux du Horizontal entier (boutons suivants
+ * decales hors ecran). Seul ".omega-home-menu" (plus bas) peut se
+ * permettre "width: 100%"/"height: 100%" sur son Button : son frame a
+ * une taille FIXE (32x3, pas "auto"), donc aucune circularite possible.
+ * Ici, le Button garde son "width: auto" natif (Button.DEFAULT_CSS) : le
+ * frame se dimensionne alors normalement sur sa taille intrinseque, sans
+ * ambiguite, des le premier rendu. */
+.omega-btn-frame {
+    border: round $accent;
+    padding: 0;
+    width: auto;
+    height: auto;
+}
+
+/* Boutons "contour" plutot que remplis de couleur (2026-08-25, demande
+ * reelle : "plutot que d'avoir des boutons de couleurs differentes je
+ * prefere que les contours soient vifs (cyan par exemple pour
+ * omega-base, meme helper)... pour les boutons rouges, juste le texte
+ * en rouge pour marquer la difference de dangerosite"). Remplace le
+ * remplissage par defaut de Textual (fond uni $surface/$primary/$error,
+ * voir Button.DEFAULT_CSS) par un contour $accent UNIFORME quel que
+ * soit le variant : seule la couleur du TEXTE change (color: $primary /
+ * $error), jamais le fond ni la bordure — c'est ce seul signal qui
+ * distingue une action normale d'une action destructrice desormais.
+ * Scope volontairement limite a ".omega-actions"/".omega-confirm-buttons"
+ * (PAS un simple "Button" global) : le menu d'accueil (screens/home.py)
+ * n'utilise ni l'une ni l'autre classe, donc n'est pas concerne par ce
+ * changement (voir commentaire de ".omega-actions" ci-dessus). Les
+ * boutons "Oui, quitter"/"Oui, confirmer" (screens/quit_confirm.py,
+ * confirm.py, variant="error") sont les boutons "mis en rouge" vises
+ * explicitement par la demande — d'ou l'inclusion de
+ * ".omega-confirm-buttons" ici, deja Horizontal depuis un correctif
+ * anterieur (voir plus bas), pas seulement les nouvelles barres
+ * d'actions. */
+.omega-actions Button,
+.omega-confirm-buttons Button {
+    background: $surface;
+    border: none;
+    color: $foreground;
+}
+
+.omega-actions Button.-primary,
+.omega-confirm-buttons Button.-primary {
+    background: $surface;
+    border: none;
+    color: $primary;
+}
+
+.omega-actions Button.-error,
+.omega-confirm-buttons Button.-error {
+    background: $surface;
+    border: none;
+    color: $error;
+}
+
+/* Surlignage fort (2026-08-25, correctif #3, deploiement general du
+ * widget compose frame+Button — voir ".omega-btn-frame" plus haut et
+ * ".omega-home-menu Button:hover/:focus" plus bas pour l'historique
+ * complet #1/#2/#3) : plus de "border:" ici du tout — le Button imbrique
+ * dans ".omega-btn-frame" n'a plus d'anneau de bordure a lui ("border:
+ * none", cf. ".omega-actions Button" plus haut), donc plus rien a faire
+ * fondre dans le fond au remplissage. Le contour rond visible reste
+ * EXCLUSIVEMENT celui de ".omega-btn-frame", jamais modifie par
+ * :hover/:focus : forme/taille rigoureusement identiques entre focus et
+ * non-focus, garanties par construction (deux widgets distincts) plutot
+ * que par coincidence de couleurs. */
+.omega-actions Button:hover,
+.omega-confirm-buttons Button:hover,
+.omega-actions Button:focus,
+.omega-confirm-buttons Button:focus {
+    background: $accent;
+    color: $background;
+    text-style: bold;
+}
+
+/* Variante destructrice (2026-08-25) : le remplissage passe en $error
+ * (pas $accent) pour garder le signal de dangerosite visible MEME
+ * surligne — plus specifique que la regle generale ci-dessus (classe
+ * ".-error" en plus), l'emporte sans avoir besoin d'ordre particulier.
+ * Pas de "border:" non plus, meme raison que ci-dessus. */
+.omega-actions Button.-error:hover,
+.omega-confirm-buttons Button.-error:hover,
+.omega-actions Button.-error:focus,
+.omega-confirm-buttons Button.-error:focus {
+    background: $error;
+    color: $background;
+    text-style: bold;
+}
+
+/* Menu d'accueil — PROTOTYPE widget compose (2026-08-25, correctif #3,
+ * remplace le Button unique avec bordure directe utilise jusque-la) :
+ * les correctifs #1 (border: round $background) et #2 (border: round
+ * $accent, ci-dessus sur ".omega-actions"/".omega-confirm-buttons")
+ * masquaient le probleme sans le resoudre — meme #2 a ete rapporte
+ * encore casse : "le surlignage est plus gros que le bouton et a des
+ * angles carres". Verifie par introspection directe des widgets
+ * (Button.region/styles.border en session de test) : les 9 boutons du
+ * menu faisaient TOUS exactement 32x3 avec un contour "round" identique,
+ * focus ou pas — la difference perçue n'etait donc PAS une histoire de
+ * taille/forme CSS mais un phenomene inherent au rendu en cellules :
+ * remplir le `background` d'un widget peint TOUJOURS tout son
+ * rectangle, anneau de bordure "round" compris (cf. Textual
+ * `_border.py::BORDER_LOCATIONS`, "round" est cable en dur sur le fond
+ * du WIDGET, jamais celui du parent) — impossible en CSS pur de garder
+ * un contour rond fixe et de ne remplir QUE l'interieur.
+ * Solution retenue (demande explicite : "peut on pas juste focuser
+ * l'interieur du bouton") : separer la decoration (".omega-btn-frame",
+ * un simple Container avec le contour round $accent FIXE, jamais
+ * modifie par :hover/:focus) du bouton interactif lui-meme (le Button
+ * imbrique dedans, voir screens/home.py, "border: none" en permanence —
+ * plus aucun anneau de bordure a lui, donc plus aucun probleme de
+ * "fond qui deborde dans la bordure" possible). Prototype limite au menu
+ * d'accueil pour validation visuelle avant deploiement eventuel sur
+ * ".omega-actions"/".omega-confirm-buttons" (meme bug latent partout
+ * ailleurs qu'un simple remplissage plein est utilise en focus/hover).
+ * width/height fixes sur le frame (2026-08-25) : remplace le "width: 32"
+ * pose auparavant directement sur Button — le Button imbrique prend
+ * "width: 100%"/"height: 100%" pour occuper exactement l'interieur du
+ * frame (32-2 x 3-2 apres l'anneau de bordure round), sans avoir besoin
+ * de connaitre lui-meme sa taille cible.
+ * ".omega-home-menu .omega-btn-frame" (PAS ".omega-btn-frame" nu,
+ * correctif 2026-08-25) : bug reel rapporte au deploiement general sur
+ * les autres ecrans — "le texte n'est plus centre, cale a gauche" +
+ * "contour de bouton pas complet" (screens/confirm.py,
+ * screens/quit_confirm.py). Cause reelle : ce bloc redeclarait
+ * ".omega-btn-frame" SANS le prefixe ".omega-home-menu", une deuxieme
+ * regle de MEME specificite que celle generique plus haut — en CSS,
+ * a specificite egale la regle la PLUS TARDIVE dans le fichier l'emporte
+ * pour TOUTES ses proprietes, donc ce "width:32; height:3" ecrasait
+ * silencieusement le "width:auto; height:auto" generique PARTOUT, pas
+ * seulement dans le menu d'accueil. Consequence en cascade : chaque
+ * frame de ".omega-confirm-buttons"/".omega-actions" se retrouvait force
+ * a 32 colonnes quel que soit le libelle du bouton qu'il contient (lui,
+ * reste "width: auto" — voir ".omega-actions Button" plus haut) : le
+ * Button, plus etroit, restait cale a GAUCHE dans ce frame trop large
+ * (aucun "align: center" sur ".omega-btn-frame" lui-meme), d'ou le texte
+ * non centre ; et deux frames de 32 colonnes chacun (64 au total)
+ * debordaient du ".omega-confirm-buttons" fixe a 60 colonnes (voir plus
+ * bas), tronquant le contour du second bouton. Scoper explicitement sous
+ * ".omega-home-menu" restaure la specificite ATTENDUE (classe+classe,
+ * l'emporte sur la classe seule independamment de l'ordre) : seuls les 9
+ * boutons du menu d'accueil recoivent la taille fixe, tous les autres
+ * gardent le "width/height: auto" generique (le Button interne y garde
+ * son "width: auto" natif, se centre alors normalement dans un frame qui
+ * epouse exactement sa taille). */
+.omega-home-menu .omega-btn-frame {
+    width: 32;
+    height: 3;
+}
+
+.omega-home-menu Button {
+    background: $surface;
+    border: none;
+    color: $foreground;
+    width: 100%;
+    height: 100%;
+    min-width: 0;
+}
+
+/* Surlignage fort : le fond seul suffit desormais comme signal (fond
+ * $accent, texte $background inverse, gras) — plus de "border:" ici du
+ * tout (ni round $background, ni round $accent) : le Button imbrique n'a
+ * plus d'anneau de bordure a lui (voir ".omega-home-menu Button"
+ * ci-dessus, "border: none" permanent), donc plus rien a faire fondre
+ * dans le fond. Le contour rond visible reste EXCLUSIVEMENT celui de
+ * ".omega-btn-frame", jamais modifie ici : forme/taille rigoureusement
+ * identiques entre focus et non-focus, garanties par construction (deux
+ * widgets distincts) plutot que par coincidence de couleurs. */
+.omega-home-menu Button:hover,
+.omega-home-menu Button:focus {
+    background: $accent;
+    color: $background;
+    text-style: bold;
+}
+
+.omega-error {
+    color: $error;
+    text-style: bold;
+}
+
+.omega-success {
+    color: $success;
+}
+
+.omega-warning {
+    color: $warning;
+}
+
+/* Textual degrade le glyphe non coche d'un ToggleButton/Checkbox vers
+ * $panel-darken-2 (voir textual/widgets/_toggle_button.py DEFAULT_CSS) :
+ * sur les themes tres sombres de ce catalogue (tous les fonds omega-*
+ * sont proches du noir), cette couleur devient quasi invisible sur son
+ * propre fond $panel, rendant la case "Je confirme etre autorise..."
+ * illisible comme decochee (elle semble toujours cochee). Corrige avec
+ * $foreground, garanti contraste dans les 10 themes (voir
+ * domain/theme/policies.py). text-style dim/bold (2026-08-24) ajoute un
+ * second signal INDEPENDANT de la couleur (utile si un theme particulier
+ * rend malgre tout le contraste de couleur insuffisant a l'oeil). */
+ToggleButton > .toggle--button {
+    color: $foreground;
+    text-style: dim;
+}
+
+ToggleButton.-on > .toggle--button {
+    color: $text-success;
+    text-style: bold;
+}
+
+/* screens/home.py (2026-08-25, refonte complete demandee : "on va mettre
+ * le menu principal aussi au milieu" — remplace le calage a gauche +
+ * disposition deux colonnes menu/hero d'une version precedente,
+ * devenue obsolete avec le deplacement de la composition ASCII complete
+ * vers screens/splash.py, voir widgets/splash_hero.py) : desormais un
+ * seul empilement vertical (bandeau -> titre -> bloc boutons). align:
+ * center middle centre le CENTRAGE VERTICAL de l'empilement (height:1fr,
+ * ce Vertical occupe deja toute la hauteur) — le centrage HORIZONTAL de
+ * chaque element pris individuellement est fait par un Center() dedie
+ * autour de chacun (screens/home.py), PAS par ce align:center-ci : bug
+ * reel rapporte par capture d'ecran reelle ("probleme de centrage...
+ * sur le menu principal") — un align:center sur un Vertical a PLUSIEURS
+ * enfants de largeurs differentes ne centre que le bloc entier sur la
+ * largeur du plus large d'entre eux (ici le bandeau), les autres enfants
+ * restant colles a GAUCHE de ce bloc plutot que centres independamment
+ * (confirme par introspection : les trois elements partageaient le MEME
+ * x, celui du bandeau). */
+.omega-home-root {
+    align: center middle;
+    height: 1fr;
+    overflow-y: auto;
+}
+
+.omega-home-wordmark {
+    color: $accent;
+    width: auto;
+    margin-bottom: 1;
+}
+
+/* Bloc central du menu (2026-08-25, demande : "on va entourer en arrondi
+ * la bloc central du menu en couleur vif (comme le contour des
+ * boutons)... on va laisser le fond de derriere les boutons pour
+ * afficher une difference") : $panel (plus clair que $background de
+ * Screen, plus sombre que $surface des boutons eux-memes — voir
+ * domain/theme/policies.py::Palette, ordre confirme sur les 10 themes)
+ * cree une vraie profondeur en trois paliers (ecran -> bloc -> bouton),
+ * la ou ".omega-panel"/boutons partageaient auparavant la MEME couleur
+ * $surface (aucun contraste visible, bug de coherence signale).
+ * padding: 1 4 (2026-08-25, porte de "1 2" — demande : "agrandir le
+ * padding sur les cotes... plus d'espace entre les cotes des boutons et
+ * le contour du bloc principal") : seul le padding HORIZONTAL change
+ * (2 -> 4), le vertical reste a 1.
+ * Titre "MENU PRINCIPAL" EMBARQUE DANS LE CONTOUR (2026-08-25, remplace
+ * l'ancienne ".omega-home-menu-title", un petit encadre SEPARE au-dessus
+ * de ce bloc — demande explicite : "on enleve le petit container menu
+ * principal... MENU PRINCIPAL est un element du contour... effet
+ * elements de console ou de dashboard") : screens/home.py assigne
+ * `menu.border_title = "MENU PRINCIPAL"`, une fonctionnalite NATIVE de
+ * Textual (Widget.border_title, distincte d'un enfant compose — le texte
+ * est peint directement dans la ligne de bordure superieure, jamais un
+ * widget separe) — border-title-align centre ce texte dans la largeur du
+ * contour, border-title-color/-style reprennent le meme jeu de couleurs
+ * inversees que les boutons ci-dessus (voir leur propre commentaire). */
+.omega-home-menu {
+    background: $panel;
+    border: round $accent;
+    border-title-align: center;
+    border-title-color: $background;
+    border-title-background: $accent;
+    border-title-style: bold;
+    padding: 1 4;
+    width: auto;
+    height: auto;
+}
+
+/* widgets/run_progress.py (2026-08-24) : Textual's Bar.render() peint la
+ * portion NON remplie avec la couleur bgcolor de ".bar--bar" utilisee
+ * comme COULEUR DE TEXTE (pas un fond de widget — voir
+ * textual/widgets/_progress_bar.py::Bar.render(), background_style =
+ * Style.from_color(bar_style.bgcolor)) : dans ce catalogue, $surface est
+ * volontairement tres proche de $background sur les themes sombres
+ * (aesthetic "presque noir" assumee, domain/theme/policies.py), donc ce
+ * liseret de caracteres fins (━) reste quasi invisible contre le fond de
+ * l'ecran — une regle CSS sur le widget Bar lui-meme n'a aucun effet
+ * (le renderable peint deja explicitement chaque cellule, il ne laisse
+ * jamais transparaitre le fond CSS du widget). Plutot que lutter contre
+ * cette mecanique de rendu, un cadre autour de TOUT le widget
+ * RunProgress (piste comprise) delimite clairement son etendue totale,
+ * quel que soit le contraste interne de la piste — bug reel rapporte
+ * ("jauge... invisible en partie"). */
+RunProgress {
+    border: round $accent;
+    padding: 0 1;
+}
+
+/* screens/confirm.py, screens/quit_confirm.py (2026-08-24) : un seul
+ * cadre borde facon console englobant titre+message+boutons, tous a la
+ * meme largeur fixe (60 colonnes) — remplace l'usage de
+ * "omega-title"/"omega-subtitle" (largeurs incoherentes entre les deux,
+ * voir INFO DEV des deux ecrans). align: center middle (2026-08-25) :
+ * un premier essai (meme date) misait sur cette regle SEULE pour centrer
+ * la rangee de boutons dans ce cadre — insuffisant en pratique (voir le
+ * commentaire de ".omega-confirm-buttons" plus bas pour le correctif
+ * retenu, la rangee prend maintenant explicitement la meme largeur fixe
+ * que titre/message). Conservee ici malgre tout : aucun effet negatif
+ * (rien d'autre a centrer dans ce cadre, titre/message/boutons occupent
+ * deja chacun toute sa largeur). */
+.omega-confirm-box {
+    background: $surface;
+    border: heavy $accent;
+    padding: 1 2;
+    width: auto;
+    height: auto;
+    align: center middle;
+}
+
+.omega-confirm-title {
+    text-style: bold;
+    color: $primary;
+    width: 60;
+    content-align: center middle;
+    margin-bottom: 1;
+}
+
+.omega-confirm-message {
+    color: $secondary;
+    width: 60;
+    margin-bottom: 1;
+}
+
+/* Horizontal (pas Center()) pour la rangee de boutons (2026-08-24) :
+ * Center() est lui-meme width:1fr par defaut (ne centre que son
+ * CONTENU, pas sa propre boite) — utilise comme enfant direct de
+ * ".omega-confirm-box" (width:auto), il forcait ce dernier a s'etendre
+ * sur toute la largeur du terminal pour satisfaire son propre 1fr (meme
+ * cause que ".omega-home-menu", voir son commentaire plus haut).
+ * width: 60 (2026-08-25, remplace "width: auto") : bug reel rapporte a
+ * nouveau apres ce premier correctif ("les boutons... colles a gauche
+ * alors que la console et le titre sont centres") — confirme par
+ * introspection (Pilot + .region) : ".omega-confirm-box" avait beau
+ * declarer "align: center middle", la rangee de boutons (alors
+ * width:auto, 34 colonnes) restait positionnee a x=0 dans le cadre, MEME
+ * divergence CSS-declaree/rendu-reel deja rencontree ailleurs dans ce
+ * fichier (alignement d'un widget entier dans un parent auto-largeur) —
+ * "align" sur le PARENT ne positionne pas fiablement un enfant
+ * auto-largeur dans ce moteur de rendu. Plutot que lutter encore contre ce mecanisme, cette rangee
+ * prend explicitement la MEME largeur fixe que le titre/message
+ * (".omega-confirm-title"/".omega-confirm-message", width:60) : "align:
+ * center middle" ci-dessous n'a alors plus besoin de POSITIONNER cette
+ * rangee (deja alignee sur les autres enfants, largeur identique), il ne
+ * fait plus que centrer les DEUX BOUTONS a l'INTERIEUR de sa propre
+ * boite deja a la bonne largeur — un alignement de contenu propre au
+ * widget, jamais pris en defaut ce round-ci contrairement a l'alignement
+ * d'un widget entier dans son parent. */
+.omega-confirm-buttons {
+    width: 60;
+    height: auto;
+    align: center middle;
+}
+
+/* screens/run_details.py (2026-08-25) : meme correctif que
+ * widgets/progress_panel.py (voir son propre INFO DEV) — un Horizontal
+ * de StatCard height:auto, sinon 1fr par defaut ecrase leur hauteur a 0. */
+.omega-stat-row {
+    height: auto;
+}
+
+/* screens/splash.py (2026-08-25, bug reel rapporte par capture d'ecran
+ * reelle : "probleme de centrage du texte en bas du splash") : Middle()
+ * est width:auto par defaut (textual/containers.py) — avec DEUX Center()
+ * enfants (hero et invite, chacun width:1fr, voir plus bas), un Middle()
+ * laisse a sa largeur par defaut se retrouve dans le meme cas ambigu
+ * "parent auto-largeur contenant un enfant 1fr" deja rencontre ailleurs
+ * dans ce fichier (voir ".omega-confirm-buttons") : SEUL le premier
+ * Center() (le plus large des deux, l'invite etant plus etroite) fixait
+ * alors la largeur du Middle(), et le second Center() suivait cette
+ * largeur-la plutot que la largeur REELLE du terminal — l'invite
+ * semblait donc "centree sur le bloc ascii" plutot que sur l'ecran.
+ * width:1fr ici force Middle() a la largeur du terminal, rendant les
+ * deux Center() enfants independants l'un de l'autre. */
+.omega-splash-middle {
+    width: 1fr;
+}
+
+/* screens/splash.py (2026-08-25, splash reintroduit) : composition
+ * complete (silhouette + cadre OMEGA-STRESS), une seule couleur de base
+ * pour tout le pave ($accent — voir widgets/splash_hero.py pour le
+ * decoupage fin en spans "clair"/"vif"/"dim" par-dessus cette base).
+ * Chaque widget garde width:auto (sa taille naturelle) : c'est le
+ * Center() qui l'entoure individuellement (screens/splash.py) qui le
+ * centre, pas ce widget lui-meme. */
+.omega-splash-hero {
+    color: $accent;
+    width: auto;
+}
+
+.omega-splash-prompt {
+    color: $secondary;
+    width: auto;
+    margin-top: 1;
+    text-style: italic;
+}

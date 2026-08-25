@@ -1,0 +1,16 @@
+/* Profil `reduced` : palette reduite, UI simplifiee, moins d'ornements
+ * (voir plan produit, "Profils de rendu"). */
+
+.omega-panel {
+    border: none;
+    padding: 0 1;
+}
+
+DataTable {
+    border: none;
+}
+
+.omega-badge {
+    background: $surface;
+    color: $primary;
+}
