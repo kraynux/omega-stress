@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
 # Copyright (c) 2026 kraynux - kraynux@proton.me - Licence MIT (voir fichier LICENSE)
 # ==============================================================================
-# Script d'installation - OMEGA-STRESS TUI/CLI
+# Script d'installation - OMEGA-SCAN TUI/CLI
 # À lancer depuis le dossier extrait de l'archive : cd omega-stress && ./install.sh
 # Résilient : peut être relancé sans erreur si une étape a déjà été faite.
 # Contrairement à omega-fire.sh, aucune étape ne nécessite les privilèges
-# root (pas de groupe dédié, pas de setgid) : Omega-Stress s'exécute
+# root (pas de groupe dédié, pas de setgid) : Omega-Scan s'exécute
 # entièrement en utilisateur normal, ses fichiers runtime (var/) lui
 # appartiennent donc déjà nativement.
 # ==============================================================================
@@ -27,7 +27,7 @@ err()  { echo -e "${RED}❌ $1${NC}"; }
 tip()  { echo -e "${WHITE}💡 $1${NC}"; }
 
 echo -e "${WHITE}    ░▒▓███████████████████████████████████████████████▓▒░${NC}"
-echo -e "${WHITE}    ░ Ω M E G A - S T R E S S — I N S T A L L A T I O N ░${NC}"
+echo -e "${WHITE}    ░ Ω M E G A - SCAN — I N S T A L L A T I O N ░${NC}"
 echo -e "${WHITE}    ░▒▓███████████████████████████████████████████████▓▒░${NC}"
 echo ""
 
@@ -40,15 +40,15 @@ cd "$SCRIPT_DIR"
 if [ -d ".venv" ]; then
     info ".venv existe déjà, création ignorée."
 else
-    if ! python3 -m venv .venv 2>/tmp/omega-stress-venv-err.log; then
+    if ! python3 -m venv .venv 2>/tmp/omega-scan-venv-err.log; then
         err "Échec de la création de l'environnement virtuel."
         warn "Sur Debian/Ubuntu (et dérivées), le module venv n'est pas toujours inclus avec python3 de base."
         tip "Installez-le puis relancez ce script : sudo apt install python3-venv"
-        cat /tmp/omega-stress-venv-err.log >&2
-        rm -f /tmp/omega-stress-venv-err.log
+        cat /tmp/omega-scan-venv-err.log >&2
+        rm -f /tmp/omega-scan-venv-err.log
         exit 1
     fi
-    rm -f /tmp/omega-stress-venv-err.log
+    rm -f /tmp/omega-scan-venv-err.log
     ok "Environnement virtuel créé (.venv)."
 fi
 
@@ -64,16 +64,16 @@ ok "Dépendances installées."
 # -------------------------------------------------------------------------
 # 3. Scripts exécutables
 # -------------------------------------------------------------------------
-chmod +x omega-stress.sh
+chmod +x omega-scan.sh
 chmod +x "$SCRIPT_DIR/install.sh"
 ok "Scripts rendus exécutables."
 
 # -------------------------------------------------------------------------
 # 4. Alias (optionnel) — bash et zsh, quel que soit celui réellement utilisé.
-#    Pas de sudo ici  : Omega-Stress ne requiert
+#    Pas de sudo ici  : Omega-Scan ne requiert
 #    aucun privilège root.
 # -------------------------------------------------------------------------
-ALIAS_LINE="alias stress=\"${SCRIPT_DIR}/omega-stress.sh\""
+ALIAS_LINE="alias scan=\"${SCRIPT_DIR}/omega-scan.sh\""
 
 for rc in "$HOME/.bashrc" "$HOME/.zshrc"; do
     rc_name="$(basename "$rc")"
@@ -88,4 +88,4 @@ done
 
 echo ""
 ok "Installation terminée."
-tip "Lancez Omega-Stress avec : ${SCRIPT_DIR}/omega-stress.sh (ou 'stress' dans un nouveau terminal si l'alias vient d'être ajouté)."
+tip "Lancez Omega-Scan avec : ${SCRIPT_DIR}/omega-scan.sh (ou 'scan' dans un nouveau terminal si l'alias vient d'être ajouté)."

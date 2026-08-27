@@ -88,7 +88,7 @@ async def test_replay_launches_a_new_run_against_the_original_target():
         id_factory=lambda: "new-id",
         explicit_confirmation=True,
         precheck_validated=False,
-        now=NOW,
+        now=lambda: NOW,
     )
 
     assert isinstance(result, Ok)
@@ -110,7 +110,7 @@ async def test_replay_rejects_unknown_run():
         id_factory=lambda: "new-id",
         explicit_confirmation=True,
         precheck_validated=False,
-        now=NOW,
+        now=lambda: NOW,
     )
 
     assert isinstance(result, Err)
@@ -142,7 +142,7 @@ async def test_replay_rejects_run_without_profile():
         id_factory=lambda: "new-id",
         explicit_confirmation=True,
         precheck_validated=False,
-        now=NOW,
+        now=lambda: NOW,
     )
 
     assert isinstance(result, Err)

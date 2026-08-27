@@ -7,7 +7,8 @@
 
 Le projet est conçu selon les principes de la **Clean Architecture**, avec une séparation claire entre domaine métier, orchestration, infrastructure et interface utilisateur.
 
-> Développé par **kraynux** pour **Omega-server** · Licence MIT [https://kraynux.snake-mackarel.ts.net](https://kraynux.snake-mackarel.ts.net)
+> Élaboré par **kraynux** pour **Omega-server** 
+[https://kraynux.snake-mackarel.ts.net](https://kraynux.snake-mackarel.ts.net)
 
 Page officielle :
 [OMEGA-STRESS](https://kraynux.snake-mackarel.ts.net/omega-stress/)
@@ -138,7 +139,6 @@ Cette commande peut être copiée-collée telle quelle et relancée sans erreur 
 ( [ -d ~/omega-stress ] || mv omega-stress ~/ ) && \
 cd ~/omega-stress && chmod +x install.sh && ./install.sh
 ```
-
 `install.sh` :
 
 1. Crée l'environnement virtuel `.venv` s'il n'existe pas déjà.

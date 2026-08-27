@@ -41,7 +41,7 @@ async def _run(explicit_confirmation: bool):
         notification_sink=lambda _msg: None,
         id_factory=lambda: "id-1",
         explicit_confirmation=explicit_confirmation,
-        now=NOW,
+        now=lambda: NOW,
     )
 
 
@@ -73,7 +73,7 @@ async def test_precheck_persists_the_run():
         notification_sink=lambda _msg: None,
         id_factory=lambda: "id-1",
         explicit_confirmation=True,
-        now=NOW,
+        now=lambda: NOW,
     )
 
     assert isinstance(result, Ok)

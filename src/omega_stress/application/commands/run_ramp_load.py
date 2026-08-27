@@ -2,8 +2,6 @@
 """Command : lancer un Test charge (montee progressive)."""
 from __future__ import annotations
 
-from datetime import datetime
-
 from omega_stress.application.commands._launch_support import LaunchError, launch_plan
 from omega_stress.application.dto.run_dto import RunDTO
 from omega_stress.application.pipeline.guards.authorization_guard import check_authorization
@@ -20,7 +18,7 @@ from omega_stress.ports.load_runner import LoadRunner
 from omega_stress.ports.run_progress_notifier import RunProgressNotifier
 from omega_stress.ports.run_repository import RunRepository
 from omega_stress.ports.target_repository import TargetRepository
-from omega_stress.shared.typing import IdFactory
+from omega_stress.shared.typing import Clock, IdFactory
 
 _HIGH_INTENSITY_LEVELS = (IntensityLevel.HAUT, IntensityLevel.MAXIMUM)
 _REQUIRED_CAPABILITY = "system.load_capacity"
@@ -42,7 +40,7 @@ async def run_ramp_load(
     audit_sink: AuditSink,
     notification_sink: NotificationSink,
     id_factory: IdFactory,
-    now: datetime,
+    now: Clock,
     profile_id: str | None = None,
     capability_registry: CapabilityRegistry | None = None,
 ) -> Result[RunDTO, UnauthorizedTargetError | LaunchError]:

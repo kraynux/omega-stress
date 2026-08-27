@@ -31,7 +31,7 @@ def test_abort_closes_run_with_auto_stopped_verdict():
     )
 
     result = abort_run(
-        run, samples=samples, reason=ThresholdExceededError("seuil depasse"), now=ABORTED_AT
+        run, samples=samples, reason=ThresholdExceededError("seuil depasse"), now=lambda: ABORTED_AT
     )
 
     assert result.finished_at == ABORTED_AT
@@ -51,7 +51,10 @@ def test_abort_records_the_reason_as_an_event():
     )
 
     result = abort_run(
-        run, samples=(), reason=ThresholdExceededError("taux d'erreur > 10%"), now=ABORTED_AT
+        run,
+        samples=(),
+        reason=ThresholdExceededError("taux d'erreur > 10%"),
+        now=lambda: ABORTED_AT,
     )
 
     assert result.result is not None

@@ -41,7 +41,7 @@ async def test_connection_load_launches_and_reports_no_requested_rate():
         audit_sink=lambda _e: None,
         notification_sink=lambda _m: None,
         id_factory=lambda: "id-1",
-        now=NOW,
+        now=lambda: NOW,
     )
 
     assert isinstance(result, Ok)

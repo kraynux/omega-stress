@@ -62,7 +62,7 @@ async def _run_pipeline(plan, run, samples, **kwargs):
         run_progress_notifier=notifier,
         audit_sink=audit_events.append,
         notification_sink=notifications.append,
-        now=NOW,
+        now=lambda: NOW,
     )
     return finished, notifier, audit_events, notifications
 

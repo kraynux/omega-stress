@@ -27,6 +27,7 @@ from omega_stress.domain.runs.models import IntervalSample, LoadRun, RunEvent
 from omega_stress.domain.runs.service import aggregate_samples, finish
 from omega_stress.ports.load_runner import LoadRunner
 from omega_stress.ports.run_progress_notifier import RunProgressNotifier
+from omega_stress.shared.typing import Clock
 
 
 async def execute(
@@ -39,7 +40,7 @@ async def execute(
     run_progress_notifier: RunProgressNotifier,
     audit_sink: AuditSink,
     notification_sink: NotificationSink,
-    now: datetime,
+    now: Clock,
 ) -> LoadRun:
     """Execute un plan deja valide (application/pipeline/planner.py) de
     bout en bout : consomme le flux de mesures, publie la progression,
@@ -70,26 +71,28 @@ async def execute(
                 emit_run_finished(aborted, sink=audit_sink)
                 return aborted
     except RunnerFailureError as exc:
+        failed_at = now()
         return _finish_with_verdict(
             run,
             samples=tuple(collected),
             verdict=RunVerdict.FAILED,
             requested_rate_per_minute=requested_rate_per_minute,
             audit_sink=audit_sink,
-            now=now,
-            events=(RunEvent(occurred_at=now, kind="runner_failure", message=str(exc)),),
+            now=failed_at,
+            events=(RunEvent(occurred_at=failed_at, kind="runner_failure", message=str(exc)),),
         )
     except asyncio.CancelledError:
+        stopped_at = now()
         stopped = _finish_with_verdict(
             run,
             samples=tuple(collected),
             verdict=RunVerdict.AUTO_STOPPED,
             requested_rate_per_minute=requested_rate_per_minute,
             audit_sink=audit_sink,
-            now=now,
+            now=stopped_at,
             events=(
                 RunEvent(
-                    occurred_at=now,
+                    occurred_at=stopped_at,
                     kind="manual_stop",
                     message="Arrete manuellement par l'utilisateur.",
                 ),
@@ -105,7 +108,7 @@ async def execute(
         verdict=verdict,
         requested_rate_per_minute=requested_rate_per_minute,
         audit_sink=audit_sink,
-        now=now,
+        now=now(),
     )
 
 
@@ -166,6 +169,15 @@ def _finish_with_verdict(
 #   parametre ici — garde ce fichier concentre sur l'execution, pas la
 #   persistance).
 # Points cles :
+# - now: Clock, pas datetime (2026-08-27, correction de bug reel :
+#   started_at == finished_at, duree 0.0 min sur TOUS les rapports
+#   exportes — voir shared/typing.py::Clock pour le detail complet).
+#   now() est appele fraichement a CHAQUE sortie (fin normale, panne
+#   RunnerFailureError, arret manuel CancelledError), jamais reutilise
+#   depuis avant le `async for` — c'est cette boucle, potentiellement
+#   longue de plusieurs minutes, que l'ancienne valeur `now: datetime`
+#   figee ne pouvait pas refleter. abort_run() (seuil depasse) recoit le
+#   Clock tel quel et fait son propre appel frais, meme principe.
 # - Quatre issues de sortie distinctes, toutes cloturees via le meme
 #   chemin interne (_finish_with_verdict) : normale (SUCCESS/DEGRADED),
 #   arret automatique par seuil (AUTO_STOPPED, via application/pipeline/

@@ -45,7 +45,7 @@ async def _run(**overrides):
         audit_sink=lambda _e: None,
         notification_sink=lambda _m: None,
         id_factory=lambda: "id-1",
-        now=NOW,
+        now=lambda: NOW,
     )
     defaults.update(overrides)
     return await run_request_load(**defaults)

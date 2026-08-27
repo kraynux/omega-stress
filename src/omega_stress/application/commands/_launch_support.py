@@ -3,8 +3,6 @@
 run_ramp_load.py et replay_run.py."""
 from __future__ import annotations
 
-from datetime import datetime
-
 from omega_stress.application.dto.mappers import run_to_dto
 from omega_stress.application.dto.run_dto import RunDTO
 from omega_stress.application.exceptions import CapabilityUnavailableError
@@ -25,7 +23,7 @@ from omega_stress.ports.load_runner import LoadRunner
 from omega_stress.ports.run_progress_notifier import RunProgressNotifier
 from omega_stress.ports.run_repository import RunRepository
 from omega_stress.ports.target_repository import TargetRepository
-from omega_stress.shared.typing import IdFactory
+from omega_stress.shared.typing import Clock, IdFactory
 
 LaunchError = PlanValidationError | CapabilityUnavailableError
 
@@ -44,7 +42,7 @@ async def launch_plan(
     audit_sink: AuditSink,
     notification_sink: NotificationSink,
     id_factory: IdFactory,
-    now: datetime,
+    now: Clock,
     capability_registry: CapabilityRegistry | None = None,
     required_capability: str | None = None,
 ) -> Result[RunDTO, LaunchError]:
@@ -72,10 +70,17 @@ async def launch_plan(
     if isinstance(prepared, Err):
         return prepared
 
+    started_at = now()
+
     parsed_address = parse_target_address(target_url)
     if isinstance(parsed_address, Ok):
         target_repository.save_recent(
-            Target(id=target_id, address=parsed_address.value, created_at=now, last_used_at=now)
+            Target(
+                id=target_id,
+                address=parsed_address.value,
+                created_at=started_at,
+                last_used_at=started_at,
+            )
         )
 
     run = LoadRun(
@@ -84,7 +89,7 @@ async def launch_plan(
         target_id=target_id,
         family=plan.family,
         level=plan.level,
-        started_at=now,
+        started_at=started_at,
     )
 
     finished = await execute(
@@ -122,6 +127,13 @@ async def launch_plan(
 # - Aucune construction de LoadPlan (chaque command construit le sien,
 #   avec sa propre famille/preset).
 # Points cles :
+# - now: Clock, pas datetime (2026-08-27, correction de bug reel : voir
+#   shared/typing.py::Clock et application/pipeline/executor.py) :
+#   `started_at = now()` est appele UNE FOIS ici (instant de depart,
+#   reutilise pour started_at ET pour created_at/last_used_at de la
+#   cible), puis le Clock est transmis TEL QUEL (pas appele) a execute(),
+#   qui rappellera now() fraichement a la cloture — jamais la valeur de
+#   depart reutilisee comme finished_at.
 # - run_repository.save() est appele ICI, apres l'execution — correction
 #   d'une premiere version de ce fichier qui laissait la persistance a
 #   "l'appelant" alors que celui-ci ne recoit qu'un RunDTO (pas

@@ -108,7 +108,7 @@ async def _handle_precheck(
         notification_sink=_print_notification,
         id_factory=new_id,
         explicit_confirmation=args.confirm,
-        now=utc_now(),
+        now=utc_now,
     )
     sys.stderr.write("\n")
     return _finish(result, args)
@@ -154,7 +154,7 @@ async def _handle_replay(
         id_factory=new_id,
         explicit_confirmation=args.confirm,
         precheck_validated=args.precheck_validated,
-        now=utc_now(),
+        now=utc_now,
         capability_registry=container.capability_registry,
     )
     sys.stderr.write("\n")
@@ -192,7 +192,7 @@ def _load_kwargs(args: argparse.Namespace, container: DependencyContainer) -> di
         audit_sink=container.audit_logger.record,
         notification_sink=_print_notification,
         id_factory=new_id,
-        now=utc_now(),
+        now=utc_now,
         capability_registry=container.capability_registry,
     )
 

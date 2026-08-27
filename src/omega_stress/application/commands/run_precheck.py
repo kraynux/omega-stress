@@ -3,8 +3,6 @@
 a intensite tres faible)."""
 from __future__ import annotations
 
-from datetime import datetime
-
 from omega_stress.application.dto.mappers import run_to_dto
 from omega_stress.application.dto.run_dto import RunDTO
 from omega_stress.application.pipeline.executor import execute
@@ -21,7 +19,7 @@ from omega_stress.ports.load_runner import LoadRunner
 from omega_stress.ports.run_progress_notifier import RunProgressNotifier
 from omega_stress.ports.run_repository import RunRepository
 from omega_stress.ports.target_repository import TargetRepository
-from omega_stress.shared.typing import IdFactory
+from omega_stress.shared.typing import Clock, IdFactory
 
 
 async def run_precheck(
@@ -36,7 +34,7 @@ async def run_precheck(
     notification_sink: NotificationSink,
     id_factory: IdFactory,
     explicit_confirmation: bool,
-    now: datetime,
+    now: Clock,
 ) -> Result[RunDTO, PlanValidationError]:
     """Lance un Pre-check : duree fixe de 1 minute (borne haute de la
     plage "30 secondes a 1 minute" du plan produit — voir Points cles),
@@ -71,7 +69,7 @@ async def run_precheck(
         target_id=target_id,
         family=plan.family,
         level=plan.level,
-        started_at=now,
+        started_at=now(),
         is_precheck=True,
     )
 
@@ -113,6 +111,12 @@ async def run_precheck(
 #   par un service dedie — deliberement differe, voir son propre
 #   commentaire INFO DEV).
 # Points cles :
+# - now: Clock, pas datetime (2026-08-27, correction de bug reel : voir
+#   shared/typing.py::Clock et application/pipeline/executor.py) :
+#   started_at=now() capture l'instant de depart ; execute() recoit le
+#   Clock tel quel et appelle now() a nouveau, fraichement, pour
+#   finished_at une fois la minute de Pre-check ecoulee — jamais la meme
+#   valeur figee pour les deux.
 # - Duration(minutes=1) : le plan produit donne un intervalle ("30
 #   secondes a 1 minute"), pas une valeur unique. La borne haute est
 #   retenue ici pour reutiliser tel quel le value object Duration

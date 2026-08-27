@@ -11,7 +11,7 @@ from textual.widgets import Button, Footer, Header, Input, Select, Static
 from omega_stress.core.enums import ExportFormat
 from omega_stress.core.results import Err
 from omega_stress.interfaces.tui.controllers import history_controller
-from omega_stress.interfaces.tui.presenters.theme_presenter import available_theme_names
+from omega_stress.interfaces.tui.presenters.theme_presenter import available_export_theme_names
 from omega_stress.interfaces.tui.screens._base import OmegaScreen
 from omega_stress.interfaces.tui.screens.settings_screen import DEFAULT_EXPORT_DIR_KEY
 
@@ -57,7 +57,7 @@ class ExportDialogScreen(OmegaScreen):
             )
             yield Input(placeholder="Dossier de destination", id="destination")
             yield Select(
-                [(name, name) for name in available_theme_names()],
+                [(name, name) for name in available_export_theme_names()],
                 prompt="Theme (HTML uniquement)",
                 id="export-theme",
             )
@@ -135,6 +135,13 @@ class ExportDialogScreen(OmegaScreen):
 #   application/dto/export_dto.py::ExportRequestDTO, meme valeur par
 #   defaut — un choix de theme n'a de sens que pour le format HTML, ignore
 #   silencieusement par les exporters JSON/CSV.
+# - Options du Select "#export-theme" (2026-08-27, correction de bug reel)
+#   : available_export_theme_names() (catalogue EXPORT_PALETTES, 5 noms),
+#   PAS available_theme_names() (catalogue TUI_THEMES, 10 noms) — les deux
+#   catalogues sont independants (domain/theme/policies.py). L'ancien code
+#   proposait des noms de themes TUI-only invalides pour un export
+#   (rejetes par validate_export_job()) et omettait les 2 themes
+#   export-only (light-basic, light-alt).
 # - "#destination" pre-rempli au montage (2026-08-24) avec
 #   DEFAULT_EXPORT_DIR_KEY (importee de screens/settings_screen.py, une
 #   seule source de verite pour le nom de cette cle settings_store —

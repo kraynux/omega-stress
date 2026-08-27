@@ -3,13 +3,25 @@
 from __future__ import annotations
 
 from omega_stress.application.dto.theme_dto import ThemeStatusDTO
-from omega_stress.domain.theme.policies import TUI_THEMES
+from omega_stress.domain.theme.policies import EXPORT_PALETTES, TUI_THEMES
 
 
 def available_theme_names() -> tuple[str, ...]:
     """Noms des themes selectionnables, dans l'ordre stable du catalogue
     (voir plan produit, ecran "Reglages" : liste des 10 themes TUI)."""
     return tuple(TUI_THEMES.keys())
+
+
+def available_export_theme_names() -> tuple[str, ...]:
+    """Noms des themes d'export HTML selectionnables (catalogue
+    EXPORT_PALETTES, independant de TUI_THEMES, voir domain/theme/
+    policies.py et son INFO DEV). A utiliser pour tout Select de theme
+    d'export (screens/export_dialog.py) : les 10 noms de
+    available_theme_names() ne correspondent PAS tous a un theme d'export
+    valide (validate_export_job() les rejetterait), et les themes
+    export-only (light-basic, light-alt) n'apparaissent que via cette
+    fonction."""
+    return tuple(EXPORT_PALETTES.keys())
 
 
 def status_label(status: ThemeStatusDTO) -> str:
@@ -36,7 +48,16 @@ def status_label(status: ThemeStatusDTO) -> str:
 # - available_theme_names() suit l'ordre d'insertion du dict TUI_THEMES
 #   (garanti par Python 3.7+), lui-meme dans l'ordre de Projet/themes.txt
 #   : ordre stable et intentionnel, pas un tri alphabetique.
+# - available_export_theme_names() (2026-08-27, correction de bug reel :
+#   screens/export_dialog.py peuplait son Select de theme d'export avec
+#   available_theme_names() — catalogue TUI_THEMES, 10 noms — au lieu du
+#   catalogue EXPORT_PALETTES, 5 noms. Consequence : 7 noms proposes
+#   (omega-dark/light/pink/hack/contrast/mono/minimal) faisaient echouer
+#   validate_export_job() a l'export, et les 2 themes export-only
+#   (light-basic, light-alt) n'etaient jamais proposables depuis la TUI.
 # Comment il sera utilise :
 # - screens/settings_screen.py (liste des themes proposes),
-#   widgets/theme_badge.py (libelle du theme actif).
+#   widgets/theme_badge.py (libelle du theme actif) : available_theme_names().
+# - screens/export_dialog.py (Select de theme d'export) :
+#   available_export_theme_names().
 #---------------------------------------------------------------------->

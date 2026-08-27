@@ -2,14 +2,13 @@
 """Arret automatique d'un run en cours suite a un depassement de seuil."""
 from __future__ import annotations
 
-from datetime import datetime
-
 from omega_stress.application.exceptions import AbortError
 from omega_stress.core.enums import RunVerdict
 from omega_stress.core.results import Err
 from omega_stress.domain.errors import ThresholdExceededError
 from omega_stress.domain.runs.models import IntervalSample, LoadRun, RunEvent
 from omega_stress.domain.runs.service import aggregate_samples, finish
+from omega_stress.shared.typing import Clock
 
 
 def abort_run(
@@ -17,7 +16,7 @@ def abort_run(
     *,
     samples: tuple[IntervalSample, ...],
     reason: ThresholdExceededError,
-    now: datetime,
+    now: Clock,
 ) -> LoadRun:
     """Cloture un run par arret automatique (verdict AUTO_STOPPED), suite
     a un ThresholdExceededError detecte par
@@ -29,14 +28,15 @@ def abort_run(
     cours, jamais d'annuler retroactivement ce qui a deja ete envoye a la
     cible (voir ARCHITECTURE.md §0).
     """
-    event = RunEvent(occurred_at=now, kind="threshold_exceeded", message=str(reason))
+    closed_at = now()
+    event = RunEvent(occurred_at=closed_at, kind="threshold_exceeded", message=str(reason))
     result = aggregate_samples(
         samples,
         verdict=RunVerdict.AUTO_STOPPED,
         requested_rate_per_minute=None,
         events=(event,),
     )
-    finished = finish(run, result=result, now=now)
+    finished = finish(run, result=result, now=closed_at)
     if isinstance(finished, Err):
         # Un run en cours d'execution ne devrait jamais etre deja
         # `finished_at` non-None a ce stade : si finish() refuse quand
@@ -79,6 +79,14 @@ def abort_run(
 #   (notify_auto_stop, ephemere) et reste consultable dans le detail du
 #   run et l'export — avant cela, `reason` n'etait utilise que pour cette
 #   notification et disparaissait ensuite.
+# - now: Clock, pas datetime (2026-08-27, correction de bug reel :
+#   started_at == finished_at, duree 0.0 min sur TOUS les rapports
+#   exportes — voir shared/typing.py::Clock pour le detail complet) :
+#   `closed_at = now()` est appele UNE FOIS ici, fraichement, au moment
+#   reel de l'arret automatique (pas la valeur figee capturee par
+#   l'appelant avant le debut du run) — reutilise pour l'event ET pour
+#   finish(), jamais deux appels a now() qui produiraient deux instants
+#   legerement differents pour la meme cloture.
 # Comment il sera utilise (apercu) :
 # - application/pipeline/executor.py appelle abort_run() des que
 #   threshold_guard.check_threshold() retourne un Err.

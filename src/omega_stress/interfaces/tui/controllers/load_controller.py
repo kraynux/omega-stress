@@ -77,7 +77,7 @@ async def launch_precheck(
         notification_sink=notification_sink,
         id_factory=new_id,
         explicit_confirmation=explicit_confirmation,
-        now=utc_now(),
+        now=utc_now,
     )
 
 
@@ -203,7 +203,7 @@ async def launch_replay(
         id_factory=new_id,
         explicit_confirmation=explicit_confirmation,
         precheck_validated=precheck_validated,
-        now=utc_now(),
+        now=utc_now,
         capability_registry=container.capability_registry,
     )
 
@@ -281,7 +281,7 @@ def _load_kwargs(
         audit_sink=container.audit_logger.record,
         notification_sink=notification_sink,
         id_factory=new_id,
-        now=utc_now(),
+        now=utc_now,
         capability_registry=container.capability_registry,
     )
 
