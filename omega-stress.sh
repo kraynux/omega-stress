@@ -19,9 +19,9 @@ NC='\033[0m'
 echo -e "${WHITE}${NC}"
 echo -e "${WHITE}DÉMARRAGE DE L'APPLICATION${NC}"
 echo -e "${WHITE}${NC}"
-echo -e "${WHITE}    ░▒▓█████████████████████▓▒░${NC}"
-echo -e "${WHITE}    ░ Ω M E G A - S T R E S S ░${NC}"
-echo -e "${WHITE}    ░▒▓█████████████████████▓▒░${NC}"
+echo -e "${WHITE}    ░▒▓█████████████████████████▓▒░${NC}"
+echo -e "${WHITE}    ░▒▓ Ω M E G A - S T R E S S ▓▒░${NC}"
+echo -e "${WHITE}    ░▒▓█████████████████████████▓▒░${NC}"
 echo -e "${WHITE}${NC}"
 
 # 1. Détection du répertoire racine du projet
