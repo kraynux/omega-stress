@@ -1,7 +1,10 @@
-from omega_stress.application.pipeline.guards.threshold_guard import check_threshold
+from omega_stress.application.pipeline.guards.threshold_guard import (
+    check_sliding_window,
+    check_threshold,
+)
 from omega_stress.core.results import Err, Ok
 from omega_stress.domain.load.models import Thresholds
-from omega_stress.domain.runs.models import IntervalSample
+from omega_stress.domain.runs.models import ErrorBreakdown, IntervalSample
 
 
 def _sample(**overrides) -> IntervalSample:
@@ -40,3 +43,20 @@ def test_no_division_by_zero_when_no_requests():
     result = check_threshold(_sample(error_count=0, request_count=0), thresholds=thresholds)
 
     assert isinstance(result, Ok)
+
+
+def test_check_sliding_window_empty_history_is_ok():
+    result = check_sliding_window([])
+
+    assert isinstance(result, Ok)
+
+
+def test_check_sliding_window_flags_breach_using_last_sample_as_now_second():
+    samples = [
+        _sample(at_second=5.0, request_count=40, errors=ErrorBreakdown(http_5xx=8)),
+    ]
+
+    result = check_sliding_window(samples)
+
+    assert isinstance(result, Err)
+    assert result.error.signal == "window_http_5xx_rate_exceeded"

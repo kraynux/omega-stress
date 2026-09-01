@@ -8,10 +8,15 @@ from omega_stress.application.pipeline.guards.authorization_guard import check_a
 from omega_stress.application.pipeline.hooks.audit_hook import AuditSink
 from omega_stress.application.pipeline.hooks.notification_hook import NotificationSink
 from omega_stress.core.capability_registry import CapabilityRegistry
-from omega_stress.core.enums import IntensityLevel, TestFamily
+from omega_stress.core.enums import DurationPresetId, IntensityLevel, TestFamily
 from omega_stress.core.results import Err, Result
 from omega_stress.domain.errors import UnauthorizedTargetError
+from omega_stress.domain.load import policies
 from omega_stress.domain.load.builders import build_ramp_steps
+from omega_stress.domain.load.duration_presets import (
+    build_duration_preset_ramp_steps,
+    duration_preset,
+)
 from omega_stress.domain.load.models import Duration, LoadPlan, Thresholds
 from omega_stress.domain.load.presets import ramp_preset
 from omega_stress.ports.load_runner import LoadRunner
@@ -20,7 +25,6 @@ from omega_stress.ports.run_repository import RunRepository
 from omega_stress.ports.target_repository import TargetRepository
 from omega_stress.shared.typing import Clock, IdFactory
 
-_HIGH_INTENSITY_LEVELS = (IntensityLevel.HAUT, IntensityLevel.MAXIMUM)
 _REQUIRED_CAPABILITY = "system.load_capacity"
 
 
@@ -43,33 +47,50 @@ async def run_ramp_load(
     now: Clock,
     profile_id: str | None = None,
     capability_registry: CapabilityRegistry | None = None,
+    duration_preset_id: DurationPresetId | None = None,
+    reinforced_confirmation_text: str | None = None,
+    safety_mode: bool = True,
 ) -> Result[RunDTO, UnauthorizedTargetError | LaunchError]:
     """Lance un Test charge en mode manuel borne. Seule famille qui derive
     des etapes de rampe (domain/load/builders.py::build_ramp_steps) et
     dont le debit demande pour le calcul de goulot d'etranglement est le
     pic de la rampe (RampPreset.peak_requests_per_minute), pas un palier
-    fixe."""
+    fixe.
+
+    duration_preset_id (mode "profil" D1-D6, optionnel) : les ramp_steps
+    proviennent alors de domain/load/duration_presets.py::
+    build_duration_preset_ramp_steps() (4 phases) plutot que de
+    build_ramp_steps() (2 phases, mode manuel)."""
     authorization = check_authorization(
         target_id, target_repository=target_repository, explicit_confirmation=explicit_confirmation
     )
     if isinstance(authorization, Err):
         return authorization
 
-    duration_result = Duration.for_level(
-        level, duration_minutes, extended_authorized=precheck_validated
-    )
-    if isinstance(duration_result, Err):
-        return duration_result
+    if duration_preset_id is not None:
+        duration = Duration(minutes=duration_minutes)
+        ramp_steps = build_duration_preset_ramp_steps(duration_preset(duration_preset_id))
+    else:
+        duration_result = Duration.for_level(
+            level, duration_minutes, extended_authorized=precheck_validated
+        )
+        if isinstance(duration_result, Err):
+            return duration_result
+        duration = duration_result.value
+        ramp_steps = build_ramp_steps(level, duration_minutes=duration_minutes)
 
     plan = LoadPlan(
         id=id_factory(),
         family=TestFamily.RAMP,
         level=level,
-        duration=duration_result.value,
+        duration=duration,
         thresholds=thresholds,
         target_authorization_confirmed=True,
         precheck_validated=precheck_validated,
-        ramp_steps=build_ramp_steps(level),
+        ramp_steps=ramp_steps,
+        duration_preset_id=duration_preset_id,
+        reinforced_confirmation_text=reinforced_confirmation_text,
+        safety_mode=safety_mode,
     )
 
     preset = ramp_preset(level)
@@ -88,7 +109,9 @@ async def run_ramp_load(
         id_factory=id_factory,
         now=now,
         capability_registry=capability_registry,
-        required_capability=_REQUIRED_CAPABILITY if level in _HIGH_INTENSITY_LEVELS else None,
+        required_capability=(
+            _REQUIRED_CAPABILITY if level in policies.PRECHECK_MANDATORY_LEVELS else None
+        ),
     )
 
 # <-- INFO DEV ---------------------------------------------------------
@@ -108,12 +131,15 @@ async def run_ramp_load(
 #   DEV pour l'interpretation retenue sur la borne de plateau).
 # Points cles :
 # - duration_minutes recu ici reste la duree TOTALE bornee du panneau de
-#   test (le meme choix ferme que les deux autres familles) ; elle n'est
-#   pas recalculee a partir de la somme ramp_up + plateau des
-#   RampStep — ce sont deux notions de duree paralleles en V1 (l'une
-#   gouverne le choix utilisateur ferme, l'autre la forme reelle de la
-#   rampe), non reconciliees explicitement faute d'exigence du plan
-#   produit sur ce point precis.
+#   test (le meme choix ferme que les deux autres familles), transmise a
+#   build_ramp_steps() (mode manuel) pour qu'elle RECALCULE ramp_up/
+#   plateau proportionnellement (2026-09-01, bug reel corrige : avant ce
+#   correctif, ces deux notions de duree n'etaient jamais reconciliees —
+#   voir domain/load/builders.py::build_ramp_steps(), INFO DEV, pour le
+#   diagnostic complet). En mode profil D1-D6, la reconciliation est deja
+#   assuree autrement par build_duration_preset_ramp_steps() (warmup/
+#   rampe/plateau/retour au calme exprimes en fractions de preset.
+#   total_minutes des sa premiere version, jamais affectee par ce bug).
 # Comment il sera utilise (apercu) :
 # - interfaces/tui/screens/ramp_panel.py,
 #   interfaces/cli/commands/run_command.py.

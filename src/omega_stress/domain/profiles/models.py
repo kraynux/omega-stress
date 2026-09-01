@@ -55,7 +55,7 @@ class Profile:
 # Points cles :
 # - extended_duration_authorized : champ explicite distinct de `frozen`.
 #   Un profil peut etre fige SANS autoriser la duree etendue (5 min en
-#   Haut/Maximum) — les deux notions sont independantes dans le plan
+#   Violent/Maximum) — les deux notions sont independantes dans le plan
 #   produit ("5 minutes seulement si le profil OU le pre-check l'autorise"
 #   : c'est une autorisation specifique, pas une consequence automatique du
 #   gel).

@@ -1,4 +1,5 @@
-from omega_stress.core.enums import RenderProfile
+from omega_lib.terminal.models import RenderProfile
+
 from omega_stress.interfaces.tui.controllers.theme_controller import (
     choose_theme,
     cycle_theme,

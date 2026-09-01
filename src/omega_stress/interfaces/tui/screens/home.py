@@ -4,14 +4,15 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
+from omega_lib.terminal.models import RenderProfile
 from textual.app import ComposeResult
 from textual.binding import Binding
 from textual.containers import Center, Container, Vertical
 from textual.screen import Screen
 from textual.widgets import Button, Footer, Header
 
-from omega_stress.core.enums import RenderProfile
 from omega_stress.interfaces.tui.screens._base import OmegaScreen
+from omega_stress.interfaces.tui.screens.calibration_screen import CalibrationScreen
 from omega_stress.interfaces.tui.screens.connection_panel import ConnectionPanelScreen
 from omega_stress.interfaces.tui.screens.help_screen import HelpScreen
 from omega_stress.interfaces.tui.screens.history import HistoryScreen
@@ -33,6 +34,7 @@ _MENU_ITEMS: tuple[tuple[str, str], ...] = (
     ("ramp", "Test charge"),
     ("history", "Historique"),
     ("targets", "Cibles"),
+    ("calibration", "Calibrage"),
     ("settings", "Reglages"),
     ("help", "Aide"),
     ("quit", "Quitter"),
@@ -114,6 +116,8 @@ class HomeScreen(OmegaScreen):
             return HistoryScreen(container=self._container)
         if item_id == "targets":
             return TargetsScreen(container=self._container)
+        if item_id == "calibration":
+            return CalibrationScreen(container=self._container)
         if item_id == "settings":
             return SettingsScreen(container=self._container)
         return None
@@ -232,6 +236,11 @@ class HomeScreen(OmegaScreen):
 #   de construire chaque Button — Textual n'a pas d'equivalent CSS
 #   text-transform, meme convention deja utilisee ailleurs dans le projet
 #   pour les titres d'ecran (".omega-title").
+# - "calibration" (2026-09-01) : ajoute entre "targets" et "settings" —
+#   ecran jamais accessible avant ce jour ("je vois pas de menu
+#   calibrage", bug reel rapporte), le mecanisme lui-meme
+#   (domain/calibration/, application/commands/run_calibration.py)
+#   existait deja mais n'etait relie a aucune navigation TUI/CLI.
 # Comment il sera utilise :
 # - interfaces/tui/app.py, apres screens/splash.py (et apres
 #   terminal_warning.py si applicable).

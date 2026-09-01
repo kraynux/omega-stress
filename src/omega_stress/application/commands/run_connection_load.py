@@ -8,9 +8,14 @@ from omega_stress.application.pipeline.guards.authorization_guard import check_a
 from omega_stress.application.pipeline.hooks.audit_hook import AuditSink
 from omega_stress.application.pipeline.hooks.notification_hook import NotificationSink
 from omega_stress.core.capability_registry import CapabilityRegistry
-from omega_stress.core.enums import IntensityLevel, TestFamily
+from omega_stress.core.enums import DurationPresetId, IntensityLevel, TestFamily
 from omega_stress.core.results import Err, Result
 from omega_stress.domain.errors import UnauthorizedTargetError
+from omega_stress.domain.load import policies
+from omega_stress.domain.load.duration_presets import (
+    build_duration_preset_ramp_steps,
+    duration_preset,
+)
 from omega_stress.domain.load.models import Duration, LoadPlan, Thresholds
 from omega_stress.ports.load_runner import LoadRunner
 from omega_stress.ports.run_progress_notifier import RunProgressNotifier
@@ -18,7 +23,6 @@ from omega_stress.ports.run_repository import RunRepository
 from omega_stress.ports.target_repository import TargetRepository
 from omega_stress.shared.typing import Clock, IdFactory
 
-_HIGH_INTENSITY_LEVELS = (IntensityLevel.HAUT, IntensityLevel.MAXIMUM)
 _REQUIRED_CAPABILITY = "system.load_capacity"
 
 
@@ -41,31 +45,51 @@ async def run_connection_load(
     now: Clock,
     profile_id: str | None = None,
     capability_registry: CapabilityRegistry | None = None,
+    duration_preset_id: DurationPresetId | None = None,
+    reinforced_confirmation_text: str | None = None,
+    safety_mode: bool = True,
 ) -> Result[RunDTO, UnauthorizedTargetError | LaunchError]:
     """Lance un Test connexions en mode manuel borne. Symetrique a
     run_request_load.py, seule differe la famille (CONNECTION) et
     l'absence de debit demande (la simultaneite n'a pas de notion de
-    requetes/minute, voir domain/load/presets.py::FixedRatePreset)."""
+    requetes/minute, voir domain/load/presets.py::FixedRatePreset).
+
+    duration_preset_id (mode "profil" D1-D6, optionnel) : peuple aussi
+    ramp_steps (domain/load/duration_presets.py::
+    build_duration_preset_ramp_steps()) — seule famille hors RAMP a le
+    faire, autorise explicitement par domain/load/validators.py::
+    validate_plan() dans ce cas precis (voir infrastructure/runner/
+    engine_params.py, branche CONNECTION desormais phase-aware)."""
     authorization = check_authorization(
         target_id, target_repository=target_repository, explicit_confirmation=explicit_confirmation
     )
     if isinstance(authorization, Err):
         return authorization
 
-    duration_result = Duration.for_level(
-        level, duration_minutes, extended_authorized=precheck_validated
-    )
-    if isinstance(duration_result, Err):
-        return duration_result
+    if duration_preset_id is not None:
+        duration = Duration(minutes=duration_minutes)
+        ramp_steps = build_duration_preset_ramp_steps(duration_preset(duration_preset_id))
+    else:
+        duration_result = Duration.for_level(
+            level, duration_minutes, extended_authorized=precheck_validated
+        )
+        if isinstance(duration_result, Err):
+            return duration_result
+        duration = duration_result.value
+        ramp_steps = ()
 
     plan = LoadPlan(
         id=id_factory(),
         family=TestFamily.CONNECTION,
         level=level,
-        duration=duration_result.value,
+        duration=duration,
         thresholds=thresholds,
         target_authorization_confirmed=True,
         precheck_validated=precheck_validated,
+        ramp_steps=ramp_steps,
+        duration_preset_id=duration_preset_id,
+        reinforced_confirmation_text=reinforced_confirmation_text,
+        safety_mode=safety_mode,
     )
 
     return await launch_plan(
@@ -83,7 +107,9 @@ async def run_connection_load(
         id_factory=id_factory,
         now=now,
         capability_registry=capability_registry,
-        required_capability=_REQUIRED_CAPABILITY if level in _HIGH_INTENSITY_LEVELS else None,
+        required_capability=(
+            _REQUIRED_CAPABILITY if level in policies.PRECHECK_MANDATORY_LEVELS else None
+        ),
     )
 
 # <-- INFO DEV ---------------------------------------------------------

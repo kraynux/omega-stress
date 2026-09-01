@@ -29,8 +29,10 @@ def target_for_interval(plan: LoadPlan, interval_index: int) -> IntervalTarget:
     une valeur calculee independamment ici."""
     if plan.family is TestFamily.CONNECTION:
         connection_preset = fixed_rate_preset(plan.level)
+        ratio = _ramp_ratio_at(plan, interval_index) if plan.ramp_steps else 1.0
         return IntervalTarget(
-            requests_per_second=0.0, concurrency=connection_preset.concurrent_connections
+            requests_per_second=0.0,
+            concurrency=round(connection_preset.concurrent_connections * ratio),
         )
 
     if plan.family is TestFamily.RAMP:
@@ -83,6 +85,14 @@ def _ramp_ratio_at(plan: LoadPlan, interval_index: int) -> float:
 # - Pour Test connexions, requests_per_second reste a 0.0 : la cible
 #   d'intensite est portee par `concurrency`, jamais un debit (voir
 #   httpx_load_generator.py pour la traduction en requetes concurrentes).
+# - Test connexions x ratio (2026-09-01, mode "profil" D1-D6) :
+#   `concurrency` est desormais multiplie par _ramp_ratio_at() QUAND
+#   plan.ramp_steps est peuple (domain/load/duration_presets.py::
+#   build_duration_preset_ramp_steps(), warm-up/rampe/plateau/retour au
+#   calme) — en mode manuel, ramp_steps reste vide pour Test connexions
+#   (voir validators.py), ratio=1.0 constant, comportement 100%
+#   inchange. Aucune nouvelle interpolation ecrite : reutilise
+#   _ramp_ratio_at() deja generique, la meme fonction que la branche RAMP.
 # Comment il sera utilise (apercu) :
 # - infrastructure/runner/httpx_load_generator.py appelle
 #   total_intervals() puis target_for_interval() a chaque iteration.

@@ -4,12 +4,13 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 
+from omega_lib.terminal.models import RenderProfile
+from omega_lib.theme.policies import DEFAULT_TUI_THEME
+
 from omega_stress.application.commands.select_theme import select_theme
 from omega_stress.application.dto.terminal_dto import TerminalStatusDTO
 from omega_stress.application.dto.theme_dto import ThemeStatusDTO
 from omega_stress.application.queries.detect_terminal import detect_terminal
-from omega_stress.core.enums import RenderProfile
-from omega_stress.domain.theme.policies import DEFAULT_TUI_THEME
 from omega_stress.ports.settings_store import SettingsStore
 from omega_stress.ports.terminal_detector import TerminalDetector
 

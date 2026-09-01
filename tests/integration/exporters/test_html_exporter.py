@@ -55,6 +55,42 @@ def test_timeline_section_is_omitted_without_samples(tmp_path, report_content):
     assert "Chronologie" not in html
 
 
+def test_charts_appear_with_samples(tmp_path, report_content_with_samples):
+    job = make_job(tmp_path, fmt=ExportFormat.HTML, filename="report.html")
+    exporter = HtmlReportExporter()
+
+    written_path = exporter.export(report_content_with_samples, job)
+
+    with open(written_path, encoding="utf-8") as handle:
+        html = handle.read()
+    assert "Graphiques" in html
+    # RPS, latence, CPU au minimum (donnees presentes sur les fixtures).
+    assert html.count("<svg") >= 3
+
+
+def test_charts_section_is_omitted_without_samples(tmp_path, report_content):
+    job = make_job(tmp_path, fmt=ExportFormat.HTML, filename="report.html")
+    exporter = HtmlReportExporter()
+
+    written_path = exporter.export(report_content, job)
+
+    with open(written_path, encoding="utf-8") as handle:
+        html = handle.read()
+    assert "Graphiques" not in html
+
+
+def test_peak_system_metrics_appear_in_metrics_box(tmp_path, report_content_with_samples):
+    job = make_job(tmp_path, fmt=ExportFormat.HTML, filename="report.html")
+    exporter = HtmlReportExporter()
+
+    written_path = exporter.export(report_content_with_samples, job)
+
+    with open(written_path, encoding="utf-8") as handle:
+        html = handle.read()
+    assert "Pic CPU generateur" in html
+    assert "22" in html
+
+
 def test_export_to_an_existing_folder_derives_a_filename_instead_of_crashing(
     tmp_path, report_content
 ):

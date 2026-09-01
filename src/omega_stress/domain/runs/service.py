@@ -2,12 +2,19 @@
 """Transitions d'etat d'un LoadRun (pas l'execution elle-meme, voir application/pipeline/)."""
 from __future__ import annotations
 
+from collections.abc import Iterable
 from datetime import datetime
 
 from omega_stress.core.enums import RunVerdict
 from omega_stress.core.results import Err, Ok, Result
 from omega_stress.domain.errors import ValidationError
-from omega_stress.domain.runs.models import IntervalSample, LoadResult, LoadRun, RunEvent
+from omega_stress.domain.runs.models import (
+    ErrorBreakdown,
+    IntervalSample,
+    LoadResult,
+    LoadRun,
+    RunEvent,
+)
 
 
 def aggregate_samples(
@@ -59,7 +66,34 @@ def aggregate_samples(
         total_requests=sum(s.request_count for s in samples),
         events=events,
         samples=samples,
+        errors=_combined_errors(samples),
+        peak_cpu_percent_generator=_peak(
+            s.system.cpu_percent_generator for s in samples if s.system is not None
+        ),
+        peak_memory_rss_mb=_peak(s.system.memory_rss_mb for s in samples if s.system is not None),
     )
+
+
+def _combined_errors(samples: tuple[IntervalSample, ...]) -> ErrorBreakdown:
+    """Somme ErrorBreakdown sur tous les samples — meme logique de
+    reduction que error_count/total_requests ci-dessus, une seule
+    passe par categorie plutot qu'une reconstruction champ par champ
+    dispersee dans l'appelant."""
+    return ErrorBreakdown(
+        timeout=sum(s.errors.timeout for s in samples),
+        connection=sum(s.errors.connection for s in samples),
+        http_4xx=sum(s.errors.http_4xx for s in samples),
+        http_5xx=sum(s.errors.http_5xx for s in samples),
+        other=sum(s.errors.other for s in samples),
+    )
+
+
+def _peak(values: Iterable[float | None]) -> float | None:
+    """max() en ignorant les None (mesure systeme absente sur certains
+    intervalles, voir domain/runs/models.py::SystemSnapshot) — jamais
+    une ValueError sur une sequence entierement None ou vide."""
+    present = [v for v in values if v is not None]
+    return max(present) if present else None
 
 
 def finish(run: LoadRun, *, result: LoadResult, now: datetime) -> Result[LoadRun, ValidationError]:
@@ -80,6 +114,8 @@ def finish(run: LoadRun, *, result: LoadResult, now: datetime) -> Result[LoadRun
             result=result,
             notes=run.notes,
             is_precheck=run.is_precheck,
+            duration_preset_id=run.duration_preset_id,
+            safety_mode=run.safety_mode,
         )
     )
 
@@ -109,6 +145,12 @@ def finish(run: LoadRun, *, result: LoadResult, now: datetime) -> Result[LoadRun
 #   un appelant qui construirait un LoadRun "termine" directement (sans
 #   passer par finish()) contourne la garde "deja termine" — a eviter en
 #   application/, toujours passer par ce service.
+# - finish() reconstruit un LoadRun avec une liste de champs EXPLICITE
+#   (jamais dataclasses.replace) : un bug reel decouvert le 2026-09-01
+#   (duration_preset_id ajoute a LoadRun sans etre reporte ici, perdu
+#   silencieusement a chaque cloture) — tout futur champ ajoute a LoadRun
+#   doit etre repercute ICI explicitement, sinon il redevient None des
+#   qu'un run se termine, meme si le run en cours le portait correctement.
 # - aggregate_samples() retourne un LoadResult a champs None si `samples`
 #   est vide (run interrompu avant le premier intervalle) plutot que de
 #   lever : un run sans aucune mesure reste un resultat valide a afficher,

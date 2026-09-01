@@ -47,5 +47,5 @@ class Capability:
 # Comment il sera utilise (apercu) :
 # - core/capability_registry.py stocke des instances de Capability par nom.
 # - application/pipeline/guards/capability_guard.py lit is_usable() avant
-#   d'autoriser un niveau Haut/Maximum ou un rendu donne.
+#   d'autoriser un niveau Violent/Maximum ou un rendu donne.
 #---------------------------------------------------------------------->

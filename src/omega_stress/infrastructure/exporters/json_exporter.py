@@ -38,6 +38,10 @@ def _content_to_dict(content: ReportContent) -> dict[str, Any]:
             "started_at": summary.started_at.isoformat(),
             "finished_at": summary.finished_at.isoformat() if summary.finished_at else None,
             "duration_minutes": summary.duration_minutes,
+            "duration_preset_id": (
+                summary.duration_preset_id.value if summary.duration_preset_id is not None else None
+            ),
+            "safety_mode": summary.safety_mode,
         },
         "result": {
             "verdict": result.verdict.value,
@@ -48,6 +52,15 @@ def _content_to_dict(content: ReportContent) -> dict[str, Any]:
             "p99_latency_ms": result.p99_latency_ms,
             "error_count": result.error_count,
             "total_requests": result.total_requests,
+            "errors": {
+                "timeout": result.errors.timeout,
+                "connection": result.errors.connection,
+                "http_4xx": result.errors.http_4xx,
+                "http_5xx": result.errors.http_5xx,
+                "other": result.errors.other,
+            },
+            "peak_cpu_percent_generator": result.peak_cpu_percent_generator,
+            "peak_memory_rss_mb": result.peak_memory_rss_mb,
             "events": [
                 {
                     "occurred_at": e.occurred_at.isoformat(),
@@ -65,6 +78,29 @@ def _content_to_dict(content: ReportContent) -> dict[str, Any]:
                     "p99_latency_ms": s.p99_latency_ms,
                     "error_count": s.error_count,
                     "request_count": s.request_count,
+                    "requested_rate_per_minute": s.requested_rate_per_minute,
+                    "active_connections": s.active_connections,
+                    "errors": {
+                        "timeout": s.errors.timeout,
+                        "connection": s.errors.connection,
+                        "http_4xx": s.errors.http_4xx,
+                        "http_5xx": s.errors.http_5xx,
+                        "other": s.errors.other,
+                    },
+                    "system": (
+                        {
+                            "cpu_percent_generator": s.system.cpu_percent_generator,
+                            "cpu_percent_global": s.system.cpu_percent_global,
+                            "memory_available_percent": s.system.memory_available_percent,
+                            "memory_rss_mb": s.system.memory_rss_mb,
+                            "swap_used_mb": s.system.swap_used_mb,
+                            "open_files": s.system.open_files,
+                            "open_files_soft_limit": s.system.open_files_soft_limit,
+                            "logical_cpu_count": s.system.logical_cpu_count,
+                        }
+                        if s.system is not None
+                        else None
+                    ),
                 }
                 for s in result.samples
             ],

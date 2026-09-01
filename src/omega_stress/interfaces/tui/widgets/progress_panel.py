@@ -22,6 +22,7 @@ class ProgressPanel(Horizontal):
         yield StatCard("Debit observe", id="rate")
         yield StatCard("Erreurs", id="errors")
         yield StatCard("Latence p95", id="p95")
+        yield StatCard("CPU / RAM", id="system")
 
     def update_sample(self, sample: IntervalSample) -> None:
         self.query_one("#rate", StatCard).update_value(
@@ -31,6 +32,19 @@ class ProgressPanel(Horizontal):
             f"{sample.error_count}/{sample.request_count}"
         )
         self.query_one("#p95", StatCard).update_value(f"{sample.p95_latency_ms:.0f} ms")
+        self.query_one("#system", StatCard).update_value(_format_system(sample))
+
+
+def _format_system(sample: IntervalSample) -> str:
+    """"?" pour un champ non mesurable (voir domain/runs/models.py::
+    SystemSnapshot) plutot qu'un vide ambigu ou une exception."""
+    if sample.system is None:
+        return "? / ?"
+    cpu = sample.system.cpu_percent_generator
+    memory = sample.system.memory_rss_mb
+    cpu_text = f"{cpu:.0f}%" if cpu is not None else "?"
+    memory_text = f"{memory:.0f} Mo" if memory is not None else "?"
+    return f"{cpu_text} / {memory_text}"
 
 # <-- INFO DEV ---------------------------------------------------------
 # Role : traduit un IntervalSample (domain/runs/models.py) en affichage
@@ -42,6 +56,10 @@ class ProgressPanel(Horizontal):
 # controller (load_controller.py) qui appelle update_sample() a chaque
 # notification recue via le port RunProgressNotifier.
 # Points cles :
+# - 4e StatCard "CPU / RAM" (Phase 1 observabilite) : affiche "?" par
+#   champ non mesurable (sample.system peut etre None, ou un champ
+#   individuel None si psutil a echoue sur cette lecture — voir
+#   infrastructure/probe/live_probe.py) plutot qu'un vide ambigu.
 # - DEFAULT_CSS height:auto (2026-08-25) : Horizontal (classe parente)
 #   vaut height:1fr par defaut (occupe tout l'espace vertical restant du
 #   panneau, souvent plusieurs dizaines de lignes) — combine a

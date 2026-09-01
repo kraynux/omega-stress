@@ -10,10 +10,16 @@ import httpx
 
 @dataclass(frozen=True, slots=True)
 class RequestOutcome:
-    """Resultat brut d'une requete individuelle, avant toute agregation."""
+    """Resultat brut d'une requete individuelle, avant toute agregation.
+
+    error_category (Phase 1 observabilite) vaut None en cas de succes,
+    sinon l'une de "timeout"/"connection"/"http_4xx"/"http_5xx" — noms
+    directement repris par domain/runs/models.py::ErrorBreakdown, jamais
+    une seconde nomenclature qui pourrait diverger."""
 
     latency_ms: float
     success: bool
+    error_category: str | None = None
 
 
 async def perform_request(client: httpx.AsyncClient, url: str) -> RequestOutcome:
@@ -23,15 +29,28 @@ async def perform_request(client: httpx.AsyncClient, url: str) -> RequestOutcome
     c'est le mecanisme normal de detection de degradation/depassement de
     seuil (ARCHITECTURE.md §5.3), pas une panne du generateur lui-meme
     (voir httpx_load_generator.py pour la distinction avec
-    RunnerFailureError)."""
+    RunnerFailureError).
+
+    httpx.TimeoutException est capturee AVANT httpx.HTTPError (dont elle
+    herite) pour distinguer un timeout d'une autre erreur de transport
+    (connexion refusee, DNS, reset) — sans cet ordre, tout timeout
+    tomberait dans la branche generique "connection", perdant la
+    distinction que Phase 1 introduit precisement pour ca."""
     started = time.perf_counter()
     try:
         response = await client.get(url)
         latency_ms = (time.perf_counter() - started) * 1000
-        return RequestOutcome(latency_ms=latency_ms, success=response.status_code < 400)
+        if response.status_code >= 500:
+            return RequestOutcome(latency_ms=latency_ms, success=False, error_category="http_5xx")
+        if response.status_code >= 400:
+            return RequestOutcome(latency_ms=latency_ms, success=False, error_category="http_4xx")
+        return RequestOutcome(latency_ms=latency_ms, success=True)
+    except httpx.TimeoutException:
+        latency_ms = (time.perf_counter() - started) * 1000
+        return RequestOutcome(latency_ms=latency_ms, success=False, error_category="timeout")
     except httpx.HTTPError:
         latency_ms = (time.perf_counter() - started) * 1000
-        return RequestOutcome(latency_ms=latency_ms, success=False)
+        return RequestOutcome(latency_ms=latency_ms, success=False, error_category="connection")
 
 # <-- INFO DEV ---------------------------------------------------------
 # Role :

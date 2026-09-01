@@ -23,14 +23,16 @@ def test_thresholds_accepts_valid_values():
 
 
 def test_duration_for_level_rejects_disallowed_minutes():
-    result = Duration.for_level(IntensityLevel.HAUT, 5)
+    # PUISSANT est un niveau gate optionnel : 5 min n'est disponible qu'avec
+    # un pre-check valide (extended_authorized).
+    result = Duration.for_level(IntensityLevel.PUISSANT, 5)
 
     assert isinstance(result, Err)
     assert isinstance(result.error, ValidationError)
 
 
 def test_duration_for_level_accepts_extended_when_authorized():
-    result = Duration.for_level(IntensityLevel.HAUT, 5, extended_authorized=True)
+    result = Duration.for_level(IntensityLevel.PUISSANT, 5, extended_authorized=True)
 
     assert isinstance(result, Ok)
     assert result.value.minutes == 5

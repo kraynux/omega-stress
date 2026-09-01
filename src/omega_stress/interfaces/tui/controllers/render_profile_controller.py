@@ -2,9 +2,10 @@
 """Controller : applique et persiste le profil de rendu (auto ou force)."""
 from __future__ import annotations
 
+from omega_lib.terminal.models import RenderProfile
+
 from omega_stress.application.commands.select_render_profile import select_render_profile
 from omega_stress.application.dto.terminal_dto import TerminalStatusDTO
-from omega_stress.core.enums import RenderProfile
 from omega_stress.ports.settings_store import SettingsStore
 from omega_stress.ports.terminal_detector import TerminalDetector
 

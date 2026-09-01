@@ -117,7 +117,7 @@ class LocalSystemProbe:
 #   pas a recopier les chaines litterales.
 # Comment il sera utilise (apercu) :
 # - app/dependency_container.py injecte LocalSystemProbe() dans le
-#   pre-flight check avant un lancement Haut/Maximum ; le registre
+#   pre-flight check avant un lancement Violent/Maximum ; le registre
 #   consolide (core/capability_registry.py) est repeuple depuis son
 #   resultat juste avant l'appel a capability_guard.check_capability().
 #---------------------------------------------------------------------->

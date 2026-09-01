@@ -8,6 +8,8 @@ from __future__ import annotations
 
 from collections.abc import AsyncIterator, Iterable
 
+from omega_lib.terminal.models import TerminalSignals
+
 from omega_stress.application.exceptions import RunnerFailureError
 from omega_stress.core.capability import Capability
 from omega_stress.domain.load.models import LoadPlan
@@ -15,7 +17,6 @@ from omega_stress.domain.profiles.models import Profile
 from omega_stress.domain.reports.models import ExportJob
 from omega_stress.domain.runs.models import IntervalSample, LoadRun
 from omega_stress.domain.targets.models import PinnedTarget, Target
-from omega_stress.domain.terminal.models import TerminalSignals
 
 
 class FakeProfileRepository:

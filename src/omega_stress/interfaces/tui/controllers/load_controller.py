@@ -24,7 +24,7 @@ from omega_stress.application.dto.run_dto import RunDTO
 from omega_stress.application.dto.target_dto import TargetDTO
 from omega_stress.application.pipeline.hooks.notification_hook import NotificationSink
 from omega_stress.application.queries.list_targets import list_targets
-from omega_stress.core.enums import IntensityLevel
+from omega_stress.core.enums import DurationPresetId, IntensityLevel
 from omega_stress.core.results import Result
 from omega_stress.domain.errors import UnauthorizedTargetError, ValidationError
 from omega_stress.domain.load.models import Thresholds
@@ -45,7 +45,7 @@ LoadLaunchError = UnauthorizedTargetError | LaunchError
 
 def ensure_capabilities_probed(container: DependencyContainer) -> None:
     """Peuple core/capability_registry.py depuis un sondage frais avant
-    tout lancement, sans quoi un lancement Haut/Maximum leverait
+    tout lancement, sans quoi un lancement Violent/Maximum leverait
     CapabilityRegistryError au lieu d'un refus controle. Duplique de
     interfaces/cli/commands/run_command.py::_ensure_capabilities_probed()
     plutot que partage : CLI et TUI restent deux adaptateurs independants
@@ -65,7 +65,7 @@ async def launch_precheck(
     notification_sink: NotificationSink,
 ) -> Result[RunDTO, PlanValidationError | UnauthorizedTargetError]:
     """Lance un Pre-check depuis un ecran de lancement, avant d'autoriser
-    un niveau Haut/Maximum."""
+    un niveau Violent/Maximum."""
     return await run_precheck(
         target_id=target_id,
         target_url=target_url,
@@ -94,6 +94,9 @@ async def launch_request(
     run_progress_notifier: RunProgressNotifier,
     notification_sink: NotificationSink,
     profile_id: str | None = None,
+    duration_preset_id: DurationPresetId | None = None,
+    reinforced_confirmation_text: str | None = None,
+    safety_mode: bool = True,
 ) -> Result[RunDTO, LoadLaunchError]:
     """Lance un Test requetes depuis screens/request_panel.py."""
     ensure_capabilities_probed(container)
@@ -110,6 +113,9 @@ async def launch_request(
             run_progress_notifier=run_progress_notifier,
             notification_sink=notification_sink,
             profile_id=profile_id,
+            duration_preset_id=duration_preset_id,
+            reinforced_confirmation_text=reinforced_confirmation_text,
+            safety_mode=safety_mode,
         )
     )
 
@@ -127,6 +133,9 @@ async def launch_connection(
     run_progress_notifier: RunProgressNotifier,
     notification_sink: NotificationSink,
     profile_id: str | None = None,
+    duration_preset_id: DurationPresetId | None = None,
+    reinforced_confirmation_text: str | None = None,
+    safety_mode: bool = True,
 ) -> Result[RunDTO, LoadLaunchError]:
     """Lance un Test connexions depuis screens/connection_panel.py."""
     ensure_capabilities_probed(container)
@@ -143,6 +152,9 @@ async def launch_connection(
             run_progress_notifier=run_progress_notifier,
             notification_sink=notification_sink,
             profile_id=profile_id,
+            duration_preset_id=duration_preset_id,
+            reinforced_confirmation_text=reinforced_confirmation_text,
+            safety_mode=safety_mode,
         )
     )
 
@@ -160,6 +172,9 @@ async def launch_ramp(
     run_progress_notifier: RunProgressNotifier,
     notification_sink: NotificationSink,
     profile_id: str | None = None,
+    duration_preset_id: DurationPresetId | None = None,
+    reinforced_confirmation_text: str | None = None,
+    safety_mode: bool = True,
 ) -> Result[RunDTO, LoadLaunchError]:
     """Lance un Test charge (montee progressive) depuis screens/ramp_panel.py."""
     ensure_capabilities_probed(container)
@@ -176,6 +191,9 @@ async def launch_ramp(
             run_progress_notifier=run_progress_notifier,
             notification_sink=notification_sink,
             profile_id=profile_id,
+            duration_preset_id=duration_preset_id,
+            reinforced_confirmation_text=reinforced_confirmation_text,
+            safety_mode=safety_mode,
         )
     )
 
@@ -264,6 +282,9 @@ def _load_kwargs(
     run_progress_notifier: RunProgressNotifier,
     notification_sink: NotificationSink,
     profile_id: str | None,
+    duration_preset_id: DurationPresetId | None = None,
+    reinforced_confirmation_text: str | None = None,
+    safety_mode: bool = True,
 ) -> dict:
     return dict(
         target_id=target_id,
@@ -274,6 +295,9 @@ def _load_kwargs(
         explicit_confirmation=explicit_confirmation,
         precheck_validated=precheck_validated,
         profile_id=profile_id,
+        duration_preset_id=duration_preset_id,
+        reinforced_confirmation_text=reinforced_confirmation_text,
+        safety_mode=safety_mode,
         target_repository=container.target_repository,
         load_runner=container.load_runner,
         run_progress_notifier=run_progress_notifier,

@@ -3,11 +3,21 @@
 from __future__ import annotations
 
 import sqlite3
+from collections.abc import Callable
 from dataclasses import dataclass, field
 from pathlib import Path
 
+from omega_lib.infrastructure.terminal.detector import SystemTerminalDetector
+
 from omega_stress.core.capability_registry import CapabilityRegistry
 from omega_stress.core.enums import ExportFormat
+from omega_stress.domain.calibration.models import CalibrationFingerprint
+from omega_stress.infrastructure.calibration.fingerprint import compute_fingerprint
+from omega_stress.infrastructure.calibration.local_server import CalibrationLocalServer
+from omega_stress.infrastructure.calibration.preconditions_probe import (
+    LiveCalibrationPreconditionsProbe,
+)
+from omega_stress.infrastructure.calibration.stage_runner import HttpxCalibrationStageRunner
 from omega_stress.infrastructure.config import paths
 from omega_stress.infrastructure.exporters.csv_exporter import CsvReportExporter
 from omega_stress.infrastructure.exporters.html_exporter import HtmlReportExporter
@@ -15,6 +25,7 @@ from omega_stress.infrastructure.exporters.json_exporter import JsonReportExport
 from omega_stress.infrastructure.logging.audit_logger import AuditLogger
 from omega_stress.infrastructure.probe.local_probe import LocalSystemProbe
 from omega_stress.infrastructure.runner.httpx_load_generator import HttpxLoadGenerator
+from omega_stress.infrastructure.storage.files.json_calibration_store import JsonCalibrationStore
 from omega_stress.infrastructure.storage.files.json_settings_store import JsonSettingsStore
 from omega_stress.infrastructure.storage.sqlite.connection import open_connection
 from omega_stress.infrastructure.storage.sqlite.export_repository import SqliteExportRepository
@@ -22,7 +33,8 @@ from omega_stress.infrastructure.storage.sqlite.migrations import apply_schema
 from omega_stress.infrastructure.storage.sqlite.profile_repository import SqliteProfileRepository
 from omega_stress.infrastructure.storage.sqlite.run_repository import SqliteRunRepository
 from omega_stress.infrastructure.storage.sqlite.target_repository import SqliteTargetRepository
-from omega_stress.infrastructure.terminal.detector import SystemTerminalDetector
+from omega_stress.ports.calibration_local_server import CalibrationServer
+from omega_stress.ports.calibration_stage_runner import CalibrationStageRunner
 from omega_stress.ports.report_exporter import ReportExporter
 
 
@@ -45,6 +57,11 @@ class DependencyContainer:
     load_runner: HttpxLoadGenerator
     audit_logger: AuditLogger
     capability_registry: CapabilityRegistry
+    calibration_repository: JsonCalibrationStore
+    calibration_preconditions_probe: LiveCalibrationPreconditionsProbe
+    compute_calibration_fingerprint: Callable[[], CalibrationFingerprint]
+    calibration_server_factory: Callable[[], CalibrationServer]
+    calibration_stage_runner_factory: Callable[[], CalibrationStageRunner]
     export_dir: Path = field(default_factory=paths.exports_dir)
     screenshot_dir: Path = field(default_factory=paths.screenshots_dir)
     exporters: dict[ExportFormat, ReportExporter] = field(default_factory=dict)
@@ -71,6 +88,11 @@ def build_container(*, var_dir: Path | None = None) -> DependencyContainer:
         load_runner=HttpxLoadGenerator(),
         audit_logger=AuditLogger(base / "audit.jsonl"),
         capability_registry=CapabilityRegistry(),
+        calibration_repository=JsonCalibrationStore(paths.calibrations_dir(base)),
+        calibration_preconditions_probe=LiveCalibrationPreconditionsProbe(),
+        compute_calibration_fingerprint=compute_fingerprint,
+        calibration_server_factory=CalibrationLocalServer,
+        calibration_stage_runner_factory=HttpxCalibrationStageRunner,
         export_dir=paths.exports_dir(base),
         screenshot_dir=paths.screenshots_dir(base),
         exporters={
@@ -103,9 +125,22 @@ def build_container(*, var_dir: Path | None = None) -> DependencyContainer:
 #   attendu par application/commands/export_run_report.py — construit une
 #   seule fois ici, jamais recree a la volee.
 # - Aucune capacite n'est pre-enregistree dans capability_registry : le
-#   registre est peuple explicitement avant un run Haut/Maximum (depuis
+#   registre est peuple explicitement avant un run Violent/Maximum (depuis
 #   system_probe.probe()), pas au demarrage — coherent avec la portee V1
 #   du pre-flight check (pas de sondage systematique inutile).
+# - calibration_server_factory/calibration_stage_runner_factory
+#   (2026-09-01) : les CLASSES infrastructure/calibration/
+#   local_server.py::CalibrationLocalServer et stage_runner.py::
+#   HttpxCalibrationStageRunner sont passees TELLES QUELLES (pas
+#   instanciees ici) — instancier une classe est appeler un callable a
+#   zero argument, forme exacte attendue par les ports Callable[[],
+#   CalibrationServer]/Callable[[], CalibrationStageRunner]
+#   d'application/commands/run_calibration.py (chaque calibrage a besoin
+#   d'une instance FRAICHE, jamais une seule instance partagee entre
+#   plusieurs calibrages successifs).
+# - compute_calibration_fingerprint (2026-09-01) : meme principe pour une
+#   fonction plutot qu'une classe — infrastructure/calibration/
+#   fingerprint.py::compute_fingerprint passee directement.
 # - export_dir/screenshot_dir (2026-08-24, screenshot_dir le 2026-08-25) :
 #   les deux seuls champs de ce dataclass qui ne sont pas des instances
 #   d'adaptateur — des Path deja resolus (infrastructure/config/

@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 
-from omega_stress.core.enums import IntensityLevel, TestFamily
+from omega_stress.core.enums import DurationPresetId, IntensityLevel, TestFamily
 from omega_stress.core.results import Err, Ok, Result
 from omega_stress.domain.errors import ValidationError
 from omega_stress.domain.load import policies
@@ -86,7 +86,19 @@ class RampStep:
 class LoadPlan:
     """Plan de test fige, pret a etre execute par le pipeline
     (application/pipeline/). Sa validite structurelle est verifiee par
-    domain/load/validators.py::validate_plan avant tout lancement."""
+    domain/load/validators.py::validate_plan avant tout lancement.
+
+    duration_preset_id (mode "profil", optionnel) : si renseigne, le plan
+    a ete construit a partir d'un domain/load/duration_presets.py::
+    DurationPreset plutot que du mode manuel (allowed_durations_minutes) —
+    validate_plan() bascule alors sur evaluate_duration_preset() pour
+    verifier `level`, jamais les deux mecanismes a la fois. `duration`
+    reste la SEULE source de verite pour la duree reellement executee
+    (deja reglee sur preset.total_minutes par l'appelant) ;
+    duration_preset_id n'est qu'une donnee de tracabilite/validation.
+    reinforced_confirmation_text n'est consulte que si `level` est le
+    reinforced_level du preset (voir policies.py::
+    REINFORCED_CONFIRMATION_PHRASE)."""
 
     id: str
     family: TestFamily
@@ -97,6 +109,9 @@ class LoadPlan:
     precheck_validated: bool = False
     ramp_steps: tuple[RampStep, ...] = ()
     notes: str = ""
+    duration_preset_id: DurationPresetId | None = None
+    reinforced_confirmation_text: str | None = None
+    safety_mode: bool = True
 
 # <-- INFO DEV ---------------------------------------------------------
 # Role :
@@ -128,6 +143,19 @@ class LoadPlan:
 #   depuis un repository) mais n'est pas revalide ici — c'est le role de
 #   domain/load/validators.py::validate_plan au moment de valider un
 #   LoadPlan complet.
+# - duration_preset_id/reinforced_confirmation_text (2026-09-01, mode
+#   "profil" D1-D6) : champs additifs par defaut None, un LoadPlan en mode
+#   manuel n'est pas affecte. DurationPresetId est defini dans
+#   core/enums.py (pas domain/load/duration_presets.py, qui importe
+#   RampStep d'ici) pour eviter un cycle d'import entre ce fichier et
+#   duration_presets.py.
+# - safety_mode (2026-09-01, "mode securite" a cocher, bug reel rapporte
+#   avec captures d'ecran) : bascule UNIQUEMENT application/pipeline/
+#   guards/resource_guard.py (CPU/memoire/FDs du GENERATEUR, protege
+#   cette machine) — jamais threshold_guard.py (protege la CIBLE testee,
+#   toujours actif quel que soit ce champ, voir application/pipeline/
+#   executor.py). Defaut True (garde-fous actifs), coherent avec la
+#   philosophie "opt-out" du reste du projet.
 # Comment il sera utilise (apercu) :
 # - domain/load/builders.py construit des RampStep a partir des presets.
 # - domain/load/validators.py consomme LoadPlan/Thresholds pour valider un

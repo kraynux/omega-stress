@@ -1,4 +1,5 @@
-from omega_stress.domain.theme.policies import DEFAULT_EXPORT_THEME, EXPORT_PALETTES
+from omega_lib.theme.policies import DEFAULT_EXPORT_THEME, EXPORT_PALETTES
+
 from omega_stress.infrastructure.exporters.html_theme_resolver import resolve_export_palette
 
 

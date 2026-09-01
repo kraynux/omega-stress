@@ -32,6 +32,37 @@ def test_error_count_reflects_failed_outcomes():
     assert sample.request_count == 3
 
 
+def test_errors_broken_down_by_category():
+    outcomes = [
+        RequestOutcome(latency_ms=10.0, success=True),
+        RequestOutcome(latency_ms=10.0, success=False, error_category="timeout"),
+        RequestOutcome(latency_ms=10.0, success=False, error_category="timeout"),
+        RequestOutcome(latency_ms=10.0, success=False, error_category="connection"),
+        RequestOutcome(latency_ms=10.0, success=False, error_category="http_4xx"),
+        RequestOutcome(latency_ms=10.0, success=False, error_category="http_5xx"),
+    ]
+
+    sample = parse_interval(0.0, outcomes)
+
+    assert sample.errors.timeout == 2
+    assert sample.errors.connection == 1
+    assert sample.errors.http_4xx == 1
+    assert sample.errors.http_5xx == 1
+    assert sample.errors.other == 0
+    assert sample.errors.total == sample.error_count
+
+
+def test_unrecognized_error_category_falls_back_to_other():
+    outcomes = [
+        RequestOutcome(latency_ms=10.0, success=False, error_category="unknown_future_kind")
+    ]
+
+    sample = parse_interval(0.0, outcomes)
+
+    assert sample.errors.other == 1
+    assert sample.errors.total == 1
+
+
 def test_percentiles_use_nearest_rank_on_sorted_latencies():
     # 100 valeurs 0.0..99.0 : index nearest-rank pour 0.50/0.95/0.99 avec
     # arrondi banquier de Python (round(49.5) == 50, round(94.05) == 94,

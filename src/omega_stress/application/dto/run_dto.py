@@ -50,6 +50,13 @@ class RunDTO:
     events: tuple[RunEventDTO, ...] = ()
     sample_count: int = 0
     samples: tuple[IntervalSampleDTO, ...] = ()
+    errors_timeout: int = 0
+    errors_connection: int = 0
+    errors_http_4xx: int = 0
+    errors_http_5xx: int = 0
+    errors_other: int = 0
+    peak_cpu_percent_generator: float | None = None
+    peak_memory_rss_mb: float | None = None
 
 # <-- INFO DEV ---------------------------------------------------------
 # Role :

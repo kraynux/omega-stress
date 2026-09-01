@@ -8,9 +8,10 @@ from omega_stress.application.pipeline.guards.authorization_guard import check_a
 from omega_stress.application.pipeline.hooks.audit_hook import AuditSink
 from omega_stress.application.pipeline.hooks.notification_hook import NotificationSink
 from omega_stress.core.capability_registry import CapabilityRegistry
-from omega_stress.core.enums import IntensityLevel, TestFamily
+from omega_stress.core.enums import TestFamily
 from omega_stress.core.results import Err, Result
 from omega_stress.domain.errors import UnauthorizedTargetError, ValidationError
+from omega_stress.domain.load import policies
 from omega_stress.domain.load.models import LoadPlan
 from omega_stress.domain.load.presets import fixed_rate_preset, ramp_preset
 from omega_stress.domain.profiles.service import to_load_plan
@@ -22,7 +23,6 @@ from omega_stress.ports.run_repository import RunRepository
 from omega_stress.ports.target_repository import TargetRepository
 from omega_stress.shared.typing import Clock, IdFactory
 
-_HIGH_INTENSITY_LEVELS = (IntensityLevel.HAUT, IntensityLevel.MAXIMUM)
 _REQUIRED_CAPABILITY = "system.load_capacity"
 
 
@@ -107,7 +107,9 @@ async def replay_run(
         id_factory=id_factory,
         now=now,
         capability_registry=capability_registry,
-        required_capability=_REQUIRED_CAPABILITY if plan.level in _HIGH_INTENSITY_LEVELS else None,
+        required_capability=(
+            _REQUIRED_CAPABILITY if plan.level in policies.PRECHECK_MANDATORY_LEVELS else None
+        ),
     )
 
 # <-- INFO DEV ---------------------------------------------------------

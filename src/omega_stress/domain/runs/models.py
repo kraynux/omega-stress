@@ -2,10 +2,10 @@
 """Entites du sous-domaine runs : evenement, resultat agrege, run historise."""
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from datetime import datetime
 
-from omega_stress.core.enums import IntensityLevel, RunVerdict, TestFamily
+from omega_stress.core.enums import DurationPresetId, IntensityLevel, RunVerdict, TestFamily
 
 
 @dataclass(frozen=True, slots=True)
@@ -16,6 +16,63 @@ class RunEvent:
     occurred_at: datetime
     kind: str
     message: str
+
+
+@dataclass(frozen=True, slots=True)
+class ErrorBreakdown:
+    """Repartition des echecs d'un intervalle (ou d'un run entier) par
+    categorie — Phase 1 observabilite (omega-stress-calibrage-profils-
+    securite.md). `timeout`/`connection` distinguent un echec reseau
+    d'un statut HTTP effectivement recu (4xx/5xx) : necessaire pour
+    distinguer plus tard une cible qui repond mal (HTTP) d'un reseau ou
+    d'un generateur limitant (Phases 2/5), jamais melanges dans un seul
+    compteur d'erreur."""
+
+    timeout: int = 0
+    connection: int = 0
+    http_4xx: int = 0
+    http_5xx: int = 0
+    other: int = 0
+
+    @property
+    def total(self) -> int:
+        return self.timeout + self.connection + self.http_4xx + self.http_5xx + self.other
+
+
+@dataclass(frozen=True, slots=True)
+class SystemSnapshot:
+    """Photo des ressources systeme locales prise pendant un intervalle
+    d'echantillonnage (Phase 1 observabilite) — distinct de
+    ports/system_probe.py, explicitement pre-flight uniquement. Tout
+    champ reste `None` si sa mesure a echoue plutot que de faire
+    echouer le run (voir infrastructure/probe/live_probe.py).
+
+    open_files_soft_limit (Phase 2 garde-fous) : limite douce de
+    descripteurs de fichiers ouverts du processus, lue une seule fois
+    (un ulimit ne change pas en cours de run) et reportee sur chaque
+    snapshot — necessaire pour que domain/load/validators.py puisse
+    calculer un ratio d'usage en pur domaine, sans appeler
+    infrastructure/ (Dependency Rule).
+
+    logical_cpu_count (2026-09-01, correction de bug reel) : nombre de
+    coeurs logiques de la machine, lu une seule fois (ne change pas en
+    cours de run) — cpu_percent_generator est deja normalise sur cette
+    base (0-100, comparable a cpu_percent_global), mais domain/load/
+    validators.py::evaluate_generator_resources() a aussi besoin du
+    nombre de coeurs pour calculer un seuil d'arret UNIVERSEL (relatif a
+    ce qu'un seul coeur peut fournir, voir policies.py::
+    GENERATOR_CPU_ABORT_RATIO_OF_SINGLE_CORE) plutot qu'un pourcentage
+    absolu fixe, quasiment inatteignable des 4 coeurs et systematiquement
+    atteint sur 1-2 coeurs sinon."""
+
+    cpu_percent_generator: float | None = None
+    cpu_percent_global: float | None = None
+    memory_available_percent: float | None = None
+    memory_rss_mb: float | None = None
+    swap_used_mb: float | None = None
+    open_files: int | None = None
+    open_files_soft_limit: int | None = None
+    logical_cpu_count: int | None = None
 
 
 @dataclass(frozen=True, slots=True)
@@ -31,6 +88,10 @@ class IntervalSample:
     p99_latency_ms: float
     error_count: int
     request_count: int
+    requested_rate_per_minute: float | None = None
+    active_connections: int = 0
+    errors: ErrorBreakdown = field(default_factory=ErrorBreakdown)
+    system: SystemSnapshot | None = None
 
 
 @dataclass(frozen=True, slots=True)
@@ -48,12 +109,26 @@ class LoadResult:
     total_requests: int
     events: tuple[RunEvent, ...] = ()
     samples: tuple[IntervalSample, ...] = ()
+    errors: ErrorBreakdown = field(default_factory=ErrorBreakdown)
+    peak_cpu_percent_generator: float | None = None
+    peak_memory_rss_mb: float | None = None
 
 
 @dataclass(frozen=True, slots=True)
 class LoadRun:
     """Un run : execution concrete d'un LoadPlan sur une cible, historise
-    (voir plan produit, "Historique et exports")."""
+    (voir plan produit, "Historique et exports").
+
+    duration_preset_id : copie de LoadPlan.duration_preset_id (domain/
+    load/models.py) au moment du lancement — None si le run a ete lance
+    en mode manuel. Portee ici (pas seulement sur LoadPlan, ephemere) pour
+    que l'historique/export sache quel profil D1-D6 a ete utilise apres
+    coup (voir domain/load/duration_presets.py).
+
+    safety_mode : copie de LoadPlan.safety_mode (2026-09-01, "mode
+    securite" a cocher) au moment du lancement — meme raison exacte que
+    duration_preset_id, pour qu'un rapport puisse dire honnetement si les
+    garde-fous locaux (CPU/memoire/FDs) etaient actifs pendant ce run."""
 
     id: str
     profile_id: str | None
@@ -65,10 +140,15 @@ class LoadRun:
     result: LoadResult | None = None
     notes: str = ""
     is_precheck: bool = False
+    duration_preset_id: DurationPresetId | None = None
+    safety_mode: bool = True
 
 # <-- INFO DEV ---------------------------------------------------------
 # Role :
 # - RunEvent : un evenement horodate survenu pendant un run.
+# - ErrorBreakdown : repartition des echecs par categorie (Phase 1).
+# - SystemSnapshot : photo CPU/RAM/swap/FDs du generateur (Phase 1),
+#   distincte de ports/system_probe.py (pre-flight uniquement).
 # - IntervalSample : une mesure d'intervalle publiee en continu pendant
 #   l'execution (avant agregation finale en LoadResult).
 # - LoadResult : agregat final (verdict, metriques, evenements).

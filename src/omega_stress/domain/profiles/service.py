@@ -78,8 +78,15 @@ def to_load_plan(
     """Convertit un profil (fige ou non) en LoadPlan pret a etre valide
     (domain/load/validators.py::validate_plan) puis execute. Les etapes de
     rampe sont derivees automatiquement pour un profil de famille RAMP —
-    jamais stockees sur le profil lui-meme (voir domain/profiles/models.py)."""
-    ramp_steps = build_ramp_steps(profile.level) if profile.family is TestFamily.RAMP else ()
+    jamais stockees sur le profil lui-meme (voir domain/profiles/models.py).
+    Mises a l'echelle de profile.duration.minutes (2026-09-01, meme
+    correctif que application/commands/run_ramp_load.py, voir domain/
+    load/builders.py::build_ramp_steps() pour le diagnostic complet)."""
+    ramp_steps = (
+        build_ramp_steps(profile.level, duration_minutes=profile.duration.minutes)
+        if profile.family is TestFamily.RAMP
+        else ()
+    )
     return LoadPlan(
         id=plan_id,
         family=profile.family,

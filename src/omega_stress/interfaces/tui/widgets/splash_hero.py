@@ -7,10 +7,9 @@ widgets/home_hero.py, qui n'existe plus). screens/home.py affiche desormais
 un simple bandeau texte, voir widgets/home_wordmark.py."""
 from __future__ import annotations
 
+from omega_lib.terminal.models import RenderProfile
 from textual import events
 from textual.widgets import Static
-
-from omega_stress.core.enums import RenderProfile
 
 _FONT_TOKEN = "$foreground"
 """Jeton de theme resolu par le moteur de markup de Content (Textual 8.x) :

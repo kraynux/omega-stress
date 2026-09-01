@@ -5,7 +5,13 @@ from __future__ import annotations
 from dataclasses import dataclass
 from datetime import datetime
 
-from omega_stress.core.enums import ExportFormat, IntensityLevel, RunVerdict, TestFamily
+from omega_stress.core.enums import (
+    DurationPresetId,
+    ExportFormat,
+    IntensityLevel,
+    RunVerdict,
+    TestFamily,
+)
 from omega_stress.domain.runs.models import LoadResult
 
 
@@ -34,6 +40,8 @@ class ReportSummary:
     started_at: datetime
     finished_at: datetime | None
     duration_minutes: float
+    duration_preset_id: DurationPresetId | None = None
+    safety_mode: bool = True
 
 
 @dataclass(frozen=True, slots=True)
@@ -80,6 +88,11 @@ class ReportContent:
 #   JSON/CSV est inoffensive mais ignoree par les exporters concernes.
 # - ReportContent.result reutilise LoadResult tel quel (domain/runs/) :
 #   pas de duplication de champ metrique entre les deux sous-domaines.
+# - ReportSummary.duration_preset_id (2026-09-01, mode "profil" D1-D6) :
+#   copie de LoadRun.duration_preset_id, None pour un run en mode manuel.
+# - ReportSummary.safety_mode (2026-09-01, "mode securite" a cocher) :
+#   copie de LoadRun.safety_mode, pour qu'un rapport dise honnetement si
+#   les garde-fous locaux (CPU/memoire/FDs) etaient actifs pendant ce run.
 # Comment il sera utilise (apercu) :
 # - domain/reports/builders.py::build_report_content() produit un
 #   ReportContent a partir d'un LoadRun termine.

@@ -15,23 +15,37 @@ class TestFamily(str, Enum):
 
 
 class IntensityLevel(str, Enum):
-    """Echelle d'intensite unique (Bas/Moyen/Haut/Maximum), appliquee en
-    palier fixe ou en montee progressive selon la famille de test."""
+    """Echelle d'intensite unique a 8 paliers (Faible/Bas/Moyen-Normal/
+    Haut-Fort/Puissant/Agressif/Violent/Maximum), appliquee en palier
+    fixe ou en montee progressive selon la famille de test — voir
+    omega-stress-calibrage-profils-securite.md. HAUT porte le sens
+    "Haut/Fort fusionne" (un seul niveau, pas deux). Ordre de
+    declaration = ordre d'iteration croissant, consomme directement par
+    les listes deroulantes TUI/CLI (aucun tri supplementaire cote
+    interface)."""
 
+    FAIBLE = "faible"
     BAS = "bas"
     MOYEN = "moyen"
     HAUT = "haut"
+    PUISSANT = "puissant"
+    AGRESSIF = "agressif"
+    VIOLENT = "violent"
     MAXIMUM = "maximum"
 
 
-class RenderProfile(str, Enum):
-    """Niveau de complexite structurelle affiche par le TUI, decide depuis
-    la capacite terminal detectee (distinct du choix de theme de couleur)."""
+class DurationPresetId(str, Enum):
+    """Identifiant court d'un profil de duree nomme D1-D6 (mode "profil",
+    coexiste avec le mode manuel de IntensityLevel/allowed_durations_
+    minutes) — voir domain/load/duration_presets.py::DURATION_PRESETS
+    pour les valeurs concretes (duree totale, plage de niveaux)."""
 
-    COMPLETE = "complete"
-    STANDARD = "standard"
-    REDUCED = "reduced"
-    MONO = "mono"
+    D1 = "d1"
+    D2 = "d2"
+    D3 = "d3"
+    D4 = "d4"
+    D5 = "d5"
+    D6 = "d6"
 
 
 class RunVerdict(str, Enum):
@@ -74,20 +88,20 @@ class ExportFormat(str, Enum):
 # Ce qu'il ne contient PAS :
 # - Aucune table de valeurs numeriques (durees, seuils, req/min) : ce sont
 #   des politiques de domaine, voir domain/load/policies.py et presets.py.
-# - Aucune logique de decision (quel profil pour quel terminal, etc.) : ce
-#   sont des services de domain/terminal/service.py.
+# - RenderProfile : n'est plus defini ici (migration omega_lib, D-008) —
+#   voir omega_lib.terminal.models.RenderProfile, partage par toute la
+#   suite (CHECK/DEEP/FOLD/FUZZ), plus une copie locale.
 # Points cles :
 # - Toutes les enums heritent de str en plus d'Enum : serialisation JSON et
 #   comparaison directe avec des chaines sans conversion explicite.
-# - RenderProfile != le theme "omega-mono" du catalogue de theme (voir
-#   ARCHITECTURE.md §8 et Projet/themes.txt) : piege de nommage documente
-#   pour ne pas etre reintroduit ici.
 # Comment il sera utilise (apercu) :
 # - domain/load/policies.py indexe ses tables par IntensityLevel.
-# - domain/terminal/service.py et domain/terminal/policies.py produisent un
-#   RenderProfile ; interfaces/tui/rendering/render_profile_resolver.py le
-#   consomme sans jamais le recalculer.
 # - core/capability.py utilise CapabilityStatus pour tout objet Capability.
 # - domain/reports/models.py utilise ExportFormat pour typer ExportJob.format
 #   plutot qu'une chaine libre.
+# - DurationPresetId (2026-09-01) : place ici plutot que dans domain/load/
+#   duration_presets.py (qui la consomme) pour eviter un cycle d'import —
+#   domain/load/models.py::LoadPlan porte un DurationPresetId optionnel,
+#   et domain/load/duration_presets.py importe RampStep depuis models.py ;
+#   les deux ne peuvent pas s'importer mutuellement.
 #---------------------------------------------------------------------->

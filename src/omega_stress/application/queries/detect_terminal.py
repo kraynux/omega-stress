@@ -2,9 +2,10 @@
 """Query : detecter le terminal courant et resoudre son profil de rendu."""
 from __future__ import annotations
 
+from omega_lib.terminal.service import resolve_render_profile
+
 from omega_stress.application.dto.mappers import terminal_profile_to_dto
 from omega_stress.application.dto.terminal_dto import TerminalStatusDTO
-from omega_stress.domain.terminal.service import resolve_render_profile
 from omega_stress.ports.terminal_detector import TerminalDetector
 
 

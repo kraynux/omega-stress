@@ -71,7 +71,12 @@ SCHEMA_STATEMENTS: tuple[str, ...] = (
         error_count INTEGER,
         total_requests INTEGER,
         events_json TEXT,
-        samples_json TEXT
+        samples_json TEXT,
+        errors_json TEXT,
+        peak_cpu_percent_generator REAL,
+        peak_memory_rss_mb REAL,
+        duration_preset_id TEXT,
+        safety_mode INTEGER
     )
     """,
     """
@@ -89,12 +94,25 @@ SCHEMA_STATEMENTS: tuple[str, ...] = (
 ADDITIVE_COLUMNS: tuple[tuple[str, str, str], ...] = (
     ("runs", "events_json", "TEXT"),
     ("runs", "samples_json", "TEXT"),
+    ("runs", "errors_json", "TEXT"),
+    ("runs", "peak_cpu_percent_generator", "REAL"),
+    ("runs", "peak_memory_rss_mb", "REAL"),
+    ("runs", "duration_preset_id", "TEXT"),
+    ("runs", "safety_mode", "INTEGER"),
 )
 """Colonnes ajoutees a une table EXISTANTE apres sa premiere creation
 (table, colonne, type SQL) — voir migrations.py::_ensure_additive_columns().
 `CREATE TABLE IF NOT EXISTS` ne retouche jamais une table deja creee : une
-base initialisee avant l'ajout de ces deux colonnes ne les gagnerait jamais
-sans ce mecanisme separe."""
+base initialisee avant l'ajout de ces colonnes ne les gagnerait jamais
+sans ce mecanisme separe. errors_json/peak_cpu_percent_generator/
+peak_memory_rss_mb (Phase 1 observabilite), duration_preset_id (mode
+"profil" D1-D6), safety_mode ("mode securite" a cocher) suivent le meme
+motif que events_json/samples_json : ajoutees ici ET dans le CREATE
+TABLE ci-dessus pour couvrir les deux cas (base neuve vs base existante
+a migrer). safety_mode nullable (pas de DEFAULT) : une base migree lit
+NULL pour tout run historique, relu comme True (voir run_repository.py)
+— ces runs antérieurs tournaient TOUJOURS avec les garde-fous actifs,
+avant que ce champ n'existe."""
 
 # <-- INFO DEV ---------------------------------------------------------
 # Role :
@@ -118,10 +136,14 @@ sans ce mecanisme separe."""
 # - RunEvent/IntervalSample n'ont pas de table dediee : serialises en
 #   JSON dans runs.events_json/samples_json (colonnes ajoutees le
 #   2026-08-24, meme precedent de denormalisation que `tags` ci-dessous)
-#   plutot qu'une table par ligne — volume borne par construction (un run
-#   dure au plus GATED_EXTENDED_DURATION_MINUTES minutes, domain/load/
-#   policies.py, donc au plus quelques centaines de samples), pas de
-#   besoin de requetage individuel sur un intervalle precis en V1.
+#   plutot qu'une table par ligne — volume borne par construction : au
+#   plus quelques centaines de samples en mode manuel (5 min maximum,
+#   domain/load/policies.py::allowed_durations_minutes()), jusqu'a ~7200
+#   en mode "profil" D1-D6 (domain/load/duration_presets.py, profil
+#   `soak` 120 min) — colonne TEXT libre sans limite pratique dans les
+#   deux cas (voir aussi infrastructure/exporters/time_series_chart.py
+#   pour le sous-echantillonnage cote graphique HTML). Pas de besoin de
+#   requetage individuel sur un intervalle precis en V1.
 # - tags (Profile, Target) est serialise en JSON dans une colonne TEXT :
 #   pas de table de jointure profiles_tags/targets_tags, le volume et les
 #   besoins de requetage sur les tags ne le justifient pas en V1.

@@ -20,7 +20,8 @@ def abort_run(
 ) -> LoadRun:
     """Cloture un run par arret automatique (verdict AUTO_STOPPED), suite
     a un ThresholdExceededError detecte par
-    application/pipeline/guards/threshold_guard.py pendant l'execution.
+    application/pipeline/guards/threshold_guard.py ou resource_guard.py
+    pendant l'execution.
 
     Nomme "abort" et non "rollback" (contrairement au gabarit omega-fire) :
     un run de charge deja execute ne se defait pas comme une regle
@@ -29,7 +30,7 @@ def abort_run(
     cible (voir ARCHITECTURE.md §0).
     """
     closed_at = now()
-    event = RunEvent(occurred_at=closed_at, kind="threshold_exceeded", message=str(reason))
+    event = RunEvent(occurred_at=closed_at, kind=reason.signal, message=str(reason))
     result = aggregate_samples(
         samples,
         verdict=RunVerdict.AUTO_STOPPED,
@@ -73,12 +74,18 @@ def abort_run(
 # - AbortError (application/exceptions.py) n'est levee que dans un cas qui
 #   ne devrait jamais se produire en pratique (finish() refusant un run
 #   deja marque termine) : un vrai garde-fou de bug, pas un chemin normal.
-# - `reason` (2026-08-24) : converti en RunEvent(kind="threshold_exceeded")
-#   et transmis a aggregate_samples(), pour que la raison precise de
+# - `reason` (2026-08-24) : converti en RunEvent(kind=reason.signal) et
+#   transmis a aggregate_samples(), pour que la raison precise de
 #   l'arret automatique survive au-dela de la notification live
 #   (notify_auto_stop, ephemere) et reste consultable dans le detail du
 #   run et l'export — avant cela, `reason` n'etait utilise que pour cette
-#   notification et disparaissait ensuite.
+#   notification et disparaissait ensuite. reason.signal (Phase 2 garde-
+#   fous, domain/errors.py::ThresholdExceededError) vaut "threshold_exceeded"
+#   par defaut (comportement historique inchange) ou un signal precis
+#   (ex. "window_error_rate_exceeded", "generator_cpu_exceeded") pour un
+#   arret declenche par les nouveaux guards — RunEvent.kind reste donc
+#   toujours "structure" (distinguable programmatiquement), jamais un
+#   seul libelle generique pour toute cause d'arret.
 # - now: Clock, pas datetime (2026-08-27, correction de bug reel :
 #   started_at == finished_at, duree 0.0 min sur TOUS les rapports
 #   exportes — voir shared/typing.py::Clock pour le detail complet) :

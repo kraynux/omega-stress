@@ -111,14 +111,14 @@ async def test_launch_request_bas_level_succeeds_and_persists(tmp_path):
     assert len(progress_notifier.notifications) == 1
 
 
-async def test_launch_request_haut_level_denied_without_precheck(tmp_path):
+async def test_launch_request_violent_level_denied_without_precheck(tmp_path):
     container = _container(tmp_path)
 
     result = await load_controller.launch_request(
         container=container,
         target_id="target-1",
         target_url="https://exemple.org",
-        level=IntensityLevel.HAUT,
+        level=IntensityLevel.VIOLENT,
         duration_minutes=1,
         thresholds=Thresholds(max_error_rate=0.5),
         explicit_confirmation=True,

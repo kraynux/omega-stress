@@ -9,7 +9,12 @@ from omega_stress.domain.reports.models import (
     ReportDiagnostic,
     ReportSummary,
 )
-from omega_stress.domain.runs.models import IntervalSample, LoadResult
+from omega_stress.domain.runs.models import (
+    ErrorBreakdown,
+    IntervalSample,
+    LoadResult,
+    SystemSnapshot,
+)
 
 STARTED = datetime(2026, 8, 24, 10, 0, tzinfo=timezone.utc)
 FINISHED = datetime(2026, 8, 24, 10, 3, tzinfo=timezone.utc)
@@ -55,6 +60,8 @@ def report_content_with_samples(report_content: ReportContent) -> ReportContent:
             p99_latency_ms=28.0,
             error_count=0,
             request_count=4,
+            requested_rate_per_minute=250.0,
+            system=SystemSnapshot(cpu_percent_generator=15.0, memory_rss_mb=60.0),
         ),
         IntervalSample(
             at_second=1.0,
@@ -64,6 +71,9 @@ def report_content_with_samples(report_content: ReportContent) -> ReportContent:
             p99_latency_ms=32.0,
             error_count=1,
             request_count=4,
+            requested_rate_per_minute=250.0,
+            errors=ErrorBreakdown(http_5xx=1),
+            system=SystemSnapshot(cpu_percent_generator=22.0, memory_rss_mb=64.0),
         ),
     )
     result = LoadResult(
@@ -76,6 +86,9 @@ def report_content_with_samples(report_content: ReportContent) -> ReportContent:
         error_count=report_content.result.error_count,
         total_requests=report_content.result.total_requests,
         samples=samples,
+        errors=ErrorBreakdown(http_5xx=1),
+        peak_cpu_percent_generator=22.0,
+        peak_memory_rss_mb=64.0,
     )
     return ReportContent(
         summary=report_content.summary, result=result, diagnostic=report_content.diagnostic

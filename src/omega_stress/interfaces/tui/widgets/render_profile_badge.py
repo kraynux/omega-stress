@@ -4,9 +4,8 @@ from __future__ import annotations
 
 from typing import Any
 
+from omega_lib.terminal.models import RenderProfile
 from textual.widgets import Static
-
-from omega_stress.core.enums import RenderProfile
 
 
 class RenderProfileBadge(Static):

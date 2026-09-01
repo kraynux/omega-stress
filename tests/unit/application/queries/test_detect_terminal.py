@@ -1,5 +1,6 @@
+from omega_lib.terminal.models import TerminalSignals
+
 from omega_stress.application.queries.detect_terminal import detect_terminal
-from omega_stress.domain.terminal.models import TerminalSignals
 from tests.fixtures.fakes import FakeTerminalDetector
 
 

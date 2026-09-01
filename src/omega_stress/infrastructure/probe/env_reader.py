@@ -2,6 +2,7 @@
 """Lecture de fichiers d'information systeme exposes par le noyau (/proc)."""
 from __future__ import annotations
 
+import os
 from pathlib import Path
 
 _MEMINFO_PATH = Path("/proc/meminfo")
@@ -24,27 +25,43 @@ def read_total_memory_mb() -> int | None:
         return None
     return None
 
+
+def read_load_average_1min() -> float | None:
+    """Lit la charge moyenne systeme sur 1 minute (os.getloadavg()[0],
+    wrapper stdlib autour de l'appel POSIX getloadavg()). Retourne None
+    si indisponible (systeme non-POSIX) — jamais une erreur, meme
+    convention que read_total_memory_mb()."""
+    try:
+        return os.getloadavg()[0]
+    except OSError:
+        return None
+
 # <-- INFO DEV ---------------------------------------------------------
 # Role :
-# - Sondage technique unique : memoire totale du systeme, lue depuis
+# - read_total_memory_mb() : memoire totale du systeme, lue depuis
 #   /proc/meminfo (pseudo-fichier expose par le noyau Linux).
+# - read_load_average_1min() (2026-09-01, calibrage) : charge moyenne
+#   systeme sur 1 minute, via le wrapper stdlib os.getloadavg().
 # Pourquoi dans infrastructure/probe/ (charte) :
-# - Lecture de fichier systeme brute, aucune decision.
+# - Lecture de fichier/appel systeme brut, aucune decision.
 # Ce qu'il ne contient PAS :
 # - Aucun seuil de comparaison (voir domain/load/policies.py::
-#   MINIMUM_VIABLE_RAM_MB, consomme par local_probe.py).
+#   MINIMUM_VIABLE_RAM_MB, consomme par local_probe.py ; domain/
+#   calibration/policies.py::CALIBRATION_PRECONDITION_*, consomme par
+#   infrastructure/calibration/preconditions_probe.py).
 # - Aucune dependance a psutil ou bibliotheque tierce : lecture directe
-#   du pseudo-fichier, coherent avec la philosophie "rester leger" du
-#   projet et son perimetre Linux.
+#   du pseudo-fichier ou de l'appel POSIX, coherent avec la philosophie
+#   "rester leger" du projet et son perimetre Linux.
 # Points cles :
-# - Retourne None plutot que de lever si /proc/meminfo est absent ou
-#   illisible : un environnement non standard (conteneur restreint,
-#   systeme non-Linux) ne doit jamais faire planter le pre-flight check,
-#   seulement degrader la capacite correspondante a MISSING.
-# - Nom de fichier interprete au sens large : "environnement systeme"
-#   (ce que le noyau expose sur l'etat de la machine), pas uniquement
-#   os.environ — aucune variable d'environnement au sens strict n'est lue
-#   ici, faute de besoin identifie pour ce cas precis en V1.
+# - Retourne None plutot que de lever si la mesure est indisponible
+#   (conteneur restreint, systeme non-Linux/non-POSIX) : un environnement
+#   non standard ne doit jamais faire planter le pre-flight check ni le
+#   calibrage, seulement degrader la capacite/precondition correspondante.
+# - Nom de fichier interprete au sens large : "environnement systeme" (ce
+#   que le noyau expose sur l'etat de la machine), pas uniquement
+#   os.environ.
 # Comment il sera utilise (apercu) :
-# - infrastructure/probe/local_probe.py.
+# - infrastructure/probe/local_probe.py consomme read_total_memory_mb().
+# - infrastructure/calibration/preconditions_probe.py consomme
+#   read_load_average_1min().
 #---------------------------------------------------------------------->

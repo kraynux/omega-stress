@@ -5,10 +5,9 @@ remplace l'ancienne composition complete (widgets/home_hero.py, deplacee
 vers l'ecran de demarrage, voir widgets/splash_hero.py)."""
 from __future__ import annotations
 
+from omega_lib.terminal.models import RenderProfile
 from textual import events
 from textual.widgets import Static
-
-from omega_stress.core.enums import RenderProfile
 
 _FONT_TOKEN = "$foreground"
 

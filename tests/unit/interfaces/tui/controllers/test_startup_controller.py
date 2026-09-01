@@ -1,4 +1,5 @@
-from omega_stress.domain.terminal.models import TerminalSignals
+from omega_lib.terminal.models import TerminalSignals
+
 from omega_stress.interfaces.tui.controllers.startup_controller import (
     resolve_startup_state,
 )

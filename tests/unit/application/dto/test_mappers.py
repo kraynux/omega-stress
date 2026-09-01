@@ -1,5 +1,7 @@
 from datetime import datetime, timezone
 
+from omega_lib.terminal.models import RenderProfile, TerminalProfile, TerminalSignals
+
 from omega_stress.application.dto.mappers import (
     pinned_target_to_dto,
     profile_to_dto,
@@ -7,12 +9,11 @@ from omega_stress.application.dto.mappers import (
     target_to_dto,
     terminal_profile_to_dto,
 )
-from omega_stress.core.enums import IntensityLevel, RenderProfile, RunVerdict, TestFamily
+from omega_stress.core.enums import IntensityLevel, RunVerdict, TestFamily
 from omega_stress.domain.load.models import Duration, Thresholds
 from omega_stress.domain.profiles.models import Profile
 from omega_stress.domain.runs.models import IntervalSample, LoadResult, LoadRun, RunEvent
 from omega_stress.domain.targets.models import PinnedTarget, Target, TargetAddress
-from omega_stress.domain.terminal.models import TerminalProfile, TerminalSignals
 
 NOW = datetime(2026, 8, 24, tzinfo=timezone.utc)
 

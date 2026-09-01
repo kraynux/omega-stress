@@ -48,6 +48,7 @@
   .bar-cell { width: 30%; }
   .bar-track { background: var(--panel); border-radius: 3px; height: 0.7rem; overflow: hidden; }
   .bar-fill { background: var(--error); height: 100%; }
+  .box svg { display: block; margin-bottom: 0.75rem; max-width: 100%; height: auto; }
 </style>
 </head>
 <body>
@@ -62,6 +63,10 @@
       <tr><th>Debut</th><td>{{ summary.started_at }}</td></tr>
       <tr><th>Fin</th><td>{{ summary.finished_at }}</td></tr>
       <tr><th>Duree</th><td>{{ "%.1f"|format(summary.duration_minutes) }} min</td></tr>
+      {% if summary.duration_preset_id %}
+      <tr><th>Profil</th><td>{{ summary.duration_preset_id.value|upper }}</td></tr>
+      {% endif %}
+      <tr><th>Mode securite</th><td>{{ "Actif" if summary.safety_mode else "Desactive" }}</td></tr>
     </table>
   </div>
 
@@ -79,8 +84,26 @@
       <tr><th>Latence p95</th><td>{{ result.p95_latency_ms }} ms</td></tr>
       <tr><th>Latence p99</th><td>{{ result.p99_latency_ms }} ms</td></tr>
       <tr><th>Erreurs</th><td>{{ result.error_count }} / {{ result.total_requests }}</td></tr>
+      <tr><th>Dont timeout / connexion / 4xx / 5xx</th><td>{{ result.errors.timeout }} / {{ result.errors.connection }} / {{ result.errors.http_4xx }} / {{ result.errors.http_5xx }}</td></tr>
+      {% if result.peak_cpu_percent_generator is not none %}
+      <tr><th>Pic CPU generateur</th><td>{{ "%.0f"|format(result.peak_cpu_percent_generator) }} %</td></tr>
+      {% endif %}
+      {% if result.peak_memory_rss_mb is not none %}
+      <tr><th>Pic memoire generateur</th><td>{{ "%.0f"|format(result.peak_memory_rss_mb) }} Mo</td></tr>
+      {% endif %}
     </table>
   </div>
+
+  {% if rps_chart or latency_chart or errors_chart or cpu_chart or memory_chart %}
+  <div class="box">
+    <h2>Graphiques</h2>
+    {% if rps_chart %}{{ rps_chart|safe }}{% endif %}
+    {% if latency_chart %}{{ latency_chart|safe }}{% endif %}
+    {% if errors_chart %}{{ errors_chart|safe }}{% endif %}
+    {% if cpu_chart %}{{ cpu_chart|safe }}{% endif %}
+    {% if memory_chart %}{{ memory_chart|safe }}{% endif %}
+  </div>
+  {% endif %}
 
   {% if result.samples %}
   <div class="box">

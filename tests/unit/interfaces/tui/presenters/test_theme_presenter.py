@@ -1,5 +1,6 @@
+from omega_lib.theme.policies import EXPORT_PALETTES, TUI_THEMES
+
 from omega_stress.application.dto.theme_dto import ThemeStatusDTO
-from omega_stress.domain.theme.policies import EXPORT_PALETTES, TUI_THEMES
 from omega_stress.interfaces.tui.presenters.theme_presenter import (
     available_export_theme_names,
     available_theme_names,

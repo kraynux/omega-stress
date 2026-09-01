@@ -3,7 +3,7 @@ from datetime import datetime, timezone
 from omega_stress.application.pipeline.executor import execute
 from omega_stress.core.enums import IntensityLevel, RunVerdict, TestFamily
 from omega_stress.domain.load.models import Duration, LoadPlan, Thresholds
-from omega_stress.domain.runs.models import IntervalSample, LoadRun
+from omega_stress.domain.runs.models import IntervalSample, LoadRun, SystemSnapshot
 from tests.fixtures.fakes import FakeLoadRunner, FakeRunProgressNotifier
 
 STARTED = datetime(2026, 8, 24, 10, 0, tzinfo=timezone.utc)
@@ -111,6 +111,28 @@ async def test_threshold_breach_triggers_auto_stop_and_short_circuits():
     assert [e.action for e in audit_events] == ["run_started", "run_finished"]
 
 
+async def test_sliding_window_breach_stops_a_run_that_per_interval_threshold_alone_would_miss():
+    # Chaque intervalle reste sous le seuil PAR INTERVALLE (40% < 50%),
+    # mais le volume cumule (20 requetes, minimum atteint au 2e
+    # echantillon) fait ressortir un taux d'erreur cumule de 40% >= 30%
+    # (policies.WINDOW_TOTAL_ERROR_RATE_ABORT_THRESHOLD) : preuve que
+    # check_sliding_window() attrape ce que check_threshold() seul
+    # laisserait passer.
+    plan = _plan(thresholds=Thresholds(max_error_rate=0.5))
+    samples = [
+        _sample(at_second=1.0, error_count=4, request_count=10),
+        _sample(at_second=2.0, error_count=4, request_count=10),
+        _sample(at_second=3.0, error_count=4, request_count=10),  # ne doit jamais etre consomme
+    ]
+
+    finished, notifier, audit_events, notifications = await _run_pipeline(plan, _run(), samples)
+
+    assert finished.result.verdict is RunVerdict.AUTO_STOPPED
+    assert len(notifier.notifications) == 2  # arret des que le volume minimum est atteint
+    assert finished.result.events[0].kind == "window_error_rate_exceeded"
+    assert any("fenetre" in n for n in notifications)
+
+
 async def test_runner_failure_produces_failed_verdict():
     finished, notifier, audit_events, _ = await _run_pipeline(
         _plan(), _run(), [_sample(), _sample()], raise_after=1
@@ -142,3 +164,33 @@ async def test_threshold_breach_auto_stop_records_the_reason_as_an_event():
     assert finished.result is not None
     assert len(finished.result.events) == 1
     assert finished.result.events[0].kind == "threshold_exceeded"
+
+
+async def test_generator_cpu_breach_triggers_auto_stop_when_safety_mode_enabled():
+    # Bug reel corrige le 2026-09-01 ("mode securite" a cocher) :
+    # safety_mode=True (defaut) preserve le comportement existant.
+    plan = _plan(safety_mode=True)
+    hot = SystemSnapshot(cpu_percent_generator=99.0, cpu_percent_global=95.0)
+    samples = [_sample(at_second=float(i), system=hot) for i in range(1, 4)] + [
+        _sample(at_second=4.0)  # ne doit jamais etre consomme
+    ]
+
+    finished, notifier, *_ = await _run_pipeline(plan, _run(), samples)
+
+    assert finished.result.verdict is RunVerdict.AUTO_STOPPED
+    assert finished.result.events[0].kind == "generator_cpu_exceeded"
+    assert len(notifier.notifications) == 3
+
+
+async def test_generator_cpu_breach_does_not_stop_when_safety_mode_disabled():
+    # check_generator_resources() n'est meme plus evalue : threshold_
+    # guard/check_sliding_window (protection de la CIBLE) restent actifs,
+    # inchanges.
+    plan = _plan(safety_mode=False)
+    hot = SystemSnapshot(cpu_percent_generator=99.0, cpu_percent_global=95.0)
+    samples = [_sample(at_second=float(i), system=hot) for i in range(1, 4)]
+
+    finished, notifier, *_ = await _run_pipeline(plan, _run(), samples)
+
+    assert finished.result.verdict is RunVerdict.SUCCESS
+    assert len(notifier.notifications) == 3

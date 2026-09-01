@@ -37,7 +37,7 @@ def test_blank_name_is_rejected():
 def test_extended_duration_requires_explicit_authorization():
     result = validate_profile(
         _profile(
-            level=IntensityLevel.HAUT,
+            level=IntensityLevel.PUISSANT,
             duration=Duration(minutes=5),
             extended_duration_authorized=False,
         )
@@ -48,7 +48,7 @@ def test_extended_duration_requires_explicit_authorization():
 def test_extended_duration_allowed_when_authorized():
     result = validate_profile(
         _profile(
-            level=IntensityLevel.HAUT,
+            level=IntensityLevel.PUISSANT,
             duration=Duration(minutes=5),
             extended_duration_authorized=True,
         )

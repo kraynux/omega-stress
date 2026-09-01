@@ -2,9 +2,10 @@
 """Controller : applique, persiste et fait defiler le theme TUI actif."""
 from __future__ import annotations
 
+from omega_lib.terminal.models import RenderProfile
+
 from omega_stress.application.commands.select_theme import select_theme
 from omega_stress.application.dto.theme_dto import ThemeStatusDTO
-from omega_stress.core.enums import RenderProfile
 from omega_stress.interfaces.tui.presenters.theme_presenter import available_theme_names
 from omega_stress.ports.settings_store import SettingsStore
 

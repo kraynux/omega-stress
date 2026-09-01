@@ -1,6 +1,6 @@
+from omega_lib.theme.policies import TUI_THEMES
 from textual.theme import Theme as TextualTheme
 
-from omega_stress.domain.theme.policies import TUI_THEMES
 from omega_stress.interfaces.tui.rendering.textual_theme_builder import (
     build_all_textual_themes,
     build_textual_theme,

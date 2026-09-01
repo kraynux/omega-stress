@@ -1,8 +1,8 @@
 import pytest
+from omega_lib.terminal.models import RenderProfile
 from textual.app import App
 from textual.widgets import Static
 
-from omega_stress.core.enums import RenderProfile
 from omega_stress.interfaces.tui.rendering.stylesheet_loader import load_paths_for
 
 ALL_PROFILES = list(RenderProfile)

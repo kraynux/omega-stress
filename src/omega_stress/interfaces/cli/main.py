@@ -13,6 +13,7 @@ from typing import TYPE_CHECKING
 from omega_stress.core.constants import APP_NAME
 from omega_stress.core.results import Err
 from omega_stress.interfaces.cli.commands import (
+    calibrate_command,
     export_command,
     history_command,
     profile_command,
@@ -29,8 +30,8 @@ if TYPE_CHECKING:
 
 
 def build_parser() -> argparse.ArgumentParser:
-    """Construit le parser racine et y enregistre les quatre
-    sous-commandes (profile/run/history/export)."""
+    """Construit le parser racine et y enregistre les cinq
+    sous-commandes (profile/run/history/export/calibrate)."""
     parser = argparse.ArgumentParser(
         prog=APP_NAME, description="Test de charge HTTP encadre (mode scriptable)."
     )
@@ -40,6 +41,7 @@ def build_parser() -> argparse.ArgumentParser:
     run_command.register(subparsers)
     history_command.register(subparsers)
     export_command.register(subparsers)
+    calibrate_command.register(subparsers)
 
     return parser
 

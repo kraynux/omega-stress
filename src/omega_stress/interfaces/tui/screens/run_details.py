@@ -85,6 +85,21 @@ class RunDetailsScreen(OmegaScreen):
         reason = diagnostic_message(run)
         if reason:
             text += f"\nDiagnostic : {reason}"
+        if run.error_count:
+            text += (
+                f"\nErreurs : {run.errors_timeout} timeout, {run.errors_connection} connexion, "
+                f"{run.errors_http_4xx} 4xx, {run.errors_http_5xx} 5xx"
+            )
+        if run.peak_cpu_percent_generator is not None or run.peak_memory_rss_mb is not None:
+            cpu = (
+                f"{run.peak_cpu_percent_generator:.0f}%"
+                if run.peak_cpu_percent_generator is not None
+                else "?"
+            )
+            memory = (
+                f"{run.peak_memory_rss_mb:.0f} Mo" if run.peak_memory_rss_mb is not None else "?"
+            )
+            text += f"\nPic generateur : {cpu} CPU, {memory} RAM"
         if run.sample_count:
             text += (
                 f"\n{run.sample_count} mesures enregistrees "

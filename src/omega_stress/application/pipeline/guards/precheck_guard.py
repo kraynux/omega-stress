@@ -1,5 +1,5 @@
 # Copyright (c) 2026 kraynux - kraynux@proton.me - Licence MIT (voir fichier LICENSE)
-"""Guard 2/4 du pipeline : pre-check obligatoire pour Haut/Maximum (ARCHITECTURE.md §4)."""
+"""Guard 2/5 du pipeline : pre-check obligatoire pour Violent/Maximum (ARCHITECTURE.md §4)."""
 from __future__ import annotations
 
 from omega_stress.core.enums import IntensityLevel

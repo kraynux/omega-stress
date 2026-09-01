@@ -73,14 +73,14 @@ async def test_denied_without_authorization():
     assert isinstance(result, Err)
 
 
-async def test_haut_level_denied_without_precheck():
-    result = await _run(level=IntensityLevel.HAUT, precheck_validated=False)
+async def test_violent_level_denied_without_precheck():
+    result = await _run(level=IntensityLevel.VIOLENT, precheck_validated=False)
 
     assert isinstance(result, Err)
 
 
-async def test_haut_level_allowed_with_precheck():
-    result = await _run(level=IntensityLevel.HAUT, precheck_validated=True)
+async def test_violent_level_allowed_with_precheck():
+    result = await _run(level=IntensityLevel.VIOLENT, precheck_validated=True)
 
     assert isinstance(result, Ok)
 
@@ -89,6 +89,28 @@ async def test_disallowed_duration_is_rejected():
     result = await _run(duration_minutes=7)
 
     assert isinstance(result, Err)
+
+
+async def test_safety_mode_defaults_to_true_and_is_persisted_on_the_run():
+    run_repository = FakeRunRepository()
+
+    result = await _run(run_repository=run_repository)
+
+    assert isinstance(result, Ok)
+    saved = run_repository.get(result.value.id)
+    assert saved is not None
+    assert saved.safety_mode is True
+
+
+async def test_safety_mode_false_is_transmitted_and_persisted_on_the_run():
+    run_repository = FakeRunRepository()
+
+    result = await _run(run_repository=run_repository, safety_mode=False)
+
+    assert isinstance(result, Ok)
+    saved = run_repository.get(result.value.id)
+    assert saved is not None
+    assert saved.safety_mode is False
 
 
 async def test_successful_launch_persists_the_target_as_recent():
