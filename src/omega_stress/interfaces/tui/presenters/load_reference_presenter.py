@@ -5,8 +5,13 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 
-from omega_stress.core.enums import IntensityLevel, TestFamily
-from omega_stress.domain.load.policies import allowed_durations_minutes, is_precheck_mandatory
+from omega_stress.core.enums import DurationPresetId, IntensityLevel, TestFamily
+from omega_stress.domain.load.duration_presets import DURATION_PRESETS
+from omega_stress.domain.load.policies import (
+    allowed_durations_minutes,
+    is_precheck_mandatory,
+    is_precheck_optional,
+)
 from omega_stress.domain.load.presets import fixed_rate_preset, ramp_preset
 
 
@@ -23,6 +28,18 @@ class LoadReferenceRow:
     durations: str
 
 
+@dataclass(frozen=True, slots=True)
+class DurationPresetReferenceRow:
+    """Une ligne du tableau des profils de duree D1-D6 (mode "profil")."""
+
+    id: str
+    name: str
+    total_minutes: int
+    families: str
+    free_levels: str
+    reinforced_level: str
+
+
 def _burst_per_second(requests_per_minute: int) -> int:
     return round(requests_per_minute / 60)
 
@@ -31,13 +48,18 @@ def _duration_label(level: IntensityLevel) -> str:
     """Libelle des durees disponibles pour ce niveau — derive UNIQUEMENT
     de domain/load/policies.py::allowed_durations_minutes() (jamais de
     valeur en dur ici), pour rester automatiquement a jour si ces regles
-    changent."""
+    changent. 3 paliers (Phase 3, 2026-09-01) : jamais gate (fourchette
+    continue) / gate obligatoire (durees de base fermes, le pre-check ne
+    les etend jamais) / gate optionnel (durees de base + extension
+    mentionnee seulement si le pre-check en debloque reellement)."""
     default = allowed_durations_minutes(level)
-    if not is_precheck_mandatory(level):
+    if not is_precheck_mandatory(level) and not is_precheck_optional(level):
         return f"{default[0]} a {default[-1]} min"
+    default_text = " ou ".join(f"{m} min" for m in default)
+    if is_precheck_mandatory(level):
+        return default_text
     extended = allowed_durations_minutes(level, extended_authorized=True)
     extra = [m for m in extended if m not in default]
-    default_text = " ou ".join(f"{m} min" for m in default)
     if not extra:
         return default_text
     extra_text = " ou ".join(f"{m} min" for m in extra)
@@ -45,7 +67,11 @@ def _duration_label(level: IntensityLevel) -> str:
 
 
 def _precheck_label(level: IntensityLevel) -> str:
-    return "Oui" if is_precheck_mandatory(level) else "Non"
+    if is_precheck_mandatory(level):
+        return "Oui"
+    if is_precheck_optional(level):
+        return "Non/Oui"
+    return "Non"
 
 
 def load_reference_rows() -> tuple[LoadReferenceRow, ...]:
@@ -105,6 +131,42 @@ def load_reference_rows() -> tuple[LoadReferenceRow, ...]:
     return tuple(rows)
 
 
+_FAMILY_LABELS: dict[TestFamily, str] = {
+    TestFamily.REQUEST: "Requetes",
+    TestFamily.CONNECTION: "Connexions",
+    TestFamily.RAMP: "Charge",
+}
+
+
+def duration_preset_reference_rows() -> tuple[DurationPresetReferenceRow, ...]:
+    """Une ligne par profil de duree D1-D6 (domain/load/duration_presets.py
+    ::DURATION_PRESETS, seule source de verite — aucune valeur en dur
+    ici), dans l'ordre D1 a D6."""
+    rows = []
+    ordered_levels = list(IntensityLevel)
+    for preset_id in DurationPresetId:
+        preset = DURATION_PRESETS[preset_id]
+        free_max_index = ordered_levels.index(preset.free_max_level)
+        free_levels = f"{ordered_levels[0].value} a {preset.free_max_level.value}"
+        if free_max_index == len(ordered_levels) - 1:
+            free_levels += " (tous)"
+        rows.append(
+            DurationPresetReferenceRow(
+                id=preset_id.value.upper(),
+                name=preset.name,
+                total_minutes=preset.total_minutes,
+                families=", ".join(
+                    _FAMILY_LABELS[f] for f in TestFamily if f in preset.compatible_families
+                ),
+                free_levels=free_levels,
+                reinforced_level=(
+                    preset.reinforced_level.value if preset.reinforced_level is not None else "—"
+                ),
+            )
+        )
+    return tuple(rows)
+
+
 def load_reference_family_note(family: TestFamily) -> str:
     """Rappel textuel de la dimension reellement pilotee par cette
     famille — evite qu'un utilisateur suppose que le second nombre du
@@ -149,16 +211,30 @@ def load_reference_family_note(family: TestFamily) -> str:
 #   SECONDS) — duplique ici volontairement en une ligne simple plutot que
 #   d'importer infrastructure/ depuis interfaces/ (interdit, voir
 #   ci-dessus) pour une seule formule triviale.
-# - _duration_label() : "(X min si pre-check)" seulement si extended_
-#   authorized ajoute reellement une duree supplementaire par rapport au
-#   defaut — jamais suppose que c'est toujours "5 min" (deriverait de
-#   GATED_EXTENDED_DURATION_MINUTES sans le nommer en dur ici).
+# - _duration_label()/_precheck_label() (Phase 3, 2026-09-01) : 3 branches
+#   distinctes (is_precheck_mandatory()/is_precheck_optional(), jamais un
+#   seul booleen binaire) — un niveau gate optionnel (Puissant/Agressif)
+#   n'est ni "jamais gate" ni "gate obligatoire" : le confondre avec l'un
+#   des deux masquerait silencieusement soit la fourchette de durees,
+#   soit l'extension via pre-check facultatif (bug reel corrige a
+#   l'introduction du 3e palier, aucune exception levee avant le
+#   correctif — juste un affichage errone). "(X min si pre-check)" ne
+#   nomme jamais GATED_EXTENDED_DURATIONS_MINUTES en dur ici.
 # - load_reference_family_note() : rappel qualitatif complementaire au
 #   tableau chiffre, pour eviter la confusion notee par l'utilisateur
 #   entre les deux dimensions d'un meme FixedRatePreset/RampPreset
 #   (ex. Test requetes n'utilise jamais concurrent_connections, Test
 #   charge n'utilise jamais peak_connections — voir engine_params.py).
+# - duration_preset_reference_rows() (2026-09-01, mode "profil" D1-D6) :
+#   AVANT ce correctif, les profils D1-D6 (deja fonctionnels dans les 3
+#   ecrans de lancement et le CLI) n'apparaissaient nulle part dans
+#   l'Aide — bug de decouvrabilite reel signale par l'utilisateur en
+#   test. free_levels/reinforced_level derives de DurationPreset.
+#   free_max_level/reinforced_level (ordre d'IntensityLevel, jamais de
+#   plage en dur ici) — coherent avec le principe du fichier (rien
+#   n'est invente, tout vient de domain/load/).
 # Comment il sera utilise :
 # - interfaces/tui/widgets/load_reference_table.py (DataTable),
+#   interfaces/tui/widgets/duration_preset_table.py (DataTable D1-D6),
 #   interfaces/tui/screens/help_screen.py (section "Reperes de charge").
 #---------------------------------------------------------------------->

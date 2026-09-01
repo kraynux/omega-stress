@@ -1,5 +1,6 @@
+from omega_lib.terminal.models import RenderProfile
+
 from omega_stress.application.commands.select_theme import select_theme
-from omega_stress.core.enums import RenderProfile
 from tests.fixtures.fakes import FakeSettingsStore
 
 

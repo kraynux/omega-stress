@@ -61,7 +61,7 @@ def test_create_with_invalid_duration_fails_cleanly(monkeypatch, tmp_path, capsy
             "--family",
             "request",
             "--level",
-            "haut",
+            "puissant",
             "--duration-minutes",
             "5",
             "--max-error-rate",

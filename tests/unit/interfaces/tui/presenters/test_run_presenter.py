@@ -2,6 +2,7 @@ from omega_stress.application.dto.run_dto import RunDTO, RunEventDTO
 from omega_stress.interfaces.tui.presenters.run_presenter import (
     diagnostic_message,
     metrics_summary,
+    verdict_explanation,
     verdict_label,
 )
 
@@ -74,3 +75,35 @@ def test_diagnostic_message_returns_the_last_event():
     )
 
     assert diagnostic_message(run) == "cible injoignable"
+
+
+def test_verdict_explanation_distinguishes_manual_from_threshold_stop():
+    # Bug reel rapporte (capture d'ecran) : screens/run_details.py
+    # affichait "...suite a un depassement de seuil" (verdict_explanation)
+    # au-dessus de "Arrete manuellement par l'utilisateur." (diagnostic_
+    # message, meme run) — deux messages contradictoires sur le meme
+    # ecran pour un arret manuel.
+    manually_stopped = _run(
+        verdict="auto_stopped",
+        events=(
+            RunEventDTO(
+                occurred_at="2026-08-24T10:00:00",
+                kind="manual_stop",
+                message="Arrete manuellement par l'utilisateur.",
+            ),
+        ),
+    )
+    threshold_stopped = _run(
+        verdict="auto_stopped",
+        events=(
+            RunEventDTO(
+                occurred_at="2026-08-24T10:00:00",
+                kind="generator_cpu_exceeded",
+                message="CPU generateur >= 21% (~85% d'un coeur) pendant 3s",
+            ),
+        ),
+    )
+
+    assert "manuellement" in verdict_explanation(manually_stopped)
+    assert "depassement de seuil" not in verdict_explanation(manually_stopped)
+    assert "depassement de seuil" in verdict_explanation(threshold_stopped)

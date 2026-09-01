@@ -4,11 +4,11 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
+from omega_lib.terminal.models import RenderProfile
 from textual.app import ComposeResult
 from textual.containers import Container, Horizontal, Vertical
 from textual.widgets import Button, Footer, Header, Input, Select, Static
 
-from omega_stress.core.enums import RenderProfile
 from omega_stress.interfaces.tui.controllers import (
     history_controller,
     load_controller,

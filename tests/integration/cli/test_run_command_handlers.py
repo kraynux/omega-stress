@@ -2,12 +2,13 @@ import argparse
 import sqlite3
 from datetime import datetime, timezone
 
+from omega_lib.terminal.models import TerminalSignals
+
 from omega_stress.app.dependency_container import DependencyContainer
 from omega_stress.core.capability_registry import CapabilityRegistry
 from omega_stress.core.results import Err, Ok
 from omega_stress.domain.runs.models import IntervalSample
 from omega_stress.domain.targets.models import PinnedTarget, Target, TargetAddress
-from omega_stress.domain.terminal.models import TerminalSignals
 from omega_stress.infrastructure.logging.audit_logger import AuditLogger
 from omega_stress.interfaces.cli.commands import run_command
 from tests.fixtures.fakes import (
@@ -53,6 +54,14 @@ def _build_container(tmp_path, *, samples=None) -> DependencyContainer:
         load_runner=FakeLoadRunner(samples or [_sample()]),
         audit_logger=AuditLogger(tmp_path / "audit.jsonl"),
         capability_registry=CapabilityRegistry(),
+        # Calibrage non exerce par ces tests (commandes run request/
+        # connection/ramp/precheck/replay) : stubs triviaux, jamais
+        # appeles.
+        calibration_repository=None,
+        calibration_preconditions_probe=None,
+        compute_calibration_fingerprint=lambda: None,
+        calibration_server_factory=lambda: None,
+        calibration_stage_runner_factory=lambda: None,
         exporters={},
     )
 
@@ -63,6 +72,9 @@ def _request_args(**overrides) -> argparse.Namespace:
         target_url="https://example.org/",
         level="bas",
         duration_minutes=1,
+        duration_preset=None,
+        confirmation_text=None,
+        unsafe=False,
         max_error_rate=0.5,
         max_p95_latency_ms=None,
         profile_id=None,
@@ -82,6 +94,32 @@ async def test_handle_request_launches_and_persists(tmp_path):
     assert isinstance(result, Ok)
     assert "request" in result.value
     assert len(container.run_repository.list_history()) == 1
+
+
+async def test_handle_request_launches_with_duration_preset(tmp_path):
+    # Mode "profil" D1-D6 (2026-09-01) : duration_minutes est deduit du
+    # profil par _load_kwargs(), jamais lu depuis args.duration_minutes
+    # (laisse a None, comme le ferait argparse avec le groupe
+    # mutuellement exclusif reel).
+    container = _build_container(tmp_path)
+
+    result = await run_command._handle_request(
+        _request_args(duration_minutes=None, duration_preset="d1"), container
+    )
+
+    assert isinstance(result, Ok)
+    run = container.run_repository.list_history()[0]
+    assert run.duration_preset_id.value == "d1"
+
+
+async def test_handle_request_unsafe_flag_disables_safety_mode(tmp_path):
+    container = _build_container(tmp_path)
+
+    result = await run_command._handle_request(_request_args(unsafe=True), container)
+
+    assert isinstance(result, Ok)
+    run = container.run_repository.list_history()[0]
+    assert run.safety_mode is False
 
 
 async def test_handle_request_denied_without_confirmation(tmp_path):

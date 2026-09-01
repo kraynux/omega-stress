@@ -8,9 +8,10 @@ from omega_stress.application.pipeline.guards.authorization_guard import check_a
 from omega_stress.application.pipeline.hooks.audit_hook import AuditSink
 from omega_stress.application.pipeline.hooks.notification_hook import NotificationSink
 from omega_stress.core.capability_registry import CapabilityRegistry
-from omega_stress.core.enums import IntensityLevel, TestFamily
+from omega_stress.core.enums import DurationPresetId, IntensityLevel, TestFamily
 from omega_stress.core.results import Err, Result
 from omega_stress.domain.errors import UnauthorizedTargetError
+from omega_stress.domain.load import policies
 from omega_stress.domain.load.models import Duration, LoadPlan, Thresholds
 from omega_stress.domain.load.presets import fixed_rate_preset
 from omega_stress.ports.load_runner import LoadRunner
@@ -19,7 +20,6 @@ from omega_stress.ports.run_repository import RunRepository
 from omega_stress.ports.target_repository import TargetRepository
 from omega_stress.shared.typing import Clock, IdFactory
 
-_HIGH_INTENSITY_LEVELS = (IntensityLevel.HAUT, IntensityLevel.MAXIMUM)
 _REQUIRED_CAPABILITY = "system.load_capacity"
 
 
@@ -42,31 +42,47 @@ async def run_request_load(
     now: Clock,
     profile_id: str | None = None,
     capability_registry: CapabilityRegistry | None = None,
+    duration_preset_id: DurationPresetId | None = None,
+    reinforced_confirmation_text: str | None = None,
+    safety_mode: bool = True,
 ) -> Result[RunDTO, UnauthorizedTargetError | LaunchError]:
     """Lance un Test requetes en mode manuel borne (profile_id=None) ou
     depuis un profil deja converti par l'appelant (profile_id fourni pour
     tracabilite — le LoadPlan lui-meme est toujours reconstruit ici a
-    partir des parametres explicites, jamais depuis un Profile)."""
+    partir des parametres explicites, jamais depuis un Profile).
+
+    duration_preset_id (mode "profil" D1-D6, optionnel) : quand fourni,
+    duration_minutes doit deja valoir duration_preset(duration_preset_id)
+    .total_minutes (verifie par domain/load/validators.py::validate_plan()
+    en aval, pas ici) — la validation manuelle (Duration.for_level) est
+    alors sautee, remplacee par evaluate_duration_preset()."""
     authorization = check_authorization(
         target_id, target_repository=target_repository, explicit_confirmation=explicit_confirmation
     )
     if isinstance(authorization, Err):
         return authorization
 
-    duration_result = Duration.for_level(
-        level, duration_minutes, extended_authorized=precheck_validated
-    )
-    if isinstance(duration_result, Err):
-        return duration_result
+    if duration_preset_id is not None:
+        duration = Duration(minutes=duration_minutes)
+    else:
+        duration_result = Duration.for_level(
+            level, duration_minutes, extended_authorized=precheck_validated
+        )
+        if isinstance(duration_result, Err):
+            return duration_result
+        duration = duration_result.value
 
     plan = LoadPlan(
         id=id_factory(),
         family=TestFamily.REQUEST,
         level=level,
-        duration=duration_result.value,
+        duration=duration,
         thresholds=thresholds,
         target_authorization_confirmed=True,
         precheck_validated=precheck_validated,
+        duration_preset_id=duration_preset_id,
+        reinforced_confirmation_text=reinforced_confirmation_text,
+        safety_mode=safety_mode,
     )
 
     preset = fixed_rate_preset(level)
@@ -85,7 +101,9 @@ async def run_request_load(
         id_factory=id_factory,
         now=now,
         capability_registry=capability_registry,
-        required_capability=_REQUIRED_CAPABILITY if level in _HIGH_INTENSITY_LEVELS else None,
+        required_capability=(
+            _REQUIRED_CAPABILITY if level in policies.PRECHECK_MANDATORY_LEVELS else None
+        ),
     )
 
 # <-- INFO DEV ---------------------------------------------------------
@@ -105,10 +123,11 @@ async def run_request_load(
 #   valeurs necessaires — ce command ne prend que des primitives.
 # - Aucune logique de guard/execution (voir _launch_support.py).
 # Points cles :
-# - required_capability n'est verifie que pour Haut/Maximum, symetrique a
-#   la regle de pre-check (domain/load/policies.py::
-#   PRECHECK_MANDATORY_LEVELS) : les niveaux Bas/Moyen restent toujours
-#   disponibles sans verification de capacite systeme supplementaire.
+# - required_capability n'est verifie que pour Violent/Maximum, la meme
+#   source que la regle de pre-check obligatoire (domain/load/policies.py::
+#   PRECHECK_MANDATORY_LEVELS, plus de tuple local duplique depuis
+#   Phase 3) : les autres niveaux restent toujours disponibles sans
+#   verification de capacite systeme supplementaire.
 # - profile_id est un champ de tracabilite pur ici (transmis tel quel au
 #   LoadRun cree) : ce command ne verifie jamais que le profil existe
 #   reellement, cette verification reste du ressort de l'appelant s'il

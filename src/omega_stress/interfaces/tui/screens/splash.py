@@ -4,13 +4,13 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
+from omega_lib.terminal.models import RenderProfile
 from textual import events
 from textual.app import ComposeResult
 from textual.containers import Center, Middle
 from textual.screen import Screen
 from textual.widgets import Footer, Header, Static
 
-from omega_stress.core.enums import RenderProfile
 from omega_stress.interfaces.tui.widgets.splash_hero import LOGO_CENTER_COLUMN, SplashHero
 
 if TYPE_CHECKING:

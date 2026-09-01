@@ -1,0 +1,64 @@
+{
+  "duration_seconds": 64.693474,
+  "envelope": {
+    "confidence": "faible",
+    "connections_safe": 0,
+    "first_degraded_stage_id": "calib_1",
+    "last_healthy_stage_id": "idle_baseline",
+    "margin_applied": 0.7,
+    "rps_safe": 0,
+    "vu_safe": 0
+  },
+  "fingerprint": {
+    "architecture": "x86_64",
+    "engine_version": "0.1.0",
+    "logical_cpu_count": 4,
+    "open_files_soft_limit": 1024,
+    "os_name": "Linux",
+    "python_version": "3.14.6",
+    "scenario_id": "payload-4k",
+    "schema_version": 1,
+    "total_ram_mb": 7788.0,
+    "workers_mode": "asyncio-single-process"
+  },
+  "overall_stop_reason": "generator_cpu_sustained",
+  "stages": [
+    {
+      "error_rate": 0.0,
+      "is_healthy": true,
+      "memory_available_percent_min": 57.15336026459843,
+      "peak_cpu_percent_generator": 2.75,
+      "peak_cpu_percent_global": 14.7,
+      "rps_achieved": 0.0,
+      "rps_target": 0,
+      "stage_id": "idle_baseline",
+      "stop_reason": null,
+      "vu_target": 0
+    },
+    {
+      "error_rate": 0.0,
+      "is_healthy": false,
+      "memory_available_percent_min": 57.13505502854864,
+      "peak_cpu_percent_generator": 25.175,
+      "peak_cpu_percent_global": 38.1,
+      "rps_achieved": 100.0,
+      "rps_target": 100,
+      "stage_id": "calib_1",
+      "stop_reason": null,
+      "vu_target": 25
+    },
+    {
+      "error_rate": 0.0,
+      "is_healthy": false,
+      "memory_available_percent_min": 57.1550654098743,
+      "peak_cpu_percent_generator": 25.625,
+      "peak_cpu_percent_global": 41.2,
+      "rps_achieved": 500.0,
+      "rps_target": 500,
+      "stage_id": "calib_2",
+      "stop_reason": "generator_cpu_sustained",
+      "vu_target": 100
+    }
+  ],
+  "started_at": "2026-09-01T21:33:35.436371+00:00"
+}

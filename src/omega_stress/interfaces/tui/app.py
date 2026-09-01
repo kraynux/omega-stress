@@ -7,13 +7,13 @@ import logging
 from pathlib import Path, PurePath
 from typing import TYPE_CHECKING, cast
 
+from omega_lib.terminal.models import RenderProfile
+from omega_lib.terminal.policies import MINIMUM_USABLE_COLUMNS, MINIMUM_USABLE_ROWS
 from textual.app import App, SystemCommand
 from textual.binding import Binding
 from textual.command import CommandPalette
 
 from omega_stress.application.queries.detect_terminal import detect_terminal
-from omega_stress.core.enums import RenderProfile
-from omega_stress.domain.terminal.policies import MINIMUM_USABLE_COLUMNS, MINIMUM_USABLE_ROWS
 from omega_stress.interfaces.tui.controllers import theme_controller
 from omega_stress.interfaces.tui.controllers.startup_controller import (
     StartupState,

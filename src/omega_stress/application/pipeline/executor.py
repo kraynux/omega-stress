@@ -8,7 +8,11 @@ from datetime import datetime
 from omega_stress.application.exceptions import RunnerFailureError, UseCaseExecutionError
 from omega_stress.application.pipeline.abort import abort_run
 from omega_stress.application.pipeline.degraded_mode import is_local_bottleneck
-from omega_stress.application.pipeline.guards.threshold_guard import check_threshold
+from omega_stress.application.pipeline.guards.resource_guard import check_generator_resources
+from omega_stress.application.pipeline.guards.threshold_guard import (
+    check_sliding_window,
+    check_threshold,
+)
 from omega_stress.application.pipeline.hooks.audit_hook import (
     AuditSink,
     emit_run_finished,
@@ -62,14 +66,21 @@ async def execute(
                 notify_local_bottleneck(sink=notification_sink)
                 bottleneck_notified = True
 
-            threshold_result = check_threshold(sample, thresholds=plan.thresholds)
-            if isinstance(threshold_result, Err):
-                aborted = abort_run(
-                    run, samples=tuple(collected), reason=threshold_result.error, now=now
-                )
-                notify_auto_stop(str(threshold_result.error), sink=notification_sink)
-                emit_run_finished(aborted, sink=audit_sink)
-                return aborted
+            collected_so_far = tuple(collected)
+            guard_results = [
+                check_threshold(sample, thresholds=plan.thresholds),
+                check_sliding_window(collected_so_far),
+            ]
+            if plan.safety_mode:
+                guard_results.append(check_generator_resources(collected_so_far))
+            for guard_result in guard_results:
+                if isinstance(guard_result, Err):
+                    aborted = abort_run(
+                        run, samples=collected_so_far, reason=guard_result.error, now=now
+                    )
+                    notify_auto_stop(str(guard_result.error), sink=notification_sink)
+                    emit_run_finished(aborted, sink=audit_sink)
+                    return aborted
     except RunnerFailureError as exc:
         failed_at = now()
         return _finish_with_verdict(
@@ -169,6 +180,26 @@ def _finish_with_verdict(
 #   parametre ici — garde ce fichier concentre sur l'execution, pas la
 #   persistance).
 # Points cles :
+# - guard_results (Phase 2 garde-fous) : jusqu'a trois guards evalues a
+#   CHAQUE IntervalSample, dans cet ordre precis — check_threshold()
+#   (seuil par intervalle, inchange depuis Phase 10), check_sliding_
+#   window() (fenetres 30s/10s, cote cible), check_generator_resources()
+#   (CPU soutenu/memoire/FDs, cote generateur). Le PREMIER Err rencontre
+#   declenche l'arret, les guards suivants ne sont pas evalues sur ce
+#   tour (inutile une fois la decision prise). collected_so_far calcule
+#   UNE FOIS par iteration (pas trois fois) : les guards en ont chacun
+#   besoin.
+# - plan.safety_mode (2026-09-01, "mode securite" a cocher, bug reel
+#   rapporte avec captures d'ecran) : check_generator_resources() n'est
+#   ajoute a guard_results QUE si plan.safety_mode est True — check_
+#   threshold()/check_sliding_window() (protection de la CIBLE testee)
+#   restent TOUJOURS evalues, jamais bascules par ce champ. Une liste
+#   (pas un tuple comme avant) car sa taille varie desormais selon
+#   plan.safety_mode. Les mesures CPU/memoire/FDs restent TOUJOURS
+#   collectees sur chaque SystemSnapshot quel que soit ce champ (aucun
+#   changement a l'echantillonnage, voir infrastructure/probe/
+#   live_probe.py) — seul le fait qu'un depassement declenche un ARRET
+#   change.
 # - now: Clock, pas datetime (2026-08-27, correction de bug reel :
 #   started_at == finished_at, duree 0.0 min sur TOUS les rapports
 #   exportes — voir shared/typing.py::Clock pour le detail complet).

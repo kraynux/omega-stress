@@ -48,8 +48,8 @@ class LoadReferenceTable(DataTable):
 #   presenter, meme role que history_table.py/target_table.py pour leurs
 #   propres DTO.
 # Ce qu'il ne contient PAS :
-# - Aucune pagination/tri/filtrage : 12 lignes fixes (3 familles x 4
-#   niveaux), toujours affichees en entier.
+# - Aucune pagination/tri/filtrage : 24 lignes fixes (3 familles x 8
+#   niveaux, grille etendue Phase 3), toujours affichees en entier.
 # Points cles :
 # - zebra_stripes=True (2026-08-25) : lisibilite sur 12 lignes de largeur
 #   variable, DataTable natif Textual (pas une convention deja etablie

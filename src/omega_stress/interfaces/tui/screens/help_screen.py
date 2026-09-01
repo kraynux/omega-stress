@@ -7,10 +7,12 @@ from textual.containers import Container, Horizontal, Vertical
 from textual.widgets import Button, Footer, Header, Static
 
 from omega_stress.core.enums import TestFamily
+from omega_stress.domain.load.policies import SAFETY_MODE_DESCRIPTION
 from omega_stress.interfaces.tui.presenters.load_reference_presenter import (
     load_reference_family_note,
 )
 from omega_stress.interfaces.tui.screens._base import OmegaScreen
+from omega_stress.interfaces.tui.widgets.duration_preset_table import DurationPresetTable
 from omega_stress.interfaces.tui.widgets.load_reference_table import LoadReferenceTable
 
 _SHORTCUTS = (
@@ -52,6 +54,30 @@ _SECTIONS = (
         "reimportables), CSV (analyse tabulaire), ou HTML (rapport "
         "lisible avec chronologie complete par intervalle).",
     ),
+    (
+        "Profils de duree D1-D6 (mode profil)",
+        "En plus de la duree manuelle (1 a 5 min selon le niveau), "
+        "chaque ecran de lancement propose un mode profil : une duree "
+        "fixe nommee (1 a 120 min) qui limite les niveaux accessibles, "
+        "avec un niveau supplementaire debloque par une confirmation "
+        "renforcee (texte exact a saisir). Voir le tableau ci-dessous.",
+    ),
+    (
+        "Calibrage",
+        "Mesure la capacite reelle de CETTE machine (pas la cible testee) "
+        "via un serveur de boucle locale, par paliers de charge "
+        "croissante. Le resultat (VU_safe/RPS_safe) n'est pas applique "
+        "automatiquement aux tests reels : consultable depuis l'ecran "
+        "Calibrage, et utile comme repere quand le mode securite est "
+        "desactive (voir ci-dessous).",
+    ),
+    (
+        "Mode securite",
+        SAFETY_MODE_DESCRIPTION
+        + " Si un calibrage a ete effectue sur cette machine, l'ecran de "
+        "lancement compare le niveau choisi a son enveloppe des que la "
+        "case est decochee.",
+    ),
 )
 
 
@@ -78,6 +104,9 @@ class HelpScreen(OmegaScreen):
                 f"[b]Test charge[/b] — {load_reference_family_note(TestFamily.RAMP)}\n"
             )
             yield LoadReferenceTable(id="load-reference")
+            yield Static("")
+            yield Static("Profils de duree D1-D6 (mode profil)", classes="omega-subtitle")
+            yield DurationPresetTable(id="duration-preset-reference")
             yield Static("")
             with Horizontal(classes="omega-actions"), Container(classes="omega-btn-frame"):
                 yield Button("Retour", id="back")
@@ -111,6 +140,12 @@ class HelpScreen(OmegaScreen):
 #   moyen 100% souris de le quitter) — incoherent avec tous les autres
 #   ecrans, qui offrent tous ce bouton. dismiss() sans argument, meme
 #   comportement qu'Escape (OmegaScreen[None]).
+# - DurationPresetTable (2026-09-01) : AVANT ce correctif, le mode
+#   "profil" D1-D6 (deja fonctionnel dans les 3 ecrans de lancement et le
+#   CLI) n'apparaissait nulle part ici — bug de decouvrabilite reel
+#   signale par l'utilisateur en test ("je vois pas la designation des
+#   profils type D1 et D6"). Meme patron que LoadReferenceTable
+#   (DataTable en lecture seule, donnees figees via le presenter).
 # Comment il sera utilise :
 # - interfaces/tui/app.py::action_help() (touche `a`, global).
 # - interfaces/tui/screens/home.py (bouton "Aide").

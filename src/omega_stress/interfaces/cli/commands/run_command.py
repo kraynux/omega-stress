@@ -11,8 +11,9 @@ from omega_stress.application.commands.run_connection_load import run_connection
 from omega_stress.application.commands.run_precheck import run_precheck
 from omega_stress.application.commands.run_ramp_load import run_ramp_load
 from omega_stress.application.commands.run_request_load import run_request_load
-from omega_stress.core.enums import IntensityLevel
+from omega_stress.core.enums import DurationPresetId, IntensityLevel
 from omega_stress.core.results import Err, Ok, Result
+from omega_stress.domain.load.duration_presets import duration_preset
 from omega_stress.domain.load.models import Thresholds
 from omega_stress.domain.runs.models import IntervalSample
 from omega_stress.interfaces.cli.formatters.text_formatter import format_run, to_json
@@ -81,7 +82,29 @@ def _add_load_launch_arguments(parser: argparse.ArgumentParser) -> None:
     parser.add_argument("--target-id", required=True)
     parser.add_argument("--target-url", required=True)
     parser.add_argument("--level", required=True, choices=[level.value for level in IntensityLevel])
-    parser.add_argument("--duration-minutes", required=True, type=int)
+    duration_group = parser.add_mutually_exclusive_group(required=True)
+    duration_group.add_argument(
+        "--duration-minutes", type=int, help="Mode manuel : duree en minutes (choix fermes)"
+    )
+    duration_group.add_argument(
+        "--duration-preset",
+        choices=[preset_id.value for preset_id in DurationPresetId],
+        help="Mode profil D1-D6 : duree fixe deduite du profil, exclusif avec --duration-minutes",
+    )
+    parser.add_argument(
+        "--confirmation-text",
+        default=None,
+        help="Confirmation renforcee exacte (voir --duration-preset), ignoree en mode manuel",
+    )
+    parser.add_argument(
+        "--unsafe",
+        action="store_true",
+        help=(
+            "Desactive le mode securite (arrets automatiques bases sur le CPU/la memoire "
+            "de CETTE machine) — les protections de la cible (taux d'erreur, latence) "
+            "restent actives dans tous les cas"
+        ),
+    )
     parser.add_argument("--max-error-rate", required=True, type=float)
     parser.add_argument("--max-p95-latency-ms", type=float, default=None)
     parser.add_argument("--profile-id", default=None)
@@ -163,7 +186,7 @@ async def _handle_replay(
 
 def _ensure_capabilities_probed(container: DependencyContainer) -> None:
     """Peuple core/capability_registry.py depuis un sondage frais avant
-    tout lancement — sans cela, un lancement Haut/Maximum leverait
+    tout lancement — sans cela, un lancement Violent/Maximum leverait
     CapabilityRegistryError (capacite jamais enregistree) au lieu d'un
     refus controle, alors que le pre-flight check est cense produire
     exactement ce refus explicite (voir plan produit, "Configuration
@@ -174,11 +197,22 @@ def _ensure_capabilities_probed(container: DependencyContainer) -> None:
 
 def _load_kwargs(args: argparse.Namespace, container: DependencyContainer) -> dict:
     _ensure_capabilities_probed(container)
+    duration_preset_id = (
+        DurationPresetId(args.duration_preset) if args.duration_preset is not None else None
+    )
+    duration_minutes = (
+        duration_preset(duration_preset_id).total_minutes
+        if duration_preset_id is not None
+        else args.duration_minutes
+    )
     return dict(
         target_id=args.target_id,
         target_url=args.target_url,
         level=IntensityLevel(args.level),
-        duration_minutes=args.duration_minutes,
+        duration_minutes=duration_minutes,
+        duration_preset_id=duration_preset_id,
+        reinforced_confirmation_text=args.confirmation_text,
+        safety_mode=not args.unsafe,
         thresholds=Thresholds(
             max_error_rate=args.max_error_rate, max_p95_latency_ms=args.max_p95_latency_ms
         ),
@@ -220,7 +254,7 @@ def _finish(result: Result, args: argparse.Namespace) -> Result[str, str]:
 # - Aucun sondage de capacite systeme actif : container.capability_registry
 #   est transmis tel quel (potentiellement vide en debut de processus) —
 #   le peuplement depuis infrastructure/probe/local_probe.py n'est pas
-#   encore cable ici, a faire quand un besoin reel de blocage Haut/Maximum
+#   encore cable ici, a faire quand un besoin reel de blocage Violent/Maximum
 #   sur capacite sera exerce en pratique (le guard reste fonctionnel avec
 #   un registre vide : capability_guard leve CapabilityRegistryError sur
 #   une capacite jamais enregistree, ce qui bloque prudemment plutot que
@@ -234,6 +268,22 @@ def _finish(result: Result, args: argparse.Namespace) -> Result[str, str]:
 #   differe) — evite de dupliquer un dict de 15 champs trois fois.
 # - _finish() est le point unique de traduction Result[RunDTO, ...] ->
 #   Result[str, str], reutilise par les cinq handlers.
+# - --unsafe (2026-09-01, "mode securite" a cocher, bug reel rapporte
+#   avec captures d'ecran) : absent par defaut = mode securite actif
+#   (safety_mode=True), symetrique au TUI (case cochee par defaut) —
+#   desactive UNIQUEMENT application/pipeline/guards/resource_guard.py
+#   (CPU/memoire/FDs de CETTE machine), jamais threshold_guard.py
+#   (protection de la cible, toujours active). Voir domain/load/
+#   policies.py::SAFETY_MODE_DESCRIPTION pour le texte complet des
+#   risques (repris dans --help ci-dessus, forme abregee).
+# - --duration-minutes/--duration-preset (2026-09-01, mode "profil"
+#   D1-D6) : groupe argparse MUTUELLEMENT EXCLUSIF, l'un des deux
+#   obligatoire — argparse rejette nativement les deux a la fois ou
+#   aucun, aucune validation manuelle necessaire ici. En mode profil,
+#   duration_minutes est DEDUIT du profil (duration_preset().total_minutes)
+#   plutot que redemande a l'utilisateur, --confirmation-text reste
+#   ignore silencieusement en mode manuel (jamais consulte par
+#   validate_plan() dans ce cas).
 # Comment il sera utilise (apercu) :
 # - interfaces/cli/main.py appelle register() au demarrage.
 #---------------------------------------------------------------------->

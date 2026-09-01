@@ -90,6 +90,8 @@ async def launch_plan(
         family=plan.family,
         level=plan.level,
         started_at=started_at,
+        duration_preset_id=plan.duration_preset_id,
+        safety_mode=plan.safety_mode,
     )
 
     finished = await execute(
@@ -164,6 +166,14 @@ async def launch_plan(
 #   (memes id/adresse) — effet secondaire voulu, pas un bug : rafraichit
 #   last_used_at a chaque nouveau lancement, coherent avec le sens du mot
 #   "recente".
+# - duration_preset_id (2026-09-01, mode "profil" D1-D6) : simple copie de
+#   plan.duration_preset_id sur le LoadRun construit ici, pour que
+#   l'historique/export sache apres coup quel profil a ete utilise.
+# - safety_mode (2026-09-01, "mode securite" a cocher) : meme geste exact,
+#   simple copie de plan.safety_mode sur le LoadRun construit ici — voir
+#   domain/runs/service.py::finish(), qui doit AUSSI le reporter
+#   explicitement a la cloture (meme point de vigilance deja documente
+#   pour duration_preset_id, bug reel corrige le meme jour).
 # Comment il sera utilise (apercu) :
 # - application/commands/run_request_load.py, run_connection_load.py,
 #   run_ramp_load.py, replay_run.py.

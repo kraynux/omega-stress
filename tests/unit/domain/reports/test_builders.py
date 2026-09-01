@@ -3,7 +3,7 @@ from datetime import datetime, timezone
 import pytest
 
 from omega_stress.core.enums import IntensityLevel, RunVerdict, TestFamily
-from omega_stress.domain.reports.builders import build_report_content
+from omega_stress.domain.reports.builders import build_report_content, verdict_headline
 from omega_stress.domain.runs.models import LoadResult, LoadRun, RunEvent
 
 STARTED = datetime(2026, 8, 23, 10, 0, tzinfo=timezone.utc)
@@ -47,6 +47,12 @@ def test_raises_for_unfinished_run():
         build_report_content(unfinished, target_address="https://example.org/")
 
 
+def test_summary_propagates_safety_mode():
+    content = build_report_content(_run(safety_mode=False), target_address="https://example.org/")
+
+    assert content.summary.safety_mode is False
+
+
 def test_builds_summary_with_computed_duration():
     content = build_report_content(_run(), target_address="https://example.org/")
 
@@ -85,6 +91,69 @@ def test_minor_rate_gap_does_not_flag_bottleneck():
     content = build_report_content(fine, target_address="https://example.org/")
 
     assert content.diagnostic.recommendations == ()
+
+
+def test_high_generator_cpu_peak_flags_a_recommendation():
+    hot_generator = _run(result=_result(peak_cpu_percent_generator=92.0))
+
+    content = build_report_content(hot_generator, target_address="https://example.org/")
+
+    assert any("generateur" in rec.lower() for rec in content.diagnostic.recommendations)
+
+
+def test_low_generator_cpu_peak_does_not_flag_a_recommendation():
+    cool_generator = _run(result=_result(peak_cpu_percent_generator=30.0))
+
+    content = build_report_content(cool_generator, target_address="https://example.org/")
+
+    assert content.diagnostic.recommendations == ()
+
+
+def test_no_cpu_measurement_does_not_flag_a_recommendation():
+    no_measurement = _run(result=_result(peak_cpu_percent_generator=None))
+
+    content = build_report_content(no_measurement, target_address="https://example.org/")
+
+    assert content.diagnostic.recommendations == ()
+
+
+def test_manual_stop_headline_is_distinct_from_threshold_headline():
+    # Bug reel rapporte (capture d'ecran) : les deux causes d'AUTO_STOPPED
+    # affichaient le meme libelle "...suite a un depassement de seuil",
+    # en contradiction directe avec un diagnostic "Arrete manuellement
+    # par l'utilisateur." juste en dessous.
+    threshold_headline = verdict_headline(
+        RunVerdict.AUTO_STOPPED, last_event_kind="generator_cpu_exceeded"
+    )
+    manual_headline = verdict_headline(RunVerdict.AUTO_STOPPED, last_event_kind="manual_stop")
+
+    assert "depassement de seuil" in threshold_headline
+    assert "depassement de seuil" not in manual_headline
+    assert "manuellement" in manual_headline
+
+
+def test_auto_stopped_headline_without_event_kind_defaults_to_threshold_wording():
+    assert "depassement de seuil" in verdict_headline(RunVerdict.AUTO_STOPPED, last_event_kind=None)
+
+
+def test_manually_stopped_run_shows_the_manual_headline_in_its_report():
+    stopped = _run(
+        result=_result(
+            verdict=RunVerdict.AUTO_STOPPED,
+            events=(
+                RunEvent(
+                    occurred_at=FINISHED,
+                    kind="manual_stop",
+                    message="Arrete manuellement par l'utilisateur.",
+                ),
+            ),
+        )
+    )
+
+    content = build_report_content(stopped, target_address="https://example.org/")
+
+    assert "manuellement" in content.diagnostic.headline
+    assert "depassement de seuil" not in content.diagnostic.headline
 
 
 def test_run_events_are_surfaced_as_recommendations():

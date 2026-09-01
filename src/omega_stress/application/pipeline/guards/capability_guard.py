@@ -1,5 +1,5 @@
 # Copyright (c) 2026 kraynux - kraynux@proton.me - Licence MIT (voir fichier LICENSE)
-"""Guard 3/4 du pipeline : capacite systeme suffisante (ARCHITECTURE.md §4)."""
+"""Guard 3/5 du pipeline : capacite systeme suffisante (ARCHITECTURE.md §4)."""
 from __future__ import annotations
 
 from omega_stress.application.exceptions import CapabilityUnavailableError
@@ -33,7 +33,7 @@ def check_capability(
 #   sondage direct ici) : ce guard ne fait aucun appel systeme lui-meme,
 #   c'est infrastructure/probe/ qui a deja peuple le registre en amont
 #   (typiquement au demarrage de l'application ou juste avant un run
-#   Haut/Maximum, voir plan produit "Configuration minimale du
+#   Violent/Maximum, voir plan produit "Configuration minimale du
 #   generateur").
 # Ce qu'il ne contient PAS :
 # - Aucun sondage systeme (infrastructure/probe/local_probe.py,
@@ -54,5 +54,5 @@ def check_capability(
 # Comment il sera utilise (apercu) :
 # - application/pipeline/planner.py appelle ce guard pour chaque capacite
 #   pertinente (ex. "system.available_fd") avant de construire le plan
-#   pour un niveau Haut/Maximum.
+#   pour un niveau Violent/Maximum.
 #---------------------------------------------------------------------->

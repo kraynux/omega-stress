@@ -3,7 +3,10 @@
 from __future__ import annotations
 
 from omega_stress.core.enums import RunVerdict
-from omega_stress.domain.load.policies import LOCAL_BOTTLENECK_RATIO_THRESHOLD
+from omega_stress.domain.load.policies import (
+    GENERATOR_CPU_WARNING_THRESHOLD,
+    LOCAL_BOTTLENECK_RATIO_THRESHOLD,
+)
 from omega_stress.domain.reports.models import ReportContent, ReportDiagnostic, ReportSummary
 from omega_stress.domain.runs.models import LoadResult, LoadRun
 
@@ -17,6 +20,31 @@ VERDICT_HEADLINES: dict[RunVerdict, str] = {
     ),
     RunVerdict.FAILED: "Le test a echoue avant d'avoir pu produire un resultat exploitable.",
 }
+
+MANUAL_STOP_HEADLINE = "Le test a ete arrete manuellement par l'utilisateur."
+"""Bug reel rapporte (2026-09-01, capture d'ecran fournie) : un arret
+manuel (bouton "Arreter") partage le verdict AUTO_STOPPED avec un arret
+automatique par seuil (voir application/pipeline/executor.py, INFO DEV,
+"ces deux motifs partagent le meme sens produit") — VERDICT_HEADLINES
+indexe seulement par verdict affichait donc "arrete... suite a un
+depassement de seuil" MEME pour un arret manuel, en contradiction directe
+avec le diagnostic (dernier RunEvent, kind="manual_stop", message "Arrete
+manuellement par l'utilisateur.") affiche juste en dessous — deux
+messages contradictoires sur le meme ecran. verdict_headline() ci-dessous
+distingue desormais les deux cas via RunEvent.kind, jamais le verdict
+seul."""
+
+
+def verdict_headline(verdict: RunVerdict, *, last_event_kind: str | None = None) -> str:
+    """Libelle explicatif d'un verdict, en tenant compte du DERNIER
+    evenement quand le verdict seul est ambigu (AUTO_STOPPED : seuil
+    depasse OU arret manuel, memes verdict, causes distinctes — voir
+    MANUAL_STOP_HEADLINE ci-dessus). Point d'entree UNIQUE, remplace tout
+    acces direct a VERDICT_HEADLINES[...] : jamais deux endroits qui
+    pourraient diverger sur ce cas particulier."""
+    if verdict is RunVerdict.AUTO_STOPPED and last_event_kind == "manual_stop":
+        return MANUAL_STOP_HEADLINE
+    return VERDICT_HEADLINES[verdict]
 
 
 def build_report_content(run: LoadRun, *, target_address: str) -> ReportContent:
@@ -43,13 +71,16 @@ def build_report_content(run: LoadRun, *, target_address: str) -> ReportContent:
         started_at=run.started_at,
         finished_at=run.finished_at,
         duration_minutes=duration_minutes,
+        duration_preset_id=run.duration_preset_id,
+        safety_mode=run.safety_mode,
     )
     diagnostic = _build_diagnostic(run.result)
     return ReportContent(summary=summary, result=run.result, diagnostic=diagnostic)
 
 
 def _build_diagnostic(result: LoadResult) -> ReportDiagnostic:
-    headline = VERDICT_HEADLINES[result.verdict]
+    last_event_kind = result.events[-1].kind if result.events else None
+    headline = verdict_headline(result.verdict, last_event_kind=last_event_kind)
     recommendations: list[str] = [event.message for event in result.events]
 
     if result.error_count > 0:
@@ -68,6 +99,16 @@ def _build_diagnostic(result: LoadResult) -> ReportDiagnostic:
             "Debit observe significativement inferieur au debit demande : "
             "le generateur local peut etre devenu le goulot d'etranglement "
             "(voir plan produit, Configuration minimale du generateur)."
+        )
+
+    if (
+        result.peak_cpu_percent_generator is not None
+        and result.peak_cpu_percent_generator >= GENERATOR_CPU_WARNING_THRESHOLD
+    ):
+        recommendations.append(
+            f"CPU du generateur monte a {result.peak_cpu_percent_generator:.0f} % au pic "
+            f"pendant le test : les resultats peuvent en partie refleter une limite du "
+            f"generateur local plutot que celle de la cible."
         )
 
     return ReportDiagnostic(
@@ -115,6 +156,17 @@ def _build_diagnostic(result: LoadResult) -> ReportDiagnostic:
 #   ce verdict ?") — une seule formulation par verdict, partagee entre
 #   l'export et l'ecran de detail, jamais deux textes qui pourraient
 #   diverger.
+# - verdict_headline()/MANUAL_STOP_HEADLINE (2026-09-01, bug reel rapporte
+#   avec capture d'ecran) : VERDICT_HEADLINES seul ne distingue pas les
+#   deux causes d'AUTO_STOPPED (seuil depasse / arret manuel), produisant
+#   un ecran contradictoire ("...suite a un depassement de seuil" au-
+#   dessus de "Arrete manuellement par l'utilisateur." juste en dessous).
+#   _build_diagnostic() et run_presenter.py::verdict_explanation()
+#   passent tous deux desormais par cette fonction plutot que d'indexer
+#   VERDICT_HEADLINES directement — VERDICT_HEADLINES reste public (garde
+#   son sens pour SUCCESS/DEGRADED/FAILED, jamais ambigus) mais ne doit
+#   plus etre indexe directement pour AUTO_STOPPED en dehors de cette
+#   fonction.
 # Comment il sera utilise (apercu) :
 # - application/commands/export_run_report.py appelle
 #   build_report_content() puis passe le resultat a

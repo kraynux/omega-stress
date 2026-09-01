@@ -2,8 +2,9 @@
 """Presenter : catalogue de themes et libelle d'etat pour l'ecran Reglages."""
 from __future__ import annotations
 
+from omega_lib.theme.policies import EXPORT_PALETTES, TUI_THEMES
+
 from omega_stress.application.dto.theme_dto import ThemeStatusDTO
-from omega_stress.domain.theme.policies import EXPORT_PALETTES, TUI_THEMES
 
 
 def available_theme_names() -> tuple[str, ...]:

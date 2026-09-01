@@ -6,7 +6,7 @@ import math
 
 from omega_stress.application.dto.run_dto import IntervalSampleDTO, RunDTO
 from omega_stress.core.enums import RunVerdict
-from omega_stress.domain.reports.builders import VERDICT_HEADLINES
+from omega_stress.domain.reports.builders import verdict_headline
 
 _VERDICT_LABELS: dict[str, str] = {
     "success": "Reussi",
@@ -30,10 +30,13 @@ def verdict_label(run: RunDTO) -> str:
 def verdict_explanation(run: RunDTO) -> str:
     """Phrase en clair expliquant CE QUE SIGNIFIE le verdict (pas
     seulement son libelle) — chaine vide tant que le run est en cours
-    (aucun verdict decide)."""
+    (aucun verdict decide). Distingue un arret automatique par seuil d'un
+    arret manuel (meme verdict AUTO_STOPPED pour les deux, voir
+    domain/reports/builders.py::verdict_headline())."""
     if run.verdict is None:
         return ""
-    return VERDICT_HEADLINES.get(RunVerdict(run.verdict), "")
+    last_event_kind = run.events[-1].kind if run.events else None
+    return verdict_headline(RunVerdict(run.verdict), last_event_kind=last_event_kind)
 
 
 def diagnostic_message(run: RunDTO) -> str:
@@ -93,13 +96,16 @@ def chronology_lines(samples: tuple[IntervalSampleDTO, ...]) -> tuple[str, ...]:
 #   ce module ne fait que formater une valeur deja decidee.
 # Points cles :
 # - verdict_explanation() (2026-08-25) : reutilise domain/reports/
-#   builders.py::VERDICT_HEADLINES (renommee publique le meme jour,
+#   builders.py::verdict_headline() (renommee publique le meme jour,
 #   utilisee jusque-la seulement par l'export) plutot que d'inventer un
 #   second texte ici — bug reel rapporte ("verdict degrade par exemple...
 #   a quoi correspond ce verdict ?", screens/run_details.py n'affichait
 #   QUE le libelle court avant ce correctif, jamais d'explication). Une
 #   seule formulation par verdict, partagee entre export et ecran de
-#   detail.
+#   detail. Depuis le 2026-09-01, passe aussi le DERNIER RunEventDTO.kind
+#   (voir verdict_headline(), distingue arret automatique/manuel) — meme
+#   correctif, meme raison que la premiere fois (deux formulations qui
+#   pourraient diverger sur le meme cas particulier).
 # - metrics_summary() teste observed_rate_per_minute (jamais verdict) pour
 #   decider si des metriques existent : coherent avec l'invariant
 #   documente dans run_dto.py (tous les champs de resultat sont None

@@ -1,10 +1,10 @@
 import dataclasses
 
 import pytest
+from omega_lib.terminal.models import TerminalSignals
 
 from omega_stress.app.dependency_container import build_container
 from omega_stress.core.enums import ExportFormat
-from omega_stress.domain.terminal.models import TerminalSignals
 from omega_stress.interfaces.tui.app import OmegaStressApp
 from omega_stress.interfaces.tui.screens.export_dialog import ExportDialogScreen
 from omega_stress.interfaces.tui.screens.help_screen import HelpScreen

@@ -17,7 +17,20 @@ class ValidationError(DomainError):
 
 
 class ThresholdExceededError(DomainError):
-    """Seuil de securite depasse (ex. debit reel > seuil d'arret)."""
+    """Seuil de securite depasse (ex. debit reel > seuil d'arret).
+
+    signal (Phase 2 garde-fous, raison d'arret structuree) identifie
+    QUEL declencheur a leve l'erreur — "threshold_exceeded" par defaut
+    (comportement historique inchange, seuil par intervalle unique),
+    ou l'un des signaux de fenetre glissante/ressources generateur
+    (voir domain/load/validators.py). Consomme par
+    application/pipeline/abort.py pour construire un RunEvent.kind
+    specifique plutot qu'un seul "threshold_exceeded" generique pour
+    toute cause d'arret."""
+
+    def __init__(self, message: str, *, signal: str = "threshold_exceeded") -> None:
+        super().__init__(message)
+        self.signal = signal
 
 
 class UnauthorizedTargetError(DomainError):
@@ -26,7 +39,7 @@ class UnauthorizedTargetError(DomainError):
 
 
 class PrecheckRequiredError(DomainError):
-    """Pre-check obligatoire non valide pour un niveau Haut/Maximum
+    """Pre-check obligatoire non valide pour un niveau Violent/Maximum
     (domain/load/policies.py : PRECHECK_MANDATORY_LEVELS)."""
 
 

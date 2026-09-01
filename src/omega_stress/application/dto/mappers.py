@@ -2,6 +2,9 @@
 """Conversion entites de domaine <-> DTO, dans les deux sens ou l'exposition l'exige."""
 from __future__ import annotations
 
+from omega_lib.terminal.models import TerminalProfile
+from omega_lib.theme.models import AppliedTheme
+
 from omega_stress.application.dto.profile_dto import ProfileDTO
 from omega_stress.application.dto.run_dto import IntervalSampleDTO, RunDTO, RunEventDTO
 from omega_stress.application.dto.target_dto import TargetDTO
@@ -10,8 +13,6 @@ from omega_stress.application.dto.theme_dto import ThemeStatusDTO
 from omega_stress.domain.profiles.models import Profile
 from omega_stress.domain.runs.models import LoadRun
 from omega_stress.domain.targets.models import PinnedTarget, Target
-from omega_stress.domain.terminal.models import TerminalProfile
-from omega_stress.domain.theme.models import AppliedTheme
 
 
 def profile_to_dto(profile: Profile) -> ProfileDTO:
@@ -93,6 +94,15 @@ def run_to_dto(run: LoadRun, *, target_address: str) -> RunDTO:
         events=events,
         sample_count=len(result.samples) if result is not None else 0,
         samples=samples,
+        errors_timeout=result.errors.timeout if result is not None else 0,
+        errors_connection=result.errors.connection if result is not None else 0,
+        errors_http_4xx=result.errors.http_4xx if result is not None else 0,
+        errors_http_5xx=result.errors.http_5xx if result is not None else 0,
+        errors_other=result.errors.other if result is not None else 0,
+        peak_cpu_percent_generator=(
+            result.peak_cpu_percent_generator if result is not None else None
+        ),
+        peak_memory_rss_mb=result.peak_memory_rss_mb if result is not None else None,
     )
 
 

@@ -38,10 +38,13 @@ async def run_precheck(
 ) -> Result[RunDTO, PlanValidationError]:
     """Lance un Pre-check : duree fixe de 1 minute (borne haute de la
     plage "30 secondes a 1 minute" du plan produit — voir Points cles),
-    intensite Bas (la plus faible du catalogue de presets). Un Pre-check
-    n'exige jamais son propre Pre-check prealable (domain/load/policies.py::
-    is_precheck_mandatory(BAS) est toujours False), mais exige toujours
-    l'autorisation de la cible comme n'importe quel run.
+    intensite Faible (la plus faible du catalogue de presets, Phase 3
+    2026-09-01 — anciennement Bas avant l'extension a 8 niveaux, bascule
+    vers Faible car Bas est passe de 250 a 500 req/min avec la nouvelle
+    grille, plus assez modeste pour une sonde de decouverte). Un
+    Pre-check n'exige jamais son propre Pre-check prealable (domain/load/
+    policies.py::is_precheck_mandatory(FAIBLE) est toujours False), mais
+    exige toujours l'autorisation de la cible comme n'importe quel run.
     """
     authorization = check_authorization(
         target_id, target_repository=target_repository, explicit_confirmation=explicit_confirmation
@@ -52,7 +55,7 @@ async def run_precheck(
     plan = LoadPlan(
         id=id_factory(),
         family=TestFamily.REQUEST,
-        level=IntensityLevel.BAS,
+        level=IntensityLevel.FAIBLE,
         duration=Duration(minutes=1),
         thresholds=Thresholds(max_error_rate=1.0),
         target_authorization_confirmed=True,
@@ -102,9 +105,9 @@ async def run_precheck(
 # - Aucun parametre level/duration_minutes/thresholds : contrairement aux
 #   trois autres commands run_*_load, un Pre-check n'est PAS configurable
 #   par l'utilisateur — ses valeurs sont figees par le plan produit.
-# - Aucune verification de pre-check_guard sur lui-meme : BAS n'exige
+# - Aucune verification de pre-check_guard sur lui-meme : FAIBLE n'exige
 #   jamais de pre-check (domain/load/policies.py::PRECHECK_MANDATORY_LEVELS
-#   ne contient que HAUT/MAXIMUM), donc appeler ce guard serait un
+#   ne contient que AGRESSIF/MAXIMUM), donc appeler ce guard serait un
 #   contournement vide de sens.
 # - Aucun calcul de validite temporelle d'un Pre-check anterieur (voir
 #   domain/load/policies.py::PRECHECK_VALIDITY_HOURS, pas encore consomme
@@ -135,6 +138,8 @@ async def run_precheck(
 #   principe).
 # Comment il sera utilise (apercu) :
 # - interfaces/tui/screens/request_panel.py (et equivalents) declenchent
-#   ce command avant d'autoriser un lancement Haut/Maximum.
+#   ce command avant d'autoriser un lancement gate obligatoire (Violent/
+#   Maximum) ou pour debloquer les durees etendues d'un gate optionnel
+#   (Puissant/Agressif).
 # - interfaces/cli/commands/run_command.py, sous-commande precheck.
 #---------------------------------------------------------------------->

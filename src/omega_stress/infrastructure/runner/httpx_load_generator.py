@@ -5,14 +5,19 @@ from __future__ import annotations
 import asyncio
 import time
 from collections.abc import AsyncIterator, Awaitable, Callable
+from dataclasses import replace
 
 import httpx
 
 from omega_stress.application.exceptions import RunnerFailureError
 from omega_stress.domain.load.models import LoadPlan
-from omega_stress.domain.load.policies import SAMPLE_INTERVAL_SECONDS
+from omega_stress.domain.load.policies import (
+    GENERATOR_MAX_CONCURRENT_REQUESTS_PER_INTERVAL,
+    SAMPLE_INTERVAL_SECONDS,
+)
 from omega_stress.domain.load.presets import FIXED_RATE_PRESETS
 from omega_stress.domain.runs.models import IntervalSample
+from omega_stress.infrastructure.probe.live_probe import LiveSystemSampler
 from omega_stress.infrastructure.runner.async_worker import RequestOutcome, perform_request
 from omega_stress.infrastructure.runner.engine_params import (
     IntervalTarget,
@@ -20,6 +25,7 @@ from omega_stress.infrastructure.runner.engine_params import (
     total_intervals,
 )
 from omega_stress.infrastructure.runner.result_parser import parse_interval
+from omega_stress.ports.system_sampler import SystemSampler
 
 SleepFn = Callable[[float], Awaitable[object]]
 
@@ -57,10 +63,17 @@ class HttpxLoadGenerator:
         timeout_seconds: float = 10.0,
         transport: httpx.AsyncBaseTransport | None = None,
         sleep: SleepFn = asyncio.sleep,
+        system_sampler: SystemSampler | None = None,
     ) -> None:
         self._timeout_seconds = timeout_seconds
         self._transport = transport
         self._sleep = sleep
+        # Construit ICI (jamais comme valeur par defaut du parametre, qui
+        # partagerait UNE SEULE instance psutil.Process() entre tous les
+        # HttpxLoadGenerator du processus) : chaque instance garde son
+        # propre etat de sondage. Un fake injecte dans les tests n'appelle
+        # jamais psutil.
+        self._system_sampler = system_sampler if system_sampler is not None else LiveSystemSampler()
 
     async def run(self, plan: LoadPlan, *, target_url: str) -> AsyncIterator[IntervalSample]:
         async with httpx.AsyncClient(
@@ -73,11 +86,22 @@ class HttpxLoadGenerator:
             ),
         ) as client:
             await self._check_reachable(client, target_url)
+            semaphore = asyncio.Semaphore(GENERATOR_MAX_CONCURRENT_REQUESTS_PER_INTERVAL)
 
             for interval_index in range(total_intervals(plan)):
                 target = target_for_interval(plan, interval_index)
-                outcomes = await self._run_interval(client, target_url, target)
-                yield parse_interval(interval_index * SAMPLE_INTERVAL_SECONDS, outcomes)
+                outcomes = await self._run_interval(client, target_url, target, semaphore)
+                sample = parse_interval(interval_index * SAMPLE_INTERVAL_SECONDS, outcomes)
+                yield replace(
+                    sample,
+                    requested_rate_per_minute=(
+                        target.requests_per_second * 60.0
+                        if target.requests_per_second > 0
+                        else None
+                    ),
+                    active_connections=target.concurrency,
+                    system=self._system_sampler.sample(),
+                )
 
     async def _check_reachable(self, client: httpx.AsyncClient, target_url: str) -> None:
         """Verifie que la cible repond AVANT de commencer le run. Une
@@ -93,7 +117,11 @@ class HttpxLoadGenerator:
             ) from exc
 
     async def _run_interval(
-        self, client: httpx.AsyncClient, target_url: str, target: IntervalTarget
+        self,
+        client: httpx.AsyncClient,
+        target_url: str,
+        target: IntervalTarget,
+        semaphore: asyncio.Semaphore,
     ) -> list[RequestOutcome]:
         request_count = (
             round(target.requests_per_second * SAMPLE_INTERVAL_SECONDS)
@@ -104,7 +132,12 @@ class HttpxLoadGenerator:
         started = time.perf_counter()
         outcomes: list[RequestOutcome] = []
         if request_count > 0:
-            tasks = [perform_request(client, target_url) for _ in range(request_count)]
+
+            async def _bounded() -> RequestOutcome:
+                async with semaphore:
+                    return await perform_request(client, target_url)
+
+            tasks = [_bounded() for _ in range(request_count)]
             outcomes = list(await asyncio.gather(*tasks))
 
         elapsed = time.perf_counter() - started
@@ -151,6 +184,28 @@ class HttpxLoadGenerator:
 #   intervalle (sleep du temps restant apres les requetes), pour que la
 #   cadence de publication vers run_progress_notifier reste reguliere
 #   meme si la cible repond tres vite.
+# - semaphore (2026-09-01, bug reel rapporte avec captures d'ecran :
+#   interface gelee, latence rapportee depassant le timeout httpx
+#   configure sans aucune erreur comptee, arrets CPU generateur au bout
+#   de 3s reproductibles seulement par intermittence) : cree UNE FOIS
+#   dans run() (pas a chaque intervalle, ni un seul partage entre
+#   plusieurs runs) et transmis a chaque appel de _run_interval() — avant
+#   ce correctif, `request_count` taches etaient lancees en un seul
+#   asyncio.gather() SANS AUCUNE LIMITE (jusqu'a 5000 pour Test
+#   connexions Maximum), bloquant _run_interval() sur cet unique await
+#   pendant potentiellement plusieurs dizaines de secondes reelles pour
+#   un intervalle nominalement d'1s — gelant la boucle asyncio partagee
+#   avec Textual (aucun thread/processus separe), desynchronisant la
+#   cadence de publication du temps reel, et empechant application/
+#   pipeline/guards/resource_guard.py de reagir avant la fin de la salve
+#   entiere. GENERATOR_MAX_CONCURRENT_REQUESTS_PER_INTERVAL (domain/load/
+#   policies.py, valeur et diagnostic complets) borne desormais le nombre
+#   de requetes REELLEMENT en vol en meme temps, jamais le nombre total
+#   de requetes de l'intervalle (request_count reste inchange, seules les
+#   requetes EXCEDENTAIRES attendent leur tour) — meme principe deja
+#   applique correctement des le depart a infrastructure/calibration/
+#   stage_runner.py::HttpxCalibrationStageRunner (asyncio.Semaphore(
+#   vu_target)), jamais retro-applique ici avant ce correctif.
 # - limits=httpx.Limits(...) (2026-08-25, bug reel rapporte : "je suis a
 #   0 erreurs [...] quand je fais le meme test avec loader io j'ai pas
 #   du tout les memes resultats") : sans ce parametre, httpx.AsyncClient

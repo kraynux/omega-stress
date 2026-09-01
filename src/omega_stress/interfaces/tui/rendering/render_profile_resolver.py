@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from omega_stress.core.enums import RenderProfile
+from omega_lib.terminal.models import RenderProfile
 
 _STYLES_DIR = Path(__file__).parent.parent / "styles"
 

@@ -2,7 +2,8 @@
 """Chargement dynamique des chemins de feuille de style selon le profil de rendu."""
 from __future__ import annotations
 
-from omega_stress.core.enums import RenderProfile
+from omega_lib.terminal.models import RenderProfile
+
 from omega_stress.interfaces.tui.rendering.render_profile_resolver import stylesheet_paths_for
 
 

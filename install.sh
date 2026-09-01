@@ -1,13 +1,14 @@
 #!/usr/bin/env bash
 # Copyright (c) 2026 kraynux - kraynux@proton.me - Licence MIT (voir fichier LICENSE)
 # ==============================================================================
-# Script d'installation - OMEGA-SCAN TUI/CLI
+# Script d'installation - OMEGA-STRESS TUI/CLI
 # À lancer depuis le dossier extrait de l'archive : cd omega-stress && ./install.sh
 # Résilient : peut être relancé sans erreur si une étape a déjà été faite.
-# Contrairement à omega-fire.sh, aucune étape ne nécessite les privilèges
-# root (pas de groupe dédié, pas de setgid) : Omega-Scan s'exécute
-# entièrement en utilisateur normal, ses fichiers runtime (var/) lui
-# appartiennent donc déjà nativement.
+# Contrairement à omega-fire.sh (nftables/fail2ban), aucune étape ne
+# nécessite les privilèges root (pas de groupe dédié, pas de setgid) :
+# Omega-Stress s'exécute entièrement en utilisateur normal (appels HTTP
+# sortants uniquement), ses fichiers runtime (var/) lui appartiennent
+# donc déjà nativement.
 # ==============================================================================
 
 set -e
@@ -27,7 +28,7 @@ err()  { echo -e "${RED}❌ $1${NC}"; }
 tip()  { echo -e "${WHITE}💡 $1${NC}"; }
 
 echo -e "${WHITE}    ░▒▓███████████████████████████████████████████████▓▒░${NC}"
-echo -e "${WHITE}    ░ Ω M E G A - SCAN — I N S T A L L A T I O N ░${NC}"
+echo -e "${WHITE}    ░ Ω M E G A - S T R E S S — I N S T A L L A T I O N ░${NC}"
 echo -e "${WHITE}    ░▒▓███████████████████████████████████████████████▓▒░${NC}"
 echo ""
 
@@ -40,40 +41,51 @@ cd "$SCRIPT_DIR"
 if [ -d ".venv" ]; then
     info ".venv existe déjà, création ignorée."
 else
-    if ! python3 -m venv .venv 2>/tmp/omega-scan-venv-err.log; then
+    if ! python3 -m venv .venv 2>/tmp/omega-stress-venv-err.log; then
         err "Échec de la création de l'environnement virtuel."
         warn "Sur Debian/Ubuntu (et dérivées), le module venv n'est pas toujours inclus avec python3 de base."
         tip "Installez-le puis relancez ce script : sudo apt install python3-venv"
-        cat /tmp/omega-scan-venv-err.log >&2
-        rm -f /tmp/omega-scan-venv-err.log
+        cat /tmp/omega-stress-venv-err.log >&2
+        rm -f /tmp/omega-stress-venv-err.log
         exit 1
     fi
-    rm -f /tmp/omega-scan-venv-err.log
+    rm -f /tmp/omega-stress-venv-err.log
     ok "Environnement virtuel créé (.venv)."
 fi
 
 # -------------------------------------------------------------------------
 # 2. Dépendances — pyproject.toml reste l'unique source de verite (pas de
 #    requirements.txt separe a maintenir en double).
+#    omega-lib n'est pas publiee sur PyPI : l'archive distribuable la
+#    vendore dans vendor/omega-lib/ (voir build-release.sh) — installee
+#    ICI, avant omega-stress lui-meme, pour que pip la trouve deja
+#    satisfaite dans le venv et ne tente jamais de la chercher sur PyPI.
+#    Absente en clone de developpement (omega-lib vient alors du
+#    monorepo local ~/DEV/LIB/omega-lib, deja installee a part) : etape
+#    silencieusement ignoree si vendor/omega-lib/ n'existe pas.
 # -------------------------------------------------------------------------
 source .venv/bin/activate
 pip install -q --upgrade pip
+if [ -d "$SCRIPT_DIR/vendor/omega-lib" ]; then
+    pip install -q -e "$SCRIPT_DIR/vendor/omega-lib"
+    ok "Dépendance vendorée omega-lib installée."
+fi
 pip install -q -e .
 ok "Dépendances installées."
 
 # -------------------------------------------------------------------------
 # 3. Scripts exécutables
 # -------------------------------------------------------------------------
-chmod +x omega-scan.sh
+chmod +x omega-stress.sh
 chmod +x "$SCRIPT_DIR/install.sh"
 ok "Scripts rendus exécutables."
 
 # -------------------------------------------------------------------------
 # 4. Alias (optionnel) — bash et zsh, quel que soit celui réellement utilisé.
-#    Pas de sudo ici  : Omega-Scan ne requiert
+#    Pas de sudo ici : Omega-Stress ne requiert
 #    aucun privilège root.
 # -------------------------------------------------------------------------
-ALIAS_LINE="alias scan=\"${SCRIPT_DIR}/omega-scan.sh\""
+ALIAS_LINE="alias stress=\"${SCRIPT_DIR}/omega-stress.sh\""
 
 for rc in "$HOME/.bashrc" "$HOME/.zshrc"; do
     rc_name="$(basename "$rc")"
@@ -88,4 +100,4 @@ done
 
 echo ""
 ok "Installation terminée."
-tip "Lancez Omega-Scan avec : ${SCRIPT_DIR}/omega-scan.sh (ou 'scan' dans un nouveau terminal si l'alias vient d'être ajouté)."
+tip "Lancez Omega-Stress avec : ${SCRIPT_DIR}/omega-stress.sh (ou 'stress' dans un nouveau terminal si l'alias vient d'être ajouté)."

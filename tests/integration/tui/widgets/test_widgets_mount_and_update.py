@@ -1,13 +1,15 @@
+from omega_lib.terminal.models import RenderProfile
 from textual.app import App, ComposeResult
+from textual.widgets import Static
 
 from omega_stress.application.dto.profile_dto import ProfileDTO
 from omega_stress.application.dto.run_dto import RunDTO
 from omega_stress.application.dto.target_dto import TargetDTO
-from omega_stress.core.enums import RenderProfile
 from omega_stress.domain.runs.models import IntervalSample
 from omega_stress.interfaces.tui.widgets.authorization_checkbox import (
     AuthorizationCheckbox,
 )
+from omega_stress.interfaces.tui.widgets.duration_preset_table import DurationPresetTable
 from omega_stress.interfaces.tui.widgets.history_table import HistoryTable
 from omega_stress.interfaces.tui.widgets.load_reference_table import LoadReferenceTable
 from omega_stress.interfaces.tui.widgets.notification_bar import NotificationBar
@@ -16,6 +18,7 @@ from omega_stress.interfaces.tui.widgets.progress_panel import ProgressPanel
 from omega_stress.interfaces.tui.widgets.render_profile_badge import (
     RenderProfileBadge,
 )
+from omega_stress.interfaces.tui.widgets.run_progress import RunProgress
 from omega_stress.interfaces.tui.widgets.stat_card import StatCard
 from omega_stress.interfaces.tui.widgets.target_picker import TargetPicker
 from omega_stress.interfaces.tui.widgets.theme_badge import ThemeBadge
@@ -88,6 +91,37 @@ async def test_stat_card_updates_its_value():
         assert card.query_one("#value").visual.plain == "248 req/min"
 
 
+async def test_run_progress_shows_a_deterministic_countdown():
+    # Bug reel rapporte a trois reprises avec captures d'ecran ("le
+    # compteur decompte a partir de 3mn alors que 1mn selectionne"),
+    # persistant meme apres un premier correctif errone (voir
+    # widgets/run_progress.py, INFO DEV, pour le diagnostic complet) :
+    # textual.widgets.ProgressBar(show_eta=True) ESTIME le temps restant
+    # a partir de la vitesse observee, structurellement peu fiable sur ce
+    # workload (demarrage plus lent que le regime de croisiere, debit
+    # variable pour une rampe). Remplace par un calcul direct (total -
+    # ecoule), verifie ici : jamais d'estimation, jamais de fluctuation
+    # sans rapport avec la progression reelle.
+    widget = RunProgress()
+
+    class _ProbeApp(App):
+        def compose(self) -> ComposeResult:
+            yield widget
+
+    app = _ProbeApp()
+    async with app.run_test():
+        widget.start(total_seconds=60.0)
+        label = widget.query_one("#run-progress-label", Static)
+        assert "01:00" in label.visual.plain
+
+        widget.update_elapsed(45.0)
+        assert "00:15" in label.visual.plain
+
+        widget.update_elapsed(75.0)  # depasse la duree prevue
+        assert "depasse" in label.visual.plain
+        assert "00:15" in label.visual.plain
+
+
 async def test_progress_panel_reflects_interval_sample():
     panel = ProgressPanel()
 
@@ -125,7 +159,19 @@ async def test_load_reference_table_loads_all_rows_on_mount():
 
     app = _ProbeApp()
     async with app.run_test():
-        assert table.row_count == 12
+        assert table.row_count == 24
+
+
+async def test_duration_preset_table_loads_all_rows_on_mount():
+    table = DurationPresetTable()
+
+    class _ProbeApp(App):
+        def compose(self) -> ComposeResult:
+            yield table
+
+    app = _ProbeApp()
+    async with app.run_test():
+        assert table.row_count == 6
 
 
 async def test_profile_list_loads_profile_rows():

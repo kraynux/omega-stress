@@ -50,7 +50,7 @@ async def test_precheck_succeeds_with_confirmation():
 
     assert isinstance(result, Ok)
     assert result.value.family == "request"
-    assert result.value.level == "bas"
+    assert result.value.level == "faible"
 
 
 async def test_precheck_denied_without_confirmation():

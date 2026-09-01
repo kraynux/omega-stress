@@ -44,7 +44,7 @@ def test_rejects_disallowed_duration_without_persisting():
         description="",
         default_target_id="target-1",
         family=TestFamily.REQUEST,
-        level=IntensityLevel.HAUT,
+        level=IntensityLevel.PUISSANT,
         duration_minutes=5,
         max_error_rate=0.1,
     )

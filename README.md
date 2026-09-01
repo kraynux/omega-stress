@@ -30,6 +30,9 @@ Le projet est conçu selon les principes de la **Clean Architecture**, avec une 
 - [Prérequis](#prérequis)
 - [Installation](#installation)
 - [Utilisation](#utilisation)
+- [Profils de durée D1-D6](#profils-de-durée-d1-d6-mode-profil)
+- [Mode sécurité](#mode-sécurité)
+- [Calibrage local](#calibrage-local)
 - [Configuration](#configuration)
 - [Tests et qualité](#tests-et-qualité)
 - [Désinstallation](#désinstallation)
@@ -43,8 +46,11 @@ Le projet est conçu selon les principes de la **Clean Architecture**, avec une 
 ## Ce que fait Omega-Stress (cible V1)
 
 - Trois familles de test encadrées : **Test requêtes** (débit), **Test connexions** (simultanéité), **Test charge** (montée progressive).
+- **8 niveaux d'intensité** (Faible/Bas/Moyen/Haut/Puissant/Agressif/Violent/Maximum), avec un modèle de pré-check à 3 paliers (jamais gaté / gaté optionnel / gaté obligatoire — voir [Valeurs des tests](#valeurs-des-tests)).
+- **Deux modes de durée** : manuel (1 à 5 min, borné par niveau) ou **profil nommé D1-D6** (durée totale fixe avec warm-up/rampe/plateau/retour au calme — voir [Profils de durée D1-D6](#profils-de-durée-d1-d6-mode-profil)).
+- **Mode sécurité** (actif par défaut, désactivable à chaque lancement) : garde-fous locaux CPU/mémoire de la machine hôte, distincts des seuils qui protègent la cible testée — voir [Mode sécurité](#mode-sécurité).
+- **Calibrage local persistant** : mesure la capacité réelle de la machine hôte (jamais la cible) via un serveur de boucle locale, par paliers de charge croissante — voir [Calibrage local](#calibrage-local).
 - Profils figés, réutilisables, historisés.
-- Pré-check obligatoire avant tout test à intensité Haute/Maximum.
 - Confirmation d'autorisation explicite obligatoire avant tout run sur une cible non épinglée.
 - Seuils d'arrêt automatique, jamais de charge non bornée.
 - Exports JSON/CSV/HTML détaillés (paliers, métriques par intervalle, verdict, diagnostic).
@@ -60,16 +66,19 @@ Le projet est conçu selon les principes de la **Clean Architecture**, avec une 
 
 ## Fonctionnalités
 
-- **Trois familles de test**, chacune avec 4 niveaux d'intensité (Bas/Moyen/Haut/Maximum) — voir le tableau [Repères de charge](#valeurs-des-tests) pour les valeurs exactes de chaque niveau.
+- **Trois familles de test**, chacune avec 8 niveaux d'intensité (Faible/Bas/Moyen/Haut/Puissant/Agressif/Violent/Maximum) — voir le tableau [Repères de charge](#valeurs-des-tests) pour les valeurs exactes de chaque niveau.
 - **Profils de test figés** : nom, cible, famille, intensité, durée, seuil d'erreur — créés une fois, relancés à l'identique depuis le TUI ou le CLI.
+- **Profils de durée nommés D1-D6** (mode « profil »), alternative au mode manuel : une durée totale fixe (1 à 120 min) avec warm-up/rampe/plateau/retour au calme, qui borne aussi les niveaux accessibles — voir [Profils de durée D1-D6](#profils-de-durée-d1-d6-mode-profil).
+- **Mode sécurité**, coché par défaut sur chaque écran de lancement : arrête un test si la machine hôte (pas la cible) semble en danger. Désactivable en connaissance de cause, avec un rappel comparant le niveau choisi au dernier calibrage effectué — voir [Mode sécurité](#mode-sécurité).
+- **Calibrage local persistant** : mesure ce que la machine peut réellement encaisser (7 paliers de charge croissante contre un serveur de boucle locale intégré), consultable depuis l'écran Calibrage — voir [Calibrage local](#calibrage-local).
 - **Cibles épinglées** : une adresse épinglée dispense de recocher l'autorisation à chaque lancement ; les cibles récentes non épinglées restent visibles (10 maximum) sans autorisation implicite.
-- **Historique complet** : chaque run est journalisé (verdict, métriques, chronologie par intervalle) ; un run lié à un profil figé peut être rejoué à l'identique.
+- **Historique complet** : chaque run est journalisé (verdict, métriques, chronologie par intervalle, mode sécurité utilisé) ; un run lié à un profil figé peut être rejoué à l'identique.
 - **Exports détaillés** JSON (données brutes réimportables), CSV (analyse tabulaire) ou HTML (rapport lisible, avec thème au choix parmi les 10 palettes du projet).
-- **Pré-check automatique et obligatoire** avant tout test à intensité Haute/Maximum, avec fenêtre de validité (24 h).
-- **Suivi en direct** d'un test en cours : jauge de progression, débit/erreurs/latence p95 mis à jour à chaque intervalle, arrêt manuel possible sans quitter l'application.
+- **Pré-check** automatique et obligatoire avant tout test Violent/Maximum, facultatif (mais débloquant des durées supplémentaires) sur Puissant/Agressif, avec fenêtre de validité (24 h).
+- **Suivi en direct** d'un test en cours : jauge de progression avec décompte fiable (temps restant calculé directement, jamais estimé), débit/erreurs/latence p95 mis à jour à chaque intervalle, arrêt manuel possible sans quitter l'application.
 - **Réglages centralisés** : thème (10 palettes Omega + tous les thèmes Textual intégrés, soit 31 au total via la palette de commandes), profil de rendu (auto ou forcé), dossiers d'export et de capture d'écran, purge des cibles/de l'historique.
-- **Aide intégrée** (touche `a`) : raccourcis clavier, description de chaque écran, et le tableau de référence des valeurs de charge par type de test et niveau.
-- **CLI scriptable** (`omega-stress profile|run|history|export ...`), exactement les mêmes cas d'usage que le TUI, sortie `--json` disponible pour l'automatisation.
+- **Aide intégrée** (touche `a`) : raccourcis clavier, description de chaque écran (y compris Calibrage et Mode sécurité), tableau de référence des valeurs de charge et tableau des profils de durée D1-D6.
+- **CLI scriptable** (`omega-stress profile|run|history|export|calibrate ...`), exactement les mêmes cas d'usage que le TUI, sortie `--json` disponible pour l'automatisation.
 - **Adaptation automatique au terminal** : famille et taille détectées au démarrage, thème et richesse d'affichage ajustés en conséquence (voir [Terminaux pris en charge](#terminaux-pris-en-charge)).
 
 ## Architecture
@@ -179,7 +188,7 @@ omega-stress profile create --name "Sondage API" --target-id t-1 \
     --family request --level bas --duration-minutes 1 --max-error-rate 0.05
 omega-stress profile freeze <profile-id>                       # figer un profil
 
-# Pré-check obligatoire avant tout lancement Haut/Maximum
+# Pré-check obligatoire avant tout lancement Violent/Maximum (optionnel sur Puissant/Agressif)
 omega-stress run precheck --target-id t-1 --target-url https://exemple.org --confirm
 
 omega-stress run request --target-id t-1 --target-url https://exemple.org \
@@ -187,7 +196,18 @@ omega-stress run request --target-id t-1 --target-url https://exemple.org \
 omega-stress run connection --target-id t-1 --target-url https://exemple.org \
     --level moyen --duration-minutes 3 --max-error-rate 0.05 --confirm
 omega-stress run ramp --target-id t-1 --target-url https://exemple.org \
-    --level haut --duration-minutes 3 --max-error-rate 0.05 --confirm --precheck-validated
+    --level puissant --duration-minutes 3 --max-error-rate 0.05 --confirm --precheck-validated
+
+# Mode profil D1-D6, plutôt que --duration-minutes (mutuellement exclusifs)
+# D4 (resilience) autorise Agressif sans condition, Violent avec confirmation renforcée
+omega-stress run request --target-id t-1 --target-url https://exemple.org \
+    --level violent --duration-preset d4 --max-error-rate 0.05 --confirm \
+    --precheck-validated --confirmation-text JE_CONFIRME_LA_CIBLE_AUTORISEE
+
+# --unsafe desactive le mode securite (garde-fous locaux CPU/memoire) ; absent par defaut
+omega-stress run connection --target-id t-1 --target-url https://exemple.org \
+    --level violent --duration-minutes 1 --max-error-rate 0.05 --confirm \
+    --precheck-validated --unsafe
 
 omega-stress run replay <run-id> --confirm                     # rejoue un run lié à un profil figé
 
@@ -195,39 +215,70 @@ omega-stress history list                                      # historique des 
 omega-stress history show <run-id>                              # détail d'un run
 
 omega-stress export <run-id> --format html --destination var/exports --theme omega-base
+
+omega-stress calibrate run                                      # lance un calibrage de cette machine
+omega-stress calibrate show                                     # affiche le dernier calibrage connu
 ```
 
 `--confirm` est l'équivalent en ligne de commande de la case d'autorisation du TUI : requis pour toute cible qui n'est pas déjà épinglée-autorisée. `--target-id`/`--target-url` identiques indique une cible manuelle (non épinglée) ; utilisez l'identifiant d'une cible déjà épinglée pour éviter `--confirm` à chaque lancement.
 
-Ajoutez `--json` à `history`/`export` pour une sortie machine, exploitable en cron/CI.
+Ajoutez `--json` à `history`/`export`/`calibrate` pour une sortie machine, exploitable en cron/CI.
 
 ### Parcours général
 
-1. Au premier lancement, l'accueil propose : Profils, Test requêtes, Test connexions, Test charge, Historique, Cibles, Réglages, Aide.
-2. Depuis un écran de test : choisir ou saisir une cible, cocher l'autorisation si la cible n'est pas déjà épinglée-autorisée, régler intensité/durée/seuil d'erreur, lancer un pré-check si le niveau l'exige, puis lancer le test.
+1. Au premier lancement, l'accueil propose : Profils, Test requêtes, Test connexions, Test charge, Historique, Cibles, Calibrage, Réglages, Aide.
+2. Depuis un écran de test : choisir ou saisir une cible, cocher l'autorisation si la cible n'est pas déjà épinglée-autorisée, régler intensité/durée (manuelle ou profil D1-D6)/seuil d'erreur, laisser le mode sécurité actif ou le désactiver en connaissance de cause, lancer un pré-check si le niveau l'exige, puis lancer le test.
 3. Le résultat s'affiche immédiatement (verdict, métriques, chronologie), sans repasser par l'Historique — un export est proposé directement depuis cet écran.
 4. Un profil peut être figé pour relancer le même test à l'identique plus tard, depuis l'écran Profils ou en le rejouant depuis l'Historique.
 
 ### Valeurs des tests
 
-| Type de test | Niveau | Dimension pilotée | Cible visée | Simultanéité réelle | Pré-check | Durées disponibles |
-|---|---|---|---|---|---|---|
-| Test requêtes | Bas | Débit | 250 req/min (≈4,2 req/s) | ~4 req/s en rafale | Non | 1 à 5 min |
-| Test requêtes | Moyen | Débit | 500 req/min (≈8,3 req/s) | ~8 req/s en rafale | Non | 1 à 5 min |
-| Test requêtes | Haut | Débit | 1000 req/min (≈16,7 req/s) | ~17 req/s en rafale | Oui | 1 ou 3 min (5 si pré-check) |
-| Test requêtes | Maximum | Débit | 2000 req/min (≈33,3 req/s) | ~33 req/s en rafale | Oui | 1 ou 3 min (5 si pré-check) |
-| Test connexions | Bas | Connexions simultanées | 25 connexions | 25 en parallèle, chaque seconde | Non | 1 à 5 min |
-| Test connexions | Moyen | Connexions simultanées | 50 connexions | 50 en parallèle, chaque seconde | Non | 1 à 5 min |
-| Test connexions | Haut | Connexions simultanées | 100 connexions | 100 en parallèle, chaque seconde | Oui | 1 ou 3 min (5 si pré-check) |
-| Test connexions | Maximum | Connexions simultanées | 200 connexions | 200 en parallèle, chaque seconde | Oui | 1 ou 3 min (5 si pré-check) |
-| Test charge (montée progressive) | Bas | Débit, en rampe | pic 250 req/min | rampe 1 min → plateau 2 min | Non | 1 à 5 min |
-| Test charge (montée progressive) | Moyen | Débit, en rampe | pic 500 req/min | rampe 1 min → plateau 2 min | Non | 1 à 5 min |
-| Test charge (montée progressive) | Haut | Débit, en rampe | pic 1000 req/min | rampe 2 min → plateau 1 min | Oui | 1 ou 3 min (5 si pré-check) |
-| Test charge (montée progressive) | Maximum | Débit, en rampe | pic 2000 req/min | rampe 2 min → plateau 1 min | Oui | 1 ou 3 min (5 si pré-check) |
+8 niveaux d'intensité, identiques dans les trois familles de test (seule la dimension pilotée change) — grille complète :
+
+| Type de test | Niveau | Dimension pilotée | Cible visée | Pré-check | Durées disponibles (mode manuel) |
+|---|---|---|---|---|---|
+| Test requêtes | Faible | Débit | 250 req/min (≈4,2 req/s) | Non | 1 à 5 min |
+| Test requêtes | Bas | Débit | 500 req/min (≈8,3 req/s) | Non | 1 à 5 min |
+| Test requêtes | Moyen | Débit | 1000 req/min (≈16,7 req/s) | Non | 1 à 5 min |
+| Test requêtes | Haut | Débit | 2000 req/min (≈33,3 req/s) | Non | 1 à 5 min |
+| Test requêtes | Puissant | Débit | 6000 req/min (≈100 req/s) | Optionnel | 1 à 3 min (5 si pré-check validé) |
+| Test requêtes | Agressif | Débit | 10 000 req/min (≈167 req/s) | Optionnel | 1 à 3 min (5 si pré-check validé) |
+| Test requêtes | Violent | Débit | 15 000 req/min (≈250 req/s) | **Obligatoire** | 1 à 3 min uniquement |
+| Test requêtes | Maximum | Débit | 20 000 req/min (≈333 req/s) | **Obligatoire** | 1 à 3 min uniquement |
+| Test connexions | Faible | Connexions simultanées | 25 connexions | Non | 1 à 5 min |
+| Test connexions | Bas | Connexions simultanées | 50 connexions | Non | 1 à 5 min |
+| Test connexions | Moyen | Connexions simultanées | 100 connexions | Non | 1 à 5 min |
+| Test connexions | Haut | Connexions simultanées | 200 connexions | Non | 1 à 5 min |
+| Test connexions | Puissant | Connexions simultanées | 1000 connexions | Optionnel | 1 à 3 min (5 si pré-check validé) |
+| Test connexions | Agressif | Connexions simultanées | 2000 connexions | Optionnel | 1 à 3 min (5 si pré-check validé) |
+| Test connexions | Violent | Connexions simultanées | 3500 connexions | **Obligatoire** | 1 à 3 min uniquement |
+| Test connexions | Maximum | Connexions simultanées | 5000 connexions | **Obligatoire** | 1 à 3 min uniquement |
+| Test charge (montée progressive) | Faible | Débit, en rampe | pic 250 req/min | Non | 1 à 5 min |
+| Test charge (montée progressive) | Bas | Débit, en rampe | pic 500 req/min | Non | 1 à 5 min |
+| Test charge (montée progressive) | Moyen | Débit, en rampe | pic 1000 req/min | Non | 1 à 5 min |
+| Test charge (montée progressive) | Haut | Débit, en rampe | pic 2000 req/min | Non | 1 à 5 min |
+| Test charge (montée progressive) | Puissant | Débit, en rampe | pic 6000 req/min | Optionnel | 1 à 3 min (5 si pré-check validé) |
+| Test charge (montée progressive) | Agressif | Débit, en rampe | pic 10 000 req/min | Optionnel | 1 à 3 min (5 si pré-check validé) |
+| Test charge (montée progressive) | Violent | Débit, en rampe | pic 15 000 req/min | **Obligatoire** | 1 à 3 min uniquement |
+| Test charge (montée progressive) | Maximum | Débit, en rampe | pic 20 000 req/min | **Obligatoire** | 1 à 3 min uniquement |
+
+- **Pré-check Non** : le test démarre directement, sans condition de durée.
+- **Pré-check Optionnel** (Puissant/Agressif) : le test démarre sans pré-check (durées 1-3 min), mais un pré-check validé débloque aussi les durées 4-5 min.
+- **Pré-check Obligatoire** (Violent/Maximum) : le test ne démarre pas sans un pré-check validé au préalable ; la durée reste plafonnée à 3 min même avec pré-check (le pré-check conditionne ici l'accès au niveau, pas une durée étendue).
+
+La colonne « Durées disponibles » ci-dessus ne couvre que le **mode manuel** (1 à 5 min maximum). Au-delà, seul le [mode profil D1-D6](#profils-de-durée-d1-d6-mode-profil) permet des tests plus longs (jusqu'à 120 min) — chaque profil D1-D6 fixe lui-même quels niveaux restent accessibles à cette durée (`free_max_level`/`reinforced_level`, voir son propre tableau) :
+
+| Niveau | Durée max en mode manuel | Durée max via un profil D1-D6 |
+|---|---|---|
+| Faible / Bas / Moyen / Haut | 5 min | 120 min (D6, Connexions/Charge uniquement) ; 60 min sur Requêtes (D5, D6 non compatible avec cette famille) |
+| Puissant | 5 min (3 min sans pré-check) | 120 min avec confirmation renforcée (D6, Connexions/Charge) ou 60 min sans (D5) |
+| Agressif | 5 min (3 min sans pré-check) | 60 min avec confirmation renforcée (D5) ou 30 min sans (D4) |
+| Violent | 3 min (pré-check obligatoire) | 30 min avec confirmation renforcée (D4) ou 15 min sans (D3) |
+| Maximum | 3 min (pré-check obligatoire) | 5 min maximum (D1/D2 seulement — aucun profil D3-D6 ne propose Maximum, même avec confirmation) |
 
 Ce même tableau est disponible directement dans l'application (Aide → Repères de charge), toujours généré depuis les mêmes valeurs de référence (`domain/load/presets.py`, `domain/load/policies.py`) — jamais dupliqué manuellement.
 
-> Sur Test charge, si la durée choisie est plus courte que le temps de rampe indiqué (2 min à Haut/Maximum), le pic annoncé n'est jamais réellement atteint : le test s'arrête en pleine montée.
+> Sur Test charge en **mode manuel**, la rampe et le plateau sont automatiquement mis à l'échelle de la durée choisie (proportions du preset conservées) : un test de 1 min explore toute la courbe, de 0 au pic, pas seulement son tout début. En **mode profil D1-D6**, la même garantie est assurée nativement par le découpage warm-up/rampe/plateau/retour au calme de chaque profil — voir [Profils de durée D1-D6](#profils-de-durée-d1-d6-mode-profil).
 
 ### Navigation
 
@@ -273,6 +324,49 @@ var/app.log             # journal applicatif
 
 Un chemin absolu système (ex. `/var/exports/`) n'est jamais utilisé par défaut — le `/` initial est donc significatif : seul un export explicite vers un dossier choisi par l'utilisateur (Réglages ou écran Export) en sort.
 
+## Profils de durée D1-D6 (mode profil)
+
+Alternative au mode manuel (durée 1-5 min bornée par niveau) : un **profil de durée nommé**, avec une durée totale fixe et un découpage interne en 4 phases (warm-up, rampe, plateau, retour au calme). Sélectionnable sur chaque écran de lancement (bascule « Mode durée : Manuel / Profil D1-D6 ») et en CLI via `--duration-preset`.
+
+| Profil | Durée totale | Warm-up | Rampe | Plateau | Retour au calme | Niveau max sans confirmation | Niveau supplémentaire (confirmation renforcée) | Familles compatibles |
+|---|---|---|---|---|---|---|---|---|
+| D1 (quick) | 1 min | 5 s | 10 s | 40 s | 5 s | Maximum | — | Requêtes, Connexions, Charge |
+| D2 (short) | 5 min | 15 s | 30 s | 4 min | 15 s | Maximum | — | Requêtes, Connexions, Charge |
+| D3 (standard) | 15 min | 30 s | 1 min 30 | 12 min 30 | 30 s | Violent | — | Requêtes, Connexions, Charge |
+| D4 (resilience) | 30 min | 1 min | 3 min | 25 min | 1 min | Agressif | Violent | Requêtes, Connexions, Charge |
+| D5 (extended) | 60 min | 2 min | 5 min | 51 min | 2 min | Puissant | Agressif | Requêtes, Connexions, Charge |
+| D6 (soak) | 120 min | 3 min | 10 min | 104 min | 3 min | Haut | Puissant | Connexions, Charge (jamais Requêtes) |
+
+- Le niveau « supplémentaire » (D4-D6) n'est accessible qu'en saisissant exactement le texte de confirmation renforcée affiché à l'écran — jamais une simple case à cocher.
+- D6 exclut Test requêtes : un test de débit se borne en volume, jamais pertinent sur un profil de 2 h axé sur la dérive dans le temps.
+- Ce même tableau est disponible dans l'application (Aide → Profils de durée D1-D6).
+
+## Mode sécurité
+
+Une case à cocher, présente sur chaque écran de lancement (cochée par défaut), qui bascule **uniquement** les garde-fous qui protègent la machine qui exécute Omega-Stress (CPU/mémoire du générateur local) :
+
+- **Toujours actifs, quel que soit ce réglage** : les seuils qui protègent la **cible testée** (taux d'erreur, latence) — les désactiver n'a jamais de sens produit, ce n'est pas ce que cette case couvre.
+- **Mode sécurité actif (par défaut)** : un test s'arrête automatiquement si la machine hôte elle-même semble sous pression (CPU du générateur ET CPU global de la machine élevés en même temps, pas l'un des deux isolément — une saturation normale d'un seul cœur ne suffit jamais à elle seule).
+- **Mode sécurité désactivé** : ce garde-fou local est retiré. Un rappel s'affiche alors, comparant le niveau choisi au dernier calibrage connu pour cette machine (voir [Calibrage local](#calibrage-local)) — dépasser cette enveloppe reste possible, mais la fiabilité du résultat et la stabilité de la machine deviennent la responsabilité de l'utilisateur.
+
+Disponible aussi en CLI via `--unsafe` (absent par défaut = mode sécurité actif).
+
+## Calibrage local
+
+Mesure la capacité réelle de **cette machine** (jamais la cible testée) : un serveur de boucle locale intégré à Omega-Stress reçoit une charge croissante par paliers, générée par le même moteur `httpx`/asyncio que les tests réels.
+
+- 7 paliers, du repos (bruit de fond système) jusqu'à 2000 connexions / 12 000 req/s, chacun évalué contre des seuils de santé (CPU générateur ET global, mémoire disponible, taux d'erreur, débit atteint) — les 2 derniers paliers sont conditionnels, sautés si le palier précédent n'est pas sain.
+- Produit une enveloppe sûre (`VU_safe` / `RPS_safe`) à partir du dernier palier sain, avec une marge de sécurité (~30 % de réserve) et un niveau de confiance croissant selon la profondeur atteinte.
+- **Mesure seule en V1** : le résultat n'est pas appliqué automatiquement pour plafonner un test réel — il sert de repère informatif, notamment quand le [Mode sécurité](#mode-sécurité) est désactivé.
+- Persisté par machine (empreinte non invasive : OS/architecture/nombre de cœurs/RAM, jamais d'adresse matérielle), consultable à tout moment sans relancer de mesure.
+
+Accessible depuis l'écran **Calibrage** du TUI (bouton « Lancer le calibrage », progression affichée seconde par seconde), ou en CLI :
+
+```bash
+omega-stress calibrate run     # lance un nouveau calibrage
+omega-stress calibrate show    # affiche le dernier calibrage connu, sans en relancer un
+```
+
 ## Configuration
 
 Tout se règle depuis l'écran **Réglages** du TUI (aucun fichier de configuration à éditer à la main) :
@@ -294,7 +388,7 @@ mypy src
 lint-imports   # vérifie la Dependency Rule (voir pyproject.toml [tool.importlinter])
 ```
 
-La suite couvre plus de 400 tests (unitaires, intégration, TUI, CLI). `lint-imports` fait échouer la CI si la Dependency Rule ou l'isolation des technologies tierces est violée — voir [Architecture](#architecture).
+La suite couvre plus de 570 tests (unitaires, intégration, TUI, CLI). `lint-imports` fait échouer la CI si la Dependency Rule ou l'isolation des technologies tierces est violée — voir [Architecture](#architecture).
 
 ## Désinstallation
 
@@ -309,12 +403,13 @@ Aucun paquet système, service, ni fichier hors de `~/omega-stress/` n'est cré�
 
 ## Limites connues
 
-- Génération de charge **in-process**, sur une seule machine (`httpx`/asyncio) : ce n'est pas un outil distribué — les plafonds réels (voir [Valeurs des tests](#valeurs-des-tests)) sont nettement plus modestes qu'un service de test de charge SaaS (loader.io, etc.), volontairement, par posture produit encadrée.
+- Génération de charge **in-process**, sur une seule machine (`httpx`/asyncio) : ce n'est pas un outil distribué — les plafonds réels (voir [Valeurs des tests](#valeurs-des-tests)) sont nettement plus modestes qu'un service de test de charge SaaS (loader.io, etc.), volontairement, par posture produit encadrée. Sur du matériel modeste, les niveaux Agressif/Violent/Maximum en Test connexions peuvent prendre nettement plus de temps réel que la durée sélectionnée pour émettre la totalité de la charge visée — c'est la capacité de **cette machine**, pas celle de la cible, qui limite alors le débit réel ; utilisez le [Calibrage local](#calibrage-local) pour connaître les valeurs raisonnables sur votre matériel.
 - La détection automatique de famille de terminal repose sur des variables d'environnement : xfce4-terminal n'a pas de marqueur fiable connu à ce jour (voir [Terminaux pris en charge](#terminaux-pris-en-charge)).
 - `plugins/` est un point d'extension prévu par l'architecture (chargement de plugins builtin/externes), non implémenté en V1 : le scaffolding existe, aucun plugin n'est livré.
 - `var/` est relatif au dossier du projet (pas XDG) : pensé pour un usage local mono-utilisateur, pas pour un partage multi-utilisateur sur la même machine.
-- Test charge (montée progressive) ne comporte pas de palier de redescente (« cooldown ») après le plateau en V1.
-- Un pré-check validé n'est pas lié à une cible précise : il reste valable 24 h pour n'importe quel lancement Haut/Maximum suivant, pas uniquement sur la cible pré-checkée.
+- Test charge (montée progressive) en **mode manuel** ne comporte pas de palier de redescente (« cooldown ») après le plateau — uniquement disponible via un [profil de durée D1-D6](#profils-de-durée-d1-d6-mode-profil), qui inclut les 4 phases nativement.
+- Un pré-check validé n'est pas lié à une cible précise : il reste valable 24 h pour n'importe quel lancement Violent/Maximum suivant, pas uniquement sur la cible pré-checkée.
+- Le [Calibrage local](#calibrage-local) mesure, mais n'applique pas encore automatiquement son enveloppe sûre pour plafonner un test réel — un chantier délibérément distinct, non commencé.
 
 ## Licence
 

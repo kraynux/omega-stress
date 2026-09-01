@@ -6,17 +6,30 @@ from typing import TYPE_CHECKING
 
 from textual.app import ComposeResult
 from textual.containers import Container, Horizontal, Vertical
-from textual.widgets import Button, Footer, Header, OptionList, Select, Static
+from textual.widgets import Button, Checkbox, Footer, Header, Input, OptionList, Select, Static
 from textual.worker import Worker
 
 from omega_stress.application.dto.profile_dto import ProfileDTO
 from omega_stress.application.dto.target_dto import TargetDTO
-from omega_stress.core.enums import IntensityLevel, TestFamily
+from omega_stress.core.enums import DurationPresetId, IntensityLevel, TestFamily
 from omega_stress.core.results import Err
+from omega_stress.domain.load.duration_presets import DurationPreset, duration_preset
 from omega_stress.domain.load.models import Thresholds
-from omega_stress.domain.load.policies import allowed_durations_minutes, is_precheck_mandatory
+from omega_stress.domain.load.policies import (
+    SAFETY_MODE_DESCRIPTION,
+    allowed_durations_minutes,
+    is_precheck_available,
+)
+from omega_stress.domain.load.presets import fixed_rate_preset
 from omega_stress.domain.runs.models import IntervalSample
-from omega_stress.interfaces.tui.controllers import load_controller, profile_controller
+from omega_stress.interfaces.tui.controllers import (
+    calibration_controller,
+    load_controller,
+    profile_controller,
+)
+from omega_stress.interfaces.tui.presenters.calibration_presenter import (
+    envelope_comparison_message,
+)
 from omega_stress.interfaces.tui.presenters.run_presenter import verdict_label
 from omega_stress.interfaces.tui.screens._base import OmegaScreen
 from omega_stress.interfaces.tui.screens.run_details import RunDetailsScreen
@@ -24,6 +37,7 @@ from omega_stress.interfaces.tui.widgets.authorization_checkbox import Authoriza
 from omega_stress.interfaces.tui.widgets.notification_bar import NotificationBar
 from omega_stress.interfaces.tui.widgets.progress_panel import ProgressPanel
 from omega_stress.interfaces.tui.widgets.run_progress import RunProgress
+from omega_stress.interfaces.tui.widgets.safety_mode_checkbox import SafetyModeCheckbox
 from omega_stress.interfaces.tui.widgets.target_picker import TargetPicker
 
 if TYPE_CHECKING:
@@ -38,6 +52,26 @@ _DEFAULT_DURATION_OPTIONS = [
 leve EmptySelectError si construit avec une liste vide (voir INFO DEV) —
 _set_duration_options() les recalcule de toute facon des que l'utilisateur
 choisit un niveau."""
+_DURATION_MODE_OPTIONS = [("Manuel (1-5 min)", "manual"), ("Profil D1-D6", "preset")]
+_DURATION_PRESET_OPTIONS = [
+    (
+        f"{preset_id.value.upper()} {duration_preset(preset_id).name} "
+        f"({duration_preset(preset_id).total_minutes} min)",
+        preset_id,
+    )
+    for preset_id in DurationPresetId
+]
+
+
+def _level_options_for_preset(preset: DurationPreset) -> list[tuple[str, IntensityLevel]]:
+    """Niveaux proposes par ce profil de duree : jusqu'a free_max_level
+    inclus, plus reinforced_level s'il existe (voir domain/load/
+    duration_presets.py::DurationPreset) — jamais la liste complete."""
+    ordered = list(IntensityLevel)
+    allowed = ordered[: ordered.index(preset.free_max_level) + 1]
+    if preset.reinforced_level is not None:
+        allowed.append(preset.reinforced_level)
+    return [(level.value, level) for level in allowed]
 
 
 class _PanelProgressNotifier:
@@ -76,9 +110,20 @@ class RequestPanelScreen(OmegaScreen):
             yield Static("Criteres du test", classes="omega-subtitle")
             yield Select(_LEVEL_OPTIONS, prompt="Intensite", id="level", allow_blank=False)
             yield Select(
+                _DURATION_MODE_OPTIONS, prompt="Mode duree", id="duration-mode",
+                allow_blank=False,
+            )
+            yield Select(
                 _DEFAULT_DURATION_OPTIONS, prompt="Duree (minutes)", id="duration",
                 allow_blank=False,
             )
+            yield Select(
+                _DURATION_PRESET_OPTIONS, prompt="Profil de duree", id="duration-preset",
+                allow_blank=False,
+            )
+            with Container(id="confirmation-frame", classes="omega-btn-frame"):
+                yield Static("Confirmation renforcee requise pour ce niveau :")
+                yield Input(placeholder="Texte de confirmation exact", id="confirmation-text")
             yield Select(
                 _MAX_ERROR_RATE_OPTIONS,
                 prompt="Taux d'erreur maximal",
@@ -86,6 +131,9 @@ class RequestPanelScreen(OmegaScreen):
                 allow_blank=False,
             )
             yield AuthorizationCheckbox(id="authorization")
+            yield Static(SAFETY_MODE_DESCRIPTION, classes="omega-subtitle")
+            yield SafetyModeCheckbox(id="safety-mode")
+            yield Static("", id="calibration-comparison")
             with Horizontal(classes="omega-actions"):
                 with Container(id="precheck-frame", classes="omega-btn-frame"):
                     yield Button("Pre-check", id="precheck")
@@ -115,8 +163,12 @@ class RequestPanelScreen(OmegaScreen):
         ]
         self.query_one("#profile", Select).set_options((p.name, p) for p in frozen_profiles)
         self._set_duration_options(IntensityLevel.BAS)
+        self.query_one("#duration-mode", Select).value = "manual"
+        self.query_one("#duration-preset", Select).display = False
+        self.query_one("#confirmation-frame", Container).display = False
         self.query_one("#precheck-frame", Container).display = False
         self.query_one("#stop-frame", Container).display = False
+        self.query_one("#calibration-comparison", Static).display = False
 
     def _set_duration_options(
         self, level: IntensityLevel, *, keep_value: int | None = None
@@ -141,16 +193,77 @@ class RequestPanelScreen(OmegaScreen):
     def on_option_list_option_selected(self, event: OptionList.OptionSelected) -> None:
         self._selected_target = self._targets_by_index.get(event.option_index)
 
-    def on_select_changed(self, event: Select.Changed) -> None:
-        if event.select.id == "level" and isinstance(event.value, IntensityLevel):
-            current_duration = self.query_one("#duration", Select).value
-            self._set_duration_options(
-                event.value,
-                keep_value=current_duration if isinstance(current_duration, int) else None,
+    def _is_preset_mode(self) -> bool:
+        return self.query_one("#duration-mode", Select).value == "preset"
+
+    def _apply_duration_mode(self, mode: object) -> None:
+        """Bascule entre mode manuel (#duration, niveaux complets) et mode
+        profil D1-D6 (#duration-preset, niveaux filtres) — les deux Select
+        de duree ne sont jamais visibles en meme temps."""
+        is_preset = mode == "preset"
+        self.query_one("#duration", Select).display = not is_preset
+        self.query_one("#duration-preset", Select).display = is_preset
+        if is_preset:
+            preset_value = self.query_one("#duration-preset", Select).value
+            preset_id = (
+                preset_value if isinstance(preset_value, DurationPresetId) else DurationPresetId.D1
             )
-            self.query_one("#precheck-frame", Container).display = is_precheck_mandatory(
+            self.query_one("#duration-preset", Select).value = preset_id
+            self._apply_duration_preset(preset_id)
+        else:
+            self.query_one("#confirmation-frame", Container).display = False
+            level_select = self.query_one("#level", Select)
+            level_select.set_options(_LEVEL_OPTIONS)
+            level = level_select.value
+            if isinstance(level, IntensityLevel):
+                self._set_duration_options(level)
+                self.query_one("#precheck-frame", Container).display = is_precheck_available(level)
+
+    def _apply_duration_preset(self, preset_id: DurationPresetId) -> None:
+        preset = duration_preset(preset_id)
+        level_select = self.query_one("#level", Select)
+        options = _level_options_for_preset(preset)
+        allowed_levels = [level for _label, level in options]
+        current_level = level_select.value
+        level_select.set_options(options)
+        level_select.value = (
+            current_level if current_level in allowed_levels else allowed_levels[0]
+        )
+        self.query_one("#precheck-frame", Container).display = is_precheck_available(
+            level_select.value
+        )
+        self._refresh_confirmation_visibility(level_select.value)
+
+    def _refresh_confirmation_visibility(self, level: IntensityLevel) -> None:
+        preset_value = self.query_one("#duration-preset", Select).value
+        preset = (
+            duration_preset(preset_value) if isinstance(preset_value, DurationPresetId) else None
+        )
+        needs_confirmation = preset is not None and level is preset.reinforced_level
+        self.query_one("#confirmation-frame", Container).display = needs_confirmation
+        if not needs_confirmation:
+            self.query_one("#confirmation-text", Input).value = ""
+
+    def on_select_changed(self, event: Select.Changed) -> None:
+        if event.select.id == "duration-mode":
+            self._apply_duration_mode(event.value)
+            return
+        if event.select.id == "duration-preset" and isinstance(event.value, DurationPresetId):
+            self._apply_duration_preset(event.value)
+            return
+        if event.select.id == "level" and isinstance(event.value, IntensityLevel):
+            self.query_one("#precheck-frame", Container).display = is_precheck_available(
                 event.value
             )
+            if self._is_preset_mode():
+                self._refresh_confirmation_visibility(event.value)
+            else:
+                current_duration = self.query_one("#duration", Select).value
+                self._set_duration_options(
+                    event.value,
+                    keep_value=current_duration if isinstance(current_duration, int) else None,
+                )
+            self._refresh_calibration_comparison()
             return
         if event.select.id != "profile":
             return
@@ -160,7 +273,38 @@ class RequestPanelScreen(OmegaScreen):
             return
         self._apply_profile(profile)
 
+    def on_checkbox_changed(self, event: Checkbox.Changed) -> None:
+        if event.checkbox.id == "safety-mode":
+            self._refresh_calibration_comparison()
+
+    def _refresh_calibration_comparison(self) -> None:
+        comparison = self.query_one("#calibration-comparison", Static)
+        if self.query_one(SafetyModeCheckbox).value:
+            comparison.display = False
+            return
+        level = self.query_one("#level", Select).value
+        if not isinstance(level, IntensityLevel):
+            comparison.display = False
+            return
+        preset = fixed_rate_preset(level)
+        result = calibration_controller.load_last_calibration(self._container)
+        comparison.update(
+            envelope_comparison_message(
+                family=TestFamily.REQUEST,
+                target_value=preset.requests_per_minute / 60.0,
+                unit="req/s",
+                result=result,
+            )
+        )
+        comparison.display = True
+
     def _apply_profile(self, profile: ProfileDTO) -> None:
+        # Un profil fige ne porte aucune notion de profil de duree D1-D6
+        # (concept exclusivement mode manuel) : force le mode manuel avant
+        # de pre-remplir, sinon un niveau filtre par un profil de duree
+        # choisi precedemment pourrait rejeter le niveau du profil.
+        self.query_one("#duration-mode", Select).value = "manual"
+        self._apply_duration_mode("manual")
         self._selected_profile_id = profile.id
         level = IntensityLevel(profile.level)
         self.query_one("#level", Select).value = level
@@ -242,11 +386,27 @@ class RequestPanelScreen(OmegaScreen):
             result_label.update("Choisissez un niveau d'intensite.")
             return
 
-        duration_minutes = self.query_one("#duration", Select).value
         max_error_rate = self.query_one("#max-error-rate", Select).value
-        if not isinstance(duration_minutes, int) or not isinstance(max_error_rate, float):
-            result_label.update("Choisissez une duree et un taux d'erreur.")
+        if not isinstance(max_error_rate, float):
+            result_label.update("Choisissez un taux d'erreur.")
             return
+
+        if self._is_preset_mode():
+            preset_value = self.query_one("#duration-preset", Select).value
+            if not isinstance(preset_value, DurationPresetId):
+                result_label.update("Choisissez un profil de duree.")
+                return
+            duration_minutes = duration_preset(preset_value).total_minutes
+            duration_preset_id: DurationPresetId | None = preset_value
+            confirmation_text = self.query_one("#confirmation-text", Input).value or None
+        else:
+            manual_duration = self.query_one("#duration", Select).value
+            if not isinstance(manual_duration, int):
+                result_label.update("Choisissez une duree.")
+                return
+            duration_minutes = manual_duration
+            duration_preset_id = None
+            confirmation_text = None
 
         run_progress = self.query_one(RunProgress)
         run_progress.start(total_seconds=duration_minutes * 60)
@@ -265,6 +425,9 @@ class RequestPanelScreen(OmegaScreen):
             ),
             notification_sink=self.query_one(NotificationBar),
             profile_id=self._selected_profile_id,
+            duration_preset_id=duration_preset_id,
+            reinforced_confirmation_text=confirmation_text,
+            safety_mode=self.query_one(SafetyModeCheckbox).value,
         )
         run_progress.stop()
         self.query_one("#stop-frame", Container).display = False
@@ -345,21 +508,27 @@ class RequestPanelScreen(OmegaScreen):
 # - #duration/#max-error-rate en Select (2026-08-24, remplace deux Input
 #   libres + int()/float()/ValueError) : la duree n'est plus une saisie
 #   libre mais calibree par domain/load/policies.py::
-#   allowed_durations_minutes(level), SEULE source de verite (Bas/Moyen ->
-#   1-5 min, Haut/Maximum -> 1 et 3 min, 5 min seulement si extended
-#   autorise) — jamais dupliquee ici. _set_duration_options() recalcule
+#   allowed_durations_minutes(level), SEULE source de verite (jamais gate
+#   -> 1-5 min, gate optionnel -> 1/2/3 min, +4/5 min si pre-check
+#   facultatif valide, gate obligatoire -> 1/2/3 min quel que soit le
+#   pre-check — modele a 3 paliers depuis Phase 3, 2026-09-01, voir
+#   policies.py) — jamais dupliquee ici. _set_duration_options() recalcule
 #   les options a chaque changement de "level" (on_select_changed) ; si la
 #   duree deja choisie devient invalide pour le nouveau niveau, retombe
 #   sur la premiere option valide et le signale dans #result plutot que de
 #   laisser une valeur fantome. Taux d'erreur : 11 options fixes (0.0 a
 #   1.0 par pas de 0.1), pure commodite de saisie, aucune regle de domaine
 #   a consommer pour ce champ.
-# - Bouton "Pre-check" (2026-08-24) : visible seulement si le niveau
-#   choisi l'exige (domain/load/policies.py::is_precheck_mandatory(),
-#   bascule dans on_select_changed sur "level") — masque par defaut
-#   (#level demarre vide). AVANT ce correctif, AUCUN ecran TUI n'appelait
-#   jamais load_controller.launch_precheck() (deja ecrit, deja utilise par
-#   `omega-stress run precheck` cote CLI) : un niveau Haut/Maximum
+# - Bouton "Pre-check" (2026-08-24) : visible si le niveau choisi le
+#   permet, obligatoire ou non (domain/load/policies.py::
+#   is_precheck_available(), bascule dans on_select_changed sur "level" —
+#   avant Phase 3 (2026-09-01) c'etait is_precheck_mandatory(), qui
+#   n'aurait jamais propose le bouton sur un niveau gate optionnel comme
+#   Puissant/Agressif, empechant de debloquer leurs durees etendues) — masque
+#   par defaut (#level demarre vide). AVANT le tout premier correctif
+#   (2026-08-24), AUCUN ecran TUI n'appelait jamais
+#   load_controller.launch_precheck() (deja ecrit, deja utilise par
+#   `omega-stress run precheck` cote CLI) : un niveau gate obligatoire
 #   echouait donc systematiquement au lancement (precheck_guard.py,
 #   toujours precheck_validated=False), sans aucun moyen de le satisfaire
 #   depuis le TUI. self._precheck_validated est un simple booleen memoire
@@ -383,6 +552,40 @@ class RequestPanelScreen(OmegaScreen):
 #   l'await comme pour n'importe quelle fin de run (run_progress.stop(),
 #   masquage de "#stop", RunDetailsScreen pousse avec un verdict
 #   AUTO_STOPPED), sans bloc try/except supplementaire ici.
+# - Mode duree "#duration-mode" (2026-09-01, D1-D6, coexiste avec le mode
+#   manuel existant) : #duration (manuel, entiers) et #duration-preset
+#   (profil, DurationPresetId) ne sont JAMAIS visibles en meme temps
+#   (.display bascule sur "#duration-mode") — deux Select distincts
+#   plutot qu'un seul reutilise pour deux types de valeur, pour ne
+#   jamais melanger int et DurationPresetId dans le meme widget.
+#   _apply_duration_preset() filtre "#level" aux seuls niveaux du profil
+#   (free_max_level + reinforced_level, jamais la liste complete) et
+#   retombe sur le premier niveau autorise si le niveau deja choisi
+#   devient invalide pour le nouveau profil — meme patron que
+#   _set_duration_options() en mode manuel. "#confirmation-frame"
+#   (Input texte libre) n'apparait que si le niveau choisi EST
+#   exactement le reinforced_level du profil courant ; la coquille
+#   editee est reinitialisee des qu'elle redevient inutile (evite qu'un
+#   texte tape pour un niveau precedent survive silencieusement a un
+#   changement de niveau/profil). "#precheck-frame" (is_precheck_
+#   available) reste gouverne uniquement par le NIVEAU, jamais par le
+#   mode duree : un niveau gate obligatoire (Violent/Maximum) exige
+#   toujours precheck_validated=True, meme en mode profil — les deux
+#   gardes (precheck de niveau, confirmation renforcee de profil) sont
+#   indépendantes et peuvent s'appliquer simultanement.
+# - "#safety-mode"/"#calibration-comparison" (2026-09-01, bug reel
+#   rapporte avec captures d'ecran : le garde-fou CPU generateur
+#   arretait des tests sains) : SafetyModeCheckbox coche par defaut,
+#   bascule UNIQUEMENT LoadPlan.safety_mode (jamais les guards qui
+#   protegent la CIBLE, toujours actifs). "#calibration-comparison"
+#   reste masque tant que la case est cochee ; des qu'elle est decochee
+#   (ou que le niveau change alors qu'elle l'est deja), affiche la
+#   comparaison entre ce que ce niveau vise et l'enveloppe du dernier
+#   calibrage exploitable pour CETTE machine (presenters/calibration_
+#   presenter.py::envelope_comparison_message()) — purement informatif,
+#   jamais un blocage : demande explicite de l'utilisateur, relier le
+#   calibrage (mesure) au mode securite (execution) sans les coupler
+#   automatiquement.
 # Comment il sera utilise :
 # - interfaces/tui/screens/home.py (bouton "Test requetes").
 #---------------------------------------------------------------------->

@@ -316,8 +316,7 @@ Rôle : porter la logique métier pure. **Jamais de commandes shell, pas de Text
 - `load/` — `LoadPlan`, `RampStep` ; **`policies.py`** (paliers d'intensité, durées autorisées, seuils d'arrêt, règles de gating du pré-check — l'ex-`load_presets.py`) ; **`presets.py`** (valeurs concrètes des 4 niveaux × 3 familles de test) ; `builders.py` (construction de rampe) ; `validators.py` (validation de plan, évaluation de seuil).
 - `runs/` — `LoadRun`, `LoadResult`, événements de run ; règles de transition d'état d'un run (pas l'exécution elle-même, qui vit dans `application/pipeline/`).
 - `reports/` — `ExportJob` ; construction du **contenu logique** d'un rapport (résumé, paliers, verdict, diagnostic) — pas de format concret, pas de Jinja2 (voir §0, tableau des écarts).
-- `terminal/` — `TerminalProfile` ; **`policies.py`** (matrice famille de terminal → profil de rendu, paliers de taille — l'ex-`terminal_presets.py`) ; `service.py` (`terminal_policy_service`).
-- `theme/` — `ThemePolicy` ; **`policies.py`** (catalogue des 10 thèmes TUI + 5 thèmes export, règle de dégradation par luminance — l'ex-`theme_presets.py`, contenu figé dans `Projet/themes.txt`) ; `service.py` (`theme_compatibility_service`).
+- `terminal/` et `theme/` — **n'existent plus localement** (migration `omega_lib`, D-008, voir §8) : `TerminalProfile`, `RenderProfile`, la matrice famille de terminal → profil de rendu, le catalogue des 10 thèmes TUI + 5 thèmes export et la règle de dégradation par luminance vivent désormais dans `omega_lib.terminal.*`/`omega_lib.theme.*`, partagés avec CHECK/DEEP/FOLD/FUZZ.
 
 **Règle de placement des politiques :** toute table qui encode une règle métier de sécurité ou de produit (paliers d'intensité, durées, seuils, matrice terminal, catalogue de thèmes, fréquence d'échantillonnage) vit dans le `policies.py` du sous-domaine concerné — jamais dans `infrastructure/`, jamais dans `interfaces/`, jamais dans un `domain/policies/` générique unique (contrairement à une version antérieure de cette charte : le placement par sous-domaine, comme chez omega-fire, remplace le dossier plat `domain/policies/`).
 
@@ -332,22 +331,22 @@ Rôle : orchestrer les cas d'usage, valider les requêtes, gérer le mode dégra
 
 #### `ports/`
 Rôle : définir les contrats attendus par le cœur applicatif. **Pas d'implémentation concrète, pas de dépendance à un outil précis.**
-`load_runner`, `profile_repository`, `target_repository`, `run_repository`, `export_repository`, `report_exporter`, `terminal_detector`, `system_probe`, `settings_store`, `run_progress_notifier`. Un port est défini par le besoin de l'application, jamais par la capacité d'une techno existante (ne pas concevoir un port qui ressemble à l'API SQLite ou à l'API httpx).
+`load_runner`, `profile_repository`, `target_repository`, `run_repository`, `export_repository`, `report_exporter`, `terminal_detector`, `system_probe`, `settings_store`, `run_progress_notifier`. Un port est défini par le besoin de l'application, jamais par la capacité d'une techno existante (ne pas concevoir un port qui ressemble à l'API SQLite ou à l'API httpx). `terminal_detector` et `settings_store` sont de simples re-exports d'`omega_lib.ports.*` (D-008, §8) — garder `omega_stress.ports.X` uniforme dans le reste du code plutôt que d'importer `omega_lib` directement partout.
 
 #### `infrastructure/`
 Rôle : implémenter la technique réelle. **Tous les appels système, fichiers, SQLite, réseau passent ici.**
 - `config/` — `settings.py`, `loader.py`, `env.py`, `paths.py`, `defaults.py`.
 - `storage/sqlite/` — seul endroit où `sqlite3` est importé. `storage/files/` — `json_settings_store.py`.
 - `runner/` — seul endroit où `httpx` est importé (`httpx_load_generator.py`). Le runner s'exécute comme tâche asynchrone **in-process** (pas de processus séparé en V1), piloté par `async_worker.py`, publiant sa progression via `application/ports/run_progress_notifier.py` implémenté ici.
-- `terminal/` — signaux bruts (variables d'environnement, taille détectée) ; ne décide jamais du profil de rendu, cette décision appartient à `domain/terminal/service.py`.
+- `terminal/` — **n'existe plus localement** (migration `omega_lib`, D-008) : signaux bruts, détection et repli viennent de `omega_lib.infrastructure.terminal.*` ; ne décide jamais du profil de rendu, cette décision appartient à `omega_lib.terminal.service`.
 - `probe/` — sondage système local (CPU/RAM/fd) pour `core/capability_registry.py`.
-- `exporters/` — sérialisation concrète JSON/CSV/HTML. `html_exporter.py` est seul point du projet où `jinja2` est importé ; `html_theme_resolver.py` fait un lookup pur dans `domain/theme/policies.py`, aucun import Jinja2.
+- `exporters/` — sérialisation concrète JSON/CSV/HTML. `html_exporter.py` est seul point du projet où `jinja2` est importé ; `html_theme_resolver.py` fait un lookup pur dans `omega_lib.theme.policies`, aucun import Jinja2.
 - `logging/` — journal applicatif technique et journal d'audit structuré (consommé par `pipeline/hooks/audit_hook.py`).
 - `exceptions.py` — `InfrastructureError`, `StorageError`, `ParseError`, `AdapterConfigurationError` (`RunnerFailureError` vit dans `application/exceptions.py`, voir §5.2).
 
 #### `interfaces/`
 Rôle : gérer l'interaction utilisateur. **Jamais de décision métier, pas de SQL, pas de logique backend.** Deux adaptateurs à parité stricte, tous deux consommateurs des mêmes `application/commands/` et `application/queries/` — aucune règle métier ne doit exister dans l'un sans exister, de la même façon, dans l'autre.
-- `tui/` — Textual. `textual` n'est importé que sous `interfaces/tui/`, jamais dans `interfaces/cli/`. `rendering/textual_theme_builder.py` construit les objets `textual.theme.Theme` à partir de `domain/theme/policies.py` — seul endroit, avec le reste de `tui/`, où thème et API Textual sont combinés.
+- `tui/` — Textual. `textual` n'est importé que sous `interfaces/tui/`, jamais dans `interfaces/cli/`. `rendering/textual_theme_builder.py` construit les objets `textual.theme.Theme` à partir d'`omega_lib.theme.policies` — seul endroit, avec le reste de `tui/`, où thème et API Textual sont combinés.
 - `cli/` — scriptable, sans Textual. Une commande CLI appelle un `command`/`query` existant, jamais une logique réécrite pour l'occasion. `cli/formatters/text_formatter.py` joue le rôle des `presenters` du TUI pour une sortie texte/JSON.
 - `exceptions.py` — `InterfaceError`, `UserInputError`, `RenderError`.
 
@@ -377,7 +376,7 @@ Rôle : utilitaires transverses non métier. **Jamais de fourre-tout métier, ja
 ## 4. Chaînes fonctionnelles obligatoires
 
 ### Capacités
-1. Détection technique : `infrastructure/terminal/raw_capabilities.py` (capacité terminal) et `infrastructure/probe/` (capacité système locale).
+1. Détection technique : `omega_lib.infrastructure.terminal.raw_capabilities` (capacité terminal, D-008) et `infrastructure/probe/` (capacité système locale).
 2. Consolidation : `core/capability_registry.py`.
 3. Autorisation : `application/pipeline/guards/capability_guard.py` (refuse Haut/Maximum si le système local ne peut pas tenir la charge ; refuse un rendu incompatible sans fallback).
 4. Projection visuelle : `interfaces/tui/rendering/render_profile_resolver.py`, `interfaces/tui/widgets/render_profile_badge.py`.
@@ -458,13 +457,13 @@ Aucun run ne démarre sans confirmation explicite d'autorisation sur la cible (`
 
 ## 8. Système de thèmes et de rendu — catalogue partagé de la suite
 
-Catalogue figé, **identique** entre omega-stress et omega-fire (source d'autorité : `Projet/themes.txt`, extrait du code réel d'omega-fire) : 10 thèmes TUI, 5 thèmes export HTML. Vit dans `domain/theme/policies.py`.
+Catalogue partagé via `omega_lib` (D-008, migration 2026) : 10 thèmes TUI, 5 thèmes export HTML, vit dans `omega_lib.theme.policies` — même bibliothèque et même catalogue que le reste de la suite (CHECK/DEEP/FOLD/FUZZ), pas une copie locale. omega-stress ne définit plus aucune table de thème ni de profil de rendu lui-même ; il consomme `omega_lib.theme.*`/`omega_lib.terminal.*` directement, `ports/terminal_detector.py` et `ports/settings_store.py` étant de simples re-exports des ports équivalents d'`omega_lib`.
 
 **Deux décisions indépendantes, jamais mélangées dans un même fichier :**
-- **Thème (couleur)** — choix manuel parmi 10, touche `t`. `domain/theme/policies.py` → `application/commands/select_theme.py` → `interfaces/tui/controllers/theme_controller.py` → `interfaces/tui/presenters/theme_presenter.py` → `interfaces/tui/widgets/theme_badge.py`.
-- **Profil de rendu (structure)** — `complete`/`standard`/`reduced`/`mono`, décidé automatiquement depuis la capacité terminal détectée (§4, chaîne Capacités). `domain/terminal/policies.py` → `application/commands/select_render_profile.py` → `interfaces/tui/controllers/render_profile_controller.py` → `interfaces/tui/rendering/render_profile_resolver.py`.
+- **Thème (couleur)** — choix manuel parmi 10, touche `t`. `omega_lib.theme.policies` → `application/commands/select_theme.py` → `interfaces/tui/controllers/theme_controller.py` → `interfaces/tui/presenters/theme_presenter.py` → `interfaces/tui/widgets/theme_badge.py`.
+- **Profil de rendu (structure)** — `complete`/`standard`/`reduced`/`mono`, décidé automatiquement depuis la capacité terminal détectée (§4, chaîne Capacités). `omega_lib.terminal.policies` → `application/commands/select_render_profile.py` → `interfaces/tui/controllers/render_profile_controller.py` → `interfaces/tui/rendering/render_profile_resolver.py`.
 
-Piège de nommage à connaître : le thème `omega-mono` (palette, choix manuel) ≠ le profil de rendu `mono` (dégradation automatique). Chacun des 10 thèmes doit rester dégradable en `reduced`/`mono` via la règle générique de conversion par luminance de `domain/theme/policies.py` (détail complet dans `Projet/themes.txt`), pas via 20 palettes maintenues à la main.
+Piège de nommage à connaître : le thème `omega-mono` (palette, choix manuel) ≠ le profil de rendu `mono` (dégradation automatique). Chacun des 10 thèmes doit rester dégradable en `reduced`/`mono` via la règle générique de conversion par luminance d'`omega_lib.theme.policies`, pas via 20 palettes maintenues à la main.
 
 Thème d'export HTML : champ indépendant du panneau « Sortie », `omega-base` par défaut, pas de correspondance automatique thème TUI → thème export.
 

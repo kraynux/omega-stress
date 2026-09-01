@@ -1,7 +1,7 @@
 from datetime import datetime, timezone
 
 from omega_stress.core.enums import RunVerdict
-from omega_stress.domain.runs.models import IntervalSample, RunEvent
+from omega_stress.domain.runs.models import ErrorBreakdown, IntervalSample, RunEvent, SystemSnapshot
 from omega_stress.domain.runs.service import aggregate_samples
 
 
@@ -114,3 +114,44 @@ def test_p50_and_rate_take_the_mean():
 
     assert result.p50_latency_ms == 15.0
     assert result.observed_rate_per_minute == 250.0
+
+
+def test_empty_samples_produce_a_zeroed_error_breakdown_and_no_peaks():
+    result = aggregate_samples((), verdict=RunVerdict.FAILED, requested_rate_per_minute=None)
+
+    assert result.errors == ErrorBreakdown()
+    assert result.peak_cpu_percent_generator is None
+    assert result.peak_memory_rss_mb is None
+
+
+def test_error_breakdown_is_summed_across_samples():
+    samples = (
+        _sample(errors=ErrorBreakdown(timeout=1, http_5xx=2)),
+        _sample(errors=ErrorBreakdown(timeout=3, connection=1)),
+    )
+
+    result = aggregate_samples(samples, verdict=RunVerdict.SUCCESS, requested_rate_per_minute=250)
+
+    assert result.errors == ErrorBreakdown(timeout=4, connection=1, http_5xx=2)
+
+
+def test_peak_cpu_and_memory_take_the_maximum_observed():
+    samples = (
+        _sample(system=SystemSnapshot(cpu_percent_generator=20.0, memory_rss_mb=50.0)),
+        _sample(system=SystemSnapshot(cpu_percent_generator=75.0, memory_rss_mb=40.0)),
+        _sample(system=None),
+    )
+
+    result = aggregate_samples(samples, verdict=RunVerdict.SUCCESS, requested_rate_per_minute=250)
+
+    assert result.peak_cpu_percent_generator == 75.0
+    assert result.peak_memory_rss_mb == 50.0
+
+
+def test_peaks_stay_none_when_no_sample_has_system_data():
+    samples = (_sample(system=None), _sample(system=None))
+
+    result = aggregate_samples(samples, verdict=RunVerdict.SUCCESS, requested_rate_per_minute=250)
+
+    assert result.peak_cpu_percent_generator is None
+    assert result.peak_memory_rss_mb is None

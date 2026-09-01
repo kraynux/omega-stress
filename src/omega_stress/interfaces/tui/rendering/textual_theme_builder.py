@@ -6,9 +6,8 @@ de theme et API Textual (ARCHITECTURE.md §2.4, §8).
 """
 from __future__ import annotations
 
+from omega_lib.theme.policies import TUI_THEMES, Palette, ThemeDefinition
 from textual.theme import Theme as TextualTheme
-
-from omega_stress.domain.theme.policies import TUI_THEMES, Palette, ThemeDefinition
 
 
 def build_textual_theme(definition: ThemeDefinition) -> TextualTheme:

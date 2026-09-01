@@ -2,11 +2,12 @@
 """Regles metier du sous-domaine reports : pertinence et validite d'un ExportJob."""
 from __future__ import annotations
 
+from omega_lib.theme.policies import EXPORT_PALETTES
+
 from omega_stress.core.enums import ExportFormat
 from omega_stress.core.results import Err, Ok, Result
 from omega_stress.domain.errors import ValidationError
 from omega_stress.domain.reports.models import ExportJob
-from omega_stress.domain.theme.policies import EXPORT_PALETTES
 
 
 def requires_theme(export_format: ExportFormat) -> bool:

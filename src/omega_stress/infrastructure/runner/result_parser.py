@@ -2,7 +2,7 @@
 """Agregation des resultats de requetes brutes d'un intervalle en IntervalSample."""
 from __future__ import annotations
 
-from omega_stress.domain.runs.models import IntervalSample
+from omega_stress.domain.runs.models import ErrorBreakdown, IntervalSample
 from omega_stress.infrastructure.runner.async_worker import RequestOutcome
 
 
@@ -23,6 +23,7 @@ def parse_interval(at_second: float, outcomes: list[RequestOutcome]) -> Interval
 
     latencies = sorted(outcome.latency_ms for outcome in outcomes)
     error_count = sum(1 for outcome in outcomes if not outcome.success)
+    errors = _breakdown(outcomes)
 
     return IntervalSample(
         at_second=at_second,
@@ -32,7 +33,21 @@ def parse_interval(at_second: float, outcomes: list[RequestOutcome]) -> Interval
         p99_latency_ms=_percentile(latencies, 0.99),
         error_count=error_count,
         request_count=len(outcomes),
+        errors=errors,
     )
+
+
+def _breakdown(outcomes: list[RequestOutcome]) -> ErrorBreakdown:
+    """Compte error_category sur les outcomes de l'intervalle. Une
+    categorie inconnue (evolution future de async_worker.py non
+    repercutee ici) tombe dans "other" plutot que de lever — un rapport
+    partiellement categorise reste preferable a un run qui plante."""
+    counts = {"timeout": 0, "connection": 0, "http_4xx": 0, "http_5xx": 0, "other": 0}
+    for outcome in outcomes:
+        if outcome.error_category is None:
+            continue
+        counts[outcome.error_category if outcome.error_category in counts else "other"] += 1
+    return ErrorBreakdown(**counts)
 
 
 def _percentile(sorted_values: list[float], fraction: float) -> float:

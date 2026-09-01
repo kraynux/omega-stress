@@ -7,8 +7,10 @@ from omega_stress.domain.load.models import RampStep
 from omega_stress.domain.load.presets import ramp_preset
 
 
-def build_ramp_steps(level: IntensityLevel) -> tuple[RampStep, ...]:
-    """Construit la sequence ramp-up + plateau pour un niveau donne.
+def build_ramp_steps(level: IntensityLevel, *, duration_minutes: int) -> tuple[RampStep, ...]:
+    """Construit la sequence ramp-up + plateau pour un niveau donne, mise
+    a l'echelle de `duration_minutes` (la duree REELLEMENT choisie pour ce
+    test, voir Duration.for_level()).
 
     Interpretation retenue pour la duree de plateau : les presets
     expriment un intervalle (plateau_minutes_min a plateau_minutes_max,
@@ -21,13 +23,27 @@ def build_ramp_steps(level: IntensityLevel) -> tuple[RampStep, ...]:
     intervalle resterait possible via un profil fige explicite, a
     construire alors avec des RampStep distincts plutot qu'en modifiant
     cette fonction.
+
+    Mise a l'echelle (2026-09-01, bug reel rapporte : "1 min" choisi sur
+    Maximum, ramp_up_minutes=4 du preset ignore le choix de duree,
+    n'explorait donc que le premier quart de la montee, debit moyen
+    observe tres faible) : ramp_up et plateau sont recalcules
+    PROPORTIONNELLEMENT pour que leur somme corresponde exactement a
+    duration_minutes, jamais aux valeurs figees du preset telles quelles.
     """
     preset = ramp_preset(level)
+    preset_total = preset.ramp_up_minutes + preset.plateau_minutes_min
+    scale = duration_minutes / preset_total if preset_total > 0 else 1.0
     return (
-        RampStep(order=1, duration_minutes=preset.ramp_up_minutes, start_ratio=0.0, end_ratio=1.0),
+        RampStep(
+            order=1,
+            duration_minutes=preset.ramp_up_minutes * scale,
+            start_ratio=0.0,
+            end_ratio=1.0,
+        ),
         RampStep(
             order=2,
-            duration_minutes=preset.plateau_minutes_min,
+            duration_minutes=preset.plateau_minutes_min * scale,
             start_ratio=1.0,
             end_ratio=1.0,
         ),
@@ -55,7 +71,23 @@ def build_ramp_steps(level: IntensityLevel) -> tuple[RampStep, ...]:
 #   interpretation documentee ci-dessus, pas une valeur du plan produit :
 #   a revoir explicitement si un mecanisme de choix dans l'intervalle est
 #   precise plus tard.
+# - duration_minutes obligatoire, sans defaut (2026-09-01, bug reel
+#   rapporte avec captures d'ecran) : avant ce correctif, ramp_up_minutes/
+#   plateau_minutes_min du preset (fixes par NIVEAU, ex. 4 min de montee
+#   pour Maximum) etaient utilises tels quels, totalement independants de
+#   la duree REELLEMENT choisie par l'utilisateur dans le formulaire (ex.
+#   1 min) — deux notions de duree jamais reconciliees (voir application/
+#   commands/run_ramp_load.py, INFO DEV, "duree TOTALE bornee... deux
+#   notions de duree paralleles"). Un test de 1 min sur Maximum n'explorait
+#   donc que le premier quart (1/4 min) de la montee vers le pic, jamais le
+#   plateau, d'ou un debit moyen observe tres faible (~240 req/min au lieu
+#   d'un pic vise a 20000). scale = duration_minutes / (ramp_up_minutes +
+#   plateau_minutes_min du preset) : preserve les PROPORTIONS relatives du
+#   preset (ex. 80% montee / 20% plateau pour Maximum) tout en garantissant
+#   que la somme des deux etapes correspond exactement a la duree choisie,
+#   que celle-ci soit plus courte OU plus longue que le total du preset.
 # Comment il sera utilise (apercu) :
-# - application/commands/run_ramp_load.py appellera build_ramp_steps() pour
-#   assembler le LoadPlan avant validation.
+# - application/commands/run_ramp_load.py appelle build_ramp_steps(level,
+#   duration_minutes=...) avec la duree DEJA validee (Duration.for_level())
+#   pour assembler le LoadPlan avant validation.
 #---------------------------------------------------------------------->

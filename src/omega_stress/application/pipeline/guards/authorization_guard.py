@@ -1,5 +1,5 @@
 # Copyright (c) 2026 kraynux - kraynux@proton.me - Licence MIT (voir fichier LICENSE)
-"""Guard 1/4 du pipeline : autorisation de la cible (ARCHITECTURE.md §4, §7)."""
+"""Guard 1/5 du pipeline : autorisation de la cible (ARCHITECTURE.md §4, §7)."""
 from __future__ import annotations
 
 from omega_stress.core.results import Err, Ok, Result

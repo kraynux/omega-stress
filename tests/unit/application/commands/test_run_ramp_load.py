@@ -46,3 +46,40 @@ async def test_ramp_load_launches_with_derived_steps():
 
     assert isinstance(result, Ok)
     assert result.value.family == "ramp"
+
+
+async def test_safety_mode_false_is_transmitted_and_persisted_on_the_run():
+    sample = IntervalSample(
+        at_second=1.0,
+        observed_rate_per_minute=250.0,
+        p50_latency_ms=10.0,
+        p95_latency_ms=20.0,
+        p99_latency_ms=30.0,
+        error_count=0,
+        request_count=10,
+    )
+    run_repository = FakeRunRepository()
+
+    result = await run_ramp_load(
+        target_id="t-1",
+        target_url="https://example.org/",
+        level=IntensityLevel.BAS,
+        duration_minutes=3,
+        thresholds=Thresholds(max_error_rate=0.5),
+        explicit_confirmation=True,
+        precheck_validated=False,
+        target_repository=FakeTargetRepository(),
+        load_runner=FakeLoadRunner([sample]),
+        run_progress_notifier=FakeRunProgressNotifier(),
+        run_repository=run_repository,
+        audit_sink=lambda _e: None,
+        notification_sink=lambda _m: None,
+        id_factory=lambda: "id-1",
+        now=lambda: NOW,
+        safety_mode=False,
+    )
+
+    assert isinstance(result, Ok)
+    saved = run_repository.get(result.value.id)
+    assert saved is not None
+    assert saved.safety_mode is False

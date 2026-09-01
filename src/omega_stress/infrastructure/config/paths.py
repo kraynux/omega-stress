@@ -33,6 +33,15 @@ def exports_dir(var_dir: Path | None = None) -> Path:
     return base / "exports"
 
 
+def calibrations_dir(var_dir: Path | None = None) -> Path:
+    """Dossier des resultats de calibrage persistes (voir
+    infrastructure/storage/files/json_calibration_store.py) — document
+    produit, "Persistance et compatibilite" : `var/calibrations/
+    <fingerprint>.json`, jamais `~/.local/share/` ni `~/.config/`."""
+    base = var_dir if var_dir is not None else resolve_var_dir()
+    return base / "calibrations"
+
+
 def screenshots_dir(var_dir: Path | None = None) -> Path:
     """Dossier de destination par defaut des captures d'ecran SVG (voir
     interfaces/tui/app.py, commande "Capture d'ecran" de la palette) —
@@ -65,6 +74,11 @@ def screenshots_dir(var_dir: Path | None = None) -> Path:
 #   screenshots en svg a modifier dans var/screenshots/" — les captures
 #   partaient jusqu'ici dans le dossier Telechargements par defaut de
 #   Textual, jamais dans var/, voir sa propre docstring).
+# - calibrations_dir() (2026-09-01) : meme patron que exports_dir()/
+#   screenshots_dir() — le document produit avait deja anticipe ce chemin
+#   exact avant meme que le mecanisme de calibrage ne soit construit
+#   (section "Persistance et compatibilite", citant explicitement ce
+#   fichier comme "convention deja etablie").
 # - resolve_var_dir() reste relatif a Path.cwd() par defaut (coherent
 #   avec l'usage local mono-utilisateur du produit) plutot qu'un
 #   repertoire XDG/utilisateur — a revoir si une distribution multi-

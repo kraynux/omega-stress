@@ -1,5 +1,5 @@
-from omega_stress.core.enums import RenderProfile
-from omega_stress.domain.terminal.models import TerminalSignals
+from omega_lib.terminal.models import RenderProfile, TerminalSignals
+
 from omega_stress.interfaces.tui.controllers.render_profile_controller import (
     apply_render_profile,
 )

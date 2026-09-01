@@ -6,17 +6,30 @@ from typing import TYPE_CHECKING
 
 from textual.app import ComposeResult
 from textual.containers import Container, Horizontal, Vertical
-from textual.widgets import Button, Footer, Header, OptionList, Select, Static
+from textual.widgets import Button, Checkbox, Footer, Header, Input, OptionList, Select, Static
 from textual.worker import Worker
 
 from omega_stress.application.dto.profile_dto import ProfileDTO
 from omega_stress.application.dto.target_dto import TargetDTO
-from omega_stress.core.enums import IntensityLevel, TestFamily
+from omega_stress.core.enums import DurationPresetId, IntensityLevel, TestFamily
 from omega_stress.core.results import Err
+from omega_stress.domain.load.duration_presets import DurationPreset, duration_preset
 from omega_stress.domain.load.models import Thresholds
-from omega_stress.domain.load.policies import allowed_durations_minutes, is_precheck_mandatory
+from omega_stress.domain.load.policies import (
+    SAFETY_MODE_DESCRIPTION,
+    allowed_durations_minutes,
+    is_precheck_available,
+)
+from omega_stress.domain.load.presets import ramp_preset
 from omega_stress.domain.runs.models import IntervalSample
-from omega_stress.interfaces.tui.controllers import load_controller, profile_controller
+from omega_stress.interfaces.tui.controllers import (
+    calibration_controller,
+    load_controller,
+    profile_controller,
+)
+from omega_stress.interfaces.tui.presenters.calibration_presenter import (
+    envelope_comparison_message,
+)
 from omega_stress.interfaces.tui.presenters.run_presenter import verdict_label
 from omega_stress.interfaces.tui.screens._base import OmegaScreen
 from omega_stress.interfaces.tui.screens.run_details import RunDetailsScreen
@@ -24,6 +37,7 @@ from omega_stress.interfaces.tui.widgets.authorization_checkbox import Authoriza
 from omega_stress.interfaces.tui.widgets.notification_bar import NotificationBar
 from omega_stress.interfaces.tui.widgets.progress_panel import ProgressPanel
 from omega_stress.interfaces.tui.widgets.run_progress import RunProgress
+from omega_stress.interfaces.tui.widgets.safety_mode_checkbox import SafetyModeCheckbox
 from omega_stress.interfaces.tui.widgets.target_picker import TargetPicker
 
 if TYPE_CHECKING:
@@ -35,6 +49,24 @@ _DEFAULT_DURATION_OPTIONS = [
     (f"{m} min", m) for m in allowed_durations_minutes(IntensityLevel.BAS)
 ]
 """Voir screens/request_panel.py, meme raison (EmptySelectError sinon)."""
+_DURATION_MODE_OPTIONS = [("Manuel (1-5 min)", "manual"), ("Profil D1-D6", "preset")]
+_DURATION_PRESET_OPTIONS = [
+    (
+        f"{preset_id.value.upper()} {duration_preset(preset_id).name} "
+        f"({duration_preset(preset_id).total_minutes} min)",
+        preset_id,
+    )
+    for preset_id in DurationPresetId
+]
+
+
+def _level_options_for_preset(preset: DurationPreset) -> list[tuple[str, IntensityLevel]]:
+    """Voir screens/request_panel.py, meme logique a l'identique."""
+    ordered = list(IntensityLevel)
+    allowed = ordered[: ordered.index(preset.free_max_level) + 1]
+    if preset.reinforced_level is not None:
+        allowed.append(preset.reinforced_level)
+    return [(level.value, level) for level in allowed]
 
 
 class _PanelProgressNotifier:
@@ -72,11 +104,22 @@ class RampPanelScreen(OmegaScreen):
             yield Static("Criteres du test", classes="omega-subtitle")
             yield Select(_LEVEL_OPTIONS, prompt="Intensite", id="level", allow_blank=False)
             yield Select(
+                _DURATION_MODE_OPTIONS, prompt="Mode duree", id="duration-mode",
+                allow_blank=False,
+            )
+            yield Select(
                 _DEFAULT_DURATION_OPTIONS,
                 prompt="Duree (minutes)",
                 id="duration",
                 allow_blank=False,
             )
+            yield Select(
+                _DURATION_PRESET_OPTIONS, prompt="Profil de duree", id="duration-preset",
+                allow_blank=False,
+            )
+            with Container(id="confirmation-frame", classes="omega-btn-frame"):
+                yield Static("Confirmation renforcee requise pour ce niveau :")
+                yield Input(placeholder="Texte de confirmation exact", id="confirmation-text")
             yield Select(
                 _MAX_ERROR_RATE_OPTIONS,
                 prompt="Taux d'erreur maximal",
@@ -84,6 +127,9 @@ class RampPanelScreen(OmegaScreen):
                 allow_blank=False,
             )
             yield AuthorizationCheckbox(id="authorization")
+            yield Static(SAFETY_MODE_DESCRIPTION, classes="omega-subtitle")
+            yield SafetyModeCheckbox(id="safety-mode")
+            yield Static("", id="calibration-comparison")
             with Horizontal(classes="omega-actions"):
                 with Container(id="precheck-frame", classes="omega-btn-frame"):
                     yield Button("Pre-check", id="precheck")
@@ -113,8 +159,12 @@ class RampPanelScreen(OmegaScreen):
         ]
         self.query_one("#profile", Select).set_options((p.name, p) for p in frozen_profiles)
         self._set_duration_options(IntensityLevel.BAS)
+        self.query_one("#duration-mode", Select).value = "manual"
+        self.query_one("#duration-preset", Select).display = False
+        self.query_one("#confirmation-frame", Container).display = False
         self.query_one("#precheck-frame", Container).display = False
         self.query_one("#stop-frame", Container).display = False
+        self.query_one("#calibration-comparison", Static).display = False
 
     def _set_duration_options(
         self, level: IntensityLevel, *, keep_value: int | None = None
@@ -136,16 +186,75 @@ class RampPanelScreen(OmegaScreen):
     def on_option_list_option_selected(self, event: OptionList.OptionSelected) -> None:
         self._selected_target = self._targets_by_index.get(event.option_index)
 
-    def on_select_changed(self, event: Select.Changed) -> None:
-        if event.select.id == "level" and isinstance(event.value, IntensityLevel):
-            current_duration = self.query_one("#duration", Select).value
-            self._set_duration_options(
-                event.value,
-                keep_value=current_duration if isinstance(current_duration, int) else None,
+    def _is_preset_mode(self) -> bool:
+        return self.query_one("#duration-mode", Select).value == "preset"
+
+    def _apply_duration_mode(self, mode: object) -> None:
+        """Voir screens/request_panel.py, meme logique a l'identique."""
+        is_preset = mode == "preset"
+        self.query_one("#duration", Select).display = not is_preset
+        self.query_one("#duration-preset", Select).display = is_preset
+        if is_preset:
+            preset_value = self.query_one("#duration-preset", Select).value
+            preset_id = (
+                preset_value if isinstance(preset_value, DurationPresetId) else DurationPresetId.D1
             )
-            self.query_one("#precheck-frame", Container).display = is_precheck_mandatory(
+            self.query_one("#duration-preset", Select).value = preset_id
+            self._apply_duration_preset(preset_id)
+        else:
+            self.query_one("#confirmation-frame", Container).display = False
+            level_select = self.query_one("#level", Select)
+            level_select.set_options(_LEVEL_OPTIONS)
+            level = level_select.value
+            if isinstance(level, IntensityLevel):
+                self._set_duration_options(level)
+                self.query_one("#precheck-frame", Container).display = is_precheck_available(level)
+
+    def _apply_duration_preset(self, preset_id: DurationPresetId) -> None:
+        preset = duration_preset(preset_id)
+        level_select = self.query_one("#level", Select)
+        options = _level_options_for_preset(preset)
+        allowed_levels = [level for _label, level in options]
+        current_level = level_select.value
+        level_select.set_options(options)
+        level_select.value = (
+            current_level if current_level in allowed_levels else allowed_levels[0]
+        )
+        self.query_one("#precheck-frame", Container).display = is_precheck_available(
+            level_select.value
+        )
+        self._refresh_confirmation_visibility(level_select.value)
+
+    def _refresh_confirmation_visibility(self, level: IntensityLevel) -> None:
+        preset_value = self.query_one("#duration-preset", Select).value
+        preset = (
+            duration_preset(preset_value) if isinstance(preset_value, DurationPresetId) else None
+        )
+        needs_confirmation = preset is not None and level is preset.reinforced_level
+        self.query_one("#confirmation-frame", Container).display = needs_confirmation
+        if not needs_confirmation:
+            self.query_one("#confirmation-text", Input).value = ""
+
+    def on_select_changed(self, event: Select.Changed) -> None:
+        if event.select.id == "duration-mode":
+            self._apply_duration_mode(event.value)
+            return
+        if event.select.id == "duration-preset" and isinstance(event.value, DurationPresetId):
+            self._apply_duration_preset(event.value)
+            return
+        if event.select.id == "level" and isinstance(event.value, IntensityLevel):
+            self.query_one("#precheck-frame", Container).display = is_precheck_available(
                 event.value
             )
+            if self._is_preset_mode():
+                self._refresh_confirmation_visibility(event.value)
+            else:
+                current_duration = self.query_one("#duration", Select).value
+                self._set_duration_options(
+                    event.value,
+                    keep_value=current_duration if isinstance(current_duration, int) else None,
+                )
+            self._refresh_calibration_comparison()
             return
         if event.select.id != "profile":
             return
@@ -155,7 +264,36 @@ class RampPanelScreen(OmegaScreen):
             return
         self._apply_profile(profile)
 
+    def on_checkbox_changed(self, event: Checkbox.Changed) -> None:
+        if event.checkbox.id == "safety-mode":
+            self._refresh_calibration_comparison()
+
+    def _refresh_calibration_comparison(self) -> None:
+        comparison = self.query_one("#calibration-comparison", Static)
+        if self.query_one(SafetyModeCheckbox).value:
+            comparison.display = False
+            return
+        level = self.query_one("#level", Select).value
+        if not isinstance(level, IntensityLevel):
+            comparison.display = False
+            return
+        preset = ramp_preset(level)
+        result = calibration_controller.load_last_calibration(self._container)
+        comparison.update(
+            envelope_comparison_message(
+                family=TestFamily.RAMP,
+                target_value=preset.peak_requests_per_minute / 60.0,
+                unit="req/s",
+                result=result,
+            )
+        )
+        comparison.display = True
+
     def _apply_profile(self, profile: ProfileDTO) -> None:
+        # Voir screens/request_panel.py, meme raison (aucun profil de
+        # duree D1-D6 sur un profil fige).
+        self.query_one("#duration-mode", Select).value = "manual"
+        self._apply_duration_mode("manual")
         self._selected_profile_id = profile.id
         level = IntensityLevel(profile.level)
         self.query_one("#level", Select).value = level
@@ -237,11 +375,27 @@ class RampPanelScreen(OmegaScreen):
             result_label.update("Choisissez un niveau d'intensite.")
             return
 
-        duration_minutes = self.query_one("#duration", Select).value
         max_error_rate = self.query_one("#max-error-rate", Select).value
-        if not isinstance(duration_minutes, int) or not isinstance(max_error_rate, float):
-            result_label.update("Choisissez une duree et un taux d'erreur.")
+        if not isinstance(max_error_rate, float):
+            result_label.update("Choisissez un taux d'erreur.")
             return
+
+        if self._is_preset_mode():
+            preset_value = self.query_one("#duration-preset", Select).value
+            if not isinstance(preset_value, DurationPresetId):
+                result_label.update("Choisissez un profil de duree.")
+                return
+            duration_minutes = duration_preset(preset_value).total_minutes
+            duration_preset_id: DurationPresetId | None = preset_value
+            confirmation_text = self.query_one("#confirmation-text", Input).value or None
+        else:
+            manual_duration = self.query_one("#duration", Select).value
+            if not isinstance(manual_duration, int):
+                result_label.update("Choisissez une duree.")
+                return
+            duration_minutes = manual_duration
+            duration_preset_id = None
+            confirmation_text = None
 
         run_progress = self.query_one(RunProgress)
         run_progress.start(total_seconds=duration_minutes * 60)
@@ -260,6 +414,9 @@ class RampPanelScreen(OmegaScreen):
             ),
             notification_sink=self.query_one(NotificationBar),
             profile_id=self._selected_profile_id,
+            duration_preset_id=duration_preset_id,
+            reinforced_confirmation_text=confirmation_text,
+            safety_mode=self.query_one(SafetyModeCheckbox).value,
         )
         run_progress.stop()
         self.query_one("#stop-frame", Container).display = False
@@ -301,14 +458,27 @@ class RampPanelScreen(OmegaScreen):
 # - #duration/#max-error-rate en Select (2026-08-24) : meme mecanisme et
 #   meme raison que documentee dans request_panel.py.
 # - Bouton "Pre-check" (2026-08-24) : mirroir exact de request_panel.py
-#   (meme raison, meme mecanisme — visible seulement si is_precheck_mandatory()
-#   sur le niveau choisi, memorise self._precheck_validated, transmis a
-#   launch_ramp() a la place du "precheck_validated=False" fige avant ce
-#   correctif).
+#   (meme raison, meme mecanisme — visible seulement si is_precheck_available()
+#   sur le niveau choisi (2026-09-01, gate optionnel OU obligatoire, voir
+#   request_panel.py pour le detail complet du changement), memorise
+#   self._precheck_validated, transmis a launch_ramp() a la place du
+#   "precheck_validated=False" fige avant ce correctif).
 # - Bouton "Arreter" (2026-08-25) : mirroir exact de request_panel.py,
 #   voir son INFO DEV pour le mecanisme complet (Worker.cancel() ->
 #   asyncio.CancelledError absorbee par application/pipeline/executor.py
 #   -> cloture normale AUTO_STOPPED).
+# - Mode duree "#duration-mode" (2026-09-01, D1-D6) : mirroir exact de
+#   request_panel.py (voir son INFO DEV pour le detail complet) — en mode
+#   profil, les ramp_steps a 4 phases (warm-up/rampe/plateau/retour au
+#   calme) sont construits dans application/commands/run_ramp_load.py
+#   (build_duration_preset_ramp_steps), remplacant build_ramp_steps() (2
+#   phases, mode manuel) — ce fichier transmet seulement
+#   level/duration_minutes/duration_preset_id, jamais les etapes elles-
+#   memes, meme separation que pour Test connexions.
+# - "#safety-mode"/"#calibration-comparison" (2026-09-01) : mirroir exact
+#   de request_panel.py (voir son INFO DEV pour le detail complet) —
+#   compare le PIC de la rampe (RampPreset.peak_requests_per_minute,
+#   pas un palier fixe) a envelope.rps_safe.
 # Comment il sera utilise :
 # - interfaces/tui/screens/home.py (bouton "Test charge").
 #---------------------------------------------------------------------->

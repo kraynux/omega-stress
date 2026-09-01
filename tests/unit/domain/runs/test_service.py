@@ -51,3 +51,14 @@ def test_finish_rejects_already_finished_run():
     result = finish(already_finished, result=_result(), now=FINISHED)
 
     assert isinstance(result, Err)
+
+
+def test_finish_preserves_safety_mode():
+    # Non-regression : finish() reconstruit LoadRun via une liste de
+    # champs EXPLICITE (voir son propre INFO DEV) — meme bug reel que
+    # duration_preset_id (2026-09-01, champ ajoute puis oublie dans cette
+    # reconstruction, perdu silencieusement a chaque cloture).
+    result = finish(_run(safety_mode=False), result=_result(), now=FINISHED)
+
+    assert isinstance(result, Ok)
+    assert result.value.safety_mode is False
