@@ -17,6 +17,11 @@ Page officielle : [OMEGA-STRESS](https://kraynux.snake-mackarel.ts.net/omega-str
 [![Platform](https://img.shields.io/badge/Platform-Linux-informational.svg)](https://www.linux.org/)
 [![Interface](https://img.shields.io/badge/Interface-TUI%20%2B%20Rich-cyan.svg)](https://github.com/Textualize/rich)
 
+**Langues:**  
+[Français](README.md) · [English](README.en.md) · [Español](README.es.md) · [Русский](README.ru.md) · [中文](README.zh-CN.md)
+
+
+
 **Omega-Stress** est une application locale en terminal (TUI [Textual](https://github.com/Textualize/textual) + CLI scriptable) qui pilote des tests de charge HTTP de manière encadrée et réutilisable : profils figés, historique, relance, exports détaillés (JSON/CSV/HTML), bornes de sécurité explicites.
 
 Le projet est conçu selon les principes de la **Clean Architecture**, avec une séparation claire entre domaine métier, orchestration, infrastructure et interface utilisateur.
