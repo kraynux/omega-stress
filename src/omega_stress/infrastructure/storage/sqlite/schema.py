@@ -76,7 +76,8 @@ SCHEMA_STATEMENTS: tuple[str, ...] = (
         peak_cpu_percent_generator REAL,
         peak_memory_rss_mb REAL,
         duration_preset_id TEXT,
-        safety_mode INTEGER
+        safety_mode INTEGER,
+        profile_customized INTEGER
     )
     """,
     """
@@ -99,6 +100,7 @@ ADDITIVE_COLUMNS: tuple[tuple[str, str, str], ...] = (
     ("runs", "peak_memory_rss_mb", "REAL"),
     ("runs", "duration_preset_id", "TEXT"),
     ("runs", "safety_mode", "INTEGER"),
+    ("runs", "profile_customized", "INTEGER"),
 )
 """Colonnes ajoutees a une table EXISTANTE apres sa premiere creation
 (table, colonne, type SQL) — voir migrations.py::_ensure_additive_columns().
@@ -112,7 +114,11 @@ TABLE ci-dessus pour couvrir les deux cas (base neuve vs base existante
 a migrer). safety_mode nullable (pas de DEFAULT) : une base migree lit
 NULL pour tout run historique, relu comme True (voir run_repository.py)
 — ces runs antérieurs tournaient TOUJOURS avec les garde-fous actifs,
-avant que ce champ n'existe."""
+avant que ce champ n'existe. profile_customized (2026-09-27) suit le
+meme motif mais l'inverse de safety_mode : NULL relu comme False (voir
+run_repository.py) — jamais suppose "personnalise" pour un run ecrit
+avant l'existence de ce champ, faute de pouvoir le verifier
+retroactivement."""
 
 # <-- INFO DEV ---------------------------------------------------------
 # Role :

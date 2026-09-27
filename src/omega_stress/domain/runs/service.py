@@ -116,6 +116,7 @@ def finish(run: LoadRun, *, result: LoadResult, now: datetime) -> Result[LoadRun
             is_precheck=run.is_precheck,
             duration_preset_id=run.duration_preset_id,
             safety_mode=run.safety_mode,
+            profile_customized=run.profile_customized,
         )
     )
 

@@ -110,6 +110,7 @@ async def replay_run(
         required_capability=(
             _REQUIRED_CAPABILITY if plan.level in policies.PRECHECK_MANDATORY_LEVELS else None
         ),
+        profile_repository=profile_repository,
     )
 
 # <-- INFO DEV ---------------------------------------------------------

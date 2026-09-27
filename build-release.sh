@@ -1,10 +1,15 @@
 #!/usr/bin/env bash
 # Copyright (c) 2026 kraynux - kraynux@proton.me - Licence MIT (voir fichier LICENSE)
 # ==============================================================================
-# Construit l'archive distribuable omega-stress-<version>.tar.gz : copie le
-# projet (sans artefacts dev/runtime), vendore omega-lib (dependance
-# obligatoire non publiee sur PyPI, voir install.sh), archive le tout.
+# Construit l'archive distribuable omega-stress.tar.gz : copie le projet
+# (sans artefacts dev/runtime), vendore omega-lib (dependance obligatoire
+# non publiee sur PyPI, voir install.sh), archive le tout dans ../dist/.
+# Meme convention que omega-serv/omega-track/omega-fuzz (build-release.sh).
 # Outil de maintenance, jamais lui-meme inclus dans l'archive generee.
+#
+# `docs/` exclu (retour utilisateur) : ne contient que le logo utilise
+# par le rendu README sur GitHub (docs/assets/omega-stress.png, ~2.6 Mo) -
+# jamais lu par le code, inutile a une installation reelle.
 # ==============================================================================
 
 set -e
@@ -20,14 +25,13 @@ err()  { echo -e "${RED}❌ $1${NC}"; }
 
 PROJECT_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 OMEGA_LIB_SRC="${OMEGA_LIB_SRC:-$HOME/DEV/LIB/omega-lib}"
+DIST_DIR="${DIST_DIR:-$PROJECT_ROOT/../dist}"
+ARCHIVE_NAME="omega-stress.tar.gz"
 
 if [ ! -d "$OMEGA_LIB_SRC" ]; then
     err "omega-lib introuvable : $OMEGA_LIB_SRC (definissez OMEGA_LIB_SRC si le chemin differe)."
     exit 1
 fi
-
-VERSION="$(grep -m1 '^version' "$PROJECT_ROOT/pyproject.toml" | sed -E 's/version = "(.*)"/\1/')"
-ARCHIVE_NAME="omega-stress-${VERSION}.tar.gz"
 
 STAGING_DIR="$(mktemp -d)"
 trap 'rm -rf "$STAGING_DIR"' EXIT
@@ -41,11 +45,13 @@ rsync -a \
     --exclude='.pytest_cache/' --exclude='.mypy_cache/' --exclude='.ruff_cache/' \
     --exclude='.import_linter_cache/' --exclude='*.egg-info/' \
     --exclude='.git/' --exclude='.claude/' \
+    --exclude='docs/' \
     --exclude='var/db/*' --exclude='var/exports/*' --exclude='var/screenshots/*' \
-    --exclude='var/settings.json' --exclude='var/*.log' --exclude='var/*.jsonl' \
+    --exclude='var/calibrations/*' --exclude='var/settings.json' \
+    --exclude='var/*.log' --exclude='var/*.jsonl' \
     --exclude='*~' --exclude='*.bak' --exclude='*.swp' \
     --exclude='.coverage' --exclude='htmlcov/' \
-    --exclude='build-release.sh' --exclude='omega-stress-*.tar.gz' \
+    --exclude='build-release.sh' --exclude='omega-stress.tar.gz' --exclude='dist/' \
     "$PROJECT_ROOT/" "$DEST/"
 
 info "Vendoring d'omega-lib (dependance obligatoire, non publiee sur PyPI)..."
@@ -57,8 +63,9 @@ rsync -a \
     "$OMEGA_LIB_SRC/" "$DEST/vendor/omega-lib/"
 
 info "Archivage..."
-tar -C "$STAGING_DIR" -czf "$PROJECT_ROOT/$ARCHIVE_NAME" omega-stress
+mkdir -p "$DIST_DIR"
+tar -C "$STAGING_DIR" -czf "$DIST_DIR/$ARCHIVE_NAME" omega-stress
 
-ok "Archive generee : $ARCHIVE_NAME"
-echo "sha256sum $ARCHIVE_NAME :"
-sha256sum "$PROJECT_ROOT/$ARCHIVE_NAME"
+ok "Archive generee : $DIST_DIR/$ARCHIVE_NAME"
+echo "sha256sum :"
+sha256sum "$DIST_DIR/$ARCHIVE_NAME"

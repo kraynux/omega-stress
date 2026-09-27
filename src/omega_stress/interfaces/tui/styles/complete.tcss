@@ -1,10 +1,11 @@
 /* Profil `complete` : bordures completes, couleurs etendues, live complet
- * (voir plan produit, "Profils de rendu"). */
-
-.omega-panel {
-    border: heavy $panel;
-    border-title-color: $primary;
-}
+ * (voir plan produit, "Profils de rendu"). Retour utilisateur : la
+ * bordure/fond/padding de ".omega-panel" (cadre "application", voir
+ * styles/terminal_frame.tcss) est desormais UNIFORME sur les 4 profils -
+ * l'ancienne surcharge ici ("border: heavy $panel") la masquait
+ * silencieusement (chargee APRES terminal_frame.tcss), retiree pour
+ * uniformiser avec les autres outils omega- (aucun ne surcharge ces
+ * classes par profil). */
 
 DataTable {
     border: round $panel;

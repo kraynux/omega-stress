@@ -103,6 +103,7 @@ def run_to_dto(run: LoadRun, *, target_address: str) -> RunDTO:
             result.peak_cpu_percent_generator if result is not None else None
         ),
         peak_memory_rss_mb=result.peak_memory_rss_mb if result is not None else None,
+        profile_customized=run.profile_customized,
     )
 
 

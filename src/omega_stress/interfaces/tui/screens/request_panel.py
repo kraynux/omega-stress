@@ -106,7 +106,9 @@ class RequestPanelScreen(OmegaScreen):
         with Vertical(classes="omega-panel"):
             yield Static("TEST REQUETES", classes="omega-title")
             yield Select([], prompt="Profil fige (optionnel)", id="profile")
+            yield Static("", id="profile-hint", classes="omega-hint")
             yield TargetPicker(id="target-picker")
+            yield Static("", id="target-hint", classes="omega-hint")
             yield Static("Criteres du test", classes="omega-subtitle")
             yield Select(_LEVEL_OPTIONS, prompt="Intensite", id="level", allow_blank=False)
             yield Select(
@@ -154,14 +156,14 @@ class RequestPanelScreen(OmegaScreen):
         self._targets_by_index = dict(enumerate(targets))
         self.query_one(TargetPicker).load_targets(targets)
 
+        all_profiles = profile_controller.load_profiles(
+            profile_repository=self._container.profile_repository
+        )
         frozen_profiles = [
-            p
-            for p in profile_controller.load_profiles(
-                profile_repository=self._container.profile_repository
-            )
-            if p.frozen and p.family == TestFamily.REQUEST.value
+            p for p in all_profiles if p.frozen and p.family == TestFamily.REQUEST.value
         ]
         self.query_one("#profile", Select).set_options((p.name, p) for p in frozen_profiles)
+        self._refresh_profile_hint(all_profiles, frozen_profiles)
         self._set_duration_options(IntensityLevel.BAS)
         self.query_one("#duration-mode", Select).value = "manual"
         self.query_one("#duration-preset", Select).display = False
@@ -169,6 +171,24 @@ class RequestPanelScreen(OmegaScreen):
         self.query_one("#precheck-frame", Container).display = False
         self.query_one("#stop-frame", Container).display = False
         self.query_one("#calibration-comparison", Static).display = False
+
+    def _refresh_profile_hint(
+        self, all_profiles: tuple[ProfileDTO, ...], frozen_profiles: list[ProfileDTO]
+    ) -> None:
+        """Voir screens/connection_panel.py, meme logique a l'identique
+        (retour utilisateur 2026-09-27)."""
+        hint = self.query_one("#profile-hint", Static)
+        if frozen_profiles:
+            hint.update("")
+        elif any(p.frozen for p in all_profiles):
+            hint.update(
+                "Aucun profil fige pour Test requetes (des profils figes existent pour "
+                "d'autres types de test — Connexions/Rampe)."
+            )
+        elif all_profiles:
+            hint.update("Aucun profil fige pour l'instant (des profils existent mais aucun n'est fige).")
+        else:
+            hint.update("Aucun profil fige pour l'instant — creez-en un depuis l'ecran Profils.")
 
     def _set_duration_options(
         self, level: IntensityLevel, *, keep_value: int | None = None
@@ -270,6 +290,7 @@ class RequestPanelScreen(OmegaScreen):
         profile = event.value
         if not isinstance(profile, ProfileDTO):
             self._selected_profile_id = None
+            self._refresh_target_visibility(None)
             return
         self._apply_profile(profile)
 
@@ -320,6 +341,25 @@ class RequestPanelScreen(OmegaScreen):
             self.query_one(TargetPicker).manual_value = ""
         else:
             self.query_one(TargetPicker).manual_value = profile.default_target_id
+
+        self._refresh_target_visibility(profile)
+
+    def _refresh_target_visibility(self, profile: ProfileDTO | None) -> None:
+        """Voir screens/connection_panel.py, meme mecanisme a l'identique
+        (retour utilisateur 2026-09-27 : le picker de cible manuel doit
+        disparaitre des qu'un profil fige (qui porte deja sa propre cible
+        par defaut) est selectionne, re-apparait si le profil est
+        efface)."""
+        picker = self.query_one(TargetPicker)
+        hint = self.query_one("#target-hint", Static)
+        if profile is None:
+            picker.display = True
+            hint.update("")
+            return
+        picker.display = False
+        target = self._resolve_target()
+        address = target[1] if target is not None else profile.default_target_id
+        hint.update(f"Cible fixee par le profil « {profile.name} » : {address}")
 
     def on_button_pressed(self, event: Button.Pressed) -> None:
         if event.button.id == "back":
@@ -488,6 +528,8 @@ class RequestPanelScreen(OmegaScreen):
 # - Une cible non epinglee (id = valeur manuelle brute) exige la case
 #   d'autorisation cochee : sinon application/pipeline/guards/
 #   authorization_guard.py refuse, message relaye tel quel dans #result.
+# - _refresh_target_visibility()/"#target-hint" (2026-09-27, retour
+#   utilisateur) : voir screens/connection_panel.py pour le detail complet.
 # - Selecteur "profile" (2026-08-24) : ne filtre QUE les profils figes de
 #   famille REQUEST (un profil connexions/charge n'a pas de sens ici) —
 #   _apply_profile() pre-remplit niveau/duree/seuil/cible et memorise

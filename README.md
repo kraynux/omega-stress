@@ -55,7 +55,7 @@ Le projet est conçu selon les principes de la **Clean Architecture**, avec une 
 - **Deux modes de durée** : manuel (1 à 5 min, borné par niveau) ou **profil nommé D1-D6** (durée totale fixe avec warm-up/rampe/plateau/retour au calme — voir [Profils de durée D1-D6](#profils-de-durée-d1-d6-mode-profil)).
 - **Mode sécurité** (actif par défaut, désactivable à chaque lancement) : garde-fous locaux CPU/mémoire de la machine hôte, distincts des seuils qui protègent la cible testée — voir [Mode sécurité](#mode-sécurité).
 - **Calibrage local persistant** : mesure la capacité réelle de la machine hôte (jamais la cible) via un serveur de boucle locale, par paliers de charge croissante — voir [Calibrage local](#calibrage-local).
-- Profils figés, réutilisables, historisés.
+- Profils figés, réutilisables, historisés — **optionnels** : un test se lance tout aussi bien en mode manuel, sans aucun profil, en choisissant/saisissant directement une cible.
 - Confirmation d'autorisation explicite obligatoire avant tout run sur une cible non épinglée.
 - Seuils d'arrêt automatique, jamais de charge non bornée.
 - Exports JSON/CSV/HTML détaillés (paliers, métriques par intervalle, verdict, diagnostic).
@@ -76,7 +76,7 @@ Le projet est conçu selon les principes de la **Clean Architecture**, avec une 
 - **Profils de durée nommés D1-D6** (mode « profil »), alternative au mode manuel : une durée totale fixe (1 à 120 min) avec warm-up/rampe/plateau/retour au calme, qui borne aussi les niveaux accessibles — voir [Profils de durée D1-D6](#profils-de-durée-d1-d6-mode-profil).
 - **Mode sécurité**, coché par défaut sur chaque écran de lancement : arrête un test si la machine hôte (pas la cible) semble en danger. Désactivable en connaissance de cause, avec un rappel comparant le niveau choisi au dernier calibrage effectué — voir [Mode sécurité](#mode-sécurité).
 - **Calibrage local persistant** : mesure ce que la machine peut réellement encaisser (7 paliers de charge croissante contre un serveur de boucle locale intégré), consultable depuis l'écran Calibrage — voir [Calibrage local](#calibrage-local).
-- **Cibles épinglées** : une adresse épinglée dispense de recocher l'autorisation à chaque lancement ; les cibles récentes non épinglées restent visibles (10 maximum) sans autorisation implicite.
+- **Cibles épinglées** : une adresse épinglée dispense de recocher l'autorisation à chaque lancement ; les cibles récentes non épinglées restent visibles (10 maximum) sans autorisation implicite. Une cible épinglée s'utilise de deux façons, indépendantes l'une de l'autre : directement, pour lancer un test en mode manuel sans aucun profil, ou comme cible par défaut lors de la création d'un profil figé.
 - **Historique complet** : chaque run est journalisé (verdict, métriques, chronologie par intervalle, mode sécurité utilisé) ; un run lié à un profil figé peut être rejoué à l'identique.
 - **Exports détaillés** JSON (données brutes réimportables), CSV (analyse tabulaire) ou HTML (rapport lisible, avec thème au choix parmi les 10 palettes du projet).
 - **Pré-check** automatique et obligatoire avant tout test Violent/Maximum, facultatif (mais débloquant des durées supplémentaires) sur Puissant/Agressif, avec fenêtre de validité (24 h).
@@ -232,7 +232,11 @@ Ajoutez `--json` à `history`/`export`/`calibrate` pour une sortie machine, expl
 ### Parcours général
 
 1. Au premier lancement, l'accueil propose : Profils, Test requêtes, Test connexions, Test charge, Historique, Cibles, Calibrage, Réglages, Aide.
-2. Depuis un écran de test : choisir ou saisir une cible, cocher l'autorisation si la cible n'est pas déjà épinglée-autorisée, régler intensité/durée (manuelle ou profil D1-D6)/seuil d'erreur, laisser le mode sécurité actif ou le désactiver en connaissance de cause, lancer un pré-check si le niveau l'exige, puis lancer le test.
+2. Depuis un écran de test, un profil figé (optionnel) reste sélectionnable en haut de l'écran : deux façons de renseigner la cible et les critères, jamais combinées sur un même lancement —
+   - **avec un profil** : le sélectionner pré-remplit cible/intensité/durée/seuil d'erreur, le champ de cible manuelle disparaît (il est alors sans objet) ; les valeurs pré-remplies restent modifiables avant de lancer ;
+   - **sans profil (mode manuel)** : choisir une cible épinglée/récente dans la liste ou en saisir une nouvelle, cocher l'autorisation si elle n'est pas déjà épinglée-autorisée, régler intensité/durée (manuelle ou profil de durée D1-D6)/seuil d'erreur à la main.
+
+   Dans les deux cas : laisser le mode sécurité actif ou le désactiver en connaissance de cause, lancer un pré-check si le niveau l'exige, puis lancer le test.
 3. Le résultat s'affiche immédiatement (verdict, métriques, chronologie), sans repasser par l'Historique — un export est proposé directement depuis cet écran.
 4. Un profil peut être figé pour relancer le même test à l'identique plus tard, depuis l'écran Profils ou en le rejouant depuis l'Historique.
 

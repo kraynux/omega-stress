@@ -128,7 +128,23 @@ class LoadRun:
     safety_mode : copie de LoadPlan.safety_mode (2026-09-01, "mode
     securite" a cocher) au moment du lancement — meme raison exacte que
     duration_preset_id, pour qu'un rapport puisse dire honnetement si les
-    garde-fous locaux (CPU/memoire/FDs) etaient actifs pendant ce run."""
+    garde-fous locaux (CPU/memoire/FDs) etaient actifs pendant ce run.
+
+    profile_customized (2026-09-27, retour utilisateur) : True si ce run
+    reference un profil fige (profile_id non None) MAIS a ete lance avec
+    au moins un critere reel (niveau, duree, taux d'erreur max, cible)
+    different des valeurs stockees dans ce profil au moment du lancement
+    — l'ecran de lancement (screens/connection_panel.py et consorts)
+    pre-remplit le formulaire depuis le profil choisi mais ne verrouille
+    aucun champ ensuite : cette divergence passait totalement inapercue
+    dans l'historique, un run pouvait sembler "issu du Profil X" alors
+    qu'il avait tourne avec des criteres reellement differents. Calcule
+    UNE SEULE FOIS a la construction (application/commands/
+    _launch_support.py::launch_plan()), jamais recalcule apres coup :
+    le profil source peut avoir change ou disparu depuis. False par
+    defaut (jamais retroactivement suppose pour un run ecrit avant
+    l'ajout de ce champ, ni pour un run sans profil — voir
+    infrastructure/storage/sqlite/run_repository.py)."""
 
     id: str
     profile_id: str | None
@@ -142,6 +158,7 @@ class LoadRun:
     is_precheck: bool = False
     duration_preset_id: DurationPresetId | None = None
     safety_mode: bool = True
+    profile_customized: bool = False
 
 # <-- INFO DEV ---------------------------------------------------------
 # Role :

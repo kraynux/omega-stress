@@ -17,10 +17,21 @@ class HistoryTable(DataTable):
     def load_runs(self, runs: tuple[RunDTO, ...]) -> None:
         self.clear()
         for run in runs:
+            profile_cell = f"{run.family}/{run.level}"
+            if run.profile_id is not None and run.profile_customized:
+                # Retour utilisateur 2026-09-27 : ce run reference un
+                # profil fige mais a ete lance avec au moins un critere
+                # reel (niveau/duree/taux d'erreur/cible) different de ce
+                # que le profil stocke — jamais indique auparavant,
+                # laissant croire a tort que ce run reproduit fidelement
+                # le profil. Suffixe simple mot ASCII (pas de symbole),
+                # meme lisibilite en profil mono/reduced que le marqueur
+                # "*" de widgets/target_picker.py.
+                profile_cell += " (personnalise)"
             self.add_row(
                 run.id[:8],
                 run.target_address,
-                f"{run.family}/{run.level}",
+                profile_cell,
                 run.started_at,
                 run.verdict or "en cours",
                 key=run.id,

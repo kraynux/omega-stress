@@ -20,12 +20,41 @@ from omega_stress.domain.runs.models import LoadRun
 from omega_stress.domain.targets.models import Target
 from omega_stress.domain.targets.validation import parse_target_address
 from omega_stress.ports.load_runner import LoadRunner
+from omega_stress.ports.profile_repository import ProfileRepository
 from omega_stress.ports.run_progress_notifier import RunProgressNotifier
 from omega_stress.ports.run_repository import RunRepository
 from omega_stress.ports.target_repository import TargetRepository
 from omega_stress.shared.typing import Clock, IdFactory
 
 LaunchError = PlanValidationError | CapabilityUnavailableError
+
+
+def _is_customized_from_profile(
+    plan: LoadPlan, target_id: str, profile_id: str | None, profile_repository: ProfileRepository | None
+) -> bool:
+    """Retour utilisateur 2026-09-27 : les ecrans de lancement
+    pre-remplissent le formulaire depuis un profil fige choisi (screens/
+    connection_panel.py::_apply_profile() et consorts) mais ne verrouillent
+    ensuite AUCUN champ — l'utilisateur peut modifier niveau/duree/taux
+    d'erreur/cible juste avant de lancer, sans que rien ne l'indique dans
+    l'historique une fois le run termine. Compare ici les criteres REELS
+    du plan a ceux stockes dans le profil au moment du lancement (jamais
+    recalcule apres coup : le profil source peut changer/disparaitre
+    ensuite). `profile_repository` optionnel (None accepte, ex. si un
+    appelant futur ne l'a pas sous la main) : dans ce cas, jamais
+    d'affirmation fausse "personnalise" faute de pouvoir comparer, False
+    par defaut comme pour un run sans profil du tout."""
+    if profile_id is None or profile_repository is None:
+        return False
+    profile = profile_repository.get(profile_id)
+    if profile is None:
+        return False
+    return (
+        plan.level is not profile.level
+        or plan.duration.minutes != profile.duration.minutes
+        or plan.thresholds.max_error_rate != profile.thresholds.max_error_rate
+        or target_id != profile.default_target_id
+    )
 
 
 async def launch_plan(
@@ -45,6 +74,7 @@ async def launch_plan(
     now: Clock,
     capability_registry: CapabilityRegistry | None = None,
     required_capability: str | None = None,
+    profile_repository: ProfileRepository | None = None,
 ) -> Result[RunDTO, LaunchError]:
     """Verifie le pre-check et la capacite systeme, valide le plan, lance
     l'execution, PERSISTE le run termine et retourne son DTO.
@@ -92,6 +122,9 @@ async def launch_plan(
         started_at=started_at,
         duration_preset_id=plan.duration_preset_id,
         safety_mode=plan.safety_mode,
+        profile_customized=_is_customized_from_profile(
+            plan, target_id, profile_id, profile_repository
+        ),
     )
 
     finished = await execute(
@@ -174,6 +207,12 @@ async def launch_plan(
 #   domain/runs/service.py::finish(), qui doit AUSSI le reporter
 #   explicitement a la cloture (meme point de vigilance deja documente
 #   pour duration_preset_id, bug reel corrige le meme jour).
+# - profile_customized/_is_customized_from_profile() (2026-09-27, retour
+#   utilisateur) : profile_repository optionnel (None accepte) - un
+#   appelant qui ne l'a pas sous la main obtient juste False, jamais une
+#   exception. Voir domain/runs/service.py::finish() qui doit AUSSI le
+#   reporter explicitement a la cloture, meme point de vigilance que
+#   duration_preset_id/safety_mode ci-dessus.
 # Comment il sera utilise (apercu) :
 # - application/commands/run_request_load.py, run_connection_load.py,
 #   run_ramp_load.py, replay_run.py.

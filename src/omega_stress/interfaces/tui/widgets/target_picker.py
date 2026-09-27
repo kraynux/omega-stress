@@ -13,6 +13,15 @@ from omega_stress.application.dto.target_dto import TargetDTO
 class TargetPicker(Vertical):
     """Combine une liste de cibles connues et un champ de saisie libre."""
 
+    DEFAULT_CSS = """
+    TargetPicker {
+        height: 12;
+    }
+    TargetPicker > #known-targets {
+        height: 8;
+    }
+    """
+
     def compose(self) -> ComposeResult:
         yield Label("Cible", classes="omega-subtitle")
         yield OptionList(id="known-targets")
@@ -49,6 +58,37 @@ class TargetPicker(Vertical):
 # de PRE-REMPLIR le champ (ex. cible par defaut d'un profil fige
 # selectionne) sans connaitre l'id interne "#manual-target" — seule cette
 # classe sait ou vit reellement le champ de saisie libre.
+# - DEFAULT_CSS height:12/#known-targets height:8 (2026-09-27, bug reel
+#   rapporte et confirme par capture d'ecran reelle ET par
+#   export_screenshot() en test : "Cible" (le Label) restait seul
+#   visible, suivi DIRECTEMENT du titre de la section suivante — aucune
+#   trace de l'OptionList ni de l'Input, quel que soit leur nombre de
+#   cibles connues) : meme famille de cause EXACTE que widgets/
+#   run_progress.py::RunProgress (voir son propre INFO DEV, correctif du
+#   2026-08-25) — TargetPicker(Vertical) heritait de height:1fr
+#   (textual.containers.Vertical.DEFAULT_CSS) SANS jamais etre corrige ;
+#   Vertical porte aussi overflow:hidden par defaut, donc des que le
+#   "1fr" alloue par le parent (".omega-panel", lui-meme scrollable mais
+#   ne calcule ce "1fr" que sur le champ de vue, pas sur toute l'etendue
+#   scrollable) devenait plus petit que le contenu naturel (Label +
+#   OptionList + Input, ~7 lignes minimum), l'exces etait purement et
+#   simplement DECOUPE (hidden), sans aucune barre de defilement propre
+#   a ce widget — le Label seul rentrait dans l'espace restant, le
+#   reste disparaissait. Introspection directe (Widget.size/.region)
+#   AVANT ce correctif rapportait pourtant des hauteurs non nulles
+#   (OptionList/Input a 1) : la mesure de layout differait du rendu
+#   reellement PEINT par le compositeur — seul export_screenshot() (ou
+#   un vrai terminal) revele l'ecart, jamais Widget.size seul (meme
+#   avertissement deja documente dans run_progress.py). Hauteurs
+#   CHIFFREES plutot que "auto"/"1fr" imbriques : 12 = Label (1) +
+#   OptionList (8) + Input (3, deja fixe nativement dans le DEFAULT_CSS
+#   Textual d'Input, jamais recouvert ici). OptionList a 8 (bordure
+#   haute/basse incluses) plutot qu'une hauteur couvrant le maximum
+#   theorique de cibles (cibles epinglees illimitees + jusqu'a 10
+#   recentes, voir README "Cibles epinglees") : OptionList gere son
+#   propre defilement INTERNE au-dela de sa hauteur fixee, contrairement
+#   au Vertical parent — aucune perte de cibles, juste un defilement a
+#   l'interieur du widget si plus de ~6 options.
 # Comment il sera utilise : screens/request_panel.py, connection_panel.py,
 # ramp_panel.py, profile_wizard.py.
 #---------------------------------------------------------------------->

@@ -78,8 +78,14 @@ class RunDetailsScreen(OmegaScreen):
         if explanation:
             self.query_one("#verdict-explanation", Static).update(explanation)
 
+        profile_note = (
+            " (personnalise — au moins un critere reel differe du profil fige reference)"
+            if run.profile_id is not None and run.profile_customized
+            else ""
+        )
         text = (
-            f"{run.id}\nCible : {run.target_address}\nFamille/niveau : {run.family}/{run.level}\n"
+            f"{run.id}\nCible : {run.target_address}\n"
+            f"Famille/niveau : {run.family}/{run.level}{profile_note}\n"
             f"Demarre : {run.started_at}"
         )
         reason = diagnostic_message(run)

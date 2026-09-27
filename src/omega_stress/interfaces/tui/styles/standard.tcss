@@ -1,9 +1,11 @@
 /* Profil `standard` : theme standard, widgets et tableaux normaux
- * (voir plan produit, "Profils de rendu"). */
-
-.omega-panel {
-    border: round $panel;
-}
+ * (voir plan produit, "Profils de rendu"). Retour utilisateur : la
+ * bordure/fond/padding de ".omega-panel" (cadre "application", voir
+ * styles/terminal_frame.tcss) est desormais UNIFORME sur les 4 profils -
+ * l'ancienne surcharge ici ("border: round $panel") la masquait
+ * silencieusement (chargee APRES terminal_frame.tcss), retiree pour
+ * uniformiser avec les autres outils omega- (aucun ne surcharge ces
+ * classes par profil). */
 
 DataTable {
     border: solid $panel;
