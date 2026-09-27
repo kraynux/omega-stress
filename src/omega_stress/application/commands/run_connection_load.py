@@ -18,6 +18,7 @@ from omega_stress.domain.load.duration_presets import (
 )
 from omega_stress.domain.load.models import Duration, LoadPlan, Thresholds
 from omega_stress.ports.load_runner import LoadRunner
+from omega_stress.ports.profile_repository import ProfileRepository
 from omega_stress.ports.run_progress_notifier import RunProgressNotifier
 from omega_stress.ports.run_repository import RunRepository
 from omega_stress.ports.target_repository import TargetRepository
@@ -48,6 +49,7 @@ async def run_connection_load(
     duration_preset_id: DurationPresetId | None = None,
     reinforced_confirmation_text: str | None = None,
     safety_mode: bool = True,
+    profile_repository: ProfileRepository | None = None,
 ) -> Result[RunDTO, UnauthorizedTargetError | LaunchError]:
     """Lance un Test connexions en mode manuel borne. Symetrique a
     run_request_load.py, seule differe la famille (CONNECTION) et
@@ -110,6 +112,7 @@ async def run_connection_load(
         required_capability=(
             _REQUIRED_CAPABILITY if level in policies.PRECHECK_MANDATORY_LEVELS else None
         ),
+        profile_repository=profile_repository,
     )
 
 # <-- INFO DEV ---------------------------------------------------------

@@ -275,12 +275,12 @@ Button:focus {
  * gardent le "width/height: auto" generique (le Button interne y garde
  * son "width: auto" natif, se centre alors normalement dans un frame qui
  * epouse exactement sa taille). */
-.omega-home-menu .omega-btn-frame {
+.omega-home-menu-grid .omega-btn-frame {
     width: 32;
     height: 3;
 }
 
-.omega-home-menu Button {
+.omega-home-menu-grid Button {
     background: $surface;
     border: none;
     color: $foreground;
@@ -298,8 +298,8 @@ Button:focus {
  * ".omega-btn-frame", jamais modifie ici : forme/taille rigoureusement
  * identiques entre focus et non-focus, garanties par construction (deux
  * widgets distincts) plutot que par coincidence de couleurs. */
-.omega-home-menu Button:hover,
-.omega-home-menu Button:focus {
+.omega-home-menu-grid Button:hover,
+.omega-home-menu-grid Button:focus {
     background: $accent;
     color: $background;
     text-style: bold;
@@ -391,7 +391,11 @@ ToggleButton.-on > .toggle--button {
  * widget separe) — border-title-align centre ce texte dans la largeur du
  * contour, border-title-color/-style reprennent le meme jeu de couleurs
  * inversees que les boutons ci-dessus (voir leur propre commentaire). */
-.omega-home-menu {
+.omega-home-menu-grid {
+    grid-size: 2;
+    grid-gutter: 1 2;
+    grid-columns: 32;
+    grid-rows: 3;
     background: $panel;
     border: round $accent;
     border-title-align: center;

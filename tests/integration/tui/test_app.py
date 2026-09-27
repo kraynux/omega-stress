@@ -1,10 +1,14 @@
 import dataclasses
+from datetime import datetime, timezone
 
 import pytest
 from omega_lib.terminal.models import TerminalSignals
 
 from omega_stress.app.dependency_container import build_container
-from omega_stress.core.enums import ExportFormat
+from omega_stress.application.commands.create_profile import create_profile
+from omega_stress.application.commands.freeze_profile import freeze_profile
+from omega_stress.application.commands.pin_target import pin_target
+from omega_stress.core.enums import ExportFormat, IntensityLevel, TestFamily
 from omega_stress.interfaces.tui.app import OmegaStressApp
 from omega_stress.interfaces.tui.screens.export_dialog import ExportDialogScreen
 from omega_stress.interfaces.tui.screens.help_screen import HelpScreen
@@ -17,6 +21,8 @@ from omega_stress.interfaces.tui.screens.settings_screen import (
     SettingsScreen,
 )
 from omega_stress.interfaces.tui.screens.targets import TargetsScreen
+from omega_stress.interfaces.tui.widgets.target_picker import TargetPicker
+from omega_stress.shared.ids import new_id
 from tests.fixtures.fakes import FakeTerminalDetector
 
 
@@ -194,3 +200,91 @@ async def test_unhandled_exception_is_caught_instead_of_crashing_the_app(contain
         notifications = list(app._notifications._notifications.values())
         assert len(notifications) == 1
         assert "panne technique inattendue" in notifications[0].message
+
+
+async def test_target_picker_hides_on_profile_selection_and_reappears_on_clear(container):
+    """Regression 2026-09-27 (retour utilisateur) : le champ cible doit
+    disparaitre des qu'un profil fige est selectionne (il porte deja sa
+    propre cible par defaut), et redevenir visible si le profil est
+    efface — jusqu'a ce correctif, aucun ecran ne masquait jamais le
+    picker, quel que soit le profil choisi."""
+    from textual.widgets import Select
+
+    now = datetime.now(timezone.utc)
+    pinned = pin_target(
+        target_repository=container.target_repository,
+        id_factory=new_id,
+        now=now,
+        raw_address="https://example.org",
+        authorization_confirmed=True,
+    )
+    assert not hasattr(pinned, "error"), pinned
+
+    created = create_profile(
+        profile_repository=container.profile_repository,
+        id_factory=new_id,
+        now=now,
+        name="Profil requetes",
+        description="",
+        default_target_id=pinned.value.id,
+        family=TestFamily.REQUEST,
+        level=IntensityLevel.BAS,
+        duration_minutes=1,
+        max_error_rate=0.5,
+    )
+    frozen = freeze_profile(created.value.id, profile_repository=container.profile_repository, now=now)
+
+    app = OmegaStressApp(container)
+    async with app.run_test(size=(120, 80)) as pilot:
+        await pilot.pause()
+        await pilot.press("space")  # dismiss SplashScreen
+        await pilot.pause()
+
+        await pilot.click("#request")
+        await pilot.pause()
+        screen = app.screen
+        picker = screen.query_one(TargetPicker)
+        assert picker.display is True
+
+        screen.query_one("#profile", Select).value = frozen.value
+        await pilot.pause()
+        assert picker.display is False
+        assert frozen.value.name in str(screen.query_one("#target-hint").content)
+
+        screen.query_one("#profile", Select).clear()
+        await pilot.pause()
+        assert picker.display is True
+        assert str(screen.query_one("#target-hint").content) == ""
+
+
+async def test_target_picker_content_is_actually_painted_not_just_sized(container):
+    """Regression 2026-09-27 (bug reel rapporte, confirme par capture
+    d'ecran reelle) : TargetPicker(Vertical) heritait de height:1fr +
+    overflow:hidden (textual.containers.Vertical.DEFAULT_CSS) sans
+    jamais etre corrige — meme famille de cause que widgets/
+    run_progress.py::RunProgress (voir son INFO DEV, correctif du
+    2026-08-25). Widget.size/.region rapportaient des hauteurs NON
+    NULLES avant ce correctif (voir widgets/target_picker.py, INFO DEV)
+    alors que le contenu reel restait totalement decoupe/invisible : ce
+    test verifie donc le rendu PEINT (export_screenshot(), jamais
+    Widget.size seul, qui aurait laisse passer la regression)."""
+    now = datetime.now(timezone.utc)
+    pin_target(
+        target_repository=container.target_repository,
+        id_factory=new_id,
+        now=now,
+        raw_address="https://example.org",
+        authorization_confirmed=True,
+    )
+
+    app = OmegaStressApp(container)
+    async with app.run_test(size=(120, 45)) as pilot:
+        await pilot.pause()
+        await pilot.press("space")
+        await pilot.pause()
+        await pilot.click("#connection")
+        await pilot.pause()
+
+        svg = app.export_screenshot()
+        assert "example.org" in svg
+        assert "saisir" in svg

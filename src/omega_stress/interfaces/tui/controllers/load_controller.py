@@ -307,6 +307,7 @@ def _load_kwargs(
         id_factory=new_id,
         now=utc_now,
         capability_registry=container.capability_registry,
+        profile_repository=container.profile_repository,
     )
 
 # <-- INFO DEV ---------------------------------------------------------

@@ -57,6 +57,7 @@ class RunDTO:
     errors_other: int = 0
     peak_cpu_percent_generator: float | None = None
     peak_memory_rss_mb: float | None = None
+    profile_customized: bool = False
 
 # <-- INFO DEV ---------------------------------------------------------
 # Role :
@@ -72,6 +73,13 @@ class RunDTO:
 #   (application/commands/export_run_report.py), sans alourdir ce DTO de
 #   liste.
 # Points cles :
+# - profile_customized (2026-09-27) : relai direct de LoadRun.
+#   profile_customized (domain/runs/models.py) — True si ce run reference
+#   un profil fige mais a ete lance avec au moins un critere reel
+#   different de ce que le profil stocke (voir application/commands/
+#   _launch_support.py::_is_customized_from_profile()). Affiche en badge
+#   "personnalise" par widgets/history_table.py des que profile_id est
+#   aussi renseigne.
 # - Tous les champs de resultat sont None ensemble pour un run en cours
 #   (finished_at is None <=> verdict is None <=> ...) : invariant garanti
 #   par application/dto/mappers.py::run_to_dto(), pas par ce DTO

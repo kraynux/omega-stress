@@ -32,12 +32,13 @@ class SqliteRunRepository:
                 """
                 INSERT OR REPLACE INTO runs (
                     id, profile_id, target_id, family, level, started_at, finished_at,
-                    notes, is_precheck, duration_preset_id, safety_mode, verdict,
+                    notes, is_precheck, duration_preset_id, safety_mode, profile_customized,
+                    verdict,
                     requested_rate_per_minute,
                     observed_rate_per_minute, p50_latency_ms, p95_latency_ms,
                     p99_latency_ms, error_count, total_requests, events_json, samples_json,
                     errors_json, peak_cpu_percent_generator, peak_memory_rss_mb
-                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                 """,
                 (
                     run.id,
@@ -51,6 +52,7 @@ class SqliteRunRepository:
                     int(run.is_precheck),
                     run.duration_preset_id.value if run.duration_preset_id is not None else None,
                     int(run.safety_mode),
+                    int(run.profile_customized),
                     result.verdict.value if result is not None else None,
                     result.requested_rate_per_minute if result is not None else None,
                     result.observed_rate_per_minute if result is not None else None,
@@ -282,6 +284,7 @@ def _row_to_run(row: sqlite3.Row) -> LoadRun:
         safety_mode=(
             bool(row["safety_mode"]) if row["safety_mode"] is not None else True
         ),
+        profile_customized=bool(row["profile_customized"]) if row["profile_customized"] is not None else False,
     )
 
 # <-- INFO DEV ---------------------------------------------------------
@@ -320,6 +323,10 @@ def _row_to_run(row: sqlite3.Row) -> LoadRun:
 #   run ecrit avant l'existence de cette colonne tournait TOUJOURS avec
 #   les garde-fous actifs, NULL doit donc rester honnete sur ce qui s'est
 #   reellement passe plutot que de retomber sur une valeur "absente".
+# - profile_customized (2026-09-27) : INTEGER 0/1, NULL relu comme False
+#   (contrairement a safety_mode ci-dessus qui retombe sur True) — jamais
+#   suppose "personnalise" pour un run ecrit avant l'existence de cette
+#   colonne, faute de pouvoir le verifier retroactivement.
 # - logical_cpu_count (2026-09-01, correction de bug reel) : cle
 #   supplementaire dans le JSON de _serialize_system_snapshot(), pas une
 #   colonne SQL separee (deja imbrique dans samples_json) — necessaire

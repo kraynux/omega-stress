@@ -13,12 +13,14 @@ __pycache__/
 var/db/*
 var/exports/*
 var/screenshots/*
+var/calibrations/*
 var/settings.json
 var/*.log
 var/*.jsonl
 !var/db/.gitkeep
 !var/exports/.gitkeep
 !var/screenshots/.gitkeep
+!var/calibrations/.gitkeep
 
 # Archives de release (générées, pas du code source)
 

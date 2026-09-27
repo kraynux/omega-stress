@@ -16,11 +16,17 @@ _PROFILE_STYLESHEETS: dict[RenderProfile, str] = {
 }
 
 
-def stylesheet_paths_for(profile: RenderProfile) -> tuple[Path, Path]:
-    """Retourne (base.tcss, <profil>.tcss) — base est toujours chargee en
-    premier (regles communes), le fichier du profil vient ensuite
+def stylesheet_paths_for(profile: RenderProfile) -> tuple[Path, Path, Path]:
+    """Retourne (base.tcss, terminal_frame.tcss, <profil>.tcss) — base
+    toujours chargee en premier (regles communes), `terminal_frame.tcss`
+    (retour utilisateur 2026-09-13, cadre "application" reutilisable -
+    voir ce fichier, isole a dessein pour etre copiable tel quel dans un
+    autre outil omega-) ensuite, le fichier du profil vient enfin
     affiner/surcharger (ARCHITECTURE.md §2.4)."""
-    return (_STYLES_DIR / "base.tcss", _STYLES_DIR / _PROFILE_STYLESHEETS[profile])
+    return (
+        _STYLES_DIR / "base.tcss", _STYLES_DIR / "terminal_frame.tcss",
+        _STYLES_DIR / _PROFILE_STYLESHEETS[profile],
+    )
 
 
 def use_simplified_widgets(profile: RenderProfile) -> bool:

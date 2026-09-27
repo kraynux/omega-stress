@@ -7,7 +7,7 @@ from typing import TYPE_CHECKING
 from omega_lib.terminal.models import RenderProfile
 from textual.app import ComposeResult
 from textual.binding import Binding
-from textual.containers import Center, Container, Vertical
+from textual.containers import Center, Container, Grid, Vertical
 from textual.screen import Screen
 from textual.widgets import Button, Footer, Header
 
@@ -29,16 +29,20 @@ if TYPE_CHECKING:
 
 _MENU_ITEMS: tuple[tuple[str, str], ...] = (
     ("profiles", "Profils"),
-    ("request", "Test requetes"),
-    ("connection", "Test connexions"),
-    ("ramp", "Test charge"),
-    ("history", "Historique"),
-    ("targets", "Cibles"),
     ("calibration", "Calibrage"),
+    ("targets", "Cibles"),
+    ("history", "Historique"),
+    ("connection", "Test connexions"),
     ("settings", "Reglages"),
+    ("ramp", "Test charge"),
     ("help", "Aide"),
+    ("request", "Test requetes"),
     ("quit", "Quitter"),
 )
+"""Ordre demande explicitement pour la grille 2 colonnes (2026-09-16) :
+remplit la grille ligne par ligne, colonne gauche puis droite -
+Profils/Calibrage, Cibles/Historique, Test connexions/Reglages, Test
+charge/Aide, Test requetes/Quitter."""
 
 
 class HomeScreen(OmegaScreen):
@@ -60,7 +64,7 @@ class HomeScreen(OmegaScreen):
             with Center():
                 yield HomeWordmark(render_profile=self._current_render_profile())
             with Center():
-                with Vertical(classes="omega-home-menu") as menu:
+                with Grid(classes="omega-home-menu-grid") as menu:
                     for item_id, label in _MENU_ITEMS:
                         with Container(classes="omega-btn-frame"):
                             yield Button(label.upper(), id=item_id)
@@ -236,6 +240,13 @@ class HomeScreen(OmegaScreen):
 #   de construire chaque Button — Textual n'a pas d'equivalent CSS
 #   text-transform, meme convention deja utilisee ailleurs dans le projet
 #   pour les titres d'ecran (".omega-title").
+# - Grille 2 colonnes (2026-09-16, demande explicite dans le cadre de
+#   l'integration omega-suite : "le padding du menu est trop grand entre
+#   les boutons... c'est trop haut... mets-le sur deux colonnes (5
+#   chacun)") : ".omega-home-menu" (Vertical, colonne unique, 10 boutons
+#   empiles) remplace par ".omega-home-menu-grid" (Grid, 2 colonnes x 5
+#   lignes, meme repartition que la grille Accueil d'omega-suite) - divise
+#   par deux la hauteur totale du menu sans retirer aucun item.
 # - "calibration" (2026-09-01) : ajoute entre "targets" et "settings" —
 #   ecran jamais accessible avant ce jour ("je vois pas de menu
 #   calibrage", bug reel rapporte), le mecanisme lui-meme

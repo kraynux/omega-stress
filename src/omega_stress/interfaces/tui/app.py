@@ -97,12 +97,26 @@ class OmegaStressApp(App[None]):
         current_profile = RenderProfile(
             self._container.settings_store.get("render_profile", RenderProfile.STANDARD.value)
         )
-        status = theme_controller.cycle_theme(
-            self.theme,
-            direction=1,
-            render_profile=current_profile,
-            settings_store=self._container.settings_store,
-        )
+        try:
+            status = theme_controller.cycle_theme(
+                self.theme,
+                direction=1,
+                render_profile=current_profile,
+                settings_store=self._container.settings_store,
+            )
+        except OSError as exc:
+            # Retour utilisateur (GROS BUG omega-fire : "t" fermait
+            # l'application) - meme correctif applique ici par coherence
+            # (audit de la suite) : une simple erreur de persistance
+            # (permissions, disque plein, systeme de fichiers en lecture
+            # seule) faisait planter cette action sans aucun rattrapage -
+            # cycle_theme() n'a ici aucune valeur de repli a offrir (le
+            # nom du theme suivant n'est connu qu'a l'interieur), le
+            # theme visuel n'est donc PAS change dans ce cas precis
+            # (contrairement au reste de la suite) : juste avertir sans
+            # planter suffit deja a corriger le bug rapporte.
+            self.notify(f"Theme non change (echec d'enregistrement) : {exc}", severity="warning")
+            return
         self.theme = status.theme_name
 
     def action_help(self) -> None:

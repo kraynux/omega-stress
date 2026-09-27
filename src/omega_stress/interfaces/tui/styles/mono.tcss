@@ -1,14 +1,13 @@
 /* Profil `mono` : UI minimaliste, lisibilite maximale, peu ou pas de
  * couleur (voir plan produit, "Profils de rendu"). La palette elle-meme
  * est deja convertie en niveaux de gris par domain/theme/policies.py::
- * mono_palette() — ce fichier ne fait que retirer les derniers ornements
- * structurels (bordures, fonds distincts). */
-
-.omega-panel {
-    border: none;
-    padding: 0;
-    background: $background;
-}
+ * mono_palette() — ce fichier ne fait plus retirer les ornements de
+ * ".omega-panel" (bordure/fond/padding, voir styles/terminal_frame.tcss)
+ * depuis l'uniformisation retour utilisateur : cette classe est
+ * desormais IDENTIQUE sur les 4 profils, meme convention que les autres
+ * outils omega- (aucun ne la surcharge par profil) - l'ancienne
+ * surcharge ici la masquait silencieusement (chargee APRES
+ * terminal_frame.tcss). */
 
 DataTable {
     border: none;
