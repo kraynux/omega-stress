@@ -7,6 +7,7 @@ from urllib.parse import urlsplit
 from omega_stress.core.results import Err, Ok, Result
 from omega_stress.domain.errors import ValidationError
 from omega_stress.domain.targets.models import TargetAddress
+from omega_stress.shared.i18n import _
 
 
 def parse_target_address(raw: str) -> Result[TargetAddress, ValidationError]:
@@ -21,18 +22,22 @@ def parse_target_address(raw: str) -> Result[TargetAddress, ValidationError]:
     """
     candidate = raw.strip()
     if not candidate:
-        return Err(ValidationError("L'adresse de la cible ne peut pas etre vide."))
+        return Err(ValidationError(_("L'adresse de la cible ne peut pas être vide.")))
 
     parsed = urlsplit(candidate if "://" in candidate else f"http://{candidate}")
 
     if parsed.scheme not in ("http", "https"):
         return Err(
             ValidationError(
-                f"Schema {parsed.scheme!r} non supporte : seuls http et https sont acceptes."
+                _("Schéma {scheme!r} non supporté : seuls http et https sont acceptés.").format(
+                    scheme=parsed.scheme
+                )
             )
         )
     if not parsed.hostname:
-        return Err(ValidationError(f"Adresse invalide, hote introuvable dans {raw!r}."))
+        return Err(
+            ValidationError(_("Adresse invalide, hôte introuvable dans {raw!r}.").format(raw=raw))
+        )
 
     try:
         address = TargetAddress(
@@ -45,6 +50,7 @@ def parse_target_address(raw: str) -> Result[TargetAddress, ValidationError]:
         return Err(ValidationError(str(exc)))
 
     return Ok(address)
+
 
 # <-- INFO DEV ---------------------------------------------------------
 # Role :
@@ -69,4 +75,4 @@ def parse_target_address(raw: str) -> Result[TargetAddress, ValidationError]:
 # - application/commands (creation de profil, ajout de cible manuelle)
 #   appellera parse_target_address() avant de construire un Target complet
 #   avec id/created_at fournis par l'appelant.
-#---------------------------------------------------------------------->
+# ---------------------------------------------------------------------->

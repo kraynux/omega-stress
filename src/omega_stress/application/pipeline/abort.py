@@ -8,6 +8,7 @@ from omega_stress.core.results import Err
 from omega_stress.domain.errors import ThresholdExceededError
 from omega_stress.domain.runs.models import IntervalSample, LoadRun, RunEvent
 from omega_stress.domain.runs.service import aggregate_samples, finish
+from omega_stress.shared.i18n import _
 from omega_stress.shared.typing import Clock
 
 
@@ -44,10 +45,12 @@ def abort_run(
         # meme, c'est un bug d'invariant du pipeline, pas un echec metier
         # attendu — d'ou une exception plutot qu'un Result ici.
         raise AbortError(
-            f"Impossible de cloturer le run {run.id} apres arret automatique : "
-            f"{finished.error}"
+            _("Impossible de clôturer le run {id} après arrêt automatique : {error}").format(
+                id=run.id, error=finished.error
+            )
         ) from None
     return finished.value
+
 
 # <-- INFO DEV ---------------------------------------------------------
 # Role :
@@ -97,4 +100,4 @@ def abort_run(
 # Comment il sera utilise (apercu) :
 # - application/pipeline/executor.py appelle abort_run() des que
 #   threshold_guard.check_threshold() retourne un Err.
-#---------------------------------------------------------------------->
+# ---------------------------------------------------------------------->

@@ -15,6 +15,7 @@ from omega_stress.domain.runs.models import (
     LoadRun,
     RunEvent,
 )
+from omega_stress.shared.i18n import _
 
 
 def aggregate_samples(
@@ -100,7 +101,7 @@ def finish(run: LoadRun, *, result: LoadResult, now: datetime) -> Result[LoadRun
     """Cloture un run avec son resultat. Un run deja termine ne peut pas
     etre reclos (regle de coherence d'etat, pas une regle de securite)."""
     if run.finished_at is not None:
-        return Err(ValidationError(f"Le run {run.id} est deja termine."))
+        return Err(ValidationError(_("Le run {id} est déjà terminé.").format(id=run.id)))
 
     return Ok(
         LoadRun(

@@ -8,6 +8,7 @@ from datetime import datetime
 from omega_stress.core.enums import ExportFormat
 from omega_stress.domain.reports.models import ExportJob
 from omega_stress.infrastructure.exceptions import StorageError
+from omega_stress.shared.i18n import _
 
 
 class SqliteExportRepository:
@@ -35,7 +36,9 @@ class SqliteExportRepository:
             )
             self._connection.commit()
         except sqlite3.Error as exc:
-            raise StorageError(f"Echec de sauvegarde du job d'export {job.id!r} : {exc}") from exc
+            raise StorageError(
+                _("Échec de sauvegarde du job d'export {id!r} : {exc}").format(id=job.id, exc=exc)
+            ) from exc
 
     def list_for_run(self, run_id: str) -> tuple[ExportJob, ...]:
         try:
@@ -43,7 +46,11 @@ class SqliteExportRepository:
                 "SELECT * FROM export_jobs WHERE run_id = ? ORDER BY created_at DESC", (run_id,)
             ).fetchall()
         except sqlite3.Error as exc:
-            raise StorageError(f"Echec de listage des exports du run {run_id!r} : {exc}") from exc
+            raise StorageError(
+                _("Échec de listage des exports du run {run_id!r} : {exc}").format(
+                    run_id=run_id, exc=exc
+                )
+            ) from exc
         return tuple(_row_to_export_job(row) for row in rows)
 
 
@@ -56,6 +63,7 @@ def _row_to_export_job(row: sqlite3.Row) -> ExportJob:
         created_at=datetime.fromisoformat(row["created_at"]),
         export_theme=row["export_theme"],
     )
+
 
 # <-- INFO DEV ---------------------------------------------------------
 # Role :
@@ -76,4 +84,4 @@ def _row_to_export_job(row: sqlite3.Row) -> ExportJob:
 #   avec ports/export_repository.py, qui n'en definit pas.
 # Comment il sera utilise (apercu) :
 # - application/commands/export_run_report.py.
-#---------------------------------------------------------------------->
+# ---------------------------------------------------------------------->

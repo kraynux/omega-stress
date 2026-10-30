@@ -7,6 +7,7 @@ from textual.containers import Horizontal
 
 from omega_stress.domain.runs.models import IntervalSample
 from omega_stress.interfaces.tui.widgets.stat_card import StatCard
+from omega_stress.shared.i18n import _
 
 
 class ProgressPanel(Horizontal):
@@ -19,14 +20,16 @@ class ProgressPanel(Horizontal):
     """
 
     def compose(self) -> ComposeResult:
-        yield StatCard("Debit observe", id="rate")
-        yield StatCard("Erreurs", id="errors")
-        yield StatCard("Latence p95", id="p95")
-        yield StatCard("CPU / RAM", id="system")
+        yield StatCard(_("Débit observé"), id="rate")
+        yield StatCard(_("Erreurs"), id="errors")
+        yield StatCard(_("Latence p95"), id="p95")
+        yield StatCard(_("CPU / RAM"), id="system")
 
     def update_sample(self, sample: IntervalSample) -> None:
         self.query_one("#rate", StatCard).update_value(
-            f"{sample.observed_rate_per_minute:.0f} req/min"
+            _("{observed_rate_per_minute:.0f} req/min").format(
+                observed_rate_per_minute=sample.observed_rate_per_minute
+            )
         )
         self.query_one("#errors", StatCard).update_value(
             f"{sample.error_count}/{sample.request_count}"
@@ -36,7 +39,7 @@ class ProgressPanel(Horizontal):
 
 
 def _format_system(sample: IntervalSample) -> str:
-    """"?" pour un champ non mesurable (voir domain/runs/models.py::
+    """ "?" pour un champ non mesurable (voir domain/runs/models.py::
     SystemSnapshot) plutot qu'un vide ambigu ou une exception."""
     if sample.system is None:
         return "? / ?"
@@ -45,6 +48,7 @@ def _format_system(sample: IntervalSample) -> str:
     cpu_text = f"{cpu:.0f}%" if cpu is not None else "?"
     memory_text = f"{memory:.0f} Mo" if memory is not None else "?"
     return f"{cpu_text} / {memory_text}"
+
 
 # <-- INFO DEV ---------------------------------------------------------
 # Role : traduit un IntervalSample (domain/runs/models.py) en affichage
@@ -77,4 +81,4 @@ def _format_system(sample: IntervalSample) -> str:
 #   dans un parent qui n'attend pas cette extension.
 # Comment il sera utilise : screens/request_panel.py, connection_panel.py,
 # ramp_panel.py (ecrans de lancement de run).
-#---------------------------------------------------------------------->
+# ---------------------------------------------------------------------->

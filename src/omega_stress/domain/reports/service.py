@@ -8,6 +8,7 @@ from omega_stress.core.enums import ExportFormat
 from omega_stress.core.results import Err, Ok, Result
 from omega_stress.domain.errors import ValidationError
 from omega_stress.domain.reports.models import ExportJob
+from omega_stress.shared.i18n import _
 
 
 def requires_theme(export_format: ExportFormat) -> bool:
@@ -22,11 +23,13 @@ def validate_export_job(job: ExportJob) -> Result[ExportJob, ValidationError]:
     if requires_theme(job.format) and job.export_theme not in EXPORT_PALETTES:
         return Err(
             ValidationError(
-                f"Theme d'export {job.export_theme!r} inconnu "
-                f"(catalogue : {sorted(EXPORT_PALETTES)})."
+                _("Thème d'export {export_theme!r} inconnu (catalogue : {value}).").format(
+                    export_theme=job.export_theme, value=sorted(EXPORT_PALETTES)
+                )
             )
         )
     return Ok(job)
+
 
 # <-- INFO DEV ---------------------------------------------------------
 # Role :
@@ -53,4 +56,4 @@ def validate_export_job(job: ExportJob) -> Result[ExportJob, ValidationError]:
 # - application/commands/export_run_report.py appelle
 #   validate_export_job() avant de transmettre le job au port
 #   report_exporter.
-#---------------------------------------------------------------------->
+# ---------------------------------------------------------------------->

@@ -5,6 +5,7 @@ from __future__ import annotations
 from omega_stress.application.exceptions import CapabilityUnavailableError
 from omega_stress.core.capability_registry import CapabilityRegistry
 from omega_stress.core.results import Err, Ok, Result
+from omega_stress.shared.i18n import _
 
 
 def check_capability(
@@ -18,10 +19,13 @@ def check_capability(
         capability = capability_registry.get(capability_name)
         return Err(
             CapabilityUnavailableError(
-                f"Capacite {capability_name!r} indisponible (statut : {capability.status.value})."
+                _("Capacité {capability_name!r} indisponible (statut : {value}).").format(
+                    capability_name=capability_name, value=capability.status.value
+                )
             )
         )
     return Ok(None)
+
 
 # <-- INFO DEV ---------------------------------------------------------
 # Role :
@@ -55,4 +59,4 @@ def check_capability(
 # - application/pipeline/planner.py appelle ce guard pour chaque capacite
 #   pertinente (ex. "system.available_fd") avant de construire le plan
 #   pour un niveau Violent/Maximum.
-#---------------------------------------------------------------------->
+# ---------------------------------------------------------------------->

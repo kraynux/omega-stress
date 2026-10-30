@@ -8,6 +8,7 @@ from textual.widgets import DataTable
 from omega_stress.interfaces.tui.presenters.load_reference_presenter import (
     duration_preset_reference_rows,
 )
+from omega_stress.shared.i18n import _
 
 
 class DurationPresetTable(DataTable):
@@ -20,18 +21,18 @@ class DurationPresetTable(DataTable):
         self.cursor_type = "row"
         self.zebra_stripes = True
         self.add_columns(
-            "ID",
-            "Nom",
-            "Duree totale",
-            "Familles compatibles",
-            "Niveaux libres",
-            "Niveau renforce",
+            _("ID"),
+            _("Nom"),
+            _("Durée totale"),
+            _("Familles compatibles"),
+            _("Niveaux libres"),
+            _("Niveau renforcé"),
         )
         for row in duration_preset_reference_rows():
             self.add_row(
                 row.id,
                 row.name,
-                f"{row.total_minutes} min",
+                _("{total_minutes} min").format(total_minutes=row.total_minutes),
                 row.families,
                 row.free_levels,
                 row.reinforced_level,

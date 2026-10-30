@@ -5,6 +5,7 @@ from __future__ import annotations
 from omega_lib.theme.policies import EXPORT_PALETTES, TUI_THEMES
 
 from omega_stress.application.dto.theme_dto import ThemeStatusDTO
+from omega_stress.shared.i18n import _
 
 
 def available_theme_names() -> tuple[str, ...]:
@@ -30,7 +31,10 @@ def status_label(status: ThemeStatusDTO) -> str:
     eventuel repli (nom demande inconnu -> nom effectivement applique)."""
     if status.fell_back_from is None:
         return status.theme_name
-    return f"{status.theme_name} (repli depuis {status.fell_back_from})"
+    return _("{theme_name} (repli depuis {fell_back_from})").format(
+        theme_name=status.theme_name, fell_back_from=status.fell_back_from
+    )
+
 
 # <-- INFO DEV ---------------------------------------------------------
 # Role :
@@ -61,4 +65,4 @@ def status_label(status: ThemeStatusDTO) -> str:
 #   widgets/theme_badge.py (libelle du theme actif) : available_theme_names().
 # - screens/export_dialog.py (Select de theme d'export) :
 #   available_export_theme_names().
-#---------------------------------------------------------------------->
+# ---------------------------------------------------------------------->

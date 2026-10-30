@@ -26,6 +26,7 @@ from omega_stress.infrastructure.runner.engine_params import (
 )
 from omega_stress.infrastructure.runner.result_parser import parse_interval
 from omega_stress.ports.system_sampler import SystemSampler
+from omega_stress.shared.i18n import _
 
 SleepFn = Callable[[float], Awaitable[object]]
 
@@ -113,7 +114,9 @@ class HttpxLoadGenerator:
             await client.get(target_url)
         except httpx.HTTPError as exc:
             raise RunnerFailureError(
-                f"Cible {target_url!r} injoignable des le depart : {exc}"
+                _("Cible {target_url!r} injoignable dès le départ : {exc}").format(
+                    target_url=target_url, exc=exc
+                )
             ) from exc
 
     async def _run_interval(
@@ -146,6 +149,7 @@ class HttpxLoadGenerator:
             await self._sleep(remaining)
 
         return outcomes
+
 
 # <-- INFO DEV ---------------------------------------------------------
 # Role :
@@ -219,4 +223,4 @@ class HttpxLoadGenerator:
 # Comment il sera utilise (apercu) :
 # - app/dependency_container.py injecte une instance dans
 #   application/pipeline/executor.py via le port load_runner.
-#---------------------------------------------------------------------->
+# ---------------------------------------------------------------------->

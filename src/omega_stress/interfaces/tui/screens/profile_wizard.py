@@ -12,14 +12,16 @@ from omega_stress.application.dto.target_dto import TargetDTO
 from omega_stress.core.enums import IntensityLevel, TestFamily
 from omega_stress.core.results import Err
 from omega_stress.interfaces.tui.controllers import load_controller, profile_controller
+from omega_stress.interfaces.tui.presenters.level_presenter import level_label
 from omega_stress.interfaces.tui.screens._base import OmegaScreen
 from omega_stress.interfaces.tui.widgets.target_picker import TargetPicker
+from omega_stress.shared.i18n import _
 
 if TYPE_CHECKING:
     from omega_stress.app.dependency_container import DependencyContainer
 
 _FAMILY_OPTIONS = [(family.value, family) for family in TestFamily]
-_LEVEL_OPTIONS = [(level.value, level) for level in IntensityLevel]
+_LEVEL_OPTIONS = [(level_label(level), level) for level in IntensityLevel]
 
 
 class ProfileWizardScreen(OmegaScreen):
@@ -35,20 +37,22 @@ class ProfileWizardScreen(OmegaScreen):
     def compose(self) -> ComposeResult:
         yield Header()
         with Vertical(classes="omega-panel"):
-            yield Static("NOUVEAU PROFIL", classes="omega-title")
-            yield Input(placeholder="Nom du profil", id="name")
-            yield Input(placeholder="Description (optionnelle)", id="description")
+            yield Static(_("NOUVEAU PROFIL"), classes="omega-title")
+            yield Input(placeholder=_("Nom du profil"), id="name")
+            yield Input(placeholder=_("Description (optionnelle)"), id="description")
             yield TargetPicker(id="target-picker")
-            yield Select(_FAMILY_OPTIONS, prompt="Famille de test", id="family", allow_blank=False)
-            yield Select(_LEVEL_OPTIONS, prompt="Intensite", id="level", allow_blank=False)
-            yield Input(placeholder="Duree (minutes)", id="duration")
-            yield Input(placeholder="Taux d'erreur maximal (0.0-1.0)", id="max-error-rate")
+            yield Select(
+                _FAMILY_OPTIONS, prompt=_("Famille de test"), id="family", allow_blank=False
+            )
+            yield Select(_LEVEL_OPTIONS, prompt=_("Intensité"), id="level", allow_blank=False)
+            yield Input(placeholder=_("Durée (minutes)"), id="duration")
+            yield Input(placeholder=_("Taux d'erreur maximal (0.0-1.0)"), id="max-error-rate")
             yield Static("", id="status")
             with Horizontal(classes="omega-actions"):
                 with Container(classes="omega-btn-frame"):
-                    yield Button("Creer", id="create", variant="primary")
+                    yield Button(_("Créer"), id="create", variant="primary")
                 with Container(classes="omega-btn-frame"):
-                    yield Button("Annuler", id="cancel")
+                    yield Button(_("Annuler"), id="cancel")
         yield Footer()
 
     def on_mount(self) -> None:
@@ -84,16 +88,16 @@ class ProfileWizardScreen(OmegaScreen):
         max_error_input = self.query_one("#max-error-rate", Input).value
 
         if not name or not default_target_id:
-            status.update("Nom et cible par defaut sont obligatoires.")
+            status.update(_("Nom et cible par défaut sont obligatoires."))
             return
         if not isinstance(family, TestFamily) or not isinstance(level, IntensityLevel):
-            status.update("Choisissez une famille et une intensite.")
+            status.update(_("Choisissez une famille et une intensité."))
             return
         try:
             duration_minutes = int(duration_input)
             max_error_rate = float(max_error_input)
         except ValueError:
-            status.update("Duree et taux d'erreur doivent etre numeriques.")
+            status.update(_("Durée et taux d'erreur doivent être numériques."))
             return
 
         result = profile_controller.create(
@@ -110,6 +114,7 @@ class ProfileWizardScreen(OmegaScreen):
             status.update(str(result.error))
             return
         self.dismiss()
+
 
 # <-- INFO DEV ---------------------------------------------------------
 # Role :
@@ -141,4 +146,4 @@ class ProfileWizardScreen(OmegaScreen):
 #   on_screen_resume().
 # Comment il sera utilise :
 # - interfaces/tui/screens/profiles.py (bouton "Nouveau profil").
-#---------------------------------------------------------------------->
+# ---------------------------------------------------------------------->

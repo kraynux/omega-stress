@@ -5,6 +5,7 @@ from __future__ import annotations
 from textual.widgets import DataTable
 
 from omega_stress.application.dto.target_dto import TargetDTO
+from omega_stress.shared.i18n import _
 
 
 class TargetTable(DataTable):
@@ -13,7 +14,7 @@ class TargetTable(DataTable):
 
     def on_mount(self) -> None:
         self.cursor_type = "row"
-        self.add_columns("Adresse", "Tags", "Statut", "Derniere utilisation")
+        self.add_columns(_("Adresse"), _("Tags"), _("Statut"), _("Dernière utilisation"))
 
     def load_targets(self, targets: tuple[TargetDTO, ...]) -> None:
         self.clear()

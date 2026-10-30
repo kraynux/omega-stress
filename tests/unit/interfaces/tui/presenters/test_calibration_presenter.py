@@ -59,7 +59,7 @@ def test_no_result_recommends_calibrating():
     )
 
     assert "Aucun calibrage" in message
-    assert "responsabilite" in message
+    assert "responsabilité" in message
 
 
 def test_result_without_envelope_recommends_calibrating():
@@ -89,7 +89,7 @@ def test_connection_target_above_envelope_is_flagged():
     )
 
     assert "AU-DESSUS" in message
-    assert "responsabilite" in message
+    assert "responsabilité" in message
 
 
 def test_request_target_compares_against_rps_safe_not_connections_safe():

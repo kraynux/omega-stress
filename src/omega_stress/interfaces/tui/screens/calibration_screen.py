@@ -22,6 +22,7 @@ from omega_stress.interfaces.tui.screens._base import OmegaScreen
 from omega_stress.interfaces.tui.widgets.notification_bar import NotificationBar
 from omega_stress.interfaces.tui.widgets.run_progress import RunProgress
 from omega_stress.shared.clock import utc_now
+from omega_stress.shared.i18n import _
 
 if TYPE_CHECKING:
     from omega_stress.app.dependency_container import DependencyContainer
@@ -73,22 +74,22 @@ class CalibrationScreen(OmegaScreen):
     def compose(self) -> ComposeResult:
         yield Header()
         with Vertical(classes="omega-panel"):
-            yield Static("CALIBRAGE", classes="omega-title")
+            yield Static(_("CALIBRAGE"), classes="omega-title")
             yield Static(
-                "Mesure la capacite reelle de CETTE machine (pas la cible testee) via "
-                "un serveur de boucle locale, par paliers de charge croissante. Le "
-                "resultat n'est pas encore applique aux tests reels : consultation "
-                "seule pour l'instant.",
+                _("Mesure la capacité réelle de CETTE machine (pas la cible testée) via un "
+                  "serveur de boucle locale, par paliers de charge croissante. Le résultat "
+                  "n'est pas encore appliqué aux tests réels : consultation seule pour "
+                  "l'instant."),
                 classes="omega-subtitle",
             )
             yield Static("", id="last-result")
             with Horizontal(classes="omega-actions"):
                 with Container(classes="omega-btn-frame"):
-                    yield Button("Lancer le calibrage", id="launch", variant="primary")
+                    yield Button(_("Lancer le calibrage"), id="launch", variant="primary")
                 with Container(id="stop-frame", classes="omega-btn-frame"):
-                    yield Button("Arreter", id="stop", variant="error")
+                    yield Button(_("Arrêter"), id="stop", variant="error")
                 with Container(classes="omega-btn-frame"):
-                    yield Button("Retour", id="back")
+                    yield Button(_("Retour"), id="back")
             yield RunProgress(id="run-progress")
             yield NotificationBar(id="notifications")
             yield Static("", id="stages")
@@ -103,10 +104,14 @@ class CalibrationScreen(OmegaScreen):
         label = self.query_one("#last-result", Static)
         stages = self.query_one("#stages", Static)
         if result is None:
-            label.update("Aucun calibrage connu pour cette machine.")
+            label.update(_("Aucun calibrage connu pour cette machine."))
             stages.update("")
             return
-        label.update(f"{envelope_summary(result)}\n{age_reminder(result, now=utc_now())}")
+        label.update(
+            _("{value}\n{value2}").format(
+                value=envelope_summary(result), value2=age_reminder(result, now=utc_now())
+            )
+        )
         stages.update("\n".join(stage_lines(result)))
 
     def on_button_pressed(self, event: Button.Pressed) -> None:
@@ -137,9 +142,10 @@ class CalibrationScreen(OmegaScreen):
             self.query_one("#launch", Button).disabled = False
 
         if isinstance(outcome, Err):
-            notifications(f"Calibrage refuse : {outcome.error}")
+            notifications(_("Calibrage refusé : {error}").format(error=outcome.error))
             return
         self._refresh_last_result()
+
 
 # <-- INFO DEV ---------------------------------------------------------
 # Role :
@@ -198,4 +204,4 @@ class CalibrationScreen(OmegaScreen):
 #   assumee, pas un bug : voir plan, chantier calibrage, "Angles morts".
 # Comment il sera utilise :
 # - screens/home.py (bouton "Calibrage").
-#---------------------------------------------------------------------->
+# ---------------------------------------------------------------------->

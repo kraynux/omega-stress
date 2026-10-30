@@ -23,21 +23,22 @@ from omega_stress.interfaces.tui.screens.request_panel import RequestPanelScreen
 from omega_stress.interfaces.tui.screens.settings_screen import SettingsScreen
 from omega_stress.interfaces.tui.screens.targets import TargetsScreen
 from omega_stress.interfaces.tui.widgets.home_wordmark import HomeWordmark
+from omega_stress.shared.i18n import _
 
 if TYPE_CHECKING:
     from omega_stress.app.dependency_container import DependencyContainer
 
 _MENU_ITEMS: tuple[tuple[str, str], ...] = (
-    ("profiles", "Profils"),
-    ("calibration", "Calibrage"),
-    ("targets", "Cibles"),
-    ("history", "Historique"),
-    ("connection", "Test connexions"),
-    ("settings", "Reglages"),
-    ("ramp", "Test charge"),
-    ("help", "Aide"),
-    ("request", "Test requetes"),
-    ("quit", "Quitter"),
+    ("profiles", _("Profils")),
+    ("calibration", _("Calibrage")),
+    ("targets", _("Cibles")),
+    ("history", _("Historique")),
+    ("connection", _("Test connexions")),
+    ("settings", _("Réglages")),
+    ("ramp", _("Test charge")),
+    ("help", _("Aide")),
+    ("request", _("Test requêtes")),
+    ("quit", _("Quitter")),
 )
 """Ordre demande explicitement pour la grille 2 colonnes (2026-09-16) :
 remplit la grille ligne par ligne, colonne gauche puis droite -
@@ -50,8 +51,8 @@ class HomeScreen(OmegaScreen):
     (et terminal_warning.py avant, si applicable)."""
 
     BINDINGS = [
-        Binding("up", "focus_previous_item", "Monter", show=False),
-        Binding("down", "focus_next_item", "Descendre", show=False),
+        Binding("up", "focus_previous_item", _("Monter"), show=False),
+        Binding("down", "focus_next_item", _("Descendre"), show=False),
     ]
 
     def __init__(self, *, container: DependencyContainer) -> None:
@@ -68,7 +69,7 @@ class HomeScreen(OmegaScreen):
                     for item_id, label in _MENU_ITEMS:
                         with Container(classes="omega-btn-frame"):
                             yield Button(label.upper(), id=item_id)
-                menu.border_title = "MENU PRINCIPAL"
+                menu.border_title = _("MENU PRINCIPAL")
         yield Footer()
 
     def on_screen_resume(self) -> None:

@@ -6,6 +6,7 @@ import sqlite3
 
 from omega_stress.infrastructure.exceptions import StorageError
 from omega_stress.infrastructure.storage.sqlite.schema import ADDITIVE_COLUMNS, SCHEMA_STATEMENTS
+from omega_stress.shared.i18n import _
 
 
 def apply_schema(connection: sqlite3.Connection) -> None:
@@ -18,7 +19,9 @@ def apply_schema(connection: sqlite3.Connection) -> None:
         _ensure_additive_columns(connection)
         connection.commit()
     except sqlite3.Error as exc:
-        raise StorageError(f"Echec de l'initialisation du schema SQLite : {exc}") from exc
+        raise StorageError(
+            _("Échec de l'initialisation du schéma SQLite : {exc}").format(exc=exc)
+        ) from exc
 
 
 def _ensure_additive_columns(connection: sqlite3.Connection) -> None:
@@ -37,6 +40,7 @@ def _ensure_additive_columns(connection: sqlite3.Connection) -> None:
         existing = {row[1] for row in connection.execute(f"PRAGMA table_info({table})")}
         if column not in existing:
             connection.execute(f"ALTER TABLE {table} ADD COLUMN {column} {sql_type}")
+
 
 # <-- INFO DEV ---------------------------------------------------------
 # Role :
@@ -74,4 +78,4 @@ def _ensure_additive_columns(connection: sqlite3.Connection) -> None:
 # Comment il sera utilise (apercu) :
 # - app/bootstrap.py appelle apply_schema() juste apres
 #   connection.py::open_connection().
-#---------------------------------------------------------------------->
+# ---------------------------------------------------------------------->

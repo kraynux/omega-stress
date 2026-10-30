@@ -5,6 +5,7 @@ from __future__ import annotations
 from textual.widgets import DataTable
 
 from omega_stress.application.dto.profile_dto import ProfileDTO
+from omega_stress.shared.i18n import _
 
 
 class ProfileList(DataTable):
@@ -12,7 +13,7 @@ class ProfileList(DataTable):
 
     def on_mount(self) -> None:
         self.cursor_type = "row"
-        self.add_columns("Nom", "Type", "Statut", "Duree")
+        self.add_columns(_("Nom"), _("Type"), _("Statut"), _("Durée"))
 
     def load_profiles(self, profiles: tuple[ProfileDTO, ...]) -> None:
         self.clear()
@@ -22,7 +23,7 @@ class ProfileList(DataTable):
                 profile.name,
                 f"{profile.family}/{profile.level}",
                 status,
-                f"{profile.duration_minutes} min",
+                _("{duration_minutes} min").format(duration_minutes=profile.duration_minutes),
                 key=profile.id,
             )
 

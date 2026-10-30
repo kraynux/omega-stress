@@ -12,6 +12,7 @@ from textual.screen import Screen
 from textual.widgets import Footer, Header, Static
 
 from omega_stress.interfaces.tui.widgets.splash_hero import LOGO_CENTER_COLUMN, SplashHero
+from omega_stress.shared.i18n import _
 
 if TYPE_CHECKING:
     from omega_stress.app.dependency_container import DependencyContainer
@@ -36,7 +37,7 @@ class SplashScreen(Screen[None]):
             with Center():
                 yield SplashHero(render_profile=render_profile)
             yield Static(
-                "Appuyez sur une touche pour continuer…", classes="omega-splash-prompt"
+                _("Appuyez sur une touche pour continuer…"), classes="omega-splash-prompt"
             )
         yield Footer()
 

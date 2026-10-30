@@ -5,6 +5,7 @@ from __future__ import annotations
 from omega_stress.core.results import Err, Ok, Result
 from omega_stress.domain.errors import UnauthorizedTargetError
 from omega_stress.ports.target_repository import TargetRepository
+from omega_stress.shared.i18n import _
 
 
 def check_authorization(
@@ -19,8 +20,8 @@ def check_authorization(
         return Ok(None)
     return Err(
         UnauthorizedTargetError(
-            f"Cible {target_id!r} non autorisee : ni epinglee, ni confirmation "
-            f"explicite fournie pour ce run."
+            _("Cible {target_id!r} non autorisée : ni épinglée, ni confirmation explicite "
+              "fournie pour ce run.").format(target_id=target_id)
         )
     )
 

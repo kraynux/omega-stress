@@ -1,0 +1,1451 @@
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: omega-stress\n"
+"Language: es\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Omega-Status: testing\n"
+
+#: src/omega_stress/application/commands/export_run_report.py:36 src/omega_stress/application/commands/replay_run.py:61 src/omega_stress/interfaces/tui/screens/run_details.py:63
+msgid "Run {run_id!r} introuvable."
+msgstr "Run {run_id!r} no encontrado."
+
+#: src/omega_stress/application/commands/export_run_report.py:40
+msgid "Run {run_id!r} n'est pas encore terminé."
+msgstr "El run {run_id!r} aún no ha terminado."
+
+#: src/omega_stress/application/commands/export_run_report.py:48
+msgid "Format d'export {format!r} inconnu."
+msgstr "Formato de exportación {format!r} desconocido."
+
+#: src/omega_stress/application/commands/freeze_profile.py:26
+msgid "Profil {profile_id!r} introuvable."
+msgstr "Perfil {profile_id!r} no encontrado."
+
+#: src/omega_stress/application/commands/replay_run.py:65
+msgid "Le run {run_id!r} ne référence aucun profil et ne peut pas être rejoué."
+msgstr "El run {run_id!r} no hace referencia a ningún perfil y no puede repetirse."
+
+#: src/omega_stress/application/commands/replay_run.py:75
+msgid "Profil {profile_id!r} introuvable, impossible de rejouer ce run."
+msgstr "Perfil {profile_id!r} no encontrado, imposible repetir este run."
+
+#: src/omega_stress/application/commands/replay_run.py:85
+msgid "Cible {target_id!r} introuvable, impossible de rejouer ce run."
+msgstr "Objetivo {target_id!r} no encontrado, imposible repetir este run."
+
+#: src/omega_stress/application/commands/run_calibration.py:98
+#, python-brace-format
+msgid "Palier {name} : {value}{value2}"
+msgstr "Escalón {name}: {value}{value2}"
+
+#: src/omega_stress/application/commands/run_calibration.py:100 src/omega_stress/interfaces/tui/presenters/calibration_presenter.py:108
+msgid "dégradé"
+msgstr "degradado"
+
+#: src/omega_stress/application/commands/run_calibration.py:100
+msgid "sain"
+msgstr "sano"
+
+#: src/omega_stress/application/pipeline/abort.py:48
+#, python-brace-format
+msgid "Impossible de clôturer le run {id} après arrêt automatique : {error}"
+msgstr "Imposible cerrar el run {id} tras la parada automática: {error}"
+
+#: src/omega_stress/application/pipeline/executor.py:109
+msgid "Arrêté manuellement par l'utilisateur."
+msgstr "Detenido manualmente por el usuario."
+
+#: src/omega_stress/application/pipeline/executor.py:113
+msgid "Test arrêté manuellement."
+msgstr "Prueba detenida manualmente."
+
+#: src/omega_stress/application/pipeline/executor.py:156
+#, python-brace-format
+msgid "Impossible de clôturer le run {id} : {error}"
+msgstr "Imposible cerrar el run {id}: {error}"
+
+#: src/omega_stress/application/pipeline/guards/authorization_guard.py:23
+msgid "Cible {target_id!r} non autorisée : ni épinglée, ni confirmation explicite fournie pour ce run."
+msgstr "Objetivo {target_id!r} no autorizado: ni anclado, ni confirmado explícitamente para este run."
+
+#: src/omega_stress/application/pipeline/guards/capability_guard.py:22
+msgid "Capacité {capability_name!r} indisponible (statut : {value})."
+msgstr "Capacidad {capability_name!r} no disponible (estado: {value})."
+
+#: src/omega_stress/application/pipeline/guards/precheck_guard.py:22 src/omega_stress/domain/load/validators.py:40
+#, python-brace-format
+msgid "Le niveau {value} exige un pré-check automatique validé avant de démarrer."
+msgstr "El nivel {value} exige un pre-check automático validado antes de empezar."
+
+#: src/omega_stress/application/pipeline/hooks/notification_hook.py:16
+#, python-brace-format
+msgid "Arrêt automatique : {reason}"
+msgstr "Parada automática: {reason}"
+
+#: src/omega_stress/application/pipeline/hooks/notification_hook.py:21
+msgid "Le générateur local semble devenir le goulot d'étranglement (débit observé significativement inférieur au débit demandé)."
+msgstr "El generador local parece convertirse en el cuello de botella (caudal observado claramente inferior al caudal solicitado)."
+
+#: src/omega_stress/domain/calibration/validators.py:39
+msgid "Un calibrage ou un test est déjà en cours sur ce poste."
+msgstr "Ya hay un calibrado o una prueba en curso en este equipo."
+
+#: src/omega_stress/domain/calibration/validators.py:49
+#, python-brace-format
+msgid "CPU global {cpu_global_percent:.0f}% > seuil {CALIBRATION_PRECONDITION_CPU_GLOBAL_MAX_PERCENT:.0f}% : machine déjà sous pression."
+msgstr "CPU global {cpu_global_percent:.0f}% > umbral {CALIBRATION_PRECONDITION_CPU_GLOBAL_MAX_PERCENT:.0f}%: máquina ya bajo presión."
+
+#: src/omega_stress/domain/calibration/validators.py:66
+#, python-brace-format
+msgid "Mémoire disponible {memory_available_percent:.0f}% < seuil {CALIBRATION_PRECONDITION_MEMORY_AVAILABLE_MIN_PERCENT:.0f}%."
+msgstr "Memoria disponible {memory_available_percent:.0f}% < umbral {CALIBRATION_PRECONDITION_MEMORY_AVAILABLE_MIN_PERCENT:.0f}%."
+
+#: src/omega_stress/domain/calibration/validators.py:77
+msgid "Swap déjà activé ou en croissance : machine déjà sous pression."
+msgstr "Swap ya activado o en aumento: máquina ya bajo presión."
+
+#: src/omega_stress/domain/calibration/validators.py:84
+#, python-brace-format
+msgid "Load average 1 min {load_average_1min:.1f} > {logical_cpu_count} coeurs logiques."
+msgstr "Load average 1 min {load_average_1min:.1f} > {logical_cpu_count} núcleos lógicos."
+
+#: src/omega_stress/domain/load/models.py:27
+msgid "max_error_rate doit être compris entre 0.0 et 1.0, reçu {max_error_rate!r}"
+msgstr "max_error_rate debe estar entre 0.0 y 1.0, recibido {max_error_rate!r}"
+
+#: src/omega_stress/domain/load/models.py:33
+msgid "max_p95_latency_ms doit être strictement positif, reçu {max_p95_latency_ms!r}"
+msgstr "max_p95_latency_ms debe ser estrictamente positivo, recibido {max_p95_latency_ms!r}"
+
+#: src/omega_stress/domain/load/models.py:57
+#, python-brace-format
+msgid "Durée {minutes} min non autorisée pour le niveau {value} (choix fermés : {allowed})"
+msgstr "Duración {minutes} min no autorizada para el nivel {value} (opciones cerradas: {allowed})"
+
+#: src/omega_stress/domain/load/models.py:83
+msgid "{field_name} doit être compris entre 0.0 et 1.0, reçu {value!r}"
+msgstr "{field_name} debe estar entre 0.0 y 1.0, recibido {value!r}"
+
+#: src/omega_stress/domain/load/models.py:90
+msgid "duration_minutes doit être strictement positif, reçu {duration_minutes!r}"
+msgstr "duration_minutes debe ser estrictamente positivo, recibido {duration_minutes!r}"
+
+#: src/omega_stress/domain/load/policies.py:241
+msgid "Le mode sécurité (actif par défaut) arrête automatiquement un test si CETTE machine - pas la cible testée - semble en danger (CPU/mémoire du générateur). Le désactiver ne change rien aux protections de la cible (taux d'erreur, latence : toujours activés) : seul le risque de ralentir ou geler temporairement VOTRE ordinateur pendant la durée du test augmente, surtout sur les niveaux intensifs (Connexions Agressif et au-delà, Requêtes Maximum). À désactiver si vous savez que votre machine peut encaisser plus que ce que le mode sécurité suppose par défaut."
+msgstr "El modo seguridad (activo por defecto) detiene automáticamente una prueba si ESTA máquina - no el objetivo probado - parece en peligro (CPU/memoria del generador). Desactivarlo no cambia nada en las protecciones del objetivo (tasa de error, latencia: siempre activadas): solo aumenta el riesgo de ralentizar o congelar temporalmente SU ordenador durante la prueba, sobre todo en los niveles intensivos (Conexiones Agresivo y superiores, Peticiones Máximo). Desactívelo si sabe que su máquina aguanta más de lo que el modo seguridad supone por defecto."
+
+#: src/omega_stress/domain/load/validators.py:32
+msgid "Aucun run ne peut démarrer sans confirmation d'autorisation de la cible."
+msgstr "Ningún run puede empezar sin la confirmación de autorización del objetivo."
+
+#: src/omega_stress/domain/load/validators.py:50
+#, python-brace-format
+msgid "Le profil {name} n'est pas compatible avec la famille {value}."
+msgstr "El perfil {name} no es compatible con la familia {value}."
+
+#: src/omega_stress/domain/load/validators.py:59
+#, python-brace-format
+msgid "Durée {minutes} min incohérente avec le profil {name} ({total_minutes} min attendues)."
+msgstr "Duración {minutes} min incoherente con el perfil {name} ({total_minutes} min esperados)."
+
+#: src/omega_stress/domain/load/validators.py:80
+#, python-brace-format
+msgid "Durée {minutes} min non autorisée pour le niveau {value}."
+msgstr "Duración {minutes} min no autorizada para el nivel {value}."
+
+#: src/omega_stress/domain/load/validators.py:87
+msgid "Un Test charge doit définir au moins une étape de rampe."
+msgstr "Una Prueba de carga debe definir al menos una etapa de rampa."
+
+#: src/omega_stress/domain/load/validators.py:95
+msgid "Seul un Test charge (ou un Test connexions avec profil de durée) peut définir des étapes de rampe."
+msgstr "Solo una Prueba de carga (o una Prueba de conexiones con perfil de duración) puede definir etapas de rampa."
+
+#: src/omega_stress/domain/load/validators.py:117
+#, python-brace-format
+msgid "Taux d'erreur observé {observed_error_rate:.1%} > seuil {max_error_rate:.1%}"
+msgstr "Tasa de error observada {observed_error_rate:.1%} > umbral {max_error_rate:.1%}"
+
+#: src/omega_stress/domain/load/validators.py:132
+#, python-brace-format
+msgid "Latence p95 observée {observed_p95_latency_ms:.0f}ms > seuil {max_p95_latency_ms:.0f}ms"
+msgstr "Latencia p95 observada {observed_p95_latency_ms:.0f}ms > umbral {max_p95_latency_ms:.0f}ms"
+
+#: src/omega_stress/domain/load/validators.py:175
+#, python-brace-format
+msgid "Le niveau {value} pour le profil {name} ({total_minutes} min) exige la confirmation renforcée exacte."
+msgstr "El nivel {value} para el perfil {name} ({total_minutes} min) exige la confirmación reforzada exacta."
+
+#: src/omega_stress/domain/load/validators.py:184
+#, python-brace-format
+msgid "Le niveau {value} n'est pas proposé pour le profil {name} ({total_minutes} min)."
+msgstr "El nivel {value} no se ofrece para el perfil {name} ({total_minutes} min)."
+
+#: src/omega_stress/domain/load/validators.py:209
+#, python-brace-format
+msgid "{CRITICAL_WINDOW_SECONDS:.0f}s critique"
+msgstr "{CRITICAL_WINDOW_SECONDS:.0f}s crítica"
+
+#: src/omega_stress/domain/load/validators.py:227
+#, python-brace-format
+msgid "Taux de timeout {timeout_rate:.1%} sur fenêtre {window_label} >= seuil {WINDOW_TIMEOUT_RATE_ABORT_THRESHOLD:.0%}"
+msgstr "Tasa de timeout {timeout_rate:.1%} en la ventana {window_label} >= umbral {WINDOW_TIMEOUT_RATE_ABORT_THRESHOLD:.0%}"
+
+#: src/omega_stress/domain/load/validators.py:243
+#, python-brace-format
+msgid "Taux d'erreurs HTTP 5xx {http_5xx_rate:.1%} sur fenêtre {window_label} >= seuil {WINDOW_HTTP_5XX_RATE_ABORT_THRESHOLD:.0%}"
+msgstr "Tasa de errores HTTP 5xx {http_5xx_rate:.1%} en la ventana {window_label} >= umbral {WINDOW_HTTP_5XX_RATE_ABORT_THRESHOLD:.0%}"
+
+#: src/omega_stress/domain/load/validators.py:259
+#, python-brace-format
+msgid "Taux d'erreurs total {total_error_rate:.1%} sur fenêtre {window_label} >= seuil {WINDOW_TOTAL_ERROR_RATE_ABORT_THRESHOLD:.0%}"
+msgstr "Tasa de errores total {total_error_rate:.1%} en la ventana {window_label} >= umbral {WINDOW_TOTAL_ERROR_RATE_ABORT_THRESHOLD:.0%}"
+
+#: src/omega_stress/domain/load/validators.py:310
+#, python-brace-format
+msgid "CPU générateur >= {threshold_text} (~{GENERATOR_CPU_ABORT_RATIO_OF_SINGLE_CORE:.0%} d'un coeur) ET CPU machine >= {GENERATOR_CPU_ABORT_GLOBAL_THRESHOLD_PERCENT:.0f}% pendant {GENERATOR_CPU_ABORT_SUSTAINED_SAMPLES}s : la machine hôte elle-même est sous pression, pas seulement le générateur"
+msgstr "CPU del generador >= {threshold_text} (~{GENERATOR_CPU_ABORT_RATIO_OF_SINGLE_CORE:.0%} de un núcleo) Y CPU de la máquina >= {GENERATOR_CPU_ABORT_GLOBAL_THRESHOLD_PERCENT:.0f}% durante {GENERATOR_CPU_ABORT_SUSTAINED_SAMPLES}s: la propia máquina anfitriona está bajo presión, no solo el generador"
+
+#: src/omega_stress/domain/load/validators.py:333
+#, python-brace-format
+msgid "Mémoire disponible {memory_available_percent:.0f}% < seuil {MEMORY_AVAILABLE_ABORT_THRESHOLD_PERCENT:.0f}%"
+msgstr "Memoria disponible {memory_available_percent:.0f}% < umbral {MEMORY_AVAILABLE_ABORT_THRESHOLD_PERCENT:.0f}%"
+
+#: src/omega_stress/domain/load/validators.py:353
+#, python-brace-format
+msgid "Descripteurs de fichiers {open_files}/{open_files_soft_limit} >= {OPEN_FILES_ABORT_RATIO:.0%} de la limite"
+msgstr "Descriptores de archivo {open_files}/{open_files_soft_limit} >= {OPEN_FILES_ABORT_RATIO:.0%} del límite"
+
+#: src/omega_stress/domain/profiles/validation.py:17
+msgid "Le nom du profil ne peut pas être vide."
+msgstr "El nombre del perfil no puede estar vacío."
+
+#: src/omega_stress/domain/profiles/validation.py:26
+#, python-brace-format
+msgid "Durée {minutes} min non autorisée pour le niveau {value} dans ce profil (extended_duration_authorized={extended_duration_authorized})."
+msgstr "Duración {minutes} min no autorizada para el nivel {value} en este perfil (extended_duration_authorized={extended_duration_authorized})."
+
+#: src/omega_stress/domain/reports/builders.py:17
+msgid "Le test s'est déroulé normalement, sans dépassement de seuil."
+msgstr "La prueba se ha desarrollado con normalidad, sin superar ningún umbral."
+
+#: src/omega_stress/domain/reports/builders.py:19
+msgid "Le test s'est terminé avec une dégradation observée, sans dépassement de seuil critique."
+msgstr "La prueba ha terminado con una degradación observada, sin superar ningún umbral crítico."
+
+#: src/omega_stress/domain/reports/builders.py:23
+msgid "Le test a été arrêté automatiquement suite à un dépassement de seuil."
+msgstr "La prueba se detuvo automáticamente tras superarse un umbral."
+
+#: src/omega_stress/domain/reports/builders.py:25
+msgid "Le test a échoué avant d'avoir pu produire un résultat exploitable."
+msgstr "La prueba falló antes de poder producir un resultado utilizable."
+
+#: src/omega_stress/domain/reports/builders.py:28
+msgid "Le test a été arrêté manuellement par l'utilisateur."
+msgstr "La prueba fue detenida manualmente por el usuario."
+
+#: src/omega_stress/domain/reports/builders.py:93
+#, python-brace-format
+msgid "{error_count} erreur(s) sur {total_requests} requêtes : vérifier les journaux de la cible sur la période du test."
+msgstr "{error_count} error(es) de {total_requests} peticiones: revise los registros del objetivo durante el periodo de la prueba."
+
+#: src/omega_stress/domain/reports/builders.py:106
+msgid "Débit observé significativement inférieur au débit demandé : le générateur local peut être devenu le goulot d'étranglement (voir plan produit, Configuration minimale du générateur)."
+msgstr "Caudal observado claramente inferior al caudal solicitado: el generador local puede haberse convertido en el cuello de botella (ver plan de producto, Configuración mínima del generador)."
+
+#: src/omega_stress/domain/reports/builders.py:118
+#, python-brace-format
+msgid "CPU du générateur monté à {peak_cpu_percent_generator:.0f} % au pic pendant le test : les résultats peuvent en partie refléter une limite du générateur local plutôt que celle de la cible."
+msgstr "La CPU del generador llegó a {peak_cpu_percent_generator:.0f} % en el pico durante la prueba: los resultados pueden reflejar en parte un límite del generador local más que del objetivo."
+
+#: src/omega_stress/domain/reports/service.py:26
+msgid "Thème d'export {export_theme!r} inconnu (catalogue : {value})."
+msgstr "Tema de exportación {export_theme!r} desconocido (catálogo: {value})."
+
+#: src/omega_stress/domain/runs/service.py:104
+#, python-brace-format
+msgid "Le run {id} est déjà terminé."
+msgstr "El run {id} ya ha terminado."
+
+#: src/omega_stress/domain/runs/validators.py:18
+#, python-brace-format
+msgid "Le run {id} a une date de fin antérieure à sa date de départ."
+msgstr "El run {id} tiene una fecha de fin anterior a su fecha de inicio."
+
+#: src/omega_stress/domain/targets/service.py:24
+#, python-brace-format
+msgid "Impossible d'épingler {base_url} sans confirmation d'autorisation."
+msgstr "No se puede anclar {base_url} sin confirmación de autorización."
+
+#: src/omega_stress/domain/targets/validation.py:25
+msgid "L'adresse de la cible ne peut pas être vide."
+msgstr "La dirección del objetivo no puede estar vacía."
+
+#: src/omega_stress/domain/targets/validation.py:32
+msgid "Schéma {scheme!r} non supporté : seuls http et https sont acceptés."
+msgstr "Esquema {scheme!r} no admitido: solo se aceptan http y https."
+
+#: src/omega_stress/domain/targets/validation.py:39
+msgid "Adresse invalide, hôte introuvable dans {raw!r}."
+msgstr "Dirección no válida, host no encontrado en {raw!r}."
+
+#: src/omega_stress/infrastructure/calibration/local_server.py:32
+msgid "Content-Type"
+msgstr "Content-Type"
+
+#: src/omega_stress/infrastructure/calibration/local_server.py:33
+msgid "Content-Length"
+msgstr "Content-Length"
+
+#: src/omega_stress/infrastructure/probe/local_probe.py:42
+#, python-brace-format
+msgid "{cpu_count} coeur(s) détecté(s)"
+msgstr "{cpu_count} núcleo(s) detectado(s)"
+
+#: src/omega_stress/infrastructure/probe/local_probe.py:51
+#, python-brace-format
+msgid "limite douce de {soft_limit} descripteurs"
+msgstr "límite blando de {soft_limit} descriptores"
+
+#: src/omega_stress/infrastructure/probe/local_probe.py:61
+#, python-brace-format
+msgid "{total_memory_mb} Mo détectés"
+msgstr "{total_memory_mb} MB detectados"
+
+#: src/omega_stress/infrastructure/probe/local_probe.py:65
+msgid "non mesurable"
+msgstr "no medible"
+
+#: src/omega_stress/infrastructure/probe/local_probe.py:72
+msgid "agrégat de "
+msgstr "agregado de "
+
+#: src/omega_stress/infrastructure/runner/httpx_load_generator.py:117
+msgid "Cible {target_url!r} injoignable dès le départ : {exc}"
+msgstr "Objetivo {target_url!r} inalcanzable desde el principio: {exc}"
+
+#: src/omega_stress/infrastructure/storage/files/json_calibration_store.py:40
+#, python-brace-format
+msgid "Échec d'écriture du calibrage vers {path} : {exc}"
+msgstr "Error al escribir el calibrado en {path}: {exc}"
+
+#: src/omega_stress/infrastructure/storage/files/json_calibration_store.py:52
+#, python-brace-format
+msgid "Échec de lecture du calibrage depuis {path} : {exc}"
+msgstr "Error al leer el calibrado desde {path}: {exc}"
+
+#: src/omega_stress/infrastructure/storage/sqlite/export_repository.py:40
+msgid "Échec de sauvegarde du job d'export {id!r} : {exc}"
+msgstr "Error al guardar el trabajo de exportación {id!r}: {exc}"
+
+#: src/omega_stress/infrastructure/storage/sqlite/export_repository.py:50
+msgid "Échec de listage des exports du run {run_id!r} : {exc}"
+msgstr "Error al listar las exportaciones del run {run_id!r}: {exc}"
+
+#: src/omega_stress/infrastructure/storage/sqlite/profile_repository.py:57
+msgid "Échec de sauvegarde du profil {id!r} : {exc}"
+msgstr "Error al guardar el perfil {id!r}: {exc}"
+
+#: src/omega_stress/infrastructure/storage/sqlite/profile_repository.py:67
+msgid "Échec de lecture du profil {profile_id!r} : {exc}"
+msgstr "Error al leer el perfil {profile_id!r}: {exc}"
+
+#: src/omega_stress/infrastructure/storage/sqlite/profile_repository.py:77
+#, python-brace-format
+msgid "Échec de listage des profils : {exc}"
+msgstr "Error al listar los perfiles: {exc}"
+
+#: src/omega_stress/infrastructure/storage/sqlite/profile_repository.py:86
+msgid "Échec de suppression du profil {profile_id!r} : {exc}"
+msgstr "Error al eliminar el perfil {profile_id!r}: {exc}"
+
+#: src/omega_stress/infrastructure/storage/sqlite/run_repository.py:75
+msgid "Échec de sauvegarde du run {id!r} : {exc}"
+msgstr "Error al guardar el run {id!r}: {exc}"
+
+#: src/omega_stress/infrastructure/storage/sqlite/run_repository.py:83
+msgid "Échec de lecture du run {run_id!r} : {exc}"
+msgstr "Error al leer el run {run_id!r}: {exc}"
+
+#: src/omega_stress/infrastructure/storage/sqlite/run_repository.py:109
+#, python-brace-format
+msgid "Échec de listage de l'historique des runs : {exc}"
+msgstr "Error al listar el historial de runs: {exc}"
+
+#: src/omega_stress/infrastructure/storage/sqlite/run_repository.py:119
+#, python-brace-format
+msgid "Échec de purge de l'historique des runs : {exc}"
+msgstr "Error al purgar el historial de runs: {exc}"
+
+#: src/omega_stress/infrastructure/storage/sqlite/target_repository.py:35
+msgid "Échec de sauvegarde de la cible {id!r} : {exc}"
+msgstr "Error al guardar el objetivo {id!r}: {exc}"
+
+#: src/omega_stress/infrastructure/storage/sqlite/target_repository.py:56
+msgid "Échec d'épinglage de la cible {id!r} : {exc}"
+msgstr "Error al anclar el objetivo {id!r}: {exc}"
+
+#: src/omega_stress/infrastructure/storage/sqlite/target_repository.py:72
+msgid "Échec de lecture de la cible {target_id!r} : {exc}"
+msgstr "Error al leer el objetivo {target_id!r}: {exc}"
+
+#: src/omega_stress/infrastructure/storage/sqlite/target_repository.py:85
+msgid "Échec de lecture de la cible épinglée {target_id!r} : {exc}"
+msgstr "Error al leer el objetivo anclado {target_id!r}: {exc}"
+
+#: src/omega_stress/infrastructure/storage/sqlite/target_repository.py:109
+#, python-brace-format
+msgid "Échec de listage des cibles récentes : {exc}"
+msgstr "Error al listar los objetivos recientes: {exc}"
+
+#: src/omega_stress/infrastructure/storage/sqlite/target_repository.py:119
+msgid "Échec de désépinglage de la cible {target_id!r} : {exc}"
+msgstr "Error al desanclar el objetivo {target_id!r}: {exc}"
+
+#: src/omega_stress/infrastructure/storage/sqlite/target_repository.py:130
+#, python-brace-format
+msgid "Échec de purge des cibles récentes : {exc}"
+msgstr "Error al purgar los objetivos recientes: {exc}"
+
+#: src/omega_stress/infrastructure/storage/sqlite/target_repository.py:140
+#, python-brace-format
+msgid "Échec de purge de toutes les cibles : {exc}"
+msgstr "Error al purgar todos los objetivos: {exc}"
+
+#: src/omega_stress/interfaces/tui/app.py:44
+msgid "🗲 OMEGA-STRESS"
+msgstr "🗲 OMEGA-STRESS"
+
+#: src/omega_stress/interfaces/tui/app.py:57
+msgid "Palette de commandes"
+msgstr "Paleta de comandos"
+
+#: src/omega_stress/interfaces/tui/app.py:63
+msgid "Quitter l'application (avec confirmation)."
+msgstr "Salir de la aplicación (con confirmación)."
+
+#: src/omega_stress/interfaces/tui/app.py:128
+#, python-brace-format
+msgid "Thème non changé (échec d'enregistrement) : {exc}"
+msgstr "Tema no cambiado (fallo al guardar): {exc}"
+
+#: src/omega_stress/interfaces/tui/app.py:175
+msgid "Rechercher une commande…"
+msgstr "Buscar un comando…"
+
+#: src/omega_stress/interfaces/tui/app.py:190
+msgid "Masquer l'aide des raccourcis"
+msgstr "Ocultar la ayuda de los atajos"
+
+#: src/omega_stress/interfaces/tui/app.py:190 src/omega_stress/interfaces/tui/app.py:194
+msgid "Raccourcis"
+msgstr "Atajos"
+
+#: src/omega_stress/interfaces/tui/app.py:195
+msgid "Afficher l'aide du widget sélectionné et les raccourcis disponibles"
+msgstr "Mostrar la ayuda del widget seleccionado y los atajos disponibles"
+
+#: src/omega_stress/interfaces/tui/presenters/calibration_presenter.py:24
+msgid "échec précoce"
+msgstr "fallo precoz"
+
+#: src/omega_stress/interfaces/tui/presenters/calibration_presenter.py:25
+#, python-brace-format
+msgid "Aucune enveloppe exploitable ({reason})."
+msgstr "Ninguna envolvente utilizable ({reason})."
+
+#: src/omega_stress/interfaces/tui/presenters/calibration_presenter.py:31
+#, python-brace-format
+msgid "VU_safe {vu_safe} | RPS_safe {rps_safe} | confiance {confidence} (dernier palier sain : {last_healthy_name})"
+msgstr "VU_safe {vu_safe} | RPS_safe {rps_safe} | confianza {confidence} (último escalón sano: {last_healthy_name})"
+
+#: src/omega_stress/interfaces/tui/presenters/calibration_presenter.py:79
+msgid "Aucun calibrage exploitable pour cette machine — vous ne connaissez pas ses limites réelles. Nous recommandons d'en faire un depuis l'écran Calibrage avant de désactiver le mode sécurité sur un niveau intensif. Vous choisissez de dépasser les garde-fous de CETTE machine : la fiabilité du résultat et la stabilité de votre ordinateur restent sous votre responsabilité."
+msgstr "Ningún calibrado utilizable para esta máquina — no conoce sus límites reales. Le recomendamos hacer uno desde la pantalla Calibrado antes de desactivar el modo seguridad en un nivel intensivo. Usted decide superar las salvaguardas de ESTA máquina: la fiabilidad del resultado y la estabilidad de su ordenador quedan bajo su responsabilidad."
+
+#: src/omega_stress/interfaces/tui/presenters/calibration_presenter.py:87
+msgid "AU-DESSUS"
+msgstr "POR ENCIMA"
+
+#: src/omega_stress/interfaces/tui/presenters/calibration_presenter.py:87
+msgid "en dessous"
+msgstr "por debajo"
+
+#: src/omega_stress/interfaces/tui/presenters/calibration_presenter.py:89
+#, python-brace-format
+msgid "Dernier calibrage : {safe_value} {unit} jugés sûrs pour cette machine (confiance {confidence}). Ce niveau vise {target_value:.0f} {unit} — {comparison} de cette enveloppe. Au-delà, la fiabilité du résultat (nombre de connexions/requêtes/charge réellement atteint) peut baisser, et votre machine pourrait ralentir ou geler temporairement : c'est votre responsabilité."
+msgstr "Último calibrado: {safe_value} {unit} considerados seguros para esta máquina (confianza {confidence}). Este nivel apunta a {target_value:.0f} {unit} — {comparison} de esta envolvente. Más allá, la fiabilidad del resultado (número de conexiones/peticiones/carga realmente alcanzado) puede bajar, y su máquina podría ralentizarse o congelarse temporalmente: es su responsabilidad."
+
+#: src/omega_stress/interfaces/tui/presenters/calibration_presenter.py:111
+#, python-brace-format
+msgid "{name} : {rps_achieved:.0f}/{rps_target} req/s ({status}{reason})"
+msgstr "{name}: {rps_achieved:.0f}/{rps_target} req/s ({status}{reason})"
+
+#: src/omega_stress/interfaces/tui/presenters/level_presenter.py:10
+msgid "faible"
+msgstr "débil"
+
+#: src/omega_stress/interfaces/tui/presenters/level_presenter.py:11
+msgid "bas"
+msgstr "bajo"
+
+#: src/omega_stress/interfaces/tui/presenters/level_presenter.py:12
+msgid "moyen"
+msgstr "medio"
+
+#: src/omega_stress/interfaces/tui/presenters/level_presenter.py:13
+msgid "haut"
+msgstr "alto"
+
+#: src/omega_stress/interfaces/tui/presenters/level_presenter.py:14
+msgid "puissant"
+msgstr "potente"
+
+#: src/omega_stress/interfaces/tui/presenters/level_presenter.py:15
+msgid "agressif"
+msgstr "agresivo"
+
+#: src/omega_stress/interfaces/tui/presenters/level_presenter.py:16
+msgid "violent"
+msgstr "violento"
+
+#: src/omega_stress/interfaces/tui/presenters/level_presenter.py:17
+msgid "maximum"
+msgstr "máximo"
+
+#: src/omega_stress/interfaces/tui/presenters/load_reference_presenter.py:58
+#, python-brace-format
+msgid "{value} à {value2} min"
+msgstr "{value} a {value2} min"
+
+#: src/omega_stress/interfaces/tui/presenters/load_reference_presenter.py:67
+#, python-brace-format
+msgid "{default_text} ({extra_text} si pré-check)"
+msgstr "{default_text} ({extra_text} con pre-check)"
+
+#: src/omega_stress/interfaces/tui/presenters/load_reference_presenter.py:76
+msgid "Non/Oui"
+msgstr "No/Sí"
+
+#: src/omega_stress/interfaces/tui/presenters/load_reference_presenter.py:93 src/omega_stress/interfaces/tui/screens/home.py:40
+msgid "Test requêtes"
+msgstr "Prueba de peticiones"
+
+#: src/omega_stress/interfaces/tui/presenters/load_reference_presenter.py:95
+msgid "Débit"
+msgstr "Tráfico"
+
+#: src/omega_stress/interfaces/tui/presenters/load_reference_presenter.py:96
+#, python-brace-format
+msgid "{requests_per_minute} req/min"
+msgstr "{requests_per_minute} req/min"
+
+#: src/omega_stress/interfaces/tui/presenters/load_reference_presenter.py:99
+#, python-brace-format
+msgid "~{value} req/s en rafale"
+msgstr "~{value} req/s en ráfaga"
+
+#: src/omega_stress/interfaces/tui/presenters/load_reference_presenter.py:111 src/omega_stress/interfaces/tui/screens/home.py:36
+msgid "Test connexions"
+msgstr "Prueba de conexiones"
+
+#: src/omega_stress/interfaces/tui/presenters/load_reference_presenter.py:113
+msgid "Connexions simultanées"
+msgstr "Conexiones simultáneas"
+
+#: src/omega_stress/interfaces/tui/presenters/load_reference_presenter.py:114
+#, python-brace-format
+msgid "{concurrent_connections} connexions"
+msgstr "{concurrent_connections} conexiones"
+
+#: src/omega_stress/interfaces/tui/presenters/load_reference_presenter.py:117
+#, python-brace-format
+msgid "{concurrent_connections} en parallèle, chaque seconde"
+msgstr "{concurrent_connections} en paralelo, cada segundo"
+
+#: src/omega_stress/interfaces/tui/presenters/load_reference_presenter.py:129 src/omega_stress/interfaces/tui/screens/home.py:38
+msgid "Test charge"
+msgstr "Prueba de carga"
+
+#: src/omega_stress/interfaces/tui/presenters/load_reference_presenter.py:131
+msgid "Débit (montée puis plateau)"
+msgstr "Caudal (subida y luego meseta)"
+
+#: src/omega_stress/interfaces/tui/presenters/load_reference_presenter.py:132
+#, python-brace-format
+msgid "pic {peak_requests_per_minute} req/min"
+msgstr "pico {peak_requests_per_minute} req/min"
+
+#: src/omega_stress/interfaces/tui/presenters/load_reference_presenter.py:137
+#, python-brace-format
+msgid "rampe {ramp_up_minutes:g} min -> plateau {plateau_minutes_min:g} min"
+msgstr "rampa {ramp_up_minutes:g} min -> meseta {plateau_minutes_min:g} min"
+
+#: src/omega_stress/interfaces/tui/presenters/load_reference_presenter.py:152
+msgid "Requêtes"
+msgstr "Peticiones"
+
+#: src/omega_stress/interfaces/tui/presenters/load_reference_presenter.py:153
+msgid "Connexions"
+msgstr "Conexiones"
+
+#: src/omega_stress/interfaces/tui/presenters/load_reference_presenter.py:154
+msgid "Charge"
+msgstr "Carga"
+
+#: src/omega_stress/interfaces/tui/presenters/load_reference_presenter.py:194
+msgid "Seul le débit (req/min) pilote ce test ; la simultanéité en découle."
+msgstr "Solo el caudal (req/min) dirige esta prueba; la simultaneidad se deriva de él."
+
+#: src/omega_stress/interfaces/tui/presenters/load_reference_presenter.py:196
+msgid "Seule la simultanéité (connexions) pilote ce test ; aucun débit cible."
+msgstr "Solo la simultaneidad (conexiones) dirige esta prueba; ningún caudal objetivo."
+
+#: src/omega_stress/interfaces/tui/presenters/load_reference_presenter.py:198
+msgid "Seul le débit au pic pilote ce test, atteint progressivement : sur une durée choisie plus courte que la rampe indiquée, le pic n'est jamais atteint."
+msgstr "Solo el caudal en el pico dirige esta prueba, alcanzado progresivamente: con una duración elegida más corta que la rampa indicada, el pico nunca se alcanza."
+
+#: src/omega_stress/interfaces/tui/presenters/profile_presenter.py:17
+msgid "Figé"
+msgstr "Congelado"
+
+#: src/omega_stress/interfaces/tui/presenters/profile_presenter.py:17
+msgid "Modifiable"
+msgstr "Modificable"
+
+#: src/omega_stress/interfaces/tui/presenters/run_presenter.py:13
+msgid "Réussi"
+msgstr "Correcto"
+
+#: src/omega_stress/interfaces/tui/presenters/run_presenter.py:14
+msgid "Dégradé"
+msgstr "Degradado"
+
+#: src/omega_stress/interfaces/tui/presenters/run_presenter.py:15
+msgid "Arrêt automatique"
+msgstr "Parada automática"
+
+#: src/omega_stress/interfaces/tui/presenters/run_presenter.py:16
+msgid "Échec"
+msgstr "Fallo"
+
+#: src/omega_stress/interfaces/tui/presenters/run_presenter.py:27
+msgid "En cours"
+msgstr "En curso"
+
+#: src/omega_stress/interfaces/tui/presenters/run_presenter.py:61
+#, python-brace-format
+msgid "{observed_rate_per_minute:.0f} req/min | {errors}/{total} erreurs | p95 {p95:.0f} ms"
+msgstr "{observed_rate_per_minute:.0f} req/min | {errors}/{total} errores | p95 {p95:.0f} ms"
+
+#: src/omega_stress/interfaces/tui/presenters/run_presenter.py:85
+#, python-brace-format
+msgid "{at_second:>5.0f}s  {bar}  {errors} err / {requests} req"
+msgstr "{at_second:>5.0f}s  {bar}  {errors} err / {requests} req"
+
+#: src/omega_stress/interfaces/tui/presenters/theme_presenter.py:34
+#, python-brace-format
+msgid "{theme_name} (repli depuis {fell_back_from})"
+msgstr "{theme_name} (alternativa a {fell_back_from})"
+
+#: src/omega_stress/interfaces/tui/screens/_base.py:20
+msgid "Focus suivant"
+msgstr "Foco siguiente"
+
+#: src/omega_stress/interfaces/tui/screens/_base.py:21
+msgid "Focus précédent"
+msgstr "Foco anterior"
+
+#: src/omega_stress/interfaces/tui/screens/_base.py:22
+msgid "Copier le texte sélectionné"
+msgstr "Copiar el texto seleccionado"
+
+#: src/omega_stress/interfaces/tui/screens/calibration_screen.py:77
+msgid "CALIBRAGE"
+msgstr "CALIBRADO"
+
+#: src/omega_stress/interfaces/tui/screens/calibration_screen.py:79
+msgid "Mesure la capacité réelle de CETTE machine (pas la cible testée) via un serveur de boucle locale, par paliers de charge croissante. Le résultat n'est pas encore appliqué aux tests réels : consultation seule pour l'instant."
+msgstr "Mide la capacidad real de ESTA máquina (no del objetivo probado) mediante un servidor de bucle local, por escalones de carga creciente. El resultado aún no se aplica a las pruebas reales: solo consulta por ahora."
+
+#: src/omega_stress/interfaces/tui/screens/calibration_screen.py:88
+msgid "Lancer le calibrage"
+msgstr "Lanzar el calibrado"
+
+#: src/omega_stress/interfaces/tui/screens/calibration_screen.py:107
+msgid "Aucun calibrage connu pour cette machine."
+msgstr "Ningún calibrado conocido para esta máquina."
+
+#: src/omega_stress/interfaces/tui/screens/calibration_screen.py:111
+#, python-brace-format
+msgid ""
+"{value}\n"
+"{value2}"
+msgstr ""
+"{value}\n"
+"{value2}"
+
+#: src/omega_stress/interfaces/tui/screens/calibration_screen.py:145
+#, python-brace-format
+msgid "Calibrage refusé : {error}"
+msgstr "Calibrado rechazado: {error}"
+
+#: src/omega_stress/interfaces/tui/screens/confirm.py:30
+msgid "Oui, confirmer"
+msgstr "Sí, confirmar"
+
+#: src/omega_stress/interfaces/tui/screens/confirm.py:32
+msgid "Non, annuler"
+msgstr "No, cancelar"
+
+#: src/omega_stress/interfaces/tui/screens/connection_panel.py:49 src/omega_stress/interfaces/tui/screens/ramp_panel.py:49 src/omega_stress/interfaces/tui/screens/request_panel.py:49
+#, python-brace-format
+msgid "{value:.1f}"
+msgstr "{value:.1f}"
+
+#: src/omega_stress/interfaces/tui/screens/connection_panel.py:51 src/omega_stress/interfaces/tui/screens/connection_panel.py:213 src/omega_stress/interfaces/tui/screens/ramp_panel.py:51 src/omega_stress/interfaces/tui/screens/ramp_panel.py:208 src/omega_stress/interfaces/tui/screens/request_panel.py:51 src/omega_stress/interfaces/tui/screens/request_panel.py:217
+#, python-brace-format
+msgid "{m} min"
+msgstr "{m} min"
+
+#: src/omega_stress/interfaces/tui/screens/connection_panel.py:54 src/omega_stress/interfaces/tui/screens/ramp_panel.py:54 src/omega_stress/interfaces/tui/screens/request_panel.py:57
+msgid "Manuel (1-5 min)"
+msgstr "Manual (1-5 min)"
+
+#: src/omega_stress/interfaces/tui/screens/connection_panel.py:54 src/omega_stress/interfaces/tui/screens/ramp_panel.py:54 src/omega_stress/interfaces/tui/screens/request_panel.py:57
+msgid "Profil D1-D6"
+msgstr "Perfil D1-D6"
+
+#: src/omega_stress/interfaces/tui/screens/connection_panel.py:57 src/omega_stress/interfaces/tui/screens/ramp_panel.py:57 src/omega_stress/interfaces/tui/screens/request_panel.py:60
+#, python-brace-format
+msgid "{upper} {name} ({total_minutes} min)"
+msgstr "{upper} {name} ({total_minutes} min)"
+
+#: src/omega_stress/interfaces/tui/screens/connection_panel.py:106
+msgid "TEST CONNEXIONS"
+msgstr "PRUEBA DE CONEXIONES"
+
+#: src/omega_stress/interfaces/tui/screens/connection_panel.py:107 src/omega_stress/interfaces/tui/screens/ramp_panel.py:107 src/omega_stress/interfaces/tui/screens/request_panel.py:113
+msgid "Profil figé (optionnel)"
+msgstr "Perfil congelado (opcional)"
+
+#: src/omega_stress/interfaces/tui/screens/connection_panel.py:111 src/omega_stress/interfaces/tui/screens/ramp_panel.py:111 src/omega_stress/interfaces/tui/screens/request_panel.py:117
+msgid "Critères du test"
+msgstr "Criterios de la prueba"
+
+#: src/omega_stress/interfaces/tui/screens/connection_panel.py:112 src/omega_stress/interfaces/tui/screens/profile_wizard.py:47 src/omega_stress/interfaces/tui/screens/ramp_panel.py:112 src/omega_stress/interfaces/tui/screens/request_panel.py:118 src/omega_stress/infrastructure/exporters/templates/report.html.jinja:62
+msgid "Intensité"
+msgstr "Intensidad"
+
+#: src/omega_stress/interfaces/tui/screens/connection_panel.py:115 src/omega_stress/interfaces/tui/screens/ramp_panel.py:115 src/omega_stress/interfaces/tui/screens/request_panel.py:121
+msgid "Mode durée"
+msgstr "Modo de duración"
+
+#: src/omega_stress/interfaces/tui/screens/connection_panel.py:121 src/omega_stress/interfaces/tui/screens/profile_wizard.py:48 src/omega_stress/interfaces/tui/screens/ramp_panel.py:121 src/omega_stress/interfaces/tui/screens/request_panel.py:127
+msgid "Durée (minutes)"
+msgstr "Duración (minutos)"
+
+#: src/omega_stress/interfaces/tui/screens/connection_panel.py:127 src/omega_stress/interfaces/tui/screens/ramp_panel.py:127 src/omega_stress/interfaces/tui/screens/request_panel.py:133
+msgid "Profil de durée"
+msgstr "Perfil de duración"
+
+#: src/omega_stress/interfaces/tui/screens/connection_panel.py:132 src/omega_stress/interfaces/tui/screens/ramp_panel.py:132 src/omega_stress/interfaces/tui/screens/request_panel.py:138
+msgid "Confirmation renforcée requise pour ce niveau :"
+msgstr "Confirmación reforzada necesaria para este nivel:"
+
+#: src/omega_stress/interfaces/tui/screens/connection_panel.py:133 src/omega_stress/interfaces/tui/screens/ramp_panel.py:133 src/omega_stress/interfaces/tui/screens/request_panel.py:139
+msgid "Texte de confirmation exact"
+msgstr "Texto de confirmación exacto"
+
+#: src/omega_stress/interfaces/tui/screens/connection_panel.py:136 src/omega_stress/interfaces/tui/screens/ramp_panel.py:136 src/omega_stress/interfaces/tui/screens/request_panel.py:142
+msgid "Taux d'erreur maximal"
+msgstr "Tasa de error máxima"
+
+#: src/omega_stress/interfaces/tui/screens/connection_panel.py:146 src/omega_stress/interfaces/tui/screens/ramp_panel.py:146 src/omega_stress/interfaces/tui/screens/request_panel.py:152 src/omega_stress/interfaces/tui/widgets/load_reference_table.py:26
+msgid "Pré-check"
+msgstr "Pre-check"
+
+#: src/omega_stress/interfaces/tui/screens/connection_panel.py:196
+msgid "Aucun profil figé pour Test connexions (des profils figés existent pour d'autres types de test — Requêtes/Rampe)."
+msgstr "Ningún perfil congelado para la Prueba de conexiones (existen perfiles congelados para otros tipos de prueba — Peticiones/Rampa)."
+
+#: src/omega_stress/interfaces/tui/screens/connection_panel.py:202 src/omega_stress/interfaces/tui/screens/ramp_panel.py:197 src/omega_stress/interfaces/tui/screens/request_panel.py:203
+msgid "Aucun profil figé pour l'instant (des profils existent mais aucun n'est figé)."
+msgstr "Ningún perfil congelado por ahora (existen perfiles pero ninguno está congelado)."
+
+#: src/omega_stress/interfaces/tui/screens/connection_panel.py:205 src/omega_stress/interfaces/tui/screens/ramp_panel.py:200 src/omega_stress/interfaces/tui/screens/request_panel.py:206
+msgid "Aucun profil figé pour l'instant — créez-en un depuis l'écran Profils."
+msgstr "Ningún perfil congelado por ahora — cree uno desde la pantalla Perfiles."
+
+#: src/omega_stress/interfaces/tui/screens/connection_panel.py:221 src/omega_stress/interfaces/tui/screens/ramp_panel.py:216 src/omega_stress/interfaces/tui/screens/request_panel.py:225
+#, python-brace-format
+msgid "Durée ramenée à {value} min : {value2} ne propose pas {keep_value} min."
+msgstr "Duración reducida a {value} min: {value2} no ofrece {keep_value} min."
+
+#: src/omega_stress/interfaces/tui/screens/connection_panel.py:377 src/omega_stress/interfaces/tui/screens/ramp_panel.py:364 src/omega_stress/interfaces/tui/screens/request_panel.py:377
+#, python-brace-format
+msgid "Cible fixée par le profil « {name} » : {address}"
+msgstr "Objetivo fijado por el perfil «{name}»: {address}"
+
+#: src/omega_stress/interfaces/tui/screens/connection_panel.py:396 src/omega_stress/interfaces/tui/screens/ramp_panel.py:383 src/omega_stress/interfaces/tui/screens/request_panel.py:396
+msgid "Choisissez ou saisissez une cible avant le pré-check."
+msgstr "Elija o introduzca un objetivo antes del pre-check."
+
+#: src/omega_stress/interfaces/tui/screens/connection_panel.py:400 src/omega_stress/interfaces/tui/screens/ramp_panel.py:387 src/omega_stress/interfaces/tui/screens/request_panel.py:400
+msgid "Pré-check en cours…"
+msgstr "Pre-check en curso…"
+
+#: src/omega_stress/interfaces/tui/screens/connection_panel.py:419 src/omega_stress/interfaces/tui/screens/ramp_panel.py:406 src/omega_stress/interfaces/tui/screens/request_panel.py:419
+#, python-brace-format
+msgid "Pré-check échoué : {error}"
+msgstr "Pre-check fallido: {error}"
+
+#: src/omega_stress/interfaces/tui/screens/connection_panel.py:422 src/omega_stress/interfaces/tui/screens/ramp_panel.py:409 src/omega_stress/interfaces/tui/screens/request_panel.py:422
+#, python-brace-format
+msgid "Pré-check réussi ({value}) — vous pouvez lancer le test."
+msgstr "Pre-check correcto ({value}) — puede lanzar la prueba."
+
+#: src/omega_stress/interfaces/tui/screens/connection_panel.py:437 src/omega_stress/interfaces/tui/screens/ramp_panel.py:424 src/omega_stress/interfaces/tui/screens/request_panel.py:437
+msgid "Lancement en cours…"
+msgstr "Lanzamiento en curso…"
+
+#: src/omega_stress/interfaces/tui/screens/connection_panel.py:440 src/omega_stress/interfaces/tui/screens/ramp_panel.py:427 src/omega_stress/interfaces/tui/screens/request_panel.py:440
+msgid "Choisissez ou saisissez une cible."
+msgstr "Elija o introduzca un objetivo."
+
+#: src/omega_stress/interfaces/tui/screens/connection_panel.py:446 src/omega_stress/interfaces/tui/screens/ramp_panel.py:433 src/omega_stress/interfaces/tui/screens/request_panel.py:446
+msgid "Choisissez un niveau d'intensité."
+msgstr "Elija un nivel de intensidad."
+
+#: src/omega_stress/interfaces/tui/screens/connection_panel.py:451 src/omega_stress/interfaces/tui/screens/ramp_panel.py:438 src/omega_stress/interfaces/tui/screens/request_panel.py:451
+msgid "Choisissez un taux d'erreur."
+msgstr "Elija una tasa de error."
+
+#: src/omega_stress/interfaces/tui/screens/connection_panel.py:457 src/omega_stress/interfaces/tui/screens/ramp_panel.py:444 src/omega_stress/interfaces/tui/screens/request_panel.py:457
+msgid "Choisissez un profil de durée."
+msgstr "Elija un perfil de duración."
+
+#: src/omega_stress/interfaces/tui/screens/connection_panel.py:465 src/omega_stress/interfaces/tui/screens/ramp_panel.py:452 src/omega_stress/interfaces/tui/screens/request_panel.py:465
+msgid "Choisissez une durée."
+msgstr "Elija una duración."
+
+#: src/omega_stress/interfaces/tui/screens/connection_panel.py:499 src/omega_stress/interfaces/tui/screens/ramp_panel.py:486 src/omega_stress/interfaces/tui/screens/request_panel.py:499
+#, python-brace-format
+msgid "Terminé — {value} (voir le détail)."
+msgstr "Terminado — {value} (ver el detalle)."
+
+#: src/omega_stress/interfaces/tui/screens/export_dialog.py:51
+msgid "EXPORTER LE RAPPORT"
+msgstr "EXPORTAR EL INFORME"
+
+#: src/omega_stress/interfaces/tui/screens/export_dialog.py:59
+msgid "Dossier de destination"
+msgstr "Carpeta de destino"
+
+#: src/omega_stress/interfaces/tui/screens/export_dialog.py:92
+msgid "Choisissez un format."
+msgstr "Elija un formato."
+
+#: src/omega_stress/interfaces/tui/screens/export_dialog.py:95
+msgid "Indiquez un dossier de destination."
+msgstr "Indique una carpeta de destino."
+
+#: src/omega_stress/interfaces/tui/screens/export_dialog.py:115
+#, python-brace-format
+msgid "Rapport écrit : {written_path}"
+msgstr "Informe escrito: {written_path}"
+
+#: src/omega_stress/interfaces/tui/screens/help_screen.py:30
+msgid "Test requêtes / connexions / charge"
+msgstr "Prueba de peticiones / conexiones / carga"
+
+#: src/omega_stress/interfaces/tui/screens/help_screen.py:31
+msgid "Trois familles de test encadrées : débit constant, nombre de connexions simultanées, ou montée progressive. Chaque lancement exige une cible (saisie manuelle ou cible épinglée) et une confirmation d'autorisation, sauf cible déjà épinglée-autorisée."
+msgstr "Tres familias de prueba supervisadas: caudal constante, número de conexiones simultáneas o subida progresiva. Cada lanzamiento exige un objetivo (entrada manual u objetivo anclado) y una confirmación de autorización, salvo si el objetivo ya está anclado-autorizado."
+
+#: src/omega_stress/interfaces/tui/screens/help_screen.py:38
+msgid "Un profil fige un jeu de paramètres (cible, type de test, intensité, durée, seuils) pour le réutiliser tel quel — créer, puis figer, un profil depuis cet écran."
+msgstr "Un perfil congela un conjunto de parámetros (objetivo, tipo de prueba, intensidad, duración, umbrales) para reutilizarlo tal cual — cree y luego congele un perfil desde esta pantalla."
+
+#: src/omega_stress/interfaces/tui/screens/help_screen.py:43
+msgid "Épingler une adresse dispense de recocher la confirmation d'autorisation à chaque lancement sur cette même cible."
+msgstr "Anclar una dirección evita volver a marcar la confirmación de autorización en cada lanzamiento sobre ese mismo objetivo."
+
+#: src/omega_stress/interfaces/tui/screens/help_screen.py:48
+msgid "Liste tous les runs passés : détail complet, ou relecture (uniquement pour un run lié à un profil figé)."
+msgstr "Lista todos los runs pasados: detalle completo o repetición (solo para un run vinculado a un perfil congelado)."
+
+#: src/omega_stress/interfaces/tui/screens/help_screen.py:53
+msgid "Depuis le détail d'un run terminé : JSON (données brutes, réimportables), CSV (analyse tabulaire), ou HTML (rapport lisible avec chronologie complète par intervalle)."
+msgstr "Desde el detalle de un run terminado: JSON (datos brutos, reimportables), CSV (análisis tabular) o HTML (informe legible con cronología completa por intervalo)."
+
+#: src/omega_stress/interfaces/tui/screens/help_screen.py:58 src/omega_stress/interfaces/tui/screens/help_screen.py:112
+msgid "Profils de durée D1-D6 (mode profil)"
+msgstr "Perfiles de duración D1-D6 (modo perfil)"
+
+#: src/omega_stress/interfaces/tui/screens/help_screen.py:59
+msgid "En plus de la durée manuelle (1 à 5 min selon le niveau), chaque écran de lancement propose un mode profil : une durée fixe nommée (1 à 120 min) qui limite les niveaux accessibles, avec un niveau supplémentaire débloqué par une confirmation renforcée (texte exact à saisir). Voir le tableau ci-dessous."
+msgstr "Además de la duración manual (1 a 5 min según el nivel), cada pantalla de lanzamiento ofrece un modo perfil: una duración fija con nombre (1 a 120 min) que limita los niveles accesibles, con un nivel adicional desbloqueado por una confirmación reforzada (texto exacto que escribir). Ver la tabla siguiente."
+
+#: src/omega_stress/interfaces/tui/screens/help_screen.py:65 src/omega_stress/interfaces/tui/screens/home.py:33
+msgid "Calibrage"
+msgstr "Calibrado"
+
+#: src/omega_stress/interfaces/tui/screens/help_screen.py:66
+msgid "Mesure la capacité réelle de CETTE machine (pas la cible testée) via un serveur de boucle locale, par paliers de charge croissante. Le résultat (VU_safe/RPS_safe) n'est pas appliqué automatiquement aux tests réels : consultable depuis l'écran Calibrage, et utile comme repère quand le mode sécurité est désactivé (voir ci-dessous)."
+msgstr "Mide la capacidad real de ESTA máquina (no del objetivo probado) mediante un servidor de bucle local, por escalones de carga creciente. El resultado (VU_safe/RPS_safe) no se aplica automáticamente a las pruebas reales: se puede consultar en la pantalla Calibrado y sirve de referencia cuando el modo seguridad está desactivado (ver más abajo)."
+
+#: src/omega_stress/interfaces/tui/screens/help_screen.py:73 src/omega_stress/infrastructure/exporters/templates/report.html.jinja:69
+msgid "Mode sécurité"
+msgstr "Modo seguridad"
+
+#: src/omega_stress/interfaces/tui/screens/help_screen.py:75
+msgid " Si un calibrage a été effectué sur cette machine, l'écran de lancement compare le niveau choisi à son enveloppe dès que la case est décochée."
+msgstr " Si se ha realizado un calibrado en esta máquina, la pantalla de lanzamiento compara el nivel elegido con su envolvente en cuanto se desmarca la casilla."
+
+#: src/omega_stress/interfaces/tui/screens/help_screen.py:98
+msgid "Repères de charge (valeurs exactes par niveau)"
+msgstr "Referencias de carga (valores exactos por nivel)"
+
+#: src/omega_stress/interfaces/tui/screens/help_screen.py:102
+#, python-brace-format
+msgid ""
+"[b]Test requêtes[/b] — {value}\n"
+"[b]Test connexions[/b] — {value2}\n"
+"[b]Test charge[/b] — {value3}\n"
+msgstr ""
+"[b]Prueba de peticiones[/b] — {value}\n"
+"[b]Prueba de conexiones[/b] — {value2}\n"
+"[b]Prueba de carga[/b] — {value3}\n"
+
+#: src/omega_stress/interfaces/tui/screens/history.py:99
+#, python-brace-format
+msgid "Relance terminée : {value}"
+msgstr "Repetición terminada: {value}"
+
+#: src/omega_stress/interfaces/tui/screens/profile_wizard.py:40
+msgid "NOUVEAU PROFIL"
+msgstr "NUEVO PERFIL"
+
+#: src/omega_stress/interfaces/tui/screens/profile_wizard.py:41
+msgid "Nom du profil"
+msgstr "Nombre del perfil"
+
+#: src/omega_stress/interfaces/tui/screens/profile_wizard.py:42
+msgid "Description (optionnelle)"
+msgstr "Descripción (opcional)"
+
+#: src/omega_stress/interfaces/tui/screens/profile_wizard.py:45
+msgid "Famille de test"
+msgstr "Familia de prueba"
+
+#: src/omega_stress/interfaces/tui/screens/profile_wizard.py:49
+msgid "Taux d'erreur maximal (0.0-1.0)"
+msgstr "Tasa de error máxima (0.0-1.0)"
+
+#: src/omega_stress/interfaces/tui/screens/profile_wizard.py:91
+msgid "Nom et cible par défaut sont obligatoires."
+msgstr "El nombre y el objetivo por defecto son obligatorios."
+
+#: src/omega_stress/interfaces/tui/screens/profile_wizard.py:94
+msgid "Choisissez une famille et une intensité."
+msgstr "Elija una familia y una intensidad."
+
+#: src/omega_stress/interfaces/tui/screens/profile_wizard.py:100
+msgid "Durée et taux d'erreur doivent être numériques."
+msgstr "La duración y la tasa de error deben ser numéricas."
+
+#: src/omega_stress/interfaces/tui/screens/profiles.py:42
+msgid "Nouveau profil"
+msgstr "Nuevo perfil"
+
+#: src/omega_stress/interfaces/tui/screens/profiles.py:44
+msgid "Figer le profil sélectionné"
+msgstr "Congelar el perfil seleccionado"
+
+#: src/omega_stress/interfaces/tui/screens/profiles.py:46
+msgid "Supprimer le profil sélectionné"
+msgstr "Eliminar el perfil seleccionado"
+
+#: src/omega_stress/interfaces/tui/screens/profiles.py:73
+#, python-brace-format
+msgid "{name} — {value}"
+msgstr "{name} — {value}"
+
+#: src/omega_stress/interfaces/tui/screens/profiles.py:107
+#, python-brace-format
+msgid "{name} figé."
+msgstr "{name} congelado."
+
+#: src/omega_stress/interfaces/tui/screens/profiles.py:116
+msgid "SUPPRIMER CE PROFIL ?"
+msgstr "¿ELIMINAR ESTE PERFIL?"
+
+#: src/omega_stress/interfaces/tui/screens/profiles.py:118
+msgid "Définitif. Un run passé lié à ce profil ne pourra plus être rejoué."
+msgstr "Definitivo. Un run pasado vinculado a este perfil ya no podrá repetirse."
+
+#: src/omega_stress/interfaces/tui/screens/profiles.py:130
+msgid "Profil supprimé."
+msgstr "Perfil eliminado."
+
+#: src/omega_stress/interfaces/tui/screens/quit_confirm.py:21
+msgid "QUITTER OMEGA-STRESS ?"
+msgstr "¿SALIR DE OMEGA-STRESS?"
+
+#: src/omega_stress/interfaces/tui/screens/quit_confirm.py:23
+msgid "Tout test en cours sera interrompu."
+msgstr "Cualquier prueba en curso se interrumpirá."
+
+#: src/omega_stress/interfaces/tui/screens/ramp_panel.py:106
+msgid "TEST CHARGE"
+msgstr "PRUEBA DE CARGA"
+
+#: src/omega_stress/interfaces/tui/screens/ramp_panel.py:191
+msgid "Aucun profil figé pour Test charge (des profils figés existent pour d'autres types de test — Connexions/Requêtes)."
+msgstr "Ningún perfil congelado para la Prueba de carga (existen perfiles congelados para otros tipos de prueba — Conexiones/Peticiones)."
+
+#: src/omega_stress/interfaces/tui/screens/request_panel.py:112
+msgid "TEST REQUÊTES"
+msgstr "PRUEBA DE PETICIONES"
+
+#: src/omega_stress/interfaces/tui/screens/request_panel.py:197
+msgid "Aucun profil figé pour Test requêtes (des profils figés existent pour d'autres types de test — Connexions/Rampe)."
+msgstr "Ningún perfil congelado para la Prueba de peticiones (existen perfiles congelados para otros tipos de prueba — Conexiones/Rampa)."
+
+#: src/omega_stress/interfaces/tui/screens/run_details.py:39
+msgid "DÉTAIL DU RUN"
+msgstr "DETALLE DEL RUN"
+
+#: src/omega_stress/interfaces/tui/screens/run_details.py:41 src/omega_stress/interfaces/tui/widgets/history_table.py:16 src/omega_stress/infrastructure/exporters/templates/report.html.jinja:74
+msgid "Verdict"
+msgstr "Veredicto"
+
+#: src/omega_stress/interfaces/tui/screens/run_details.py:42 src/omega_stress/interfaces/tui/widgets/progress_panel.py:23 src/omega_stress/infrastructure/exporters/templates/report.html.jinja:82
+msgid "Débit observé"
+msgstr "Caudal observado"
+
+#: src/omega_stress/interfaces/tui/screens/run_details.py:44 src/omega_stress/interfaces/tui/widgets/progress_panel.py:25 src/omega_stress/infrastructure/exporters/templates/report.html.jinja:84
+msgid "Latence p95"
+msgstr "Latencia p95"
+
+#: src/omega_stress/interfaces/tui/screens/run_details.py:70 src/omega_stress/interfaces/tui/widgets/progress_panel.py:30
+#, python-brace-format
+msgid "{observed_rate_per_minute:.0f} req/min"
+msgstr "{observed_rate_per_minute:.0f} req/min"
+
+#: src/omega_stress/interfaces/tui/screens/run_details.py:85
+msgid " (personnalisé — au moins un critère réel diffère du profil figé référence)"
+msgstr " (personalizado — al menos un criterio real difiere del perfil congelado de referencia)"
+
+#: src/omega_stress/interfaces/tui/screens/run_details.py:90
+#, python-brace-format
+msgid ""
+"{id}\n"
+"Cible : {target_address}\n"
+"Famille/niveau : {family}/{level}{profile_note}\n"
+"Démarré : {started_at}"
+msgstr ""
+"{id}\n"
+"Objetivo: {target_address}\n"
+"Familia/nivel: {family}/{level}{profile_note}\n"
+"Iniciado: {started_at}"
+
+#: src/omega_stress/interfaces/tui/screens/run_details.py:102
+#, python-brace-format
+msgid ""
+"\n"
+"Diagnostic : {reason}"
+msgstr ""
+"\n"
+"Diagnóstico: {reason}"
+
+#: src/omega_stress/interfaces/tui/screens/run_details.py:105
+#, python-brace-format
+msgid ""
+"\n"
+"Erreurs : {errors_timeout} timeout, {errors_connection} connexion, {errors_http_4xx} 4xx, {errors_http_5xx} 5xx"
+msgstr ""
+"\n"
+"Errores: {errors_timeout} timeout, {errors_connection} conexión, {errors_http_4xx} 4xx, {errors_http_5xx} 5xx"
+
+#: src/omega_stress/interfaces/tui/screens/run_details.py:122
+#, python-brace-format
+msgid ""
+"\n"
+"Pic générateur : {cpu} CPU, {memory} RAM"
+msgstr ""
+"\n"
+"Pico del generador: {cpu} CPU, {memory} RAM"
+
+#: src/omega_stress/interfaces/tui/screens/run_details.py:125
+#, python-brace-format
+msgid ""
+"\n"
+"{sample_count} mesures enregistrées (détail exhaustif : export JSON/HTML)."
+msgstr ""
+"\n"
+"{sample_count} mediciones registradas (detalle exhaustivo: exportación JSON/HTML)."
+
+#: src/omega_stress/interfaces/tui/screens/run_details.py:133
+msgid "Chronologie — temps | taux d'erreur (barre) | erreurs/requêtes par palier\n"
+msgstr "Cronología — tiempo | tasa de error (barra) | errores/peticiones por escalón\n"
+
+#: src/omega_stress/interfaces/tui/screens/run_details.py:139
+msgid "Aucune mesure enregistrée : le test s'est terminé avant la première mesure (voir le diagnostic ci-dessus)."
+msgstr "Ninguna medición registrada: la prueba terminó antes de la primera medición (ver el diagnóstico de arriba)."
+
+#: src/omega_stress/interfaces/tui/screens/settings_screen.py:84
+msgid "Dossier d'export par défaut"
+msgstr "Carpeta de exportación por defecto"
+
+#: src/omega_stress/interfaces/tui/screens/settings_screen.py:87
+msgid "Dossier des captures d'écran par défaut"
+msgstr "Carpeta de capturas de pantalla por defecto"
+
+#: src/omega_stress/interfaces/tui/screens/settings_screen.py:93
+msgid "Vider les cibles récentes"
+msgstr "Vaciar los objetivos recientes"
+
+#: src/omega_stress/interfaces/tui/screens/settings_screen.py:122
+msgid "VIDER LES CIBLES RÉCENTES ?"
+msgstr "¿VACIAR LOS OBJETIVOS RECIENTES?"
+
+#: src/omega_stress/interfaces/tui/screens/settings_screen.py:123
+msgid "Les cibles épinglées ne sont pas concernées."
+msgstr "Los objetivos anclados no se ven afectados."
+
+#: src/omega_stress/interfaces/tui/screens/settings_screen.py:132
+msgid "Y compris les cibles épinglées : les autorisations déjà accordées seront perdues."
+msgstr "Incluidos los objetivos anclados: se perderán las autorizaciones ya concedidas."
+
+#: src/omega_stress/interfaces/tui/screens/settings_screen.py:142
+msgid "Tous les runs enregistrés seront effacés définitivement."
+msgstr "Todos los runs registrados se borrarán definitivamente."
+
+#: src/omega_stress/interfaces/tui/screens/settings_screen.py:169
+msgid "Cibles récentes vidées."
+msgstr "Objetivos recientes vaciados."
+
+#: src/omega_stress/interfaces/tui/screens/settings_screen.py:175
+msgid "Toutes les cibles ont été effacées."
+msgstr "Todos los objetivos se han borrado."
+
+#: src/omega_stress/interfaces/tui/screens/splash.py:40
+msgid "Appuyez sur une touche pour continuer…"
+msgstr "Pulse una tecla para continuar…"
+
+#: src/omega_stress/interfaces/tui/screens/targets.py:36
+msgid "Cibles épinglées : illimitées | Cibles récentes : 10 maximum"
+msgstr "Objetivos anclados: ilimitados | Objetivos recientes: 10 como máximo"
+
+#: src/omega_stress/interfaces/tui/screens/targets.py:42
+msgid "Nouvelle adresse (ex. https://exemple.org)"
+msgstr "Nueva dirección (p. ej. https://ejemplo.org)"
+
+#: src/omega_stress/interfaces/tui/screens/targets.py:49
+msgid "Désépingler la cible sélectionnée"
+msgstr "Desanclar el objetivo seleccionado"
+
+#: src/omega_stress/interfaces/tui/screens/targets.py:83
+msgid "Saisissez une adresse à épingler."
+msgstr "Introduzca una dirección que anclar."
+
+#: src/omega_stress/interfaces/tui/screens/targets.py:93
+#, python-brace-format
+msgid "{base_url} épinglée."
+msgstr "{base_url} anclado."
+
+#: src/omega_stress/interfaces/tui/screens/targets.py:106
+msgid "Cible désépinglée."
+msgstr "Objetivo desanclado."
+
+#: src/omega_stress/interfaces/tui/widgets/authorization_checkbox.py:11
+msgid "Je confirme être autorisé à tester cette cible"
+msgstr "Confirmo que estoy autorizado a probar este objetivo"
+
+#: src/omega_stress/interfaces/tui/widgets/duration_preset_table.py:24 src/omega_stress/interfaces/tui/widgets/history_table.py:16
+msgid "ID"
+msgstr "ID"
+
+#: src/omega_stress/interfaces/tui/widgets/duration_preset_table.py:26
+msgid "Durée totale"
+msgstr "Duración total"
+
+#: src/omega_stress/interfaces/tui/widgets/duration_preset_table.py:27
+msgid "Familles compatibles"
+msgstr "Familias compatibles"
+
+#: src/omega_stress/interfaces/tui/widgets/duration_preset_table.py:28
+msgid "Niveaux libres"
+msgstr "Niveles libres"
+
+#: src/omega_stress/interfaces/tui/widgets/duration_preset_table.py:29
+msgid "Niveau renforcé"
+msgstr "Nivel reforzado"
+
+#: src/omega_stress/interfaces/tui/widgets/duration_preset_table.py:35
+#, python-brace-format
+msgid "{total_minutes} min"
+msgstr "{total_minutes} min"
+
+#: src/omega_stress/interfaces/tui/widgets/history_table.py:16
+msgid "Démarré"
+msgstr "Iniciado"
+
+#: src/omega_stress/interfaces/tui/widgets/history_table.py:37
+msgid "en cours"
+msgstr "en curso"
+
+#: src/omega_stress/interfaces/tui/widgets/load_reference_table.py:21 src/omega_stress/infrastructure/exporters/templates/report.html.jinja:61
+msgid "Type de test"
+msgstr "Tipo de prueba"
+
+#: src/omega_stress/interfaces/tui/widgets/load_reference_table.py:22
+msgid "Niveau"
+msgstr "Nivel"
+
+#: src/omega_stress/interfaces/tui/widgets/load_reference_table.py:23
+msgid "Dimension pilotée"
+msgstr "Dimensión dirigida"
+
+#: src/omega_stress/interfaces/tui/widgets/load_reference_table.py:24
+msgid "Cible visée"
+msgstr "Objetivo buscado"
+
+#: src/omega_stress/interfaces/tui/widgets/load_reference_table.py:25
+msgid "Simultanéité réelle"
+msgstr "Simultaneidad real"
+
+#: src/omega_stress/interfaces/tui/widgets/load_reference_table.py:27
+msgid "Durées disponibles"
+msgstr "Duraciones disponibles"
+
+#: src/omega_stress/interfaces/tui/widgets/profile_list.py:16 src/omega_stress/infrastructure/exporters/templates/report.html.jinja:65
+msgid "Durée"
+msgstr "Duración"
+
+#: src/omega_stress/interfaces/tui/widgets/profile_list.py:26
+#, python-brace-format
+msgid "{duration_minutes} min"
+msgstr "{duration_minutes} min"
+
+#: src/omega_stress/interfaces/tui/widgets/progress_panel.py:26
+msgid "CPU / RAM"
+msgstr "CPU / RAM"
+
+#: src/omega_stress/interfaces/tui/widgets/run_progress.py:45 src/omega_stress/interfaces/tui/widgets/run_progress.py:58
+#, python-brace-format
+msgid "Test en cours… (reste {value})"
+msgstr "Prueba en curso… (quedan {value})"
+
+#: src/omega_stress/interfaces/tui/widgets/run_progress.py:63
+#, python-brace-format
+msgid "Test en cours… (dépasse la durée prévue de {overrun})"
+msgstr "Prueba en curso… (supera la duración prevista en {overrun})"
+
+#: src/omega_stress/interfaces/tui/widgets/safety_mode_checkbox.py:11
+msgid "Mode sécurité (protège cette machine)"
+msgstr "Modo seguridad (protege esta máquina)"
+
+#: src/omega_stress/interfaces/tui/widgets/target_picker.py:30
+msgid "ou saisir une adresse (ex. https://exemple.org)"
+msgstr "o introducir una dirección (p. ej. https://ejemplo.org)"
+
+#: src/omega_stress/interfaces/tui/widgets/target_table.py:17
+msgid "Adresse"
+msgstr "Dirección"
+
+#: src/omega_stress/interfaces/tui/widgets/target_table.py:17
+msgid "Dernière utilisation"
+msgstr "Último uso"
+
+#: src/omega_stress/interfaces/tui/presenters/calibration_presenter.py:49
+#, python-brace-format
+msgid "Âge du calibrage : {age_days} j — renouvellement OBLIGATOIRE (> {CALIBRATION_VALIDITY_DAYS_MANDATORY} j)."
+msgstr "Antigüedad del calibrado: {age_days} d — renovación OBLIGATORIA (> {CALIBRATION_VALIDITY_DAYS_MANDATORY} d)."
+
+#: src/omega_stress/interfaces/tui/presenters/calibration_presenter.py:57
+#, python-brace-format
+msgid "Âge du calibrage : {age_days} j — renouvellement recommandé (> {CALIBRATION_VALIDITY_DAYS_RECOMMENDED} j)."
+msgstr "Antigüedad del calibrado: {age_days} d — renovación recomendada (> {CALIBRATION_VALIDITY_DAYS_RECOMMENDED} d)."
+
+#: src/omega_stress/interfaces/tui/presenters/calibration_presenter.py:63
+#, python-brace-format
+msgid "Âge du calibrage : {age_days} j."
+msgstr "Antigüedad del calibrado: {age_days} d."
+
+#: src/omega_stress/infrastructure/exporters/csv_exporter.py:57
+#, python-brace-format
+msgid "Échec d'écriture CSV vers {path} : {exc}"
+msgstr "Error al escribir el CSV en {path}: {exc}"
+
+#: src/omega_stress/infrastructure/exporters/html_exporter.py:61
+#, python-brace-format
+msgid "Échec d'écriture HTML vers {path} : {exc}"
+msgstr "Error al escribir el HTML en {path}: {exc}"
+
+#: src/omega_stress/infrastructure/exporters/html_exporter.py:78
+msgid "Débit (requêtes/min)"
+msgstr "Caudal (peticiones/min)"
+
+#: src/omega_stress/infrastructure/exporters/html_exporter.py:82
+msgid "Demandé"
+msgstr "Solicitado"
+
+#: src/omega_stress/infrastructure/exporters/html_exporter.py:84
+msgid "Réel"
+msgstr "Real"
+
+#: src/omega_stress/infrastructure/exporters/html_exporter.py:89
+msgid "Latence (ms)"
+msgstr "Latencia (ms)"
+
+#: src/omega_stress/infrastructure/exporters/html_exporter.py:99
+msgid "Erreurs par catégorie"
+msgstr "Errores por categoría"
+
+#: src/omega_stress/infrastructure/exporters/html_exporter.py:102
+msgid "Timeout"
+msgstr "Timeout"
+
+#: src/omega_stress/infrastructure/exporters/html_exporter.py:103
+msgid "Connexion"
+msgstr "Conexión"
+
+#: src/omega_stress/infrastructure/exporters/html_exporter.py:105
+msgid "HTTP 4xx"
+msgstr "HTTP 4xx"
+
+#: src/omega_stress/infrastructure/exporters/html_exporter.py:107
+msgid "HTTP 5xx"
+msgstr "HTTP 5xx"
+
+#: src/omega_stress/infrastructure/exporters/html_exporter.py:112
+msgid "CPU (%)"
+msgstr "CPU (%)"
+
+#: src/omega_stress/infrastructure/exporters/html_exporter.py:116
+msgid "Générateur"
+msgstr "Generador"
+
+#: src/omega_stress/infrastructure/exporters/html_exporter.py:121
+msgid "Système"
+msgstr "Sistema"
+
+#: src/omega_stress/infrastructure/exporters/html_exporter.py:129
+msgid "Mémoire (Mo)"
+msgstr "Memoria (MB)"
+
+#: src/omega_stress/infrastructure/exporters/html_exporter.py:133
+msgid "RSS générateur"
+msgstr "RSS del generador"
+
+#: src/omega_stress/infrastructure/exporters/html_exporter.py:138
+msgid "Swap utilisé"
+msgstr "Swap usado"
+
+#: src/omega_stress/infrastructure/exporters/json_exporter.py:28
+#, python-brace-format
+msgid "Échec d'écriture JSON vers {path} : {exc}"
+msgstr "Error al escribir el JSON en {path}: {exc}"
+
+#: src/omega_stress/infrastructure/exporters/templates/report.html.jinja:5
+#, python-brace-format
+msgid "Rapport omega-stress — {run_id}"
+msgstr "Informe omega-stress — {run_id}"
+
+#: src/omega_stress/infrastructure/exporters/templates/report.html.jinja:55
+#, python-brace-format
+msgid "Rapport de test — {run_id}"
+msgstr "Informe de prueba — {run_id}"
+
+#: src/omega_stress/infrastructure/exporters/templates/report.html.jinja:63
+msgid "Début"
+msgstr "Inicio"
+
+#: src/omega_stress/infrastructure/exporters/templates/report.html.jinja:64
+msgid "Fin"
+msgstr "Fin"
+
+#: src/omega_stress/infrastructure/exporters/templates/report.html.jinja:65
+#, python-brace-format
+msgid "{value} min"
+msgstr "{value} min"
+
+#: src/omega_stress/infrastructure/exporters/templates/report.html.jinja:69
+msgid "Actif"
+msgstr "Activa"
+
+#: src/omega_stress/infrastructure/exporters/templates/report.html.jinja:69
+msgid "Désactivé"
+msgstr "Desactivado"
+
+#: src/omega_stress/infrastructure/exporters/templates/report.html.jinja:79
+msgid "Métriques"
+msgstr "Métricas"
+
+#: src/omega_stress/infrastructure/exporters/templates/report.html.jinja:81
+msgid "Débit demandé"
+msgstr "Caudal solicitado"
+
+#: src/omega_stress/infrastructure/exporters/templates/report.html.jinja:81
+#, python-brace-format
+msgid "{requested_rate_per_minute} req/min"
+msgstr "{requested_rate_per_minute} pet/min"
+
+#: src/omega_stress/infrastructure/exporters/templates/report.html.jinja:82
+#, python-brace-format
+msgid "{observed_rate_per_minute} req/min"
+msgstr "{observed_rate_per_minute} pet/min"
+
+#: src/omega_stress/infrastructure/exporters/templates/report.html.jinja:83
+msgid "Latence p50"
+msgstr "Latencia p50"
+
+#: src/omega_stress/infrastructure/exporters/templates/report.html.jinja:85
+msgid "Latence p99"
+msgstr "Latencia p99"
+
+#: src/omega_stress/infrastructure/exporters/templates/report.html.jinja:87
+msgid "Dont timeout / connexion / 4xx / 5xx"
+msgstr "De ellos timeout / conexión / 4xx / 5xx"
+
+#: src/omega_stress/infrastructure/exporters/templates/report.html.jinja:89
+msgid "Pic CPU générateur"
+msgstr "Pico de CPU del generador"
+
+#: src/omega_stress/infrastructure/exporters/templates/report.html.jinja:92
+msgid "Pic mémoire générateur"
+msgstr "Pico de memoria del generador"
+
+#: src/omega_stress/infrastructure/exporters/templates/report.html.jinja:92
+#, python-brace-format
+msgid "{value} Mo"
+msgstr "{value} MB"
+
+#: src/omega_stress/infrastructure/exporters/templates/report.html.jinja:99
+msgid "Graphiques"
+msgstr "Gráficos"
+
+#: src/omega_stress/infrastructure/exporters/templates/report.html.jinja:110
+#, python-brace-format
+msgid "Chronologie ({samples} mesures)"
+msgstr "Cronología ({samples} mediciones)"
+
+#: src/omega_stress/infrastructure/exporters/templates/report.html.jinja:114
+msgid "Seconde"
+msgstr "Segundo"
+
+#: src/omega_stress/infrastructure/exporters/templates/report.html.jinja:114
+msgid "Débit (req/min)"
+msgstr "Caudal (pet/min)"
+
+#: src/omega_stress/infrastructure/exporters/templates/report.html.jinja:139
+msgid "Diagnostic"
+msgstr "Diagnóstico"

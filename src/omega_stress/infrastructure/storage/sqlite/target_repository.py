@@ -8,6 +8,7 @@ from datetime import datetime
 
 from omega_stress.domain.targets.models import PinnedTarget, Target, TargetAddress
 from omega_stress.infrastructure.exceptions import StorageError
+from omega_stress.shared.i18n import _
 
 
 class SqliteTargetRepository:
@@ -30,7 +31,9 @@ class SqliteTargetRepository:
             )
             self._connection.commit()
         except sqlite3.Error as exc:
-            raise StorageError(f"Echec de sauvegarde de la cible {target.id!r} : {exc}") from exc
+            raise StorageError(
+                _("Échec de sauvegarde de la cible {id!r} : {exc}").format(id=target.id, exc=exc)
+            ) from exc
 
     def save_pinned(self, pinned: PinnedTarget) -> None:
         try:
@@ -50,7 +53,9 @@ class SqliteTargetRepository:
             self._connection.commit()
         except sqlite3.Error as exc:
             raise StorageError(
-                f"Echec d'epinglage de la cible {pinned.target.id!r} : {exc}"
+                _("Échec d'épinglage de la cible {id!r} : {exc}").format(
+                    id=pinned.target.id, exc=exc
+                )
             ) from exc
 
     def get(self, target_id: str) -> Target | None:
@@ -63,7 +68,11 @@ class SqliteTargetRepository:
                     "SELECT * FROM targets WHERE id = ?", (target_id,)
                 ).fetchone()
         except sqlite3.Error as exc:
-            raise StorageError(f"Echec de lecture de la cible {target_id!r} : {exc}") from exc
+            raise StorageError(
+                _("Échec de lecture de la cible {target_id!r} : {exc}").format(
+                    target_id=target_id, exc=exc
+                )
+            ) from exc
         return _row_to_target(row) if row is not None else None
 
     def get_pinned(self, target_id: str) -> PinnedTarget | None:
@@ -73,7 +82,9 @@ class SqliteTargetRepository:
             ).fetchone()
         except sqlite3.Error as exc:
             raise StorageError(
-                f"Echec de lecture de la cible epinglee {target_id!r} : {exc}"
+                _("Échec de lecture de la cible épinglée {target_id!r} : {exc}").format(
+                    target_id=target_id, exc=exc
+                )
             ) from exc
         return _row_to_pinned_target(row) if row is not None else None
 
@@ -83,7 +94,9 @@ class SqliteTargetRepository:
                 "SELECT * FROM pinned_targets ORDER BY pinned_at DESC"
             ).fetchall()
         except sqlite3.Error as exc:
-            raise StorageError(f"Echec de listage des cibles epinglees : {exc}") from exc
+            raise StorageError(
+                _("Échec de listage des cibles épinglées : {exc}").format(exc=exc)
+            ) from exc
         return tuple(_row_to_pinned_target(row) for row in rows)
 
     def list_recent(self, *, limit: int = 10) -> tuple[Target, ...]:
@@ -92,7 +105,9 @@ class SqliteTargetRepository:
                 "SELECT * FROM targets ORDER BY created_at DESC LIMIT ?", (limit,)
             ).fetchall()
         except sqlite3.Error as exc:
-            raise StorageError(f"Echec de listage des cibles recentes : {exc}") from exc
+            raise StorageError(
+                _("Échec de listage des cibles récentes : {exc}").format(exc=exc)
+            ) from exc
         return tuple(_row_to_target(row) for row in rows)
 
     def unpin(self, target_id: str) -> None:
@@ -100,14 +115,20 @@ class SqliteTargetRepository:
             self._connection.execute("DELETE FROM pinned_targets WHERE id = ?", (target_id,))
             self._connection.commit()
         except sqlite3.Error as exc:
-            raise StorageError(f"Echec de desepinglage de la cible {target_id!r} : {exc}") from exc
+            raise StorageError(
+                _("Échec de désépinglage de la cible {target_id!r} : {exc}").format(
+                    target_id=target_id, exc=exc
+                )
+            ) from exc
 
     def clear_recent(self) -> None:
         try:
             self._connection.execute("DELETE FROM targets")
             self._connection.commit()
         except sqlite3.Error as exc:
-            raise StorageError(f"Echec de purge des cibles recentes : {exc}") from exc
+            raise StorageError(
+                _("Échec de purge des cibles récentes : {exc}").format(exc=exc)
+            ) from exc
 
     def clear_all(self) -> None:
         try:
@@ -115,7 +136,9 @@ class SqliteTargetRepository:
             self._connection.execute("DELETE FROM pinned_targets")
             self._connection.commit()
         except sqlite3.Error as exc:
-            raise StorageError(f"Echec de purge de toutes les cibles : {exc}") from exc
+            raise StorageError(
+                _("Échec de purge de toutes les cibles : {exc}").format(exc=exc)
+            ) from exc
 
 
 def _target_params(target: Target) -> tuple[object, ...]:
@@ -152,6 +175,7 @@ def _row_to_pinned_target(row: sqlite3.Row) -> PinnedTarget:
         authorized_at=datetime.fromisoformat(row["authorized_at"]),
     )
 
+
 # <-- INFO DEV ---------------------------------------------------------
 # Role :
 # - Implementation concrete du port target_repository.py, sur les deux
@@ -181,4 +205,4 @@ def _row_to_pinned_target(row: sqlite3.Row) -> PinnedTarget:
 #   jamais l'une sans l'autre en cas d'echec partiel.
 # Comment il sera utilise (apercu) :
 # - app/dependency_container.py cree une instance unique.
-#---------------------------------------------------------------------->
+# ---------------------------------------------------------------------->

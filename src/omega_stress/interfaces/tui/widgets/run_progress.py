@@ -6,6 +6,8 @@ from textual.app import ComposeResult
 from textual.containers import Vertical
 from textual.widgets import ProgressBar, Static
 
+from omega_stress.shared.i18n import _
+
 
 def _format_minutes_seconds(total_seconds: float) -> str:
     whole = max(0, round(total_seconds))
@@ -40,7 +42,7 @@ class RunProgress(Vertical):
         (re)initialise son total sur la duree totale planifiee."""
         self._total_seconds = total_seconds
         self.query_one("#run-progress-label", Static).update(
-            f"Test en cours… (reste {_format_minutes_seconds(total_seconds)})"
+            _("Test en cours… (reste {value})").format(value=_format_minutes_seconds(total_seconds))
         )
         self.query_one(ProgressBar).update(total=total_seconds, progress=0)
         self.display = True
@@ -52,15 +54,20 @@ class RunProgress(Vertical):
         remaining = self._total_seconds - at_second
         label = self.query_one("#run-progress-label", Static)
         if remaining >= 0:
-            label.update(f"Test en cours… (reste {_format_minutes_seconds(remaining)})")
+            label.update(
+                _("Test en cours… (reste {value})").format(value=_format_minutes_seconds(remaining))
+            )
         else:
             overrun = _format_minutes_seconds(-remaining)
-            label.update(f"Test en cours… (depasse la duree prevue de {overrun})")
+            label.update(
+                _("Test en cours… (dépasse la durée prévue de {overrun})").format(overrun=overrun)
+            )
 
     def stop(self) -> None:
         """A appeler des que le run se termine (succes, echec, ou arret
         automatique) : masque de nouveau la jauge."""
         self.display = False
+
 
 # <-- INFO DEV ---------------------------------------------------------
 # Role :
@@ -148,4 +155,4 @@ class RunProgress(Vertical):
 # - screens/request_panel.py, connection_panel.py, ramp_panel.py :
 #   start() au clic sur "Lancer", update_elapsed() depuis
 #   _PanelProgressNotifier.notify(), stop() une fois l'outcome recu.
-#---------------------------------------------------------------------->
+# ---------------------------------------------------------------------->

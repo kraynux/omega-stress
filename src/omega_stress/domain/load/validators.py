@@ -16,6 +16,7 @@ from omega_stress.domain.load import policies
 from omega_stress.domain.load.duration_presets import DurationPreset, duration_preset
 from omega_stress.domain.load.models import LoadPlan, Thresholds
 from omega_stress.domain.runs.models import IntervalSample, SystemSnapshot
+from omega_stress.shared.i18n import _
 
 PlanValidationError = ValidationError | UnauthorizedTargetError | PrecheckRequiredError
 
@@ -28,15 +29,16 @@ def validate_plan(plan: LoadPlan) -> Result[LoadPlan, PlanValidationError]:
     if not plan.target_authorization_confirmed:
         return Err(
             UnauthorizedTargetError(
-                "Aucun run ne peut demarrer sans confirmation d'autorisation de la cible."
+                _("Aucun run ne peut démarrer sans confirmation d'autorisation de la cible.")
             )
         )
 
     if policies.is_precheck_mandatory(plan.level) and not plan.precheck_validated:
         return Err(
             PrecheckRequiredError(
-                f"Le niveau {plan.level.value} exige un pre-check automatique valide "
-                f"avant de demarrer."
+                _(
+                    "Le niveau {value} exige un pré-check automatique validé avant de démarrer."
+                ).format(value=plan.level.value)
             )
         )
 
@@ -45,15 +47,22 @@ def validate_plan(plan: LoadPlan) -> Result[LoadPlan, PlanValidationError]:
         if plan.family not in preset.compatible_families:
             return Err(
                 ValidationError(
-                    f"Le profil {preset.name} n'est pas compatible avec la famille "
-                    f"{plan.family.value}."
+                    _("Le profil {name} n'est pas compatible avec la famille {value}.").format(
+                        name=preset.name, value=plan.family.value
+                    )
                 )
             )
         if plan.duration.minutes != preset.total_minutes:
             return Err(
                 ValidationError(
-                    f"Duree {plan.duration.minutes} min incoherente avec le profil "
-                    f"{preset.name} ({preset.total_minutes} min attendues)."
+                    _(
+                        "Durée {minutes} min incohérente avec le profil {name} ({total_minutes} "
+                        "min attendues)."
+                    ).format(
+                        minutes=plan.duration.minutes,
+                        name=preset.name,
+                        total_minutes=preset.total_minutes,
+                    )
                 )
             )
         preset_result = evaluate_duration_preset(
@@ -68,21 +77,24 @@ def validate_plan(plan: LoadPlan) -> Result[LoadPlan, PlanValidationError]:
         if plan.duration.minutes not in allowed:
             return Err(
                 ValidationError(
-                    f"Duree {plan.duration.minutes} min non autorisee "
-                    f"pour le niveau {plan.level.value}."
+                    _("Durée {minutes} min non autorisée pour le niveau {value}.").format(
+                        minutes=plan.duration.minutes, value=plan.level.value
+                    )
                 )
             )
 
     if plan.family is TestFamily.RAMP and not plan.ramp_steps:
-        return Err(ValidationError("Un Test charge doit definir au moins une etape de rampe."))
+        return Err(ValidationError(_("Un Test charge doit définir au moins une étape de rampe.")))
     ramp_steps_allowed = plan.family is TestFamily.RAMP or (
         plan.family is TestFamily.CONNECTION and plan.duration_preset_id is not None
     )
     if not ramp_steps_allowed and plan.ramp_steps:
         return Err(
             ValidationError(
-                "Seul un Test charge (ou un Test connexions avec profil de duree) "
-                "peut definir des etapes de rampe."
+                _(
+                    "Seul un Test charge (ou un Test connexions avec profil de durée) peut "
+                    "définir des étapes de rampe."
+                )
             )
         )
 
@@ -101,8 +113,12 @@ def evaluate_threshold(
     if observed_error_rate > thresholds.max_error_rate:
         return Err(
             ThresholdExceededError(
-                f"Taux d'erreur observe {observed_error_rate:.1%} > "
-                f"seuil {thresholds.max_error_rate:.1%}"
+                _(
+                    "Taux d'erreur observé {observed_error_rate:.1%} > seuil {max_error_rate:.1%}"
+                ).format(
+                    observed_error_rate=observed_error_rate,
+                    max_error_rate=thresholds.max_error_rate,
+                )
             )
         )
     if (
@@ -112,8 +128,13 @@ def evaluate_threshold(
     ):
         return Err(
             ThresholdExceededError(
-                f"Latence p95 observee {observed_p95_latency_ms:.0f}ms > "
-                f"seuil {thresholds.max_p95_latency_ms:.0f}ms"
+                _(
+                    "Latence p95 observée {observed_p95_latency_ms:.0f}ms > seuil "
+                    "{max_p95_latency_ms:.0f}ms"
+                ).format(
+                    observed_p95_latency_ms=observed_p95_latency_ms,
+                    max_p95_latency_ms=thresholds.max_p95_latency_ms,
+                )
             )
         )
     return Ok(None)
@@ -150,15 +171,18 @@ def evaluate_duration_preset(
             return Ok(None)
         return Err(
             ValidationError(
-                f"Le niveau {level.value} pour le profil {preset.name} "
-                f"({preset.total_minutes} min) exige la confirmation renforcee exacte."
+                _(
+                    "Le niveau {value} pour le profil {name} ({total_minutes} min) exige la "
+                    "confirmation renforcée exacte."
+                ).format(value=level.value, name=preset.name, total_minutes=preset.total_minutes)
             )
         )
 
     return Err(
         ValidationError(
-            f"Le niveau {level.value} n'est pas propose pour le profil {preset.name} "
-            f"({preset.total_minutes} min)."
+            _(
+                "Le niveau {value} n'est pas proposé pour le profil {name} ({total_minutes} min)."
+            ).format(value=level.value, name=preset.name, total_minutes=preset.total_minutes)
         )
     )
 
@@ -182,7 +206,9 @@ def evaluate_sliding_window(
         return window_result
     return _evaluate_window(
         [s for s in samples if s.at_second > now_second - policies.CRITICAL_WINDOW_SECONDS],
-        window_label=f"{policies.CRITICAL_WINDOW_SECONDS:.0f}s critique",
+        window_label=_("{CRITICAL_WINDOW_SECONDS:.0f}s critique").format(
+            CRITICAL_WINDOW_SECONDS=policies.CRITICAL_WINDOW_SECONDS
+        ),
     )
 
 
@@ -197,8 +223,14 @@ def _evaluate_window(
     if timeout_rate >= policies.WINDOW_TIMEOUT_RATE_ABORT_THRESHOLD:
         return Err(
             ThresholdExceededError(
-                f"Taux de timeout {timeout_rate:.1%} sur fenetre {window_label} >= "
-                f"seuil {policies.WINDOW_TIMEOUT_RATE_ABORT_THRESHOLD:.0%}",
+                _(
+                    "Taux de timeout {timeout_rate:.1%} sur fenêtre {window_label} >= seuil "
+                    "{WINDOW_TIMEOUT_RATE_ABORT_THRESHOLD:.0%}"
+                ).format(
+                    timeout_rate=timeout_rate,
+                    window_label=window_label,
+                    WINDOW_TIMEOUT_RATE_ABORT_THRESHOLD=policies.WINDOW_TIMEOUT_RATE_ABORT_THRESHOLD,
+                ),
                 signal="window_timeout_rate_exceeded",
             )
         )
@@ -207,8 +239,14 @@ def _evaluate_window(
     if http_5xx_rate >= policies.WINDOW_HTTP_5XX_RATE_ABORT_THRESHOLD:
         return Err(
             ThresholdExceededError(
-                f"Taux d'erreurs HTTP 5xx {http_5xx_rate:.1%} sur fenetre {window_label} >= "
-                f"seuil {policies.WINDOW_HTTP_5XX_RATE_ABORT_THRESHOLD:.0%}",
+                _(
+                    "Taux d'erreurs HTTP 5xx {http_5xx_rate:.1%} sur fenêtre {window_label} >= "
+                    "seuil {WINDOW_HTTP_5XX_RATE_ABORT_THRESHOLD:.0%}"
+                ).format(
+                    http_5xx_rate=http_5xx_rate,
+                    window_label=window_label,
+                    WINDOW_HTTP_5XX_RATE_ABORT_THRESHOLD=policies.WINDOW_HTTP_5XX_RATE_ABORT_THRESHOLD,
+                ),
                 signal="window_http_5xx_rate_exceeded",
             )
         )
@@ -217,8 +255,14 @@ def _evaluate_window(
     if total_error_rate >= policies.WINDOW_TOTAL_ERROR_RATE_ABORT_THRESHOLD:
         return Err(
             ThresholdExceededError(
-                f"Taux d'erreurs total {total_error_rate:.1%} sur fenetre {window_label} >= "
-                f"seuil {policies.WINDOW_TOTAL_ERROR_RATE_ABORT_THRESHOLD:.0%}",
+                _(
+                    "Taux d'erreurs total {total_error_rate:.1%} sur fenêtre {window_label} >= "
+                    "seuil {WINDOW_TOTAL_ERROR_RATE_ABORT_THRESHOLD:.0%}"
+                ).format(
+                    total_error_rate=total_error_rate,
+                    window_label=window_label,
+                    WINDOW_TOTAL_ERROR_RATE_ABORT_THRESHOLD=policies.WINDOW_TOTAL_ERROR_RATE_ABORT_THRESHOLD,
+                ),
                 signal="window_error_rate_exceeded",
             )
         )
@@ -262,11 +306,18 @@ def evaluate_generator_resources(
         threshold_text = f"{_single_core_abort_threshold(latest.system):.0f}%"
         return Err(
             ThresholdExceededError(
-                f"CPU generateur >= {threshold_text} (~"
-                f"{policies.GENERATOR_CPU_ABORT_RATIO_OF_SINGLE_CORE:.0%} d'un coeur) ET "
-                f"CPU machine >= {policies.GENERATOR_CPU_ABORT_GLOBAL_THRESHOLD_PERCENT:.0f}% "
-                f"pendant {policies.GENERATOR_CPU_ABORT_SUSTAINED_SAMPLES}s : la machine hote "
-                f"elle-meme est sous pression, pas seulement le generateur",
+                _(
+                    "CPU générateur >= {threshold_text} "
+                    "(~{GENERATOR_CPU_ABORT_RATIO_OF_SINGLE_CORE:.0%} d'un coeur) ET CPU machine "
+                    ">= {GENERATOR_CPU_ABORT_GLOBAL_THRESHOLD_PERCENT:.0f}% pendant "
+                    "{GENERATOR_CPU_ABORT_SUSTAINED_SAMPLES}s : la machine hôte elle-même est "
+                    "sous pression, pas seulement le générateur"
+                ).format(
+                    threshold_text=threshold_text,
+                    GENERATOR_CPU_ABORT_RATIO_OF_SINGLE_CORE=policies.GENERATOR_CPU_ABORT_RATIO_OF_SINGLE_CORE,
+                    GENERATOR_CPU_ABORT_GLOBAL_THRESHOLD_PERCENT=policies.GENERATOR_CPU_ABORT_GLOBAL_THRESHOLD_PERCENT,
+                    GENERATOR_CPU_ABORT_SUSTAINED_SAMPLES=policies.GENERATOR_CPU_ABORT_SUSTAINED_SAMPLES,
+                ),
                 signal="generator_cpu_exceeded",
             )
         )
@@ -278,8 +329,13 @@ def evaluate_generator_resources(
     ):
         return Err(
             ThresholdExceededError(
-                f"Memoire disponible {latest.system.memory_available_percent:.0f}% < "
-                f"seuil {policies.MEMORY_AVAILABLE_ABORT_THRESHOLD_PERCENT:.0f}%",
+                _(
+                    "Mémoire disponible {memory_available_percent:.0f}% < seuil "
+                    "{MEMORY_AVAILABLE_ABORT_THRESHOLD_PERCENT:.0f}%"
+                ).format(
+                    memory_available_percent=latest.system.memory_available_percent,
+                    MEMORY_AVAILABLE_ABORT_THRESHOLD_PERCENT=policies.MEMORY_AVAILABLE_ABORT_THRESHOLD_PERCENT,
+                ),
                 signal="generator_memory_exceeded",
             )
         )
@@ -293,14 +349,20 @@ def evaluate_generator_resources(
     ):
         return Err(
             ThresholdExceededError(
-                f"Descripteurs de fichiers {latest.system.open_files}/"
-                f"{latest.system.open_files_soft_limit} >= "
-                f"{policies.OPEN_FILES_ABORT_RATIO:.0%} de la limite",
+                _(
+                    "Descripteurs de fichiers {open_files}/{open_files_soft_limit} >= "
+                    "{OPEN_FILES_ABORT_RATIO:.0%} de la limite"
+                ).format(
+                    open_files=latest.system.open_files,
+                    open_files_soft_limit=latest.system.open_files_soft_limit,
+                    OPEN_FILES_ABORT_RATIO=policies.OPEN_FILES_ABORT_RATIO,
+                ),
                 signal="generator_fds_exceeded",
             )
         )
 
     return Ok(None)
+
 
 # <-- INFO DEV ---------------------------------------------------------
 # Role :
@@ -368,4 +430,4 @@ def evaluate_generator_resources(
 #   construire le plan d'execution.
 # - application/pipeline/guards/threshold_guard.py appelle
 #   evaluate_threshold() a chaque point de mesure publie par le runner.
-#---------------------------------------------------------------------->
+# ---------------------------------------------------------------------->

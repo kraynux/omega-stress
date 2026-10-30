@@ -30,6 +30,7 @@ from omega_stress.ports.calibration_stage_progress_notifier import (
     CalibrationStageProgressNotifier,
 )
 from omega_stress.ports.calibration_stage_runner import CalibrationStageRunner
+from omega_stress.shared.i18n import _
 from omega_stress.shared.typing import Clock
 
 
@@ -94,9 +95,11 @@ async def run_calibration(
                 )
                 stage_results.append(stage_result)
                 notification_sink(
-                    f"Palier {stage.name} : "
-                    f"{'sain' if stage_result.is_healthy else 'degrade'}"
-                    f"{f' — {stage_result.stop_reason}' if stage_result.stop_reason else ''}"
+                    _("Palier {name} : {value}{value2}").format(
+                        name=stage.name,
+                        value=_("sain") if stage_result.is_healthy else _("dégradé"),
+                        value2=f" — {stage_result.stop_reason}" if stage_result.stop_reason else "",
+                    )
                 )
 
                 if stage_result.is_healthy:
@@ -126,6 +129,7 @@ async def run_calibration(
     )
     calibration_repository.save(result)
     return Ok(result)
+
 
 # <-- INFO DEV ---------------------------------------------------------
 # Role :
@@ -186,4 +190,4 @@ async def run_calibration(
 # Comment il sera utilise (apercu) :
 # - interfaces/tui/screens/calibration_screen.py (bouton "Lancer le
 #   calibrage"), interfaces/cli/commands/calibrate_command.py.
-#---------------------------------------------------------------------->
+# ---------------------------------------------------------------------->

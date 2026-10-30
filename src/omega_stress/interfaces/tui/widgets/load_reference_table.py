@@ -6,6 +6,7 @@ from __future__ import annotations
 from textual.widgets import DataTable
 
 from omega_stress.interfaces.tui.presenters.load_reference_presenter import load_reference_rows
+from omega_stress.shared.i18n import _
 
 
 class LoadReferenceTable(DataTable):
@@ -17,13 +18,13 @@ class LoadReferenceTable(DataTable):
         self.cursor_type = "row"
         self.zebra_stripes = True
         self.add_columns(
-            "Type de test",
-            "Niveau",
-            "Dimension pilotee",
-            "Cible visee",
-            "Simultaneite reelle",
-            "Pre-check",
-            "Durees disponibles",
+            _("Type de test"),
+            _("Niveau"),
+            _("Dimension pilotée"),
+            _("Cible visée"),
+            _("Simultanéité réelle"),
+            _("Pré-check"),
+            _("Durées disponibles"),
         )
         for row in load_reference_rows():
             self.add_row(

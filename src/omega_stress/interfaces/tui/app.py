@@ -19,6 +19,7 @@ from omega_stress.interfaces.tui.controllers.startup_controller import (
     StartupState,
     resolve_startup_state,
 )
+from omega_stress.interfaces.tui.language_setting import notify_language_at_startup
 from omega_stress.interfaces.tui.rendering.stylesheet_loader import load_paths_for
 from omega_stress.interfaces.tui.rendering.textual_theme_builder import build_all_textual_themes
 from omega_stress.interfaces.tui.screens.help_screen import HelpScreen
@@ -27,6 +28,7 @@ from omega_stress.interfaces.tui.screens.quit_confirm import QuitConfirmScreen
 from omega_stress.interfaces.tui.screens.settings_screen import DEFAULT_SCREENSHOT_DIR_KEY
 from omega_stress.interfaces.tui.screens.splash import SplashScreen
 from omega_stress.interfaces.tui.screens.terminal_warning import TerminalWarningScreen
+from omega_stress.shared.i18n import _
 
 if TYPE_CHECKING:
     from collections.abc import Iterable
@@ -39,7 +41,7 @@ if TYPE_CHECKING:
     # app/bootstrap.py, jamais assemble ni importe ici a l'execution.
     from omega_stress.app.dependency_container import DependencyContainer
 
-TITLE = "🗲 OMEGA-STRESS"
+TITLE = _("🗲 OMEGA-STRESS")
 
 
 class OmegaStressApp(App[None]):
@@ -48,17 +50,17 @@ class OmegaStressApp(App[None]):
 
     TITLE = TITLE
     BINDINGS = [
-        ("t", "cycle_theme", "Theme suivant"),
-        ("a", "help", "Aide"),
-        ("r", "refresh_terminal", "Rafraichir"),
-        ("q", "quit", "Quitter"),
-        Binding("ctrl+p", "command_palette", "Palette de commandes", show=False),
+        ("t", "cycle_theme", _("Thème suivant")),
+        ("a", "help", _("Aide")),
+        ("r", "refresh_terminal", _("Rafraîchir")),
+        ("q", "quit", _("Quitter")),
+        Binding("ctrl+p", "command_palette", _("Palette de commandes"), show=False),
         Binding(
             "ctrl+q",
             "quit",
-            "Quitter",
+            _("Quitter"),
             show=False,
-            tooltip="Quitter l'application (avec confirmation).",
+            tooltip=_("Quitter l'application (avec confirmation)."),
         ),
     ]
 
@@ -70,21 +72,28 @@ class OmegaStressApp(App[None]):
         )
         render_profile = RenderProfile(self._startup_state.terminal.render_profile)
         css_path = cast("list[str | PurePath]", load_paths_for(render_profile))
+        self.pending_language: str | None = None
+        """Langue choisie dans les Reglages : __main__.py relance l'interface apres la fermeture."""
         super().__init__(css_path=css_path)
         for theme in build_all_textual_themes():
             self.register_theme(theme)
         self.theme = self._startup_state.theme.theme_name
 
     def on_mount(self) -> None:
+        notify_language_at_startup(self)
         self.push_screen(SplashScreen(container=self._container), self._after_splash)
 
     def _after_splash(self, _result: None) -> None:
         terminal = self._startup_state.terminal
         too_small = terminal.columns < MINIMUM_USABLE_COLUMNS or terminal.rows < MINIMUM_USABLE_ROWS
         if terminal.render_profile == RenderProfile.MONO.value or too_small:
-            message = (
-                f"Terminal detecte : {terminal.family} ({terminal.columns}x{terminal.rows}). "
-                f"Rendu applique : {terminal.render_profile}."
+            message = _(
+                "Terminal détecté : {family} ({columns}x{rows}). Rendu appliqué : {render_profile}."
+            ).format(
+                family=terminal.family,
+                columns=terminal.columns,
+                rows=terminal.rows,
+                render_profile=terminal.render_profile,
             )
             self.push_screen(TerminalWarningScreen(message=message), self._show_home)
         else:
@@ -115,7 +124,10 @@ class OmegaStressApp(App[None]):
             # theme visuel n'est donc PAS change dans ce cas precis
             # (contrairement au reste de la suite) : juste avertir sans
             # planter suffit deja a corriger le bug rapporte.
-            self.notify(f"Theme non change (echec d'enregistrement) : {exc}", severity="warning")
+            self.notify(
+                _("Thème non changé (échec d'enregistrement) : {exc}").format(exc=exc),
+                severity="warning",
+            )
             return
         self.theme = status.theme_name
 
@@ -131,12 +143,17 @@ class OmegaStressApp(App[None]):
         self._startup_state = StartupState(terminal=terminal, theme=self._startup_state.theme)
         self._update_sub_title()
         self.notify(
-            f"{terminal.family} ({terminal.columns}x{terminal.rows})", title="Terminal rafraichi"
+            _("{family} ({columns}x{rows})").format(
+                family=terminal.family, columns=terminal.columns, rows=terminal.rows
+            ),
+            title=_("Terminal rafraîchi"),
         )
 
     def _update_sub_title(self) -> None:
         terminal = self._startup_state.terminal
-        self.sub_title = f"{self.theme} | {terminal.columns}x{terminal.rows}"
+        self.sub_title = _("{theme} | {columns}x{rows}").format(
+            theme=self.theme, columns=terminal.columns, rows=terminal.rows
+        )
 
     def watch_theme(self, _theme_name: str) -> None:
         """Tient le sous-titre du Header a jour (theme actif + taille du
@@ -155,7 +172,7 @@ class OmegaStressApp(App[None]):
         # propre action_command_palette() a exactement le meme appel).
         if self.use_command_palette and not CommandPalette.is_open(cast("App[object]", self)):
             self.push_screen(
-                CommandPalette(id="--command-palette", placeholder="Rechercher une commande…")
+                CommandPalette(id="--command-palette", placeholder=_("Rechercher une commande…"))
             )
 
     def get_system_commands(self, screen: Screen) -> Iterable[SystemCommand]:
@@ -164,23 +181,23 @@ class OmegaStressApp(App[None]):
         reste de l'application est en francais) plutot que d'appeler
         super() — PAS de traduction 1 pour 1 : Agrandir/Reduire
         (Maximize/Minimize) sont deliberement omises, voir INFO DEV."""
-        yield SystemCommand("Theme", "Changer le theme actif", self.action_change_theme)
+        yield SystemCommand(_("Thème"), _("Changer le thème actif"), self.action_change_theme)
         yield SystemCommand(
-            "Quitter", "Quitter l'application (avec confirmation)", self.action_quit
+            _("Quitter"), _("Quitter l'application (avec confirmation)"), self.action_quit
         )
         if screen.query("HelpPanel"):
             yield SystemCommand(
-                "Raccourcis", "Masquer l'aide des raccourcis", self.action_hide_help_panel
+                _("Raccourcis"), _("Masquer l'aide des raccourcis"), self.action_hide_help_panel
             )
         else:
             yield SystemCommand(
-                "Raccourcis",
-                "Afficher l'aide du widget selectionne et les raccourcis disponibles",
+                _("Raccourcis"),
+                _("Afficher l'aide du widget sélectionné et les raccourcis disponibles"),
                 self.action_show_help_panel,
             )
         yield SystemCommand(
-            "Capture d'ecran",
-            "Enregistrer une capture SVG de l'ecran courant",
+            _("Capture d'écran"),
+            _("Enregistrer une capture SVG de l'écran courant"),
             lambda: self.set_timer(0.1, self._deliver_screenshot_to_configured_dir),
         )
 
@@ -222,10 +239,11 @@ class OmegaStressApp(App[None]):
         logging.getLogger("omega_stress").error("Exception non prevue", exc_info=error)
         self.notify(
             str(error) or type(error).__name__,
-            title="Erreur inattendue",
+            title=_("Erreur inattendue"),
             severity="error",
             timeout=10,
         )
+
 
 # <-- INFO DEV ---------------------------------------------------------
 # Role :
@@ -361,4 +379,4 @@ class OmegaStressApp(App[None]):
 # - src/omega_stress/__main__.py (composition root), quand aucune
 #   sous-commande CLI n'est reconnue (voir son propre INFO DEV pour le
 #   detail du dispatch).
-#---------------------------------------------------------------------->
+# ---------------------------------------------------------------------->

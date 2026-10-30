@@ -10,6 +10,7 @@ fichier).
 from __future__ import annotations
 
 from omega_stress.core.enums import IntensityLevel
+from omega_stress.shared.i18n import _
 
 SAMPLE_INTERVAL_SECONDS: float = 1.0
 """Frequence d'echantillonnage des metriques pendant un run. Constante de
@@ -237,15 +238,13 @@ infrastructure/calibration/stage_runner.py (asyncio.Semaphore(vu_target)),
 jamais retro-applique au generateur reel avant ce correctif."""
 
 SAFETY_MODE_DESCRIPTION: str = (
-    "Le mode securite (actif par defaut) arrete automatiquement un test "
-    "si CETTE machine - pas la cible testee - semble en danger (CPU/"
-    "memoire du generateur). Le desactiver ne change rien aux "
-    "protections de la cible (taux d'erreur, latence : toujours "
-    "actives) : seul le risque de ralentir ou geler temporairement "
-    "VOTRE ordinateur pendant la duree du test augmente, surtout sur "
-    "les niveaux intensifs (Connexions Agressif et au-dela, Requetes "
-    "Maximum). A desactiver si vous savez que votre machine peut "
-    "encaisser plus que ce que le mode securite suppose par defaut."
+    _("Le mode sécurité (actif par défaut) arrête automatiquement un test si CETTE machine - "
+      "pas la cible testée - semble en danger (CPU/mémoire du générateur). Le désactiver ne "
+      "change rien aux protections de la cible (taux d'erreur, latence : toujours activés) : "
+      "seul le risque de ralentir ou geler temporairement VOTRE ordinateur pendant la durée du "
+      "test augmente, surtout sur les niveaux intensifs (Connexions Agressif et au-delà, "
+      "Requêtes Maximum). À désactiver si vous savez que votre machine peut encaisser plus que "
+      "ce que le mode sécurité suppose par défaut.")
 )
 """Texte explicatif UNIQUE (2026-09-01, "mode securite" a cocher au
 lancement, bug reel rapporte avec captures d'ecran) — reutilise tel quel

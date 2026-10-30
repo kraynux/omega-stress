@@ -14,6 +14,7 @@ from omega_stress.interfaces.tui.controllers import history_controller
 from omega_stress.interfaces.tui.presenters.theme_presenter import available_export_theme_names
 from omega_stress.interfaces.tui.screens._base import OmegaScreen
 from omega_stress.interfaces.tui.screens.settings_screen import DEFAULT_EXPORT_DIR_KEY
+from omega_stress.shared.i18n import LANGUAGE, _, translating_as
 
 if TYPE_CHECKING:
     from omega_stress.app.dependency_container import DependencyContainer
@@ -47,26 +48,26 @@ class ExportDialogScreen(OmegaScreen):
     def compose(self) -> ComposeResult:
         yield Header()
         with Vertical(classes="omega-panel"):
-            yield Static("EXPORTER LE RAPPORT", classes="omega-title")
+            yield Static(_("EXPORTER LE RAPPORT"), classes="omega-title")
             yield Select(
                 _FORMAT_OPTIONS,
-                prompt="Format",
+                prompt=_("Format"),
                 id="format",
                 allow_blank=False,
                 value=ExportFormat.HTML,
             )
-            yield Input(placeholder="Dossier de destination", id="destination")
+            yield Input(placeholder=_("Dossier de destination"), id="destination")
             yield Select(
                 [(name, name) for name in available_export_theme_names()],
-                prompt="Theme (HTML uniquement)",
+                prompt=_("Thème (HTML uniquement)"),
                 id="export-theme",
             )
             yield Static("", id="status")
             with Horizontal(classes="omega-actions"):
                 with Container(classes="omega-btn-frame"):
-                    yield Button("Exporter", id="export", variant="primary")
+                    yield Button(_("Exporter"), id="export", variant="primary")
                 with Container(classes="omega-btn-frame"):
-                    yield Button("Retour", id="back")
+                    yield Button(_("Retour"), id="back")
         yield Footer()
 
     def on_mount(self) -> None:
@@ -88,27 +89,32 @@ class ExportDialogScreen(OmegaScreen):
         export_theme = self.query_one("#export-theme", Select).value
 
         if not isinstance(export_format, ExportFormat):
-            status.update("Choisissez un format.")
+            status.update(_("Choisissez un format."))
             return
         if not destination_path:
-            status.update("Indiquez un dossier de destination.")
+            status.update(_("Indiquez un dossier de destination."))
             return
         theme_name = export_theme if isinstance(export_theme, str) else "omega-base"
 
-        result = await history_controller.export_report(
-            self._run_id,
-            export_format=export_format,
-            destination_path=destination_path,
-            export_theme=theme_name,
-            run_repository=self._container.run_repository,
-            target_repository=self._container.target_repository,
-            export_repository=self._container.export_repository,
-            exporters=self._container.exporters,
-        )
+        # Lot N (Q5) : rapport ecrit dans la langue des exports (reglage ; dans la suite, le sien).
+        with translating_as(LANGUAGE.export_state(self._container.settings_store)):
+            result = await history_controller.export_report(
+                self._run_id,
+                export_format=export_format,
+                destination_path=destination_path,
+                export_theme=theme_name,
+                run_repository=self._container.run_repository,
+                target_repository=self._container.target_repository,
+                export_repository=self._container.export_repository,
+                exporters=self._container.exporters,
+            )
         if isinstance(result, Err):
             status.update(str(result.error))
             return
-        status.update(f"Rapport ecrit : {result.value.written_path}")
+        status.update(
+            _("Rapport écrit : {written_path}").format(written_path=result.value.written_path)
+        )
+
 
 # <-- INFO DEV ---------------------------------------------------------
 # Role :
@@ -153,4 +159,4 @@ class ExportDialogScreen(OmegaScreen):
 #   sauve au blur/validation, met a jour DEFAULT_EXPORT_DIR_KEY).
 # Comment il sera utilise :
 # - interfaces/tui/screens/run_details.py (bouton "Exporter").
-#---------------------------------------------------------------------->
+# ---------------------------------------------------------------------->

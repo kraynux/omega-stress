@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from omega_stress.application.dto.profile_dto import ProfileDTO
+from omega_stress.shared.i18n import _
 
 
 def sorted_for_display(profiles: tuple[ProfileDTO, ...]) -> tuple[ProfileDTO, ...]:
@@ -13,7 +14,7 @@ def sorted_for_display(profiles: tuple[ProfileDTO, ...]) -> tuple[ProfileDTO, ..
 
 def status_label(profile: ProfileDTO) -> str:
     """Libelle humain du statut fige/modifiable d'un profil."""
-    return "Fige" if profile.frozen else "Modifiable"
+    return _("Figé") if profile.frozen else _("Modifiable")
 
 # <-- INFO DEV ---------------------------------------------------------
 # Role :

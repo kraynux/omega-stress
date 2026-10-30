@@ -15,6 +15,7 @@ from omega_stress.domain.calibration.policies import (
     CALIBRATION_PAYLOAD_SIZE_BYTES,
     CALIBRATION_TARGET_PATH,
 )
+from omega_stress.shared.i18n import _
 
 _PAYLOAD = b"o" * CALIBRATION_PAYLOAD_SIZE_BYTES
 
@@ -28,8 +29,8 @@ class _CalibrationRequestHandler(http.server.BaseHTTPRequestHandler):
             self.end_headers()
             return
         self.send_response(200)
-        self.send_header("Content-Type", "application/octet-stream")
-        self.send_header("Content-Length", str(CALIBRATION_PAYLOAD_SIZE_BYTES))
+        self.send_header(_("Content-Type"), "application/octet-stream")
+        self.send_header(_("Content-Length"), str(CALIBRATION_PAYLOAD_SIZE_BYTES))
         self.end_headers()
         self.wfile.write(_PAYLOAD)
 

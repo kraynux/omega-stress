@@ -133,7 +133,7 @@ async def test_pinning_a_target_makes_it_appear_in_the_known_targets_list(contai
         await pilot.pause()
         await pilot.click("#pin")
         await pilot.pause()
-        assert "epinglee" in str(screen.query_one("#status").content)
+        assert "épinglée" in str(screen.query_one("#status").content)
 
         await pilot.click("#back")
         await pilot.pause()

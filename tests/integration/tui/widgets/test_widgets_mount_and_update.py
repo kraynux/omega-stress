@@ -79,7 +79,7 @@ _TARGET = TargetDTO(
 
 
 async def test_stat_card_updates_its_value():
-    card = StatCard("Debit observe")
+    card = StatCard("Débit observé")
 
     class _ProbeApp(App):
         def compose(self) -> ComposeResult:
@@ -118,7 +118,7 @@ async def test_run_progress_shows_a_deterministic_countdown():
         assert "00:15" in label.visual.plain
 
         widget.update_elapsed(75.0)  # depasse la duree prevue
-        assert "depasse" in label.visual.plain
+        assert "dépasse" in label.visual.plain
         assert "00:15" in label.visual.plain
 
 
@@ -212,7 +212,7 @@ async def test_authorization_checkbox_has_expected_label():
 
     app = _ProbeApp()
     async with app.run_test():
-        assert "autorise" in str(checkbox.label)
+        assert "autorisé" in str(checkbox.label)
         assert checkbox.value is False
 
 

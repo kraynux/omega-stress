@@ -107,7 +107,7 @@ async def test_threshold_breach_triggers_auto_stop_and_short_circuits():
 
     assert finished.result.verdict is RunVerdict.AUTO_STOPPED
     assert len(notifier.notifications) == 1  # arrete avant le 2e echantillon
-    assert any("Arret automatique" in n for n in notifications)
+    assert any("Arrêt automatique" in n for n in notifications)
     assert [e.action for e in audit_events] == ["run_started", "run_finished"]
 
 
@@ -130,7 +130,7 @@ async def test_sliding_window_breach_stops_a_run_that_per_interval_threshold_alo
     assert finished.result.verdict is RunVerdict.AUTO_STOPPED
     assert len(notifier.notifications) == 2  # arret des que le volume minimum est atteint
     assert finished.result.events[0].kind == "window_error_rate_exceeded"
-    assert any("fenetre" in n for n in notifications)
+    assert any("fenêtre" in n for n in notifications)
 
 
 async def test_runner_failure_produces_failed_verdict():

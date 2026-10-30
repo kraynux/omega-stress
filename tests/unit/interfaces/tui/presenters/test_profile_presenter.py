@@ -43,5 +43,5 @@ def test_same_favorite_status_sorts_alphabetically():
 
 
 def test_status_label_reflects_frozen_flag():
-    assert status_label(_profile("A", frozen=True)) == "Fige"
+    assert status_label(_profile("A", frozen=True)) == "Figé"
     assert status_label(_profile("A", frozen=False)) == "Modifiable"

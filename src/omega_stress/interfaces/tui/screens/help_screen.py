@@ -14,69 +14,66 @@ from omega_stress.interfaces.tui.presenters.load_reference_presenter import (
 from omega_stress.interfaces.tui.screens._base import OmegaScreen
 from omega_stress.interfaces.tui.widgets.duration_preset_table import DurationPresetTable
 from omega_stress.interfaces.tui.widgets.load_reference_table import LoadReferenceTable
+from omega_stress.shared.i18n import _
 
 _SHORTCUTS = (
-    ("Haut / Bas", "Naviguer entre les elements d'un ecran"),
-    ("Tab / Maj+Tab", "Naviguer entre les champs d'un formulaire"),
-    ("Echap", "Retour a l'ecran precedent (confirmation de sortie sur l'accueil)"),
-    ("t", "Theme suivant"),
-    ("a", "Cette aide"),
-    ("q", "Quitter (avec confirmation)"),
+    (_("Haut / Bas"), _("Naviguer entre les éléments d'un écran")),
+    (_("Tab / Maj+Tab"), _("Naviguer entre les champs d'un formulaire")),
+    (_("Échap"), _("Retour à l'écran précédent (confirmation de sortie sur l'accueil)")),
+    ("t", _("Thème suivant")),
+    ("a", _("Cette aide")),
+    ("q", _("Quitter (avec confirmation)")),
 )
 
 _SECTIONS = (
     (
-        "Test requetes / connexions / charge",
-        "Trois familles de test encadrees : debit constant, nombre de "
-        "connexions simultanees, ou montee progressive. Chaque lancement "
-        "exige une cible (saisie manuelle ou cible epinglee) et une "
-        "confirmation d'autorisation, sauf cible deja epinglee-autorisee.",
+        _("Test requêtes / connexions / charge"),
+        _("Trois familles de test encadrées : débit constant, nombre de connexions "
+          "simultanées, ou montée progressive. Chaque lancement exige une cible (saisie "
+          "manuelle ou cible épinglée) et une confirmation d'autorisation, sauf cible déjà "
+          "épinglée-autorisée."),
     ),
     (
-        "Profils",
-        "Un profil fige un jeu de parametres (cible, type de test, "
-        "intensite, duree, seuils) pour le reutiliser tel quel — creer, "
-        "puis figer, un profil depuis cet ecran.",
+        _("Profils"),
+        _("Un profil fige un jeu de paramètres (cible, type de test, intensité, durée, seuils) "
+          "pour le réutiliser tel quel — créer, puis figer, un profil depuis cet écran."),
     ),
     (
-        "Cibles",
-        "Epingler une adresse dispense de recocher la confirmation "
-        "d'autorisation a chaque lancement sur cette meme cible.",
+        _("Cibles"),
+        _("Épingler une adresse dispense de recocher la confirmation d'autorisation à chaque "
+          "lancement sur cette même cible."),
     ),
     (
-        "Historique",
-        "Liste tous les runs passes : detail complet, ou relecture "
-        "(uniquement pour un run lie a un profil fige).",
+        _("Historique"),
+        _("Liste tous les runs passés : détail complet, ou relecture (uniquement pour un run "
+          "lié à un profil figé)."),
     ),
     (
-        "Export",
-        "Depuis le detail d'un run termine : JSON (donnees brutes, "
-        "reimportables), CSV (analyse tabulaire), ou HTML (rapport "
-        "lisible avec chronologie complete par intervalle).",
+        _("Export"),
+        _("Depuis le détail d'un run terminé : JSON (données brutes, réimportables), CSV "
+          "(analyse tabulaire), ou HTML (rapport lisible avec chronologie complète par "
+          "intervalle)."),
     ),
     (
-        "Profils de duree D1-D6 (mode profil)",
-        "En plus de la duree manuelle (1 a 5 min selon le niveau), "
-        "chaque ecran de lancement propose un mode profil : une duree "
-        "fixe nommee (1 a 120 min) qui limite les niveaux accessibles, "
-        "avec un niveau supplementaire debloque par une confirmation "
-        "renforcee (texte exact a saisir). Voir le tableau ci-dessous.",
+        _("Profils de durée D1-D6 (mode profil)"),
+        _("En plus de la durée manuelle (1 à 5 min selon le niveau), chaque écran de lancement "
+          "propose un mode profil : une durée fixe nommée (1 à 120 min) qui limite les niveaux "
+          "accessibles, avec un niveau supplémentaire débloqué par une confirmation renforcée "
+          "(texte exact à saisir). Voir le tableau ci-dessous."),
     ),
     (
-        "Calibrage",
-        "Mesure la capacite reelle de CETTE machine (pas la cible testee) "
-        "via un serveur de boucle locale, par paliers de charge "
-        "croissante. Le resultat (VU_safe/RPS_safe) n'est pas applique "
-        "automatiquement aux tests reels : consultable depuis l'ecran "
-        "Calibrage, et utile comme repere quand le mode securite est "
-        "desactive (voir ci-dessous).",
+        _("Calibrage"),
+        _("Mesure la capacité réelle de CETTE machine (pas la cible testée) via un serveur de "
+          "boucle locale, par paliers de charge croissante. Le résultat (VU_safe/RPS_safe) "
+          "n'est pas appliqué automatiquement aux tests réels : consultable depuis l'écran "
+          "Calibrage, et utile comme repère quand le mode sécurité est désactivé (voir "
+          "ci-dessous)."),
     ),
     (
-        "Mode securite",
+        _("Mode sécurité"),
         SAFETY_MODE_DESCRIPTION
-        + " Si un calibrage a ete effectue sur cette machine, l'ecran de "
-        "lancement compare le niveau choisi a son enveloppe des que la "
-        "case est decochee.",
+        + _(" Si un calibrage a été effectué sur cette machine, l'écran de lancement compare "
+            "le niveau choisi à son enveloppe dès que la case est décochée."),
     ),
 )
 
@@ -89,32 +86,40 @@ class HelpScreen(OmegaScreen):
     def compose(self) -> ComposeResult:
         yield Header()
         with Vertical(classes="omega-panel"):
-            yield Static("AIDE", classes="omega-title")
-            yield Static("Raccourcis clavier", classes="omega-subtitle")
+            yield Static(_("AIDE"), classes="omega-title")
+            yield Static(_("Raccourcis clavier"), classes="omega-subtitle")
             for key, description in _SHORTCUTS:
-                yield Static(f"{key:<14} {description}")
+                yield Static(_("{key:<14} {description}").format(key=key, description=description))
             yield Static("")
-            yield Static("Fonctions", classes="omega-subtitle")
+            yield Static(_("Fonctions"), classes="omega-subtitle")
             for title, description in _SECTIONS:
                 yield Static(f"[b]{title}[/b]\n{description}\n")
-            yield Static("Reperes de charge (valeurs exactes par niveau)", classes="omega-subtitle")
             yield Static(
-                f"[b]Test requetes[/b] — {load_reference_family_note(TestFamily.REQUEST)}\n"
-                f"[b]Test connexions[/b] — {load_reference_family_note(TestFamily.CONNECTION)}\n"
-                f"[b]Test charge[/b] — {load_reference_family_note(TestFamily.RAMP)}\n"
+                _("Repères de charge (valeurs exactes par niveau)"), classes="omega-subtitle"
+            )
+            yield Static(
+                _(
+                    "[b]Test requêtes[/b] — {value}\n[b]Test connexions[/b] — {value2}\n[b]Test "
+                    "charge[/b] — {value3}\n"
+                ).format(
+                    value=load_reference_family_note(TestFamily.REQUEST),
+                    value2=load_reference_family_note(TestFamily.CONNECTION),
+                    value3=load_reference_family_note(TestFamily.RAMP),
+                )
             )
             yield LoadReferenceTable(id="load-reference")
             yield Static("")
-            yield Static("Profils de duree D1-D6 (mode profil)", classes="omega-subtitle")
+            yield Static(_("Profils de durée D1-D6 (mode profil)"), classes="omega-subtitle")
             yield DurationPresetTable(id="duration-preset-reference")
             yield Static("")
             with Horizontal(classes="omega-actions"), Container(classes="omega-btn-frame"):
-                yield Button("Retour", id="back")
+                yield Button(_("Retour"), id="back")
         yield Footer()
 
     def on_button_pressed(self, event: Button.Pressed) -> None:
         if event.button.id == "back":
             self.dismiss()
+
 
 # <-- INFO DEV ---------------------------------------------------------
 # Role :
@@ -149,4 +154,4 @@ class HelpScreen(OmegaScreen):
 # Comment il sera utilise :
 # - interfaces/tui/app.py::action_help() (touche `a`, global).
 # - interfaces/tui/screens/home.py (bouton "Aide").
-#---------------------------------------------------------------------->
+# ---------------------------------------------------------------------->

@@ -21,6 +21,7 @@ from omega_stress.ports.profile_repository import ProfileRepository
 from omega_stress.ports.run_progress_notifier import RunProgressNotifier
 from omega_stress.ports.run_repository import RunRepository
 from omega_stress.ports.target_repository import TargetRepository
+from omega_stress.shared.i18n import _
 from omega_stress.shared.typing import Clock, IdFactory
 
 _REQUIRED_CAPABILITY = "system.load_capacity"
@@ -57,24 +58,34 @@ async def replay_run(
     a pu changer depuis (voir Points cles)."""
     run = run_repository.get(run_id)
     if run is None:
-        return Err(ValidationError(f"Run {run_id!r} introuvable."))
+        return Err(ValidationError(_("Run {run_id!r} introuvable.").format(run_id=run_id)))
     if not can_be_replayed(run):
         return Err(
             ValidationError(
-                f"Le run {run_id!r} ne reference aucun profil et ne peut pas etre rejoue."
+                _("Le run {run_id!r} ne référence aucun profil et ne peut pas être rejoué.").format(
+                    run_id=run_id
+                )
             )
         )
 
     profile = profile_repository.get(run.profile_id)  # type: ignore[arg-type]
     if profile is None:
         return Err(
-            ValidationError(f"Profil {run.profile_id!r} introuvable, impossible de rejouer ce run.")
+            ValidationError(
+                _("Profil {profile_id!r} introuvable, impossible de rejouer ce run.").format(
+                    profile_id=run.profile_id
+                )
+            )
         )
 
     target = target_repository.get(run.target_id)
     if target is None:
         return Err(
-            ValidationError(f"Cible {run.target_id!r} introuvable, impossible de rejouer ce run.")
+            ValidationError(
+                _("Cible {target_id!r} introuvable, impossible de rejouer ce run.").format(
+                    target_id=run.target_id
+                )
+            )
         )
 
     authorization = check_authorization(
@@ -113,6 +124,7 @@ async def replay_run(
         profile_repository=profile_repository,
     )
 
+
 # <-- INFO DEV ---------------------------------------------------------
 # Role :
 # - Reconstruit un LoadPlan a partir du profil fige reference par un run
@@ -144,4 +156,4 @@ async def replay_run(
 # Comment il sera utilise (apercu) :
 # - interfaces/tui/screens/history.py (action "relancer"),
 #   interfaces/cli/commands/history_command.py.
-#---------------------------------------------------------------------->
+# ---------------------------------------------------------------------->

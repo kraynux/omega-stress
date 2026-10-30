@@ -32,10 +32,10 @@ def test_verdict_label_for_in_progress_run():
 
 
 def test_verdict_label_for_known_verdicts():
-    assert verdict_label(_run(verdict="success")) == "Reussi"
-    assert verdict_label(_run(verdict="degraded")) == "Degrade"
-    assert verdict_label(_run(verdict="auto_stopped")) == "Arret automatique"
-    assert verdict_label(_run(verdict="failed")) == "Echec"
+    assert verdict_label(_run(verdict="success")) == "Réussi"
+    assert verdict_label(_run(verdict="degraded")) == "Dégradé"
+    assert verdict_label(_run(verdict="auto_stopped")) == "Arrêt automatique"
+    assert verdict_label(_run(verdict="failed")) == "Échec"
 
 
 def test_metrics_summary_empty_for_in_progress_run():
@@ -89,7 +89,7 @@ def test_verdict_explanation_distinguishes_manual_from_threshold_stop():
             RunEventDTO(
                 occurred_at="2026-08-24T10:00:00",
                 kind="manual_stop",
-                message="Arrete manuellement par l'utilisateur.",
+                message="Arrêté manuellement par l'utilisateur.",
             ),
         ),
     )
@@ -105,5 +105,5 @@ def test_verdict_explanation_distinguishes_manual_from_threshold_stop():
     )
 
     assert "manuellement" in verdict_explanation(manually_stopped)
-    assert "depassement de seuil" not in verdict_explanation(manually_stopped)
-    assert "depassement de seuil" in verdict_explanation(threshold_stopped)
+    assert "dépassement de seuil" not in verdict_explanation(manually_stopped)
+    assert "dépassement de seuil" in verdict_explanation(threshold_stopped)

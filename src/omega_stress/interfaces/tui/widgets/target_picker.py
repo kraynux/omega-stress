@@ -8,6 +8,7 @@ from textual.widgets import Input, Label, OptionList
 from textual.widgets.option_list import Option
 
 from omega_stress.application.dto.target_dto import TargetDTO
+from omega_stress.shared.i18n import _
 
 
 class TargetPicker(Vertical):
@@ -23,10 +24,10 @@ class TargetPicker(Vertical):
     """
 
     def compose(self) -> ComposeResult:
-        yield Label("Cible", classes="omega-subtitle")
+        yield Label(_("Cible"), classes="omega-subtitle")
         yield OptionList(id="known-targets")
         yield Input(
-            placeholder="ou saisir une adresse (ex. https://exemple.org)",
+            placeholder=_("ou saisir une adresse (ex. https://exemple.org)"),
             id="manual-target",
         )
 

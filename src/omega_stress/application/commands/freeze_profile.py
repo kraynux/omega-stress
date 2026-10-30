@@ -10,6 +10,7 @@ from omega_stress.core.results import Err, Ok, Result
 from omega_stress.domain.errors import ValidationError
 from omega_stress.domain.profiles.service import freeze
 from omega_stress.ports.profile_repository import ProfileRepository
+from omega_stress.shared.i18n import _
 
 
 def freeze_profile(
@@ -21,7 +22,9 @@ def freeze_profile(
     (afficher un message, refuser l'action) etant identique."""
     profile = profile_repository.get(profile_id)
     if profile is None:
-        return Err(ValidationError(f"Profil {profile_id!r} introuvable."))
+        return Err(
+            ValidationError(_("Profil {profile_id!r} introuvable.").format(profile_id=profile_id))
+        )
 
     frozen = freeze(profile, now=now)
     if isinstance(frozen, Err):
@@ -29,6 +32,7 @@ def freeze_profile(
 
     profile_repository.save(frozen.value)
     return Ok(profile_to_dto(frozen.value))
+
 
 # <-- INFO DEV ---------------------------------------------------------
 # Role :
@@ -48,4 +52,4 @@ def freeze_profile(
 # Comment il sera utilise (apercu) :
 # - interfaces/tui/screens/profiles.py (action "figer"),
 #   interfaces/cli/commands/profile_command.py.
-#---------------------------------------------------------------------->
+# ---------------------------------------------------------------------->

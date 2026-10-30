@@ -7,6 +7,7 @@ from datetime import datetime
 from omega_stress.core.results import Err, Ok, Result
 from omega_stress.domain.errors import UnauthorizedTargetError
 from omega_stress.domain.targets.models import PinnedTarget, Target
+from omega_stress.shared.i18n import _
 
 
 def pin(
@@ -20,11 +21,13 @@ def pin(
     if not authorization_confirmed:
         return Err(
             UnauthorizedTargetError(
-                f"Impossible d'epingler {target.address.base_url} sans confirmation "
-                f"d'autorisation."
+                _("Impossible d'épingler {base_url} sans confirmation d'autorisation.").format(
+                    base_url=target.address.base_url
+                )
             )
         )
     return Ok(PinnedTarget(target=target, pinned_at=now, authorized_at=now))
+
 
 # <-- INFO DEV ---------------------------------------------------------
 # Role :
@@ -51,4 +54,4 @@ def pin(
 # - application/commands/pin_target.py appelle pin() avec la valeur de la
 #   case a cocher confirmee par l'utilisateur, puis persiste le resultat
 #   via le port target_repository.
-#---------------------------------------------------------------------->
+# ---------------------------------------------------------------------->

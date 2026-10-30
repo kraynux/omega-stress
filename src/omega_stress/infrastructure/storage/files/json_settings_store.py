@@ -6,6 +6,7 @@ import json
 from pathlib import Path
 
 from omega_stress.infrastructure.exceptions import StorageError
+from omega_stress.shared.i18n import _
 
 
 class JsonSettingsStore:
@@ -37,7 +38,9 @@ class JsonSettingsStore:
                 data: dict[str, str] = json.load(handle)
                 return data
         except (OSError, json.JSONDecodeError) as exc:
-            raise StorageError(f"Echec de lecture de {self._path} : {exc}") from exc
+            raise StorageError(
+                _("Échec de lecture de {path} : {exc}").format(path=self._path, exc=exc)
+            ) from exc
 
     def _write(self, data: dict[str, str]) -> None:
         try:
@@ -45,7 +48,10 @@ class JsonSettingsStore:
             with self._path.open("w", encoding="utf-8") as handle:
                 json.dump(data, handle, indent=2, sort_keys=True)
         except OSError as exc:
-            raise StorageError(f"Echec d'ecriture de {self._path} : {exc}") from exc
+            raise StorageError(
+                _("Échec d'écriture de {path} : {exc}").format(path=self._path, exc=exc)
+            ) from exc
+
 
 # <-- INFO DEV ---------------------------------------------------------
 # Role :
@@ -72,4 +78,4 @@ class JsonSettingsStore:
 #   premier lancement sans settings.json prealable reste un cas normal.
 # Comment il sera utilise (apercu) :
 # - application/commands/select_theme.py, select_render_profile.py.
-#---------------------------------------------------------------------->
+# ---------------------------------------------------------------------->
