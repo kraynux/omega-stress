@@ -7,6 +7,7 @@ import csv
 from omega_stress.domain.reports.models import ExportJob, ReportContent
 from omega_stress.infrastructure.exceptions import StorageError
 from omega_stress.infrastructure.exporters.destination_resolver import resolve_destination_file
+from omega_stress.shared.i18n import _
 
 FIELDNAMES: tuple[str, ...] = (
     "run_id",
@@ -52,7 +53,9 @@ class CsvReportExporter:
                 writer.writeheader()
                 writer.writerow(row)
         except OSError as exc:
-            raise StorageError(f"Echec d'ecriture CSV vers {path} : {exc}") from exc
+            raise StorageError(
+                _("Échec d'écriture CSV vers {path} : {exc}").format(path=path, exc=exc)
+            ) from exc
         return str(path)
 
 
@@ -89,6 +92,7 @@ def _content_to_row(content: ReportContent) -> dict[str, object]:
         "diagnostic_recommendations": "; ".join(diagnostic.recommendations),
     }
 
+
 # <-- INFO DEV ---------------------------------------------------------
 # Role :
 # - Ecrit une ligne d'en-tete puis UNE ligne de donnees par export
@@ -119,4 +123,4 @@ def _content_to_row(content: ReportContent) -> dict[str, object]:
 #   DEV pour le bug corrige (dossier existant traite comme fichier).
 # Comment il sera utilise (apercu) :
 # - app/dependency_container.py l'enregistre sous ExportFormat.CSV.
-#---------------------------------------------------------------------->
+# ---------------------------------------------------------------------->

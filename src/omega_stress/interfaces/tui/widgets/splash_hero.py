@@ -46,7 +46,7 @@ _FRAME_BOX_HEAD = (
     "┌────────────────────────┐",
     "│    LINUX SERVER TEST   │",
     "└────────────────────────┘",
-    "▓▒░v1.0░▒▓",
+    "▓▒░v1.5░▒▓",
     "┌─────────────────────────────────────────┐",
     "│ ┌╦═══╦┐ ┌╦═╦═╦┐ ┌╦═══╦┐ ┌╦═══╦┐ ┌╦═══╦┐ │",
     "│ │║   ║│ │║ ║ ║│ ├╬══    │║  ═╦┐ ├╬═══╬┤ │",
@@ -253,7 +253,7 @@ class SplashHero(Static):
 #     de la version precedente de home_hero.py, qui avait le texte du
 #     titre en clair et son cadre en vif (bug de coherence signale :
 #     "decorele trop des autres application OMEGA").
-#   * "v1.0" : laisse en "vif" (aucune consigne specifique donnee, pas de
+#   * "v1.5" : laisse en "vif" (aucune consigne specifique donnee, pas de
 #     cadre propre a inverser — differe du choix precedent qui l'alignait
 #     a tort sur le titre).
 #   * Accroche du bas : mots en clair, "|" en vif — inchange.

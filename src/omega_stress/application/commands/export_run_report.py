@@ -15,6 +15,7 @@ from omega_stress.ports.export_repository import ExportRepository
 from omega_stress.ports.report_exporter import ReportExporter
 from omega_stress.ports.run_repository import RunRepository
 from omega_stress.ports.target_repository import TargetRepository
+from omega_stress.shared.i18n import _
 from omega_stress.shared.typing import IdFactory
 
 
@@ -32,14 +33,20 @@ async def export_run_report(
     et l'ecrit via l'exporter concret correspondant au format demande."""
     run = run_repository.get(request.run_id)
     if run is None:
-        return Err(ValidationError(f"Run {request.run_id!r} introuvable."))
+        return Err(ValidationError(_("Run {run_id!r} introuvable.").format(run_id=request.run_id)))
     if run.finished_at is None:
-        return Err(ValidationError(f"Run {request.run_id!r} n'est pas encore termine."))
+        return Err(
+            ValidationError(
+                _("Run {run_id!r} n'est pas encore terminé.").format(run_id=request.run_id)
+            )
+        )
 
     try:
         export_format = ExportFormat(request.format)
     except ValueError:
-        return Err(ValidationError(f"Format d'export {request.format!r} inconnu."))
+        return Err(
+            ValidationError(_("Format d'export {format!r} inconnu.").format(format=request.format))
+        )
 
     job = ExportJob(
         id=id_factory(),
@@ -63,6 +70,7 @@ async def export_run_report(
     export_repository.save(validated_job.value)
 
     return Ok(ExportResultDTO(job_id=validated_job.value.id, written_path=written_path))
+
 
 # <-- INFO DEV ---------------------------------------------------------
 # Role :
@@ -97,4 +105,4 @@ async def export_run_report(
 # Comment il sera utilise (apercu) :
 # - interfaces/tui/screens/export_dialog.py,
 #   interfaces/cli/commands/export_command.py.
-#---------------------------------------------------------------------->
+# ---------------------------------------------------------------------->

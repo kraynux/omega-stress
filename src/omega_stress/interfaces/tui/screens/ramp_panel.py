@@ -30,6 +30,7 @@ from omega_stress.interfaces.tui.controllers import (
 from omega_stress.interfaces.tui.presenters.calibration_presenter import (
     envelope_comparison_message,
 )
+from omega_stress.interfaces.tui.presenters.level_presenter import level_label
 from omega_stress.interfaces.tui.presenters.run_presenter import verdict_label
 from omega_stress.interfaces.tui.screens._base import OmegaScreen
 from omega_stress.interfaces.tui.screens.run_details import RunDetailsScreen
@@ -39,21 +40,25 @@ from omega_stress.interfaces.tui.widgets.progress_panel import ProgressPanel
 from omega_stress.interfaces.tui.widgets.run_progress import RunProgress
 from omega_stress.interfaces.tui.widgets.safety_mode_checkbox import SafetyModeCheckbox
 from omega_stress.interfaces.tui.widgets.target_picker import TargetPicker
+from omega_stress.shared.i18n import _
 
 if TYPE_CHECKING:
     from omega_stress.app.dependency_container import DependencyContainer
 
-_LEVEL_OPTIONS = [(level.value, level) for level in IntensityLevel]
-_MAX_ERROR_RATE_OPTIONS = [(f"{v / 10:.1f}", v / 10) for v in range(11)]
+_LEVEL_OPTIONS = [(level_label(level), level) for level in IntensityLevel]
+_MAX_ERROR_RATE_OPTIONS = [(_("{value:.1f}").format(value=v / 10), v / 10) for v in range(11)]
 _DEFAULT_DURATION_OPTIONS = [
-    (f"{m} min", m) for m in allowed_durations_minutes(IntensityLevel.BAS)
+    (_("{m} min").format(m=m), m) for m in allowed_durations_minutes(IntensityLevel.BAS)
 ]
 """Voir screens/request_panel.py, meme raison (EmptySelectError sinon)."""
-_DURATION_MODE_OPTIONS = [("Manuel (1-5 min)", "manual"), ("Profil D1-D6", "preset")]
+_DURATION_MODE_OPTIONS = [(_("Manuel (1-5 min)"), "manual"), (_("Profil D1-D6"), "preset")]
 _DURATION_PRESET_OPTIONS = [
     (
-        f"{preset_id.value.upper()} {duration_preset(preset_id).name} "
-        f"({duration_preset(preset_id).total_minutes} min)",
+        _("{upper} {name} ({total_minutes} min)").format(
+            upper=preset_id.value.upper(),
+            name=duration_preset(preset_id).name,
+            total_minutes=duration_preset(preset_id).total_minutes,
+        ),
         preset_id,
     )
     for preset_id in DurationPresetId
@@ -66,7 +71,7 @@ def _level_options_for_preset(preset: DurationPreset) -> list[tuple[str, Intensi
     allowed = ordered[: ordered.index(preset.free_max_level) + 1]
     if preset.reinforced_level is not None:
         allowed.append(preset.reinforced_level)
-    return [(level.value, level) for level in allowed]
+    return [(level_label(level), level) for level in allowed]
 
 
 class _PanelProgressNotifier:
@@ -98,33 +103,37 @@ class RampPanelScreen(OmegaScreen):
     def compose(self) -> ComposeResult:
         yield Header()
         with Vertical(classes="omega-panel"):
-            yield Static("TEST CHARGE", classes="omega-title")
-            yield Select([], prompt="Profil fige (optionnel)", id="profile")
+            yield Static(_("TEST CHARGE"), classes="omega-title")
+            yield Select([], prompt=_("Profil figé (optionnel)"), id="profile")
             yield Static("", id="profile-hint", classes="omega-hint")
             yield TargetPicker(id="target-picker")
             yield Static("", id="target-hint", classes="omega-hint")
-            yield Static("Criteres du test", classes="omega-subtitle")
-            yield Select(_LEVEL_OPTIONS, prompt="Intensite", id="level", allow_blank=False)
+            yield Static(_("Critères du test"), classes="omega-subtitle")
+            yield Select(_LEVEL_OPTIONS, prompt=_("Intensité"), id="level", allow_blank=False)
             yield Select(
-                _DURATION_MODE_OPTIONS, prompt="Mode duree", id="duration-mode",
+                _DURATION_MODE_OPTIONS,
+                prompt=_("Mode durée"),
+                id="duration-mode",
                 allow_blank=False,
             )
             yield Select(
                 _DEFAULT_DURATION_OPTIONS,
-                prompt="Duree (minutes)",
+                prompt=_("Durée (minutes)"),
                 id="duration",
                 allow_blank=False,
             )
             yield Select(
-                _DURATION_PRESET_OPTIONS, prompt="Profil de duree", id="duration-preset",
+                _DURATION_PRESET_OPTIONS,
+                prompt=_("Profil de durée"),
+                id="duration-preset",
                 allow_blank=False,
             )
             with Container(id="confirmation-frame", classes="omega-btn-frame"):
-                yield Static("Confirmation renforcee requise pour ce niveau :")
-                yield Input(placeholder="Texte de confirmation exact", id="confirmation-text")
+                yield Static(_("Confirmation renforcée requise pour ce niveau :"))
+                yield Input(placeholder=_("Texte de confirmation exact"), id="confirmation-text")
             yield Select(
                 _MAX_ERROR_RATE_OPTIONS,
-                prompt="Taux d'erreur maximal",
+                prompt=_("Taux d'erreur maximal"),
                 id="max-error-rate",
                 allow_blank=False,
             )
@@ -134,13 +143,13 @@ class RampPanelScreen(OmegaScreen):
             yield Static("", id="calibration-comparison")
             with Horizontal(classes="omega-actions"):
                 with Container(id="precheck-frame", classes="omega-btn-frame"):
-                    yield Button("Pre-check", id="precheck")
+                    yield Button(_("Pré-check"), id="precheck")
                 with Container(classes="omega-btn-frame"):
-                    yield Button("Lancer", id="launch", variant="primary")
+                    yield Button(_("Lancer"), id="launch", variant="primary")
                 with Container(id="stop-frame", classes="omega-btn-frame"):
-                    yield Button("Arreter", id="stop", variant="error")
+                    yield Button(_("Arrêter"), id="stop", variant="error")
                 with Container(classes="omega-btn-frame"):
-                    yield Button("Retour", id="back")
+                    yield Button(_("Retour"), id="back")
             yield RunProgress(id="run-progress")
             yield ProgressPanel(id="progress")
             yield NotificationBar(id="notifications")
@@ -178,13 +187,17 @@ class RampPanelScreen(OmegaScreen):
             hint.update("")
         elif any(p.frozen for p in all_profiles):
             hint.update(
-                "Aucun profil fige pour Test charge (des profils figes existent pour "
-                "d'autres types de test — Connexions/Requetes)."
+                _(
+                    "Aucun profil figé pour Test charge (des profils figés existent pour "
+                    "d'autres types de test — Connexions/Requêtes)."
+                )
             )
         elif all_profiles:
-            hint.update("Aucun profil fige pour l'instant (des profils existent mais aucun n'est fige).")
+            hint.update(
+                _("Aucun profil figé pour l'instant (des profils existent mais aucun n'est figé).")
+            )
         else:
-            hint.update("Aucun profil fige pour l'instant — creez-en un depuis l'ecran Profils.")
+            hint.update(_("Aucun profil figé pour l'instant — créez-en un depuis l'écran Profils."))
 
     def _set_duration_options(
         self, level: IntensityLevel, *, keep_value: int | None = None
@@ -192,15 +205,16 @@ class RampPanelScreen(OmegaScreen):
         """Voir screens/request_panel.py, meme logique a l'identique."""
         options = allowed_durations_minutes(level)
         duration_select = self.query_one("#duration", Select)
-        duration_select.set_options((f"{m} min", m) for m in options)
+        duration_select.set_options((_("{m} min").format(m=m), m) for m in options)
         if keep_value is not None and keep_value in options:
             duration_select.value = keep_value
         else:
             duration_select.value = options[0]
             if keep_value is not None:
                 self.query_one("#result", Static).update(
-                    f"Duree ramenee a {options[0]} min : {level.value} "
-                    f"ne propose pas {keep_value} min."
+                    _(
+                        "Durée ramenée à {value} min : {value2} ne propose pas {keep_value} min."
+                    ).format(value=options[0], value2=level.value, keep_value=keep_value)
                 )
 
     def on_option_list_option_selected(self, event: OptionList.OptionSelected) -> None:
@@ -237,9 +251,7 @@ class RampPanelScreen(OmegaScreen):
         allowed_levels = [level for _label, level in options]
         current_level = level_select.value
         level_select.set_options(options)
-        level_select.value = (
-            current_level if current_level in allowed_levels else allowed_levels[0]
-        )
+        level_select.value = current_level if current_level in allowed_levels else allowed_levels[0]
         self.query_one("#precheck-frame", Container).display = is_precheck_available(
             level_select.value
         )
@@ -348,7 +360,11 @@ class RampPanelScreen(OmegaScreen):
         picker.display = False
         target = self._resolve_target()
         address = target[1] if target is not None else profile.default_target_id
-        hint.update(f"Cible fixee par le profil « {profile.name} » : {address}")
+        hint.update(
+            _("Cible fixée par le profil « {name} » : {address}").format(
+                name=profile.name, address=address
+            )
+        )
 
     def on_button_pressed(self, event: Button.Pressed) -> None:
         if event.button.id == "back":
@@ -364,11 +380,11 @@ class RampPanelScreen(OmegaScreen):
         result_label = self.query_one("#result", Static)
         target = self._resolve_target()
         if target is None:
-            result_label.update("Choisissez ou saisissez une cible avant le pre-check.")
+            result_label.update(_("Choisissez ou saisissez une cible avant le pré-check."))
             return
         target_id, target_url = target
 
-        result_label.update("Pre-check en cours…")
+        result_label.update(_("Pré-check en cours…"))
         run_progress = self.query_one(RunProgress)
         run_progress.start(total_seconds=60)
         self.query_one("#stop-frame", Container).display = True
@@ -387,10 +403,12 @@ class RampPanelScreen(OmegaScreen):
 
         self._precheck_validated = not isinstance(outcome, Err)
         if isinstance(outcome, Err):
-            result_label.update(f"Pre-check echoue : {outcome.error}")
+            result_label.update(_("Pré-check échoué : {error}").format(error=outcome.error))
             return
         result_label.update(
-            f"Pre-check reussi ({verdict_label(outcome.value)}) — vous pouvez lancer le test."
+            _("Pré-check réussi ({value}) — vous pouvez lancer le test.").format(
+                value=verdict_label(outcome.value)
+            )
         )
 
     def _resolve_target(self) -> tuple[str, str] | None:
@@ -403,27 +421,27 @@ class RampPanelScreen(OmegaScreen):
 
     async def _launch(self) -> None:
         result_label = self.query_one("#result", Static)
-        result_label.update("Lancement en cours…")
+        result_label.update(_("Lancement en cours…"))
         target = self._resolve_target()
         if target is None:
-            result_label.update("Choisissez ou saisissez une cible.")
+            result_label.update(_("Choisissez ou saisissez une cible."))
             return
         target_id, target_url = target
 
         level = self.query_one("#level", Select).value
         if not isinstance(level, IntensityLevel):
-            result_label.update("Choisissez un niveau d'intensite.")
+            result_label.update(_("Choisissez un niveau d'intensité."))
             return
 
         max_error_rate = self.query_one("#max-error-rate", Select).value
         if not isinstance(max_error_rate, float):
-            result_label.update("Choisissez un taux d'erreur.")
+            result_label.update(_("Choisissez un taux d'erreur."))
             return
 
         if self._is_preset_mode():
             preset_value = self.query_one("#duration-preset", Select).value
             if not isinstance(preset_value, DurationPresetId):
-                result_label.update("Choisissez un profil de duree.")
+                result_label.update(_("Choisissez un profil de durée."))
                 return
             duration_minutes = duration_preset(preset_value).total_minutes
             duration_preset_id: DurationPresetId | None = preset_value
@@ -431,7 +449,7 @@ class RampPanelScreen(OmegaScreen):
         else:
             manual_duration = self.query_one("#duration", Select).value
             if not isinstance(manual_duration, int):
-                result_label.update("Choisissez une duree.")
+                result_label.update(_("Choisissez une durée."))
                 return
             duration_minutes = manual_duration
             duration_preset_id = None
@@ -464,10 +482,11 @@ class RampPanelScreen(OmegaScreen):
         if isinstance(outcome, Err):
             result_label.update(str(outcome.error))
             return
-        result_label.update(f"Termine — {verdict_label(outcome.value)} (voir le detail).")
-        self.app.push_screen(
-            RunDetailsScreen(container=self._container, run_id=outcome.value.id)
+        result_label.update(
+            _("Terminé — {value} (voir le détail).").format(value=verdict_label(outcome.value))
         )
+        self.app.push_screen(RunDetailsScreen(container=self._container, run_id=outcome.value.id))
+
 
 # <-- INFO DEV ---------------------------------------------------------
 # Role :
@@ -523,4 +542,4 @@ class RampPanelScreen(OmegaScreen):
 #   pas un palier fixe) a envelope.rps_safe.
 # Comment il sera utilise :
 # - interfaces/tui/screens/home.py (bouton "Test charge").
-#---------------------------------------------------------------------->
+# ---------------------------------------------------------------------->

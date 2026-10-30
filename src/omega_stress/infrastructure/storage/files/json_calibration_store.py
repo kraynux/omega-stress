@@ -16,6 +16,7 @@ from omega_stress.domain.calibration.models import (
 )
 from omega_stress.domain.calibration.service import compute_fingerprint_hash
 from omega_stress.infrastructure.exceptions import StorageError
+from omega_stress.shared.i18n import _
 
 
 class JsonCalibrationStore:
@@ -35,7 +36,9 @@ class JsonCalibrationStore:
             with path.open("w", encoding="utf-8") as handle:
                 json.dump(_serialize_result(result), handle, indent=2, sort_keys=True)
         except OSError as exc:
-            raise StorageError(f"Echec d'ecriture du calibrage vers {path} : {exc}") from exc
+            raise StorageError(
+                _("Échec d'écriture du calibrage vers {path} : {exc}").format(path=path, exc=exc)
+            ) from exc
 
     def load(self, fingerprint_hash: str) -> CalibrationResult | None:
         path = self._path_for(fingerprint_hash)
@@ -45,7 +48,9 @@ class JsonCalibrationStore:
             with path.open("r", encoding="utf-8") as handle:
                 raw = json.load(handle)
         except (OSError, json.JSONDecodeError) as exc:
-            raise StorageError(f"Echec de lecture du calibrage depuis {path} : {exc}") from exc
+            raise StorageError(
+                _("Échec de lecture du calibrage depuis {path} : {exc}").format(path=path, exc=exc)
+            ) from exc
         return _deserialize_result(raw)
 
     def _path_for(self, fingerprint_hash: str) -> Path:
@@ -161,6 +166,7 @@ def _deserialize_envelope(raw: dict | None) -> CalibrationEnvelope | None:
         confidence=raw["confidence"],
     )
 
+
 # <-- INFO DEV ---------------------------------------------------------
 # Role :
 # - Implementation concrete du port calibration_repository.py sur un
@@ -194,4 +200,4 @@ def _deserialize_envelope(raw: dict | None) -> CalibrationEnvelope | None:
 # Comment il sera utilise (apercu) :
 # - app/dependency_container.py construit une instance avec
 #   infrastructure/config/paths.py::calibrations_dir().
-#---------------------------------------------------------------------->
+# ---------------------------------------------------------------------->

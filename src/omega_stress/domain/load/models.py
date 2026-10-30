@@ -8,6 +8,7 @@ from omega_stress.core.enums import DurationPresetId, IntensityLevel, TestFamily
 from omega_stress.core.results import Err, Ok, Result
 from omega_stress.domain.errors import ValidationError
 from omega_stress.domain.load import policies
+from omega_stress.shared.i18n import _
 
 
 @dataclass(frozen=True, slots=True)
@@ -22,12 +23,15 @@ class Thresholds:
     def __post_init__(self) -> None:
         if not 0.0 <= self.max_error_rate <= 1.0:
             raise ValidationError(
-                f"max_error_rate doit etre compris entre 0.0 et 1.0, recu {self.max_error_rate!r}"
+                _(
+                    "max_error_rate doit être compris entre 0.0 et 1.0, reçu {max_error_rate!r}"
+                ).format(max_error_rate=self.max_error_rate)
             )
         if self.max_p95_latency_ms is not None and self.max_p95_latency_ms <= 0:
             raise ValidationError(
-                f"max_p95_latency_ms doit etre strictement positif, "
-                f"recu {self.max_p95_latency_ms!r}"
+                _(
+                    "max_p95_latency_ms doit être strictement positif, reçu {max_p95_latency_ms!r}"
+                ).format(max_p95_latency_ms=self.max_p95_latency_ms)
             )
 
 
@@ -49,8 +53,10 @@ class Duration:
         if minutes not in allowed:
             return Err(
                 ValidationError(
-                    f"Duree {minutes} min non autorisee pour le niveau {level.value} "
-                    f"(choix fermes : {allowed})"
+                    _(
+                        "Durée {minutes} min non autorisée pour le niveau {value} (choix fermés "
+                        ": {allowed})"
+                    ).format(minutes=minutes, value=level.value, allowed=allowed)
                 )
             )
         return Ok(Duration(minutes=minutes))
@@ -74,11 +80,15 @@ class RampStep:
         for field_name, value in (("start_ratio", self.start_ratio), ("end_ratio", self.end_ratio)):
             if not 0.0 <= value <= 1.0:
                 raise ValidationError(
-                    f"{field_name} doit etre compris entre 0.0 et 1.0, recu {value!r}"
+                    _("{field_name} doit être compris entre 0.0 et 1.0, reçu {value!r}").format(
+                        field_name=field_name, value=value
+                    )
                 )
         if self.duration_minutes <= 0:
             raise ValidationError(
-                f"duration_minutes doit etre strictement positif, recu {self.duration_minutes!r}"
+                _(
+                    "duration_minutes doit être strictement positif, reçu {duration_minutes!r}"
+                ).format(duration_minutes=self.duration_minutes)
             )
 
 
@@ -112,6 +122,7 @@ class LoadPlan:
     duration_preset_id: DurationPresetId | None = None
     reinforced_confirmation_text: str | None = None
     safety_mode: bool = True
+
 
 # <-- INFO DEV ---------------------------------------------------------
 # Role :
@@ -161,4 +172,4 @@ class LoadPlan:
 # - domain/load/validators.py consomme LoadPlan/Thresholds pour valider un
 #   plan et evaluer un seuil pendant l'execution.
 # - domain/profiles/models.py reutilise Duration et Thresholds tels quels.
-#---------------------------------------------------------------------->
+# ---------------------------------------------------------------------->

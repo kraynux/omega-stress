@@ -6,7 +6,9 @@ from typing import Any
 
 from textual.widgets import Checkbox
 
-_LABEL = "Je confirme etre autorise a tester cette cible"
+from omega_stress.shared.i18n import _
+
+_LABEL = _("Je confirme être autorisé à tester cette cible")
 
 
 class AuthorizationCheckbox(Checkbox):

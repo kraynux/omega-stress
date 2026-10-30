@@ -30,7 +30,10 @@ LaunchError = PlanValidationError | CapabilityUnavailableError
 
 
 def _is_customized_from_profile(
-    plan: LoadPlan, target_id: str, profile_id: str | None, profile_repository: ProfileRepository | None
+    plan: LoadPlan,
+    target_id: str,
+    profile_id: str | None,
+    profile_repository: ProfileRepository | None,
 ) -> bool:
     """Retour utilisateur 2026-09-27 : les ecrans de lancement
     pre-remplissent le formulaire depuis un profil fige choisi (screens/
@@ -141,6 +144,7 @@ async def launch_plan(
     run_repository.save(finished)
     return Ok(run_to_dto(finished, target_address=target_url))
 
+
 # <-- INFO DEV ---------------------------------------------------------
 # Role :
 # - Factorise la sequence commune aux quatre commands qui declenchent une
@@ -216,4 +220,4 @@ async def launch_plan(
 # Comment il sera utilise (apercu) :
 # - application/commands/run_request_load.py, run_connection_load.py,
 #   run_ramp_load.py, replay_run.py.
-#---------------------------------------------------------------------->
+# ---------------------------------------------------------------------->

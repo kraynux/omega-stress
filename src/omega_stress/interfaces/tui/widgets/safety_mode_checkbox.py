@@ -6,7 +6,9 @@ from typing import Any
 
 from textual.widgets import Checkbox
 
-_LABEL = "Mode securite (protege cette machine)"
+from omega_stress.shared.i18n import _
+
+_LABEL = _("Mode sécurité (protège cette machine)")
 
 
 class SafetyModeCheckbox(Checkbox):

@@ -1,0 +1,1451 @@
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: omega-stress\n"
+"Language: vi\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"X-Omega-Status: testing\n"
+
+#: src/omega_stress/application/commands/export_run_report.py:36 src/omega_stress/application/commands/replay_run.py:61 src/omega_stress/interfaces/tui/screens/run_details.py:63
+msgid "Run {run_id!r} introuvable."
+msgstr "Không tìm thấy lượt chạy {run_id!r}."
+
+#: src/omega_stress/application/commands/export_run_report.py:40
+msgid "Run {run_id!r} n'est pas encore terminé."
+msgstr "Lượt chạy {run_id!r} chưa kết thúc."
+
+#: src/omega_stress/application/commands/export_run_report.py:48
+msgid "Format d'export {format!r} inconnu."
+msgstr "Định dạng xuất không xác định {format!r}."
+
+#: src/omega_stress/application/commands/freeze_profile.py:26
+msgid "Profil {profile_id!r} introuvable."
+msgstr "Không tìm thấy hồ sơ {profile_id!r}."
+
+#: src/omega_stress/application/commands/replay_run.py:65
+msgid "Le run {run_id!r} ne référence aucun profil et ne peut pas être rejoué."
+msgstr "Lượt chạy {run_id!r} không tham chiếu hồ sơ nào và không thể chạy lại."
+
+#: src/omega_stress/application/commands/replay_run.py:75
+msgid "Profil {profile_id!r} introuvable, impossible de rejouer ce run."
+msgstr "Không tìm thấy hồ sơ {profile_id!r}, không thể chạy lại lượt chạy này."
+
+#: src/omega_stress/application/commands/replay_run.py:85
+msgid "Cible {target_id!r} introuvable, impossible de rejouer ce run."
+msgstr "Không tìm thấy mục tiêu {target_id!r}, không thể chạy lại lượt chạy này."
+
+#: src/omega_stress/application/commands/run_calibration.py:98
+#, python-brace-format
+msgid "Palier {name} : {value}{value2}"
+msgstr "Bậc {name}: {value}{value2}"
+
+#: src/omega_stress/application/commands/run_calibration.py:100 src/omega_stress/interfaces/tui/presenters/calibration_presenter.py:108
+msgid "dégradé"
+msgstr "suy giảm"
+
+#: src/omega_stress/application/commands/run_calibration.py:100
+msgid "sain"
+msgstr "ổn định"
+
+#: src/omega_stress/application/pipeline/abort.py:48
+#, python-brace-format
+msgid "Impossible de clôturer le run {id} après arrêt automatique : {error}"
+msgstr "Không thể đóng lượt chạy {id} sau khi tự động dừng: {error}"
+
+#: src/omega_stress/application/pipeline/executor.py:109
+msgid "Arrêté manuellement par l'utilisateur."
+msgstr "Người dùng đã dừng thủ công."
+
+#: src/omega_stress/application/pipeline/executor.py:113
+msgid "Test arrêté manuellement."
+msgstr "Đã dừng kiểm thử thủ công."
+
+#: src/omega_stress/application/pipeline/executor.py:156
+#, python-brace-format
+msgid "Impossible de clôturer le run {id} : {error}"
+msgstr "Không thể đóng lượt chạy {id}: {error}"
+
+#: src/omega_stress/application/pipeline/guards/authorization_guard.py:23
+msgid "Cible {target_id!r} non autorisée : ni épinglée, ni confirmation explicite fournie pour ce run."
+msgstr "Mục tiêu {target_id!r} chưa được cho phép: chưa ghim và không có xác nhận rõ ràng cho lượt chạy này."
+
+#: src/omega_stress/application/pipeline/guards/capability_guard.py:22
+msgid "Capacité {capability_name!r} indisponible (statut : {value})."
+msgstr "Khả năng {capability_name!r} không khả dụng (trạng thái: {value})."
+
+#: src/omega_stress/application/pipeline/guards/precheck_guard.py:22 src/omega_stress/domain/load/validators.py:40
+#, python-brace-format
+msgid "Le niveau {value} exige un pré-check automatique validé avant de démarrer."
+msgstr "Mức {value} yêu cầu một lần kiểm tra trước tự động đạt yêu cầu trước khi bắt đầu."
+
+#: src/omega_stress/application/pipeline/hooks/notification_hook.py:16
+#, python-brace-format
+msgid "Arrêt automatique : {reason}"
+msgstr "Tự động dừng: {reason}"
+
+#: src/omega_stress/application/pipeline/hooks/notification_hook.py:21
+msgid "Le générateur local semble devenir le goulot d'étranglement (débit observé significativement inférieur au débit demandé)."
+msgstr "Bộ sinh tải cục bộ có vẻ đang trở thành nút thắt cổ chai (thông lượng quan sát thấp hơn đáng kể so với yêu cầu)."
+
+#: src/omega_stress/domain/calibration/validators.py:39
+msgid "Un calibrage ou un test est déjà en cours sur ce poste."
+msgstr "Đã có một lần hiệu chuẩn hoặc kiểm thử đang chạy trên máy này."
+
+#: src/omega_stress/domain/calibration/validators.py:49
+#, python-brace-format
+msgid "CPU global {cpu_global_percent:.0f}% > seuil {CALIBRATION_PRECONDITION_CPU_GLOBAL_MAX_PERCENT:.0f}% : machine déjà sous pression."
+msgstr "CPU tổng {cpu_global_percent:.0f}% > ngưỡng {CALIBRATION_PRECONDITION_CPU_GLOBAL_MAX_PERCENT:.0f}%: máy đã chịu tải."
+
+#: src/omega_stress/domain/calibration/validators.py:66
+#, python-brace-format
+msgid "Mémoire disponible {memory_available_percent:.0f}% < seuil {CALIBRATION_PRECONDITION_MEMORY_AVAILABLE_MIN_PERCENT:.0f}%."
+msgstr "Bộ nhớ khả dụng {memory_available_percent:.0f}% < ngưỡng {CALIBRATION_PRECONDITION_MEMORY_AVAILABLE_MIN_PERCENT:.0f}%."
+
+#: src/omega_stress/domain/calibration/validators.py:77
+msgid "Swap déjà activé ou en croissance : machine déjà sous pression."
+msgstr "Swap đã được dùng hoặc đang tăng: máy đã chịu tải."
+
+#: src/omega_stress/domain/calibration/validators.py:84
+#, python-brace-format
+msgid "Load average 1 min {load_average_1min:.1f} > {logical_cpu_count} coeurs logiques."
+msgstr "Load average 1 phút {load_average_1min:.1f} > {logical_cpu_count} nhân logic."
+
+#: src/omega_stress/domain/load/models.py:27
+msgid "max_error_rate doit être compris entre 0.0 et 1.0, reçu {max_error_rate!r}"
+msgstr "max_error_rate phải nằm trong khoảng 0.0 đến 1.0, nhận được {max_error_rate!r}"
+
+#: src/omega_stress/domain/load/models.py:33
+msgid "max_p95_latency_ms doit être strictement positif, reçu {max_p95_latency_ms!r}"
+msgstr "max_p95_latency_ms phải lớn hơn 0, nhận được {max_p95_latency_ms!r}"
+
+#: src/omega_stress/domain/load/models.py:57
+#, python-brace-format
+msgid "Durée {minutes} min non autorisée pour le niveau {value} (choix fermés : {allowed})"
+msgstr "Thời lượng {minutes} phút không được phép cho mức {value} (các lựa chọn: {allowed})"
+
+#: src/omega_stress/domain/load/models.py:83
+msgid "{field_name} doit être compris entre 0.0 et 1.0, reçu {value!r}"
+msgstr "{field_name} phải nằm trong khoảng 0.0 đến 1.0, nhận được {value!r}"
+
+#: src/omega_stress/domain/load/models.py:90
+msgid "duration_minutes doit être strictement positif, reçu {duration_minutes!r}"
+msgstr "duration_minutes phải lớn hơn 0, nhận được {duration_minutes!r}"
+
+#: src/omega_stress/domain/load/policies.py:241
+msgid "Le mode sécurité (actif par défaut) arrête automatiquement un test si CETTE machine - pas la cible testée - semble en danger (CPU/mémoire du générateur). Le désactiver ne change rien aux protections de la cible (taux d'erreur, latence : toujours activés) : seul le risque de ralentir ou geler temporairement VOTRE ordinateur pendant la durée du test augmente, surtout sur les niveaux intensifs (Connexions Agressif et au-delà, Requêtes Maximum). À désactiver si vous savez que votre machine peut encaisser plus que ce que le mode sécurité suppose par défaut."
+msgstr "Chế độ an toàn (bật mặc định) tự động dừng kiểm thử nếu CHÍNH MÁY NÀY — không phải mục tiêu đang kiểm thử — có vẻ gặp nguy (CPU/bộ nhớ của bộ sinh tải). Tắt nó không thay đổi các lớp bảo vệ cho mục tiêu (tỉ lệ lỗi, độ trễ: luôn bật): chỉ tăng nguy cơ làm chậm hoặc treo tạm thời MÁY TÍNH CỦA BẠN trong thời gian kiểm thử, nhất là ở các mức cường độ cao (Kết nối Hung hãn trở lên, Yêu cầu Tối đa). Hãy tắt nếu bạn biết máy mình chịu được nhiều hơn mức mà chế độ an toàn mặc định giả định."
+
+#: src/omega_stress/domain/load/validators.py:32
+msgid "Aucun run ne peut démarrer sans confirmation d'autorisation de la cible."
+msgstr "Không lượt chạy nào có thể bắt đầu khi chưa xác nhận quyền đối với mục tiêu."
+
+#: src/omega_stress/domain/load/validators.py:50
+#, python-brace-format
+msgid "Le profil {name} n'est pas compatible avec la famille {value}."
+msgstr "Hồ sơ {name} không tương thích với họ {value}."
+
+#: src/omega_stress/domain/load/validators.py:59
+#, python-brace-format
+msgid "Durée {minutes} min incohérente avec le profil {name} ({total_minutes} min attendues)."
+msgstr "Thời lượng {minutes} phút không khớp với hồ sơ {name} (cần {total_minutes} phút)."
+
+#: src/omega_stress/domain/load/validators.py:80
+#, python-brace-format
+msgid "Durée {minutes} min non autorisée pour le niveau {value}."
+msgstr "Thời lượng {minutes} phút không được phép cho mức {value}."
+
+#: src/omega_stress/domain/load/validators.py:87
+msgid "Un Test charge doit définir au moins une étape de rampe."
+msgstr "Kiểm thử tải phải định nghĩa ít nhất một bậc tăng dần."
+
+#: src/omega_stress/domain/load/validators.py:95
+msgid "Seul un Test charge (ou un Test connexions avec profil de durée) peut définir des étapes de rampe."
+msgstr "Chỉ Kiểm thử tải (hoặc Kiểm thử kết nối có hồ sơ thời lượng) mới có thể định nghĩa các bậc tăng dần."
+
+#: src/omega_stress/domain/load/validators.py:117
+#, python-brace-format
+msgid "Taux d'erreur observé {observed_error_rate:.1%} > seuil {max_error_rate:.1%}"
+msgstr "Tỉ lệ lỗi quan sát {observed_error_rate:.1%} > ngưỡng {max_error_rate:.1%}"
+
+#: src/omega_stress/domain/load/validators.py:132
+#, python-brace-format
+msgid "Latence p95 observée {observed_p95_latency_ms:.0f}ms > seuil {max_p95_latency_ms:.0f}ms"
+msgstr "Độ trễ p95 quan sát {observed_p95_latency_ms:.0f}ms > ngưỡng {max_p95_latency_ms:.0f}ms"
+
+#: src/omega_stress/domain/load/validators.py:175
+#, python-brace-format
+msgid "Le niveau {value} pour le profil {name} ({total_minutes} min) exige la confirmation renforcée exacte."
+msgstr "Mức {value} cho hồ sơ {name} ({total_minutes} phút) yêu cầu xác nhận tăng cường chính xác."
+
+#: src/omega_stress/domain/load/validators.py:184
+#, python-brace-format
+msgid "Le niveau {value} n'est pas proposé pour le profil {name} ({total_minutes} min)."
+msgstr "Mức {value} không có sẵn cho hồ sơ {name} ({total_minutes} phút)."
+
+#: src/omega_stress/domain/load/validators.py:209
+#, python-brace-format
+msgid "{CRITICAL_WINDOW_SECONDS:.0f}s critique"
+msgstr "{CRITICAL_WINDOW_SECONDS:.0f}s nguy cấp"
+
+#: src/omega_stress/domain/load/validators.py:227
+#, python-brace-format
+msgid "Taux de timeout {timeout_rate:.1%} sur fenêtre {window_label} >= seuil {WINDOW_TIMEOUT_RATE_ABORT_THRESHOLD:.0%}"
+msgstr "Tỉ lệ timeout {timeout_rate:.1%} trong cửa sổ {window_label} >= ngưỡng {WINDOW_TIMEOUT_RATE_ABORT_THRESHOLD:.0%}"
+
+#: src/omega_stress/domain/load/validators.py:243
+#, python-brace-format
+msgid "Taux d'erreurs HTTP 5xx {http_5xx_rate:.1%} sur fenêtre {window_label} >= seuil {WINDOW_HTTP_5XX_RATE_ABORT_THRESHOLD:.0%}"
+msgstr "Tỉ lệ lỗi HTTP 5xx {http_5xx_rate:.1%} trong cửa sổ {window_label} >= ngưỡng {WINDOW_HTTP_5XX_RATE_ABORT_THRESHOLD:.0%}"
+
+#: src/omega_stress/domain/load/validators.py:259
+#, python-brace-format
+msgid "Taux d'erreurs total {total_error_rate:.1%} sur fenêtre {window_label} >= seuil {WINDOW_TOTAL_ERROR_RATE_ABORT_THRESHOLD:.0%}"
+msgstr "Tổng tỉ lệ lỗi {total_error_rate:.1%} trong cửa sổ {window_label} >= ngưỡng {WINDOW_TOTAL_ERROR_RATE_ABORT_THRESHOLD:.0%}"
+
+#: src/omega_stress/domain/load/validators.py:310
+#, python-brace-format
+msgid "CPU générateur >= {threshold_text} (~{GENERATOR_CPU_ABORT_RATIO_OF_SINGLE_CORE:.0%} d'un coeur) ET CPU machine >= {GENERATOR_CPU_ABORT_GLOBAL_THRESHOLD_PERCENT:.0f}% pendant {GENERATOR_CPU_ABORT_SUSTAINED_SAMPLES}s : la machine hôte elle-même est sous pression, pas seulement le générateur"
+msgstr "CPU bộ sinh tải >= {threshold_text} (~{GENERATOR_CPU_ABORT_RATIO_OF_SINGLE_CORE:.0%} của một nhân) VÀ CPU máy >= {GENERATOR_CPU_ABORT_GLOBAL_THRESHOLD_PERCENT:.0f}% trong {GENERATOR_CPU_ABORT_SUSTAINED_SAMPLES}s: chính máy chủ đang chịu tải, không chỉ bộ sinh tải"
+
+#: src/omega_stress/domain/load/validators.py:333
+#, python-brace-format
+msgid "Mémoire disponible {memory_available_percent:.0f}% < seuil {MEMORY_AVAILABLE_ABORT_THRESHOLD_PERCENT:.0f}%"
+msgstr "Bộ nhớ khả dụng {memory_available_percent:.0f}% < ngưỡng {MEMORY_AVAILABLE_ABORT_THRESHOLD_PERCENT:.0f}%"
+
+#: src/omega_stress/domain/load/validators.py:353
+#, python-brace-format
+msgid "Descripteurs de fichiers {open_files}/{open_files_soft_limit} >= {OPEN_FILES_ABORT_RATIO:.0%} de la limite"
+msgstr "Bộ mô tả tệp {open_files}/{open_files_soft_limit} >= {OPEN_FILES_ABORT_RATIO:.0%} giới hạn"
+
+#: src/omega_stress/domain/profiles/validation.py:17
+msgid "Le nom du profil ne peut pas être vide."
+msgstr "Tên hồ sơ không được để trống."
+
+#: src/omega_stress/domain/profiles/validation.py:26
+#, python-brace-format
+msgid "Durée {minutes} min non autorisée pour le niveau {value} dans ce profil (extended_duration_authorized={extended_duration_authorized})."
+msgstr "Thời lượng {minutes} phút không được phép cho mức {value} trong hồ sơ này (extended_duration_authorized={extended_duration_authorized})."
+
+#: src/omega_stress/domain/reports/builders.py:17
+msgid "Le test s'est déroulé normalement, sans dépassement de seuil."
+msgstr "Kiểm thử diễn ra bình thường, không vượt ngưỡng nào."
+
+#: src/omega_stress/domain/reports/builders.py:19
+msgid "Le test s'est terminé avec une dégradation observée, sans dépassement de seuil critique."
+msgstr "Kiểm thử kết thúc với suy giảm quan sát được, không vượt ngưỡng nguy cấp."
+
+#: src/omega_stress/domain/reports/builders.py:23
+msgid "Le test a été arrêté automatiquement suite à un dépassement de seuil."
+msgstr "Kiểm thử đã bị tự động dừng do vượt ngưỡng."
+
+#: src/omega_stress/domain/reports/builders.py:25
+msgid "Le test a échoué avant d'avoir pu produire un résultat exploitable."
+msgstr "Kiểm thử thất bại trước khi tạo ra được kết quả dùng được."
+
+#: src/omega_stress/domain/reports/builders.py:28
+msgid "Le test a été arrêté manuellement par l'utilisateur."
+msgstr "Người dùng đã dừng kiểm thử thủ công."
+
+#: src/omega_stress/domain/reports/builders.py:93
+#, python-brace-format
+msgid "{error_count} erreur(s) sur {total_requests} requêtes : vérifier les journaux de la cible sur la période du test."
+msgstr "{error_count} lỗi trên {total_requests} yêu cầu: hãy kiểm tra nhật ký của mục tiêu trong khoảng thời gian kiểm thử."
+
+#: src/omega_stress/domain/reports/builders.py:106
+msgid "Débit observé significativement inférieur au débit demandé : le générateur local peut être devenu le goulot d'étranglement (voir plan produit, Configuration minimale du générateur)."
+msgstr "Thông lượng quan sát thấp hơn đáng kể so với yêu cầu: bộ sinh tải cục bộ có thể đã thành nút thắt cổ chai (xem kế hoạch sản phẩm, Cấu hình tối thiểu của bộ sinh tải)."
+
+#: src/omega_stress/domain/reports/builders.py:118
+#, python-brace-format
+msgid "CPU du générateur monté à {peak_cpu_percent_generator:.0f} % au pic pendant le test : les résultats peuvent en partie refléter une limite du générateur local plutôt que celle de la cible."
+msgstr "CPU của bộ sinh tải đạt đỉnh {peak_cpu_percent_generator:.0f} % trong khi kiểm thử: kết quả có thể phần nào phản ánh giới hạn của bộ sinh tải cục bộ hơn là của mục tiêu."
+
+#: src/omega_stress/domain/reports/service.py:26
+msgid "Thème d'export {export_theme!r} inconnu (catalogue : {value})."
+msgstr "Giao diện xuất không xác định {export_theme!r} (danh mục: {value})."
+
+#: src/omega_stress/domain/runs/service.py:104
+#, python-brace-format
+msgid "Le run {id} est déjà terminé."
+msgstr "Lượt chạy {id} đã kết thúc."
+
+#: src/omega_stress/domain/runs/validators.py:18
+#, python-brace-format
+msgid "Le run {id} a une date de fin antérieure à sa date de départ."
+msgstr "Lượt chạy {id} có thời điểm kết thúc sớm hơn thời điểm bắt đầu."
+
+#: src/omega_stress/domain/targets/service.py:24
+#, python-brace-format
+msgid "Impossible d'épingler {base_url} sans confirmation d'autorisation."
+msgstr "Không thể ghim {base_url} khi chưa xác nhận quyền."
+
+#: src/omega_stress/domain/targets/validation.py:25
+msgid "L'adresse de la cible ne peut pas être vide."
+msgstr "Địa chỉ mục tiêu không được để trống."
+
+#: src/omega_stress/domain/targets/validation.py:32
+msgid "Schéma {scheme!r} non supporté : seuls http et https sont acceptés."
+msgstr "Giao thức {scheme!r} không được hỗ trợ: chỉ chấp nhận http và https."
+
+#: src/omega_stress/domain/targets/validation.py:39
+msgid "Adresse invalide, hôte introuvable dans {raw!r}."
+msgstr "Địa chỉ không hợp lệ, không tìm thấy host trong {raw!r}."
+
+#: src/omega_stress/infrastructure/calibration/local_server.py:32
+msgid "Content-Type"
+msgstr "Content-Type"
+
+#: src/omega_stress/infrastructure/calibration/local_server.py:33
+msgid "Content-Length"
+msgstr "Content-Length"
+
+#: src/omega_stress/infrastructure/probe/local_probe.py:42
+#, python-brace-format
+msgid "{cpu_count} coeur(s) détecté(s)"
+msgstr "Phát hiện {cpu_count} nhân"
+
+#: src/omega_stress/infrastructure/probe/local_probe.py:51
+#, python-brace-format
+msgid "limite douce de {soft_limit} descripteurs"
+msgstr "giới hạn mềm {soft_limit} bộ mô tả"
+
+#: src/omega_stress/infrastructure/probe/local_probe.py:61
+#, python-brace-format
+msgid "{total_memory_mb} Mo détectés"
+msgstr "Phát hiện {total_memory_mb} MB"
+
+#: src/omega_stress/infrastructure/probe/local_probe.py:65
+msgid "non mesurable"
+msgstr "không đo được"
+
+#: src/omega_stress/infrastructure/probe/local_probe.py:72
+msgid "agrégat de "
+msgstr "tổng hợp từ "
+
+#: src/omega_stress/infrastructure/runner/httpx_load_generator.py:117
+msgid "Cible {target_url!r} injoignable dès le départ : {exc}"
+msgstr "Mục tiêu {target_url!r} không truy cập được ngay từ đầu: {exc}"
+
+#: src/omega_stress/infrastructure/storage/files/json_calibration_store.py:40
+#, python-brace-format
+msgid "Échec d'écriture du calibrage vers {path} : {exc}"
+msgstr "Không ghi được hiệu chuẩn vào {path}: {exc}"
+
+#: src/omega_stress/infrastructure/storage/files/json_calibration_store.py:52
+#, python-brace-format
+msgid "Échec de lecture du calibrage depuis {path} : {exc}"
+msgstr "Không đọc được hiệu chuẩn từ {path}: {exc}"
+
+#: src/omega_stress/infrastructure/storage/sqlite/export_repository.py:40
+msgid "Échec de sauvegarde du job d'export {id!r} : {exc}"
+msgstr "Không lưu được tác vụ xuất {id!r}: {exc}"
+
+#: src/omega_stress/infrastructure/storage/sqlite/export_repository.py:50
+msgid "Échec de listage des exports du run {run_id!r} : {exc}"
+msgstr "Không liệt kê được bản xuất của lượt chạy {run_id!r}: {exc}"
+
+#: src/omega_stress/infrastructure/storage/sqlite/profile_repository.py:57
+msgid "Échec de sauvegarde du profil {id!r} : {exc}"
+msgstr "Không lưu được hồ sơ {id!r}: {exc}"
+
+#: src/omega_stress/infrastructure/storage/sqlite/profile_repository.py:67
+msgid "Échec de lecture du profil {profile_id!r} : {exc}"
+msgstr "Không đọc được hồ sơ {profile_id!r}: {exc}"
+
+#: src/omega_stress/infrastructure/storage/sqlite/profile_repository.py:77
+#, python-brace-format
+msgid "Échec de listage des profils : {exc}"
+msgstr "Không liệt kê được hồ sơ: {exc}"
+
+#: src/omega_stress/infrastructure/storage/sqlite/profile_repository.py:86
+msgid "Échec de suppression du profil {profile_id!r} : {exc}"
+msgstr "Không xóa được hồ sơ {profile_id!r}: {exc}"
+
+#: src/omega_stress/infrastructure/storage/sqlite/run_repository.py:75
+msgid "Échec de sauvegarde du run {id!r} : {exc}"
+msgstr "Không lưu được lượt chạy {id!r}: {exc}"
+
+#: src/omega_stress/infrastructure/storage/sqlite/run_repository.py:83
+msgid "Échec de lecture du run {run_id!r} : {exc}"
+msgstr "Không đọc được lượt chạy {run_id!r}: {exc}"
+
+#: src/omega_stress/infrastructure/storage/sqlite/run_repository.py:109
+#, python-brace-format
+msgid "Échec de listage de l'historique des runs : {exc}"
+msgstr "Không liệt kê được lịch sử lượt chạy: {exc}"
+
+#: src/omega_stress/infrastructure/storage/sqlite/run_repository.py:119
+#, python-brace-format
+msgid "Échec de purge de l'historique des runs : {exc}"
+msgstr "Không xóa được lịch sử lượt chạy: {exc}"
+
+#: src/omega_stress/infrastructure/storage/sqlite/target_repository.py:35
+msgid "Échec de sauvegarde de la cible {id!r} : {exc}"
+msgstr "Không lưu được mục tiêu {id!r}: {exc}"
+
+#: src/omega_stress/infrastructure/storage/sqlite/target_repository.py:56
+msgid "Échec d'épinglage de la cible {id!r} : {exc}"
+msgstr "Không ghim được mục tiêu {id!r}: {exc}"
+
+#: src/omega_stress/infrastructure/storage/sqlite/target_repository.py:72
+msgid "Échec de lecture de la cible {target_id!r} : {exc}"
+msgstr "Không đọc được mục tiêu {target_id!r}: {exc}"
+
+#: src/omega_stress/infrastructure/storage/sqlite/target_repository.py:85
+msgid "Échec de lecture de la cible épinglée {target_id!r} : {exc}"
+msgstr "Không đọc được mục tiêu đã ghim {target_id!r}: {exc}"
+
+#: src/omega_stress/infrastructure/storage/sqlite/target_repository.py:109
+#, python-brace-format
+msgid "Échec de listage des cibles récentes : {exc}"
+msgstr "Không liệt kê được mục tiêu gần đây: {exc}"
+
+#: src/omega_stress/infrastructure/storage/sqlite/target_repository.py:119
+msgid "Échec de désépinglage de la cible {target_id!r} : {exc}"
+msgstr "Không bỏ ghim được mục tiêu {target_id!r}: {exc}"
+
+#: src/omega_stress/infrastructure/storage/sqlite/target_repository.py:130
+#, python-brace-format
+msgid "Échec de purge des cibles récentes : {exc}"
+msgstr "Không xóa được mục tiêu gần đây: {exc}"
+
+#: src/omega_stress/infrastructure/storage/sqlite/target_repository.py:140
+#, python-brace-format
+msgid "Échec de purge de toutes les cibles : {exc}"
+msgstr "Không xóa được tất cả mục tiêu: {exc}"
+
+#: src/omega_stress/interfaces/tui/app.py:44
+msgid "🗲 OMEGA-STRESS"
+msgstr "🗲 OMEGA-STRESS"
+
+#: src/omega_stress/interfaces/tui/app.py:57
+msgid "Palette de commandes"
+msgstr "Bảng lệnh"
+
+#: src/omega_stress/interfaces/tui/app.py:63
+msgid "Quitter l'application (avec confirmation)."
+msgstr "Thoát ứng dụng (có xác nhận)."
+
+#: src/omega_stress/interfaces/tui/app.py:128
+#, python-brace-format
+msgid "Thème non changé (échec d'enregistrement) : {exc}"
+msgstr "Không đổi giao diện (lưu thất bại): {exc}"
+
+#: src/omega_stress/interfaces/tui/app.py:175
+msgid "Rechercher une commande…"
+msgstr "Tìm lệnh…"
+
+#: src/omega_stress/interfaces/tui/app.py:190
+msgid "Masquer l'aide des raccourcis"
+msgstr "Ẩn trợ giúp phím tắt"
+
+#: src/omega_stress/interfaces/tui/app.py:190 src/omega_stress/interfaces/tui/app.py:194
+msgid "Raccourcis"
+msgstr "Phím tắt"
+
+#: src/omega_stress/interfaces/tui/app.py:195
+msgid "Afficher l'aide du widget sélectionné et les raccourcis disponibles"
+msgstr "Hiển thị trợ giúp của widget đang chọn và các phím tắt có sẵn"
+
+#: src/omega_stress/interfaces/tui/presenters/calibration_presenter.py:24
+msgid "échec précoce"
+msgstr "lỗi sớm"
+
+#: src/omega_stress/interfaces/tui/presenters/calibration_presenter.py:25
+#, python-brace-format
+msgid "Aucune enveloppe exploitable ({reason})."
+msgstr "Không có đường bao dùng được ({reason})."
+
+#: src/omega_stress/interfaces/tui/presenters/calibration_presenter.py:31
+#, python-brace-format
+msgid "VU_safe {vu_safe} | RPS_safe {rps_safe} | confiance {confidence} (dernier palier sain : {last_healthy_name})"
+msgstr "VU_safe {vu_safe} | RPS_safe {rps_safe} | độ tin cậy {confidence} (bậc ổn định cuối: {last_healthy_name})"
+
+#: src/omega_stress/interfaces/tui/presenters/calibration_presenter.py:79
+msgid "Aucun calibrage exploitable pour cette machine — vous ne connaissez pas ses limites réelles. Nous recommandons d'en faire un depuis l'écran Calibrage avant de désactiver le mode sécurité sur un niveau intensif. Vous choisissez de dépasser les garde-fous de CETTE machine : la fiabilité du résultat et la stabilité de votre ordinateur restent sous votre responsabilité."
+msgstr "Không có hiệu chuẩn dùng được cho máy này — bạn không biết giới hạn thực của nó. Chúng tôi khuyên nên hiệu chuẩn từ màn hình Hiệu chuẩn trước khi tắt chế độ an toàn ở mức cường độ cao. Bạn chọn vượt qua giới hạn an toàn của CHÍNH MÁY NÀY: độ tin cậy của kết quả và sự ổn định của máy tính thuộc trách nhiệm của bạn."
+
+#: src/omega_stress/interfaces/tui/presenters/calibration_presenter.py:87
+msgid "AU-DESSUS"
+msgstr "CAO HƠN"
+
+#: src/omega_stress/interfaces/tui/presenters/calibration_presenter.py:87
+msgid "en dessous"
+msgstr "thấp hơn"
+
+#: src/omega_stress/interfaces/tui/presenters/calibration_presenter.py:89
+#, python-brace-format
+msgid "Dernier calibrage : {safe_value} {unit} jugés sûrs pour cette machine (confiance {confidence}). Ce niveau vise {target_value:.0f} {unit} — {comparison} de cette enveloppe. Au-delà, la fiabilité du résultat (nombre de connexions/requêtes/charge réellement atteint) peut baisser, et votre machine pourrait ralentir ou geler temporairement : c'est votre responsabilité."
+msgstr "Lần hiệu chuẩn gần nhất: {safe_value} {unit} được xem là an toàn cho máy này (độ tin cậy {confidence}). Mức này nhắm tới {target_value:.0f} {unit} — {comparison} đường bao này. Vượt quá, độ tin cậy của kết quả (số kết nối/yêu cầu/tải thực sự đạt được) có thể giảm, và máy của bạn có thể chậm hoặc treo tạm thời: đó là trách nhiệm của bạn."
+
+#: src/omega_stress/interfaces/tui/presenters/calibration_presenter.py:111
+#, python-brace-format
+msgid "{name} : {rps_achieved:.0f}/{rps_target} req/s ({status}{reason})"
+msgstr "{name}: {rps_achieved:.0f}/{rps_target} yc/s ({status}{reason})"
+
+#: src/omega_stress/interfaces/tui/presenters/level_presenter.py:10
+msgid "faible"
+msgstr "yếu"
+
+#: src/omega_stress/interfaces/tui/presenters/level_presenter.py:11
+msgid "bas"
+msgstr "thấp"
+
+#: src/omega_stress/interfaces/tui/presenters/level_presenter.py:12
+msgid "moyen"
+msgstr "trung bình"
+
+#: src/omega_stress/interfaces/tui/presenters/level_presenter.py:13
+msgid "haut"
+msgstr "cao"
+
+#: src/omega_stress/interfaces/tui/presenters/level_presenter.py:14
+msgid "puissant"
+msgstr "mạnh"
+
+#: src/omega_stress/interfaces/tui/presenters/level_presenter.py:15
+msgid "agressif"
+msgstr "hung hãn"
+
+#: src/omega_stress/interfaces/tui/presenters/level_presenter.py:16
+msgid "violent"
+msgstr "dữ dội"
+
+#: src/omega_stress/interfaces/tui/presenters/level_presenter.py:17
+msgid "maximum"
+msgstr "tối đa"
+
+#: src/omega_stress/interfaces/tui/presenters/load_reference_presenter.py:58
+#, python-brace-format
+msgid "{value} à {value2} min"
+msgstr "{value} đến {value2} phút"
+
+#: src/omega_stress/interfaces/tui/presenters/load_reference_presenter.py:67
+#, python-brace-format
+msgid "{default_text} ({extra_text} si pré-check)"
+msgstr "{default_text} ({extra_text} nếu có kiểm tra trước)"
+
+#: src/omega_stress/interfaces/tui/presenters/load_reference_presenter.py:76
+msgid "Non/Oui"
+msgstr "Không/Có"
+
+#: src/omega_stress/interfaces/tui/presenters/load_reference_presenter.py:93 src/omega_stress/interfaces/tui/screens/home.py:40
+msgid "Test requêtes"
+msgstr "Kiểm thử yêu cầu"
+
+#: src/omega_stress/interfaces/tui/presenters/load_reference_presenter.py:95
+msgid "Débit"
+msgstr "Lưu lượng"
+
+#: src/omega_stress/interfaces/tui/presenters/load_reference_presenter.py:96
+#, python-brace-format
+msgid "{requests_per_minute} req/min"
+msgstr "{requests_per_minute} yc/phút"
+
+#: src/omega_stress/interfaces/tui/presenters/load_reference_presenter.py:99
+#, python-brace-format
+msgid "~{value} req/s en rafale"
+msgstr "~{value} yc/s theo đợt"
+
+#: src/omega_stress/interfaces/tui/presenters/load_reference_presenter.py:111 src/omega_stress/interfaces/tui/screens/home.py:36
+msgid "Test connexions"
+msgstr "Kiểm thử kết nối"
+
+#: src/omega_stress/interfaces/tui/presenters/load_reference_presenter.py:113
+msgid "Connexions simultanées"
+msgstr "Kết nối đồng thời"
+
+#: src/omega_stress/interfaces/tui/presenters/load_reference_presenter.py:114
+#, python-brace-format
+msgid "{concurrent_connections} connexions"
+msgstr "{concurrent_connections} kết nối"
+
+#: src/omega_stress/interfaces/tui/presenters/load_reference_presenter.py:117
+#, python-brace-format
+msgid "{concurrent_connections} en parallèle, chaque seconde"
+msgstr "{concurrent_connections} song song, mỗi giây"
+
+#: src/omega_stress/interfaces/tui/presenters/load_reference_presenter.py:129 src/omega_stress/interfaces/tui/screens/home.py:38
+msgid "Test charge"
+msgstr "Kiểm thử tải"
+
+#: src/omega_stress/interfaces/tui/presenters/load_reference_presenter.py:131
+msgid "Débit (montée puis plateau)"
+msgstr "Thông lượng (tăng dần rồi giữ ổn định)"
+
+#: src/omega_stress/interfaces/tui/presenters/load_reference_presenter.py:132
+#, python-brace-format
+msgid "pic {peak_requests_per_minute} req/min"
+msgstr "đỉnh {peak_requests_per_minute} yc/phút"
+
+#: src/omega_stress/interfaces/tui/presenters/load_reference_presenter.py:137
+#, python-brace-format
+msgid "rampe {ramp_up_minutes:g} min -> plateau {plateau_minutes_min:g} min"
+msgstr "tăng dần {ramp_up_minutes:g} phút -> ổn định {plateau_minutes_min:g} phút"
+
+#: src/omega_stress/interfaces/tui/presenters/load_reference_presenter.py:152
+msgid "Requêtes"
+msgstr "Yêu cầu"
+
+#: src/omega_stress/interfaces/tui/presenters/load_reference_presenter.py:153
+msgid "Connexions"
+msgstr "Kết nối"
+
+#: src/omega_stress/interfaces/tui/presenters/load_reference_presenter.py:154
+msgid "Charge"
+msgstr "Tải"
+
+#: src/omega_stress/interfaces/tui/presenters/load_reference_presenter.py:194
+msgid "Seul le débit (req/min) pilote ce test ; la simultanéité en découle."
+msgstr "Chỉ thông lượng (yc/phút) điều khiển kiểm thử này; độ đồng thời là hệ quả."
+
+#: src/omega_stress/interfaces/tui/presenters/load_reference_presenter.py:196
+msgid "Seule la simultanéité (connexions) pilote ce test ; aucun débit cible."
+msgstr "Chỉ độ đồng thời (kết nối) điều khiển kiểm thử này; không có thông lượng mục tiêu."
+
+#: src/omega_stress/interfaces/tui/presenters/load_reference_presenter.py:198
+msgid "Seul le débit au pic pilote ce test, atteint progressivement : sur une durée choisie plus courte que la rampe indiquée, le pic n'est jamais atteint."
+msgstr "Chỉ thông lượng đỉnh, đạt được dần dần, điều khiển kiểm thử này: nếu thời lượng đã chọn ngắn hơn thời gian tăng dần ghi ở đây, đỉnh sẽ không bao giờ đạt tới."
+
+#: src/omega_stress/interfaces/tui/presenters/profile_presenter.py:17
+msgid "Figé"
+msgstr "Cố định"
+
+#: src/omega_stress/interfaces/tui/presenters/profile_presenter.py:17
+msgid "Modifiable"
+msgstr "Có thể sửa"
+
+#: src/omega_stress/interfaces/tui/presenters/run_presenter.py:13
+msgid "Réussi"
+msgstr "Thành công"
+
+#: src/omega_stress/interfaces/tui/presenters/run_presenter.py:14
+msgid "Dégradé"
+msgstr "Suy giảm"
+
+#: src/omega_stress/interfaces/tui/presenters/run_presenter.py:15
+msgid "Arrêt automatique"
+msgstr "Tự động dừng"
+
+#: src/omega_stress/interfaces/tui/presenters/run_presenter.py:16
+msgid "Échec"
+msgstr "Thất bại"
+
+#: src/omega_stress/interfaces/tui/presenters/run_presenter.py:27
+msgid "En cours"
+msgstr "Đang chạy"
+
+#: src/omega_stress/interfaces/tui/presenters/run_presenter.py:61
+#, python-brace-format
+msgid "{observed_rate_per_minute:.0f} req/min | {errors}/{total} erreurs | p95 {p95:.0f} ms"
+msgstr "{observed_rate_per_minute:.0f} yc/phút | {errors}/{total} lỗi | p95 {p95:.0f} ms"
+
+#: src/omega_stress/interfaces/tui/presenters/run_presenter.py:85
+#, python-brace-format
+msgid "{at_second:>5.0f}s  {bar}  {errors} err / {requests} req"
+msgstr "{at_second:>5.0f}s  {bar}  {errors} lỗi / {requests} yc"
+
+#: src/omega_stress/interfaces/tui/presenters/theme_presenter.py:34
+#, python-brace-format
+msgid "{theme_name} (repli depuis {fell_back_from})"
+msgstr "{theme_name} (thay thế cho {fell_back_from})"
+
+#: src/omega_stress/interfaces/tui/screens/_base.py:20
+msgid "Focus suivant"
+msgstr "Tiêu điểm tiếp theo"
+
+#: src/omega_stress/interfaces/tui/screens/_base.py:21
+msgid "Focus précédent"
+msgstr "Tiêu điểm trước"
+
+#: src/omega_stress/interfaces/tui/screens/_base.py:22
+msgid "Copier le texte sélectionné"
+msgstr "Sao chép văn bản đã chọn"
+
+#: src/omega_stress/interfaces/tui/screens/calibration_screen.py:77
+msgid "CALIBRAGE"
+msgstr "HIỆU CHUẨN"
+
+#: src/omega_stress/interfaces/tui/screens/calibration_screen.py:79
+msgid "Mesure la capacité réelle de CETTE machine (pas la cible testée) via un serveur de boucle locale, par paliers de charge croissante. Le résultat n'est pas encore appliqué aux tests réels : consultation seule pour l'instant."
+msgstr "Đo năng lực thực của CHÍNH MÁY NÀY (không phải mục tiêu kiểm thử) qua một máy chủ vòng lặp cục bộ, theo các bậc tải tăng dần. Kết quả chưa được áp dụng cho các kiểm thử thực: hiện chỉ để xem."
+
+#: src/omega_stress/interfaces/tui/screens/calibration_screen.py:88
+msgid "Lancer le calibrage"
+msgstr "Bắt đầu hiệu chuẩn"
+
+#: src/omega_stress/interfaces/tui/screens/calibration_screen.py:107
+msgid "Aucun calibrage connu pour cette machine."
+msgstr "Chưa có hiệu chuẩn nào cho máy này."
+
+#: src/omega_stress/interfaces/tui/screens/calibration_screen.py:111
+#, python-brace-format
+msgid ""
+"{value}\n"
+"{value2}"
+msgstr ""
+"{value}\n"
+"{value2}"
+
+#: src/omega_stress/interfaces/tui/screens/calibration_screen.py:145
+#, python-brace-format
+msgid "Calibrage refusé : {error}"
+msgstr "Hiệu chuẩn bị từ chối: {error}"
+
+#: src/omega_stress/interfaces/tui/screens/confirm.py:30
+msgid "Oui, confirmer"
+msgstr "Có, xác nhận"
+
+#: src/omega_stress/interfaces/tui/screens/confirm.py:32
+msgid "Non, annuler"
+msgstr "Không, hủy"
+
+#: src/omega_stress/interfaces/tui/screens/connection_panel.py:49 src/omega_stress/interfaces/tui/screens/ramp_panel.py:49 src/omega_stress/interfaces/tui/screens/request_panel.py:49
+#, python-brace-format
+msgid "{value:.1f}"
+msgstr "{value:.1f}"
+
+#: src/omega_stress/interfaces/tui/screens/connection_panel.py:51 src/omega_stress/interfaces/tui/screens/connection_panel.py:213 src/omega_stress/interfaces/tui/screens/ramp_panel.py:51 src/omega_stress/interfaces/tui/screens/ramp_panel.py:208 src/omega_stress/interfaces/tui/screens/request_panel.py:51 src/omega_stress/interfaces/tui/screens/request_panel.py:217
+#, python-brace-format
+msgid "{m} min"
+msgstr "{m} phút"
+
+#: src/omega_stress/interfaces/tui/screens/connection_panel.py:54 src/omega_stress/interfaces/tui/screens/ramp_panel.py:54 src/omega_stress/interfaces/tui/screens/request_panel.py:57
+msgid "Manuel (1-5 min)"
+msgstr "Thủ công (1-5 phút)"
+
+#: src/omega_stress/interfaces/tui/screens/connection_panel.py:54 src/omega_stress/interfaces/tui/screens/ramp_panel.py:54 src/omega_stress/interfaces/tui/screens/request_panel.py:57
+msgid "Profil D1-D6"
+msgstr "Hồ sơ D1-D6"
+
+#: src/omega_stress/interfaces/tui/screens/connection_panel.py:57 src/omega_stress/interfaces/tui/screens/ramp_panel.py:57 src/omega_stress/interfaces/tui/screens/request_panel.py:60
+#, python-brace-format
+msgid "{upper} {name} ({total_minutes} min)"
+msgstr "{upper} {name} ({total_minutes} phút)"
+
+#: src/omega_stress/interfaces/tui/screens/connection_panel.py:106
+msgid "TEST CONNEXIONS"
+msgstr "KIỂM THỬ KẾT NỐI"
+
+#: src/omega_stress/interfaces/tui/screens/connection_panel.py:107 src/omega_stress/interfaces/tui/screens/ramp_panel.py:107 src/omega_stress/interfaces/tui/screens/request_panel.py:113
+msgid "Profil figé (optionnel)"
+msgstr "Hồ sơ cố định (tùy chọn)"
+
+#: src/omega_stress/interfaces/tui/screens/connection_panel.py:111 src/omega_stress/interfaces/tui/screens/ramp_panel.py:111 src/omega_stress/interfaces/tui/screens/request_panel.py:117
+msgid "Critères du test"
+msgstr "Tiêu chí kiểm thử"
+
+#: src/omega_stress/interfaces/tui/screens/connection_panel.py:112 src/omega_stress/interfaces/tui/screens/profile_wizard.py:47 src/omega_stress/interfaces/tui/screens/ramp_panel.py:112 src/omega_stress/interfaces/tui/screens/request_panel.py:118 src/omega_stress/infrastructure/exporters/templates/report.html.jinja:62
+msgid "Intensité"
+msgstr "Cường độ"
+
+#: src/omega_stress/interfaces/tui/screens/connection_panel.py:115 src/omega_stress/interfaces/tui/screens/ramp_panel.py:115 src/omega_stress/interfaces/tui/screens/request_panel.py:121
+msgid "Mode durée"
+msgstr "Chế độ thời lượng"
+
+#: src/omega_stress/interfaces/tui/screens/connection_panel.py:121 src/omega_stress/interfaces/tui/screens/profile_wizard.py:48 src/omega_stress/interfaces/tui/screens/ramp_panel.py:121 src/omega_stress/interfaces/tui/screens/request_panel.py:127
+msgid "Durée (minutes)"
+msgstr "Thời lượng (phút)"
+
+#: src/omega_stress/interfaces/tui/screens/connection_panel.py:127 src/omega_stress/interfaces/tui/screens/ramp_panel.py:127 src/omega_stress/interfaces/tui/screens/request_panel.py:133
+msgid "Profil de durée"
+msgstr "Hồ sơ thời lượng"
+
+#: src/omega_stress/interfaces/tui/screens/connection_panel.py:132 src/omega_stress/interfaces/tui/screens/ramp_panel.py:132 src/omega_stress/interfaces/tui/screens/request_panel.py:138
+msgid "Confirmation renforcée requise pour ce niveau :"
+msgstr "Mức này yêu cầu xác nhận tăng cường:"
+
+#: src/omega_stress/interfaces/tui/screens/connection_panel.py:133 src/omega_stress/interfaces/tui/screens/ramp_panel.py:133 src/omega_stress/interfaces/tui/screens/request_panel.py:139
+msgid "Texte de confirmation exact"
+msgstr "Văn bản xác nhận chính xác"
+
+#: src/omega_stress/interfaces/tui/screens/connection_panel.py:136 src/omega_stress/interfaces/tui/screens/ramp_panel.py:136 src/omega_stress/interfaces/tui/screens/request_panel.py:142
+msgid "Taux d'erreur maximal"
+msgstr "Tỉ lệ lỗi tối đa"
+
+#: src/omega_stress/interfaces/tui/screens/connection_panel.py:146 src/omega_stress/interfaces/tui/screens/ramp_panel.py:146 src/omega_stress/interfaces/tui/screens/request_panel.py:152 src/omega_stress/interfaces/tui/widgets/load_reference_table.py:26
+msgid "Pré-check"
+msgstr "Kiểm tra trước"
+
+#: src/omega_stress/interfaces/tui/screens/connection_panel.py:196
+msgid "Aucun profil figé pour Test connexions (des profils figés existent pour d'autres types de test — Requêtes/Rampe)."
+msgstr "Không có hồ sơ cố định cho Kiểm thử kết nối (có hồ sơ cố định cho các loại kiểm thử khác — Yêu cầu/Tăng dần)."
+
+#: src/omega_stress/interfaces/tui/screens/connection_panel.py:202 src/omega_stress/interfaces/tui/screens/ramp_panel.py:197 src/omega_stress/interfaces/tui/screens/request_panel.py:203
+msgid "Aucun profil figé pour l'instant (des profils existent mais aucun n'est figé)."
+msgstr "Hiện chưa có hồ sơ cố định (có hồ sơ nhưng chưa hồ sơ nào được cố định)."
+
+#: src/omega_stress/interfaces/tui/screens/connection_panel.py:205 src/omega_stress/interfaces/tui/screens/ramp_panel.py:200 src/omega_stress/interfaces/tui/screens/request_panel.py:206
+msgid "Aucun profil figé pour l'instant — créez-en un depuis l'écran Profils."
+msgstr "Hiện chưa có hồ sơ cố định — hãy tạo một hồ sơ ở màn hình Hồ sơ."
+
+#: src/omega_stress/interfaces/tui/screens/connection_panel.py:221 src/omega_stress/interfaces/tui/screens/ramp_panel.py:216 src/omega_stress/interfaces/tui/screens/request_panel.py:225
+#, python-brace-format
+msgid "Durée ramenée à {value} min : {value2} ne propose pas {keep_value} min."
+msgstr "Thời lượng được đưa về {value} phút: {value2} không có {keep_value} phút."
+
+#: src/omega_stress/interfaces/tui/screens/connection_panel.py:377 src/omega_stress/interfaces/tui/screens/ramp_panel.py:364 src/omega_stress/interfaces/tui/screens/request_panel.py:377
+#, python-brace-format
+msgid "Cible fixée par le profil « {name} » : {address}"
+msgstr "Mục tiêu do hồ sơ “{name}” cố định: {address}"
+
+#: src/omega_stress/interfaces/tui/screens/connection_panel.py:396 src/omega_stress/interfaces/tui/screens/ramp_panel.py:383 src/omega_stress/interfaces/tui/screens/request_panel.py:396
+msgid "Choisissez ou saisissez une cible avant le pré-check."
+msgstr "Hãy chọn hoặc nhập một mục tiêu trước khi kiểm tra trước."
+
+#: src/omega_stress/interfaces/tui/screens/connection_panel.py:400 src/omega_stress/interfaces/tui/screens/ramp_panel.py:387 src/omega_stress/interfaces/tui/screens/request_panel.py:400
+msgid "Pré-check en cours…"
+msgstr "Đang kiểm tra trước…"
+
+#: src/omega_stress/interfaces/tui/screens/connection_panel.py:419 src/omega_stress/interfaces/tui/screens/ramp_panel.py:406 src/omega_stress/interfaces/tui/screens/request_panel.py:419
+#, python-brace-format
+msgid "Pré-check échoué : {error}"
+msgstr "Kiểm tra trước thất bại: {error}"
+
+#: src/omega_stress/interfaces/tui/screens/connection_panel.py:422 src/omega_stress/interfaces/tui/screens/ramp_panel.py:409 src/omega_stress/interfaces/tui/screens/request_panel.py:422
+#, python-brace-format
+msgid "Pré-check réussi ({value}) — vous pouvez lancer le test."
+msgstr "Kiểm tra trước thành công ({value}) — bạn có thể bắt đầu kiểm thử."
+
+#: src/omega_stress/interfaces/tui/screens/connection_panel.py:437 src/omega_stress/interfaces/tui/screens/ramp_panel.py:424 src/omega_stress/interfaces/tui/screens/request_panel.py:437
+msgid "Lancement en cours…"
+msgstr "Đang khởi chạy…"
+
+#: src/omega_stress/interfaces/tui/screens/connection_panel.py:440 src/omega_stress/interfaces/tui/screens/ramp_panel.py:427 src/omega_stress/interfaces/tui/screens/request_panel.py:440
+msgid "Choisissez ou saisissez une cible."
+msgstr "Hãy chọn hoặc nhập một mục tiêu."
+
+#: src/omega_stress/interfaces/tui/screens/connection_panel.py:446 src/omega_stress/interfaces/tui/screens/ramp_panel.py:433 src/omega_stress/interfaces/tui/screens/request_panel.py:446
+msgid "Choisissez un niveau d'intensité."
+msgstr "Hãy chọn một mức cường độ."
+
+#: src/omega_stress/interfaces/tui/screens/connection_panel.py:451 src/omega_stress/interfaces/tui/screens/ramp_panel.py:438 src/omega_stress/interfaces/tui/screens/request_panel.py:451
+msgid "Choisissez un taux d'erreur."
+msgstr "Hãy chọn một tỉ lệ lỗi."
+
+#: src/omega_stress/interfaces/tui/screens/connection_panel.py:457 src/omega_stress/interfaces/tui/screens/ramp_panel.py:444 src/omega_stress/interfaces/tui/screens/request_panel.py:457
+msgid "Choisissez un profil de durée."
+msgstr "Hãy chọn một hồ sơ thời lượng."
+
+#: src/omega_stress/interfaces/tui/screens/connection_panel.py:465 src/omega_stress/interfaces/tui/screens/ramp_panel.py:452 src/omega_stress/interfaces/tui/screens/request_panel.py:465
+msgid "Choisissez une durée."
+msgstr "Hãy chọn một thời lượng."
+
+#: src/omega_stress/interfaces/tui/screens/connection_panel.py:499 src/omega_stress/interfaces/tui/screens/ramp_panel.py:486 src/omega_stress/interfaces/tui/screens/request_panel.py:499
+#, python-brace-format
+msgid "Terminé — {value} (voir le détail)."
+msgstr "Hoàn tất — {value} (xem chi tiết)."
+
+#: src/omega_stress/interfaces/tui/screens/export_dialog.py:51
+msgid "EXPORTER LE RAPPORT"
+msgstr "XUẤT BÁO CÁO"
+
+#: src/omega_stress/interfaces/tui/screens/export_dialog.py:59
+msgid "Dossier de destination"
+msgstr "Thư mục đích"
+
+#: src/omega_stress/interfaces/tui/screens/export_dialog.py:92
+msgid "Choisissez un format."
+msgstr "Hãy chọn một định dạng."
+
+#: src/omega_stress/interfaces/tui/screens/export_dialog.py:95
+msgid "Indiquez un dossier de destination."
+msgstr "Hãy chỉ định thư mục đích."
+
+#: src/omega_stress/interfaces/tui/screens/export_dialog.py:115
+#, python-brace-format
+msgid "Rapport écrit : {written_path}"
+msgstr "Đã ghi báo cáo: {written_path}"
+
+#: src/omega_stress/interfaces/tui/screens/help_screen.py:30
+msgid "Test requêtes / connexions / charge"
+msgstr "Kiểm thử yêu cầu / kết nối / tải"
+
+#: src/omega_stress/interfaces/tui/screens/help_screen.py:31
+msgid "Trois familles de test encadrées : débit constant, nombre de connexions simultanées, ou montée progressive. Chaque lancement exige une cible (saisie manuelle ou cible épinglée) et une confirmation d'autorisation, sauf cible déjà épinglée-autorisée."
+msgstr "Ba họ kiểm thử có kiểm soát: thông lượng không đổi, số kết nối đồng thời, hoặc tăng dần. Mỗi lần khởi chạy cần một mục tiêu (nhập tay hoặc đã ghim) và một xác nhận quyền, trừ khi mục tiêu đã được ghim và cho phép."
+
+#: src/omega_stress/interfaces/tui/screens/help_screen.py:38
+msgid "Un profil fige un jeu de paramètres (cible, type de test, intensité, durée, seuils) pour le réutiliser tel quel — créer, puis figer, un profil depuis cet écran."
+msgstr "Một hồ sơ cố định một bộ tham số (mục tiêu, loại kiểm thử, cường độ, thời lượng, ngưỡng) để dùng lại nguyên vẹn — tạo rồi cố định hồ sơ từ màn hình này."
+
+#: src/omega_stress/interfaces/tui/screens/help_screen.py:43
+msgid "Épingler une adresse dispense de recocher la confirmation d'autorisation à chaque lancement sur cette même cible."
+msgstr "Ghim một địa chỉ giúp không phải đánh dấu lại xác nhận quyền mỗi lần khởi chạy trên cùng mục tiêu đó."
+
+#: src/omega_stress/interfaces/tui/screens/help_screen.py:48
+msgid "Liste tous les runs passés : détail complet, ou relecture (uniquement pour un run lié à un profil figé)."
+msgstr "Liệt kê mọi lượt chạy trước đây: chi tiết đầy đủ, hoặc chạy lại (chỉ với lượt chạy gắn với hồ sơ cố định)."
+
+#: src/omega_stress/interfaces/tui/screens/help_screen.py:53
+msgid "Depuis le détail d'un run terminé : JSON (données brutes, réimportables), CSV (analyse tabulaire), ou HTML (rapport lisible avec chronologie complète par intervalle)."
+msgstr "Từ chi tiết một lượt chạy đã xong: JSON (dữ liệu thô, nhập lại được), CSV (phân tích dạng bảng), hoặc HTML (báo cáo dễ đọc với dòng thời gian đầy đủ theo từng khoảng)."
+
+#: src/omega_stress/interfaces/tui/screens/help_screen.py:58 src/omega_stress/interfaces/tui/screens/help_screen.py:112
+msgid "Profils de durée D1-D6 (mode profil)"
+msgstr "Hồ sơ thời lượng D1-D6 (chế độ hồ sơ)"
+
+#: src/omega_stress/interfaces/tui/screens/help_screen.py:59
+msgid "En plus de la durée manuelle (1 à 5 min selon le niveau), chaque écran de lancement propose un mode profil : une durée fixe nommée (1 à 120 min) qui limite les niveaux accessibles, avec un niveau supplémentaire débloqué par une confirmation renforcée (texte exact à saisir). Voir le tableau ci-dessous."
+msgstr "Ngoài thời lượng thủ công (1 đến 5 phút tùy mức), mỗi màn hình khởi chạy có chế độ hồ sơ: một thời lượng cố định có tên (1 đến 120 phút) giới hạn các mức có thể chọn, kèm một mức bổ sung được mở khóa bằng xác nhận tăng cường (văn bản chính xác cần nhập). Xem bảng bên dưới."
+
+#: src/omega_stress/interfaces/tui/screens/help_screen.py:65 src/omega_stress/interfaces/tui/screens/home.py:33
+msgid "Calibrage"
+msgstr "Hiệu chuẩn"
+
+#: src/omega_stress/interfaces/tui/screens/help_screen.py:66
+msgid "Mesure la capacité réelle de CETTE machine (pas la cible testée) via un serveur de boucle locale, par paliers de charge croissante. Le résultat (VU_safe/RPS_safe) n'est pas appliqué automatiquement aux tests réels : consultable depuis l'écran Calibrage, et utile comme repère quand le mode sécurité est désactivé (voir ci-dessous)."
+msgstr "Đo năng lực thực của CHÍNH MÁY NÀY (không phải mục tiêu kiểm thử) qua một máy chủ vòng lặp cục bộ, theo các bậc tải tăng dần. Kết quả (VU_safe/RPS_safe) không được tự động áp dụng cho kiểm thử thực: xem được ở màn hình Hiệu chuẩn, và hữu ích làm mốc tham chiếu khi chế độ an toàn bị tắt (xem bên dưới)."
+
+#: src/omega_stress/interfaces/tui/screens/help_screen.py:73 src/omega_stress/infrastructure/exporters/templates/report.html.jinja:69
+msgid "Mode sécurité"
+msgstr "Chế độ an toàn"
+
+#: src/omega_stress/interfaces/tui/screens/help_screen.py:75
+msgid " Si un calibrage a été effectué sur cette machine, l'écran de lancement compare le niveau choisi à son enveloppe dès que la case est décochée."
+msgstr " Nếu máy này đã được hiệu chuẩn, màn hình khởi chạy sẽ so sánh mức đã chọn với đường bao của nó ngay khi ô được bỏ chọn."
+
+#: src/omega_stress/interfaces/tui/screens/help_screen.py:98
+msgid "Repères de charge (valeurs exactes par niveau)"
+msgstr "Mốc tải (giá trị chính xác theo mức)"
+
+#: src/omega_stress/interfaces/tui/screens/help_screen.py:102
+#, python-brace-format
+msgid ""
+"[b]Test requêtes[/b] — {value}\n"
+"[b]Test connexions[/b] — {value2}\n"
+"[b]Test charge[/b] — {value3}\n"
+msgstr ""
+"[b]Kiểm thử yêu cầu[/b] — {value}\n"
+"[b]Kiểm thử kết nối[/b] — {value2}\n"
+"[b]Kiểm thử tải[/b] — {value3}\n"
+
+#: src/omega_stress/interfaces/tui/screens/history.py:99
+#, python-brace-format
+msgid "Relance terminée : {value}"
+msgstr "Chạy lại xong: {value}"
+
+#: src/omega_stress/interfaces/tui/screens/profile_wizard.py:40
+msgid "NOUVEAU PROFIL"
+msgstr "HỒ SƠ MỚI"
+
+#: src/omega_stress/interfaces/tui/screens/profile_wizard.py:41
+msgid "Nom du profil"
+msgstr "Tên hồ sơ"
+
+#: src/omega_stress/interfaces/tui/screens/profile_wizard.py:42
+msgid "Description (optionnelle)"
+msgstr "Mô tả (tùy chọn)"
+
+#: src/omega_stress/interfaces/tui/screens/profile_wizard.py:45
+msgid "Famille de test"
+msgstr "Họ kiểm thử"
+
+#: src/omega_stress/interfaces/tui/screens/profile_wizard.py:49
+msgid "Taux d'erreur maximal (0.0-1.0)"
+msgstr "Tỉ lệ lỗi tối đa (0.0-1.0)"
+
+#: src/omega_stress/interfaces/tui/screens/profile_wizard.py:91
+msgid "Nom et cible par défaut sont obligatoires."
+msgstr "Tên và mục tiêu mặc định là bắt buộc."
+
+#: src/omega_stress/interfaces/tui/screens/profile_wizard.py:94
+msgid "Choisissez une famille et une intensité."
+msgstr "Hãy chọn một họ và một cường độ."
+
+#: src/omega_stress/interfaces/tui/screens/profile_wizard.py:100
+msgid "Durée et taux d'erreur doivent être numériques."
+msgstr "Thời lượng và tỉ lệ lỗi phải là số."
+
+#: src/omega_stress/interfaces/tui/screens/profiles.py:42
+msgid "Nouveau profil"
+msgstr "Hồ sơ mới"
+
+#: src/omega_stress/interfaces/tui/screens/profiles.py:44
+msgid "Figer le profil sélectionné"
+msgstr "Cố định hồ sơ đã chọn"
+
+#: src/omega_stress/interfaces/tui/screens/profiles.py:46
+msgid "Supprimer le profil sélectionné"
+msgstr "Xóa hồ sơ đã chọn"
+
+#: src/omega_stress/interfaces/tui/screens/profiles.py:73
+#, python-brace-format
+msgid "{name} — {value}"
+msgstr "{name} — {value}"
+
+#: src/omega_stress/interfaces/tui/screens/profiles.py:107
+#, python-brace-format
+msgid "{name} figé."
+msgstr "Đã cố định {name}."
+
+#: src/omega_stress/interfaces/tui/screens/profiles.py:116
+msgid "SUPPRIMER CE PROFIL ?"
+msgstr "XÓA HỒ SƠ NÀY?"
+
+#: src/omega_stress/interfaces/tui/screens/profiles.py:118
+msgid "Définitif. Un run passé lié à ce profil ne pourra plus être rejoué."
+msgstr "Không thể hoàn tác. Lượt chạy trước đây gắn với hồ sơ này sẽ không thể chạy lại."
+
+#: src/omega_stress/interfaces/tui/screens/profiles.py:130
+msgid "Profil supprimé."
+msgstr "Đã xóa hồ sơ."
+
+#: src/omega_stress/interfaces/tui/screens/quit_confirm.py:21
+msgid "QUITTER OMEGA-STRESS ?"
+msgstr "THOÁT OMEGA-STRESS?"
+
+#: src/omega_stress/interfaces/tui/screens/quit_confirm.py:23
+msgid "Tout test en cours sera interrompu."
+msgstr "Mọi kiểm thử đang chạy sẽ bị ngắt."
+
+#: src/omega_stress/interfaces/tui/screens/ramp_panel.py:106
+msgid "TEST CHARGE"
+msgstr "KIỂM THỬ TẢI"
+
+#: src/omega_stress/interfaces/tui/screens/ramp_panel.py:191
+msgid "Aucun profil figé pour Test charge (des profils figés existent pour d'autres types de test — Connexions/Requêtes)."
+msgstr "Không có hồ sơ cố định cho Kiểm thử tải (có hồ sơ cố định cho các loại kiểm thử khác — Kết nối/Yêu cầu)."
+
+#: src/omega_stress/interfaces/tui/screens/request_panel.py:112
+msgid "TEST REQUÊTES"
+msgstr "KIỂM THỬ YÊU CẦU"
+
+#: src/omega_stress/interfaces/tui/screens/request_panel.py:197
+msgid "Aucun profil figé pour Test requêtes (des profils figés existent pour d'autres types de test — Connexions/Rampe)."
+msgstr "Không có hồ sơ cố định cho Kiểm thử yêu cầu (có hồ sơ cố định cho các loại kiểm thử khác — Kết nối/Tăng dần)."
+
+#: src/omega_stress/interfaces/tui/screens/run_details.py:39
+msgid "DÉTAIL DU RUN"
+msgstr "CHI TIẾT LƯỢT CHẠY"
+
+#: src/omega_stress/interfaces/tui/screens/run_details.py:41 src/omega_stress/interfaces/tui/widgets/history_table.py:16 src/omega_stress/infrastructure/exporters/templates/report.html.jinja:74
+msgid "Verdict"
+msgstr "Phán quyết"
+
+#: src/omega_stress/interfaces/tui/screens/run_details.py:42 src/omega_stress/interfaces/tui/widgets/progress_panel.py:23 src/omega_stress/infrastructure/exporters/templates/report.html.jinja:82
+msgid "Débit observé"
+msgstr "Thông lượng quan sát"
+
+#: src/omega_stress/interfaces/tui/screens/run_details.py:44 src/omega_stress/interfaces/tui/widgets/progress_panel.py:25 src/omega_stress/infrastructure/exporters/templates/report.html.jinja:84
+msgid "Latence p95"
+msgstr "Độ trễ p95"
+
+#: src/omega_stress/interfaces/tui/screens/run_details.py:70 src/omega_stress/interfaces/tui/widgets/progress_panel.py:30
+#, python-brace-format
+msgid "{observed_rate_per_minute:.0f} req/min"
+msgstr "{observed_rate_per_minute:.0f} yc/phút"
+
+#: src/omega_stress/interfaces/tui/screens/run_details.py:85
+msgid " (personnalisé — au moins un critère réel diffère du profil figé référence)"
+msgstr " (tùy chỉnh — ít nhất một tiêu chí thực khác với hồ sơ cố định tham chiếu)"
+
+#: src/omega_stress/interfaces/tui/screens/run_details.py:90
+#, python-brace-format
+msgid ""
+"{id}\n"
+"Cible : {target_address}\n"
+"Famille/niveau : {family}/{level}{profile_note}\n"
+"Démarré : {started_at}"
+msgstr ""
+"{id}\n"
+"Mục tiêu: {target_address}\n"
+"Họ/mức: {family}/{level}{profile_note}\n"
+"Bắt đầu: {started_at}"
+
+#: src/omega_stress/interfaces/tui/screens/run_details.py:102
+#, python-brace-format
+msgid ""
+"\n"
+"Diagnostic : {reason}"
+msgstr ""
+"\n"
+"Chẩn đoán: {reason}"
+
+#: src/omega_stress/interfaces/tui/screens/run_details.py:105
+#, python-brace-format
+msgid ""
+"\n"
+"Erreurs : {errors_timeout} timeout, {errors_connection} connexion, {errors_http_4xx} 4xx, {errors_http_5xx} 5xx"
+msgstr ""
+"\n"
+"Lỗi: {errors_timeout} timeout, {errors_connection} kết nối, {errors_http_4xx} 4xx, {errors_http_5xx} 5xx"
+
+#: src/omega_stress/interfaces/tui/screens/run_details.py:122
+#, python-brace-format
+msgid ""
+"\n"
+"Pic générateur : {cpu} CPU, {memory} RAM"
+msgstr ""
+"\n"
+"Đỉnh bộ sinh tải: {cpu} CPU, {memory} RAM"
+
+#: src/omega_stress/interfaces/tui/screens/run_details.py:125
+#, python-brace-format
+msgid ""
+"\n"
+"{sample_count} mesures enregistrées (détail exhaustif : export JSON/HTML)."
+msgstr ""
+"\n"
+"Đã ghi {sample_count} lần đo (chi tiết đầy đủ: xuất JSON/HTML)."
+
+#: src/omega_stress/interfaces/tui/screens/run_details.py:133
+msgid "Chronologie — temps | taux d'erreur (barre) | erreurs/requêtes par palier\n"
+msgstr "Dòng thời gian — thời gian | tỉ lệ lỗi (thanh) | lỗi/yêu cầu theo bậc\n"
+
+#: src/omega_stress/interfaces/tui/screens/run_details.py:139
+msgid "Aucune mesure enregistrée : le test s'est terminé avant la première mesure (voir le diagnostic ci-dessus)."
+msgstr "Không có lần đo nào được ghi: kiểm thử kết thúc trước lần đo đầu tiên (xem chẩn đoán ở trên)."
+
+#: src/omega_stress/interfaces/tui/screens/settings_screen.py:84
+msgid "Dossier d'export par défaut"
+msgstr "Thư mục xuất mặc định"
+
+#: src/omega_stress/interfaces/tui/screens/settings_screen.py:87
+msgid "Dossier des captures d'écran par défaut"
+msgstr "Thư mục ảnh chụp màn hình mặc định"
+
+#: src/omega_stress/interfaces/tui/screens/settings_screen.py:93
+msgid "Vider les cibles récentes"
+msgstr "Xóa mục tiêu gần đây"
+
+#: src/omega_stress/interfaces/tui/screens/settings_screen.py:122
+msgid "VIDER LES CIBLES RÉCENTES ?"
+msgstr "XÓA MỤC TIÊU GẦN ĐÂY?"
+
+#: src/omega_stress/interfaces/tui/screens/settings_screen.py:123
+msgid "Les cibles épinglées ne sont pas concernées."
+msgstr "Các mục tiêu đã ghim không bị ảnh hưởng."
+
+#: src/omega_stress/interfaces/tui/screens/settings_screen.py:132
+msgid "Y compris les cibles épinglées : les autorisations déjà accordées seront perdues."
+msgstr "Bao gồm cả mục tiêu đã ghim: các quyền đã cấp sẽ bị mất."
+
+#: src/omega_stress/interfaces/tui/screens/settings_screen.py:142
+msgid "Tous les runs enregistrés seront effacés définitivement."
+msgstr "Tất cả lượt chạy đã lưu sẽ bị xóa vĩnh viễn."
+
+#: src/omega_stress/interfaces/tui/screens/settings_screen.py:169
+msgid "Cibles récentes vidées."
+msgstr "Đã xóa mục tiêu gần đây."
+
+#: src/omega_stress/interfaces/tui/screens/settings_screen.py:175
+msgid "Toutes les cibles ont été effacées."
+msgstr "Đã xóa tất cả mục tiêu."
+
+#: src/omega_stress/interfaces/tui/screens/splash.py:40
+msgid "Appuyez sur une touche pour continuer…"
+msgstr "Nhấn một phím để tiếp tục…"
+
+#: src/omega_stress/interfaces/tui/screens/targets.py:36
+msgid "Cibles épinglées : illimitées | Cibles récentes : 10 maximum"
+msgstr "Mục tiêu đã ghim: không giới hạn | Mục tiêu gần đây: tối đa 10"
+
+#: src/omega_stress/interfaces/tui/screens/targets.py:42
+msgid "Nouvelle adresse (ex. https://exemple.org)"
+msgstr "Địa chỉ mới (vd. https://example.org)"
+
+#: src/omega_stress/interfaces/tui/screens/targets.py:49
+msgid "Désépingler la cible sélectionnée"
+msgstr "Bỏ ghim mục tiêu đã chọn"
+
+#: src/omega_stress/interfaces/tui/screens/targets.py:83
+msgid "Saisissez une adresse à épingler."
+msgstr "Hãy nhập một địa chỉ để ghim."
+
+#: src/omega_stress/interfaces/tui/screens/targets.py:93
+#, python-brace-format
+msgid "{base_url} épinglée."
+msgstr "Đã ghim {base_url}."
+
+#: src/omega_stress/interfaces/tui/screens/targets.py:106
+msgid "Cible désépinglée."
+msgstr "Đã bỏ ghim mục tiêu."
+
+#: src/omega_stress/interfaces/tui/widgets/authorization_checkbox.py:11
+msgid "Je confirme être autorisé à tester cette cible"
+msgstr "Tôi xác nhận có quyền kiểm thử mục tiêu này"
+
+#: src/omega_stress/interfaces/tui/widgets/duration_preset_table.py:24 src/omega_stress/interfaces/tui/widgets/history_table.py:16
+msgid "ID"
+msgstr "ID"
+
+#: src/omega_stress/interfaces/tui/widgets/duration_preset_table.py:26
+msgid "Durée totale"
+msgstr "Tổng thời lượng"
+
+#: src/omega_stress/interfaces/tui/widgets/duration_preset_table.py:27
+msgid "Familles compatibles"
+msgstr "Họ tương thích"
+
+#: src/omega_stress/interfaces/tui/widgets/duration_preset_table.py:28
+msgid "Niveaux libres"
+msgstr "Mức tự do"
+
+#: src/omega_stress/interfaces/tui/widgets/duration_preset_table.py:29
+msgid "Niveau renforcé"
+msgstr "Mức tăng cường"
+
+#: src/omega_stress/interfaces/tui/widgets/duration_preset_table.py:35
+#, python-brace-format
+msgid "{total_minutes} min"
+msgstr "{total_minutes} phút"
+
+#: src/omega_stress/interfaces/tui/widgets/history_table.py:16
+msgid "Démarré"
+msgstr "Bắt đầu"
+
+#: src/omega_stress/interfaces/tui/widgets/history_table.py:37
+msgid "en cours"
+msgstr "đang chạy"
+
+#: src/omega_stress/interfaces/tui/widgets/load_reference_table.py:21 src/omega_stress/infrastructure/exporters/templates/report.html.jinja:61
+msgid "Type de test"
+msgstr "Loại kiểm thử"
+
+#: src/omega_stress/interfaces/tui/widgets/load_reference_table.py:22
+msgid "Niveau"
+msgstr "Mức"
+
+#: src/omega_stress/interfaces/tui/widgets/load_reference_table.py:23
+msgid "Dimension pilotée"
+msgstr "Chiều điều khiển"
+
+#: src/omega_stress/interfaces/tui/widgets/load_reference_table.py:24
+msgid "Cible visée"
+msgstr "Giá trị nhắm tới"
+
+#: src/omega_stress/interfaces/tui/widgets/load_reference_table.py:25
+msgid "Simultanéité réelle"
+msgstr "Độ đồng thời thực"
+
+#: src/omega_stress/interfaces/tui/widgets/load_reference_table.py:27
+msgid "Durées disponibles"
+msgstr "Thời lượng có sẵn"
+
+#: src/omega_stress/interfaces/tui/widgets/profile_list.py:16 src/omega_stress/infrastructure/exporters/templates/report.html.jinja:65
+msgid "Durée"
+msgstr "Thời lượng"
+
+#: src/omega_stress/interfaces/tui/widgets/profile_list.py:26
+#, python-brace-format
+msgid "{duration_minutes} min"
+msgstr "{duration_minutes} phút"
+
+#: src/omega_stress/interfaces/tui/widgets/progress_panel.py:26
+msgid "CPU / RAM"
+msgstr "CPU / RAM"
+
+#: src/omega_stress/interfaces/tui/widgets/run_progress.py:45 src/omega_stress/interfaces/tui/widgets/run_progress.py:58
+#, python-brace-format
+msgid "Test en cours… (reste {value})"
+msgstr "Đang kiểm thử… (còn {value})"
+
+#: src/omega_stress/interfaces/tui/widgets/run_progress.py:63
+#, python-brace-format
+msgid "Test en cours… (dépasse la durée prévue de {overrun})"
+msgstr "Đang kiểm thử… (vượt thời lượng dự kiến {overrun})"
+
+#: src/omega_stress/interfaces/tui/widgets/safety_mode_checkbox.py:11
+msgid "Mode sécurité (protège cette machine)"
+msgstr "Chế độ an toàn (bảo vệ máy này)"
+
+#: src/omega_stress/interfaces/tui/widgets/target_picker.py:30
+msgid "ou saisir une adresse (ex. https://exemple.org)"
+msgstr "hoặc nhập một địa chỉ (vd. https://example.org)"
+
+#: src/omega_stress/interfaces/tui/widgets/target_table.py:17
+msgid "Adresse"
+msgstr "Địa chỉ"
+
+#: src/omega_stress/interfaces/tui/widgets/target_table.py:17
+msgid "Dernière utilisation"
+msgstr "Lần dùng gần nhất"
+
+#: src/omega_stress/interfaces/tui/presenters/calibration_presenter.py:49
+#, python-brace-format
+msgid "Âge du calibrage : {age_days} j — renouvellement OBLIGATOIRE (> {CALIBRATION_VALIDITY_DAYS_MANDATORY} j)."
+msgstr "Tuổi hiệu chuẩn: {age_days} ngày — BẮT BUỘC làm mới (> {CALIBRATION_VALIDITY_DAYS_MANDATORY} ngày)."
+
+#: src/omega_stress/interfaces/tui/presenters/calibration_presenter.py:57
+#, python-brace-format
+msgid "Âge du calibrage : {age_days} j — renouvellement recommandé (> {CALIBRATION_VALIDITY_DAYS_RECOMMENDED} j)."
+msgstr "Tuổi hiệu chuẩn: {age_days} ngày — nên làm mới (> {CALIBRATION_VALIDITY_DAYS_RECOMMENDED} ngày)."
+
+#: src/omega_stress/interfaces/tui/presenters/calibration_presenter.py:63
+#, python-brace-format
+msgid "Âge du calibrage : {age_days} j."
+msgstr "Tuổi hiệu chuẩn: {age_days} ngày."
+
+#: src/omega_stress/infrastructure/exporters/csv_exporter.py:57
+#, python-brace-format
+msgid "Échec d'écriture CSV vers {path} : {exc}"
+msgstr "Không ghi được CSV vào {path}: {exc}"
+
+#: src/omega_stress/infrastructure/exporters/html_exporter.py:61
+#, python-brace-format
+msgid "Échec d'écriture HTML vers {path} : {exc}"
+msgstr "Không ghi được HTML vào {path}: {exc}"
+
+#: src/omega_stress/infrastructure/exporters/html_exporter.py:78
+msgid "Débit (requêtes/min)"
+msgstr "Thông lượng (yêu cầu/phút)"
+
+#: src/omega_stress/infrastructure/exporters/html_exporter.py:82
+msgid "Demandé"
+msgstr "Yêu cầu"
+
+#: src/omega_stress/infrastructure/exporters/html_exporter.py:84
+msgid "Réel"
+msgstr "Thực tế"
+
+#: src/omega_stress/infrastructure/exporters/html_exporter.py:89
+msgid "Latence (ms)"
+msgstr "Độ trễ (ms)"
+
+#: src/omega_stress/infrastructure/exporters/html_exporter.py:99
+msgid "Erreurs par catégorie"
+msgstr "Lỗi theo danh mục"
+
+#: src/omega_stress/infrastructure/exporters/html_exporter.py:102
+msgid "Timeout"
+msgstr "Timeout"
+
+#: src/omega_stress/infrastructure/exporters/html_exporter.py:103
+msgid "Connexion"
+msgstr "Kết nối"
+
+#: src/omega_stress/infrastructure/exporters/html_exporter.py:105
+msgid "HTTP 4xx"
+msgstr "HTTP 4xx"
+
+#: src/omega_stress/infrastructure/exporters/html_exporter.py:107
+msgid "HTTP 5xx"
+msgstr "HTTP 5xx"
+
+#: src/omega_stress/infrastructure/exporters/html_exporter.py:112
+msgid "CPU (%)"
+msgstr "CPU (%)"
+
+#: src/omega_stress/infrastructure/exporters/html_exporter.py:116
+msgid "Générateur"
+msgstr "Bộ sinh tải"
+
+#: src/omega_stress/infrastructure/exporters/html_exporter.py:121
+msgid "Système"
+msgstr "Hệ thống"
+
+#: src/omega_stress/infrastructure/exporters/html_exporter.py:129
+msgid "Mémoire (Mo)"
+msgstr "Bộ nhớ (MB)"
+
+#: src/omega_stress/infrastructure/exporters/html_exporter.py:133
+msgid "RSS générateur"
+msgstr "RSS của bộ sinh tải"
+
+#: src/omega_stress/infrastructure/exporters/html_exporter.py:138
+msgid "Swap utilisé"
+msgstr "Swap đã dùng"
+
+#: src/omega_stress/infrastructure/exporters/json_exporter.py:28
+#, python-brace-format
+msgid "Échec d'écriture JSON vers {path} : {exc}"
+msgstr "Không ghi được JSON vào {path}: {exc}"
+
+#: src/omega_stress/infrastructure/exporters/templates/report.html.jinja:5
+#, python-brace-format
+msgid "Rapport omega-stress — {run_id}"
+msgstr "Báo cáo omega-stress — {run_id}"
+
+#: src/omega_stress/infrastructure/exporters/templates/report.html.jinja:55
+#, python-brace-format
+msgid "Rapport de test — {run_id}"
+msgstr "Báo cáo kiểm thử — {run_id}"
+
+#: src/omega_stress/infrastructure/exporters/templates/report.html.jinja:63
+msgid "Début"
+msgstr "Đầu"
+
+#: src/omega_stress/infrastructure/exporters/templates/report.html.jinja:64
+msgid "Fin"
+msgstr "Cuối"
+
+#: src/omega_stress/infrastructure/exporters/templates/report.html.jinja:65
+#, python-brace-format
+msgid "{value} min"
+msgstr "{value} phút"
+
+#: src/omega_stress/infrastructure/exporters/templates/report.html.jinja:69
+msgid "Actif"
+msgstr "Đang hoạt động"
+
+#: src/omega_stress/infrastructure/exporters/templates/report.html.jinja:69
+msgid "Désactivé"
+msgstr "Đã tắt"
+
+#: src/omega_stress/infrastructure/exporters/templates/report.html.jinja:79
+msgid "Métriques"
+msgstr "Chỉ số"
+
+#: src/omega_stress/infrastructure/exporters/templates/report.html.jinja:81
+msgid "Débit demandé"
+msgstr "Thông lượng yêu cầu"
+
+#: src/omega_stress/infrastructure/exporters/templates/report.html.jinja:81
+#, python-brace-format
+msgid "{requested_rate_per_minute} req/min"
+msgstr "{requested_rate_per_minute} yc/phút"
+
+#: src/omega_stress/infrastructure/exporters/templates/report.html.jinja:82
+#, python-brace-format
+msgid "{observed_rate_per_minute} req/min"
+msgstr "{observed_rate_per_minute} yc/phút"
+
+#: src/omega_stress/infrastructure/exporters/templates/report.html.jinja:83
+msgid "Latence p50"
+msgstr "Độ trễ p50"
+
+#: src/omega_stress/infrastructure/exporters/templates/report.html.jinja:85
+msgid "Latence p99"
+msgstr "Độ trễ p99"
+
+#: src/omega_stress/infrastructure/exporters/templates/report.html.jinja:87
+msgid "Dont timeout / connexion / 4xx / 5xx"
+msgstr "Trong đó timeout / kết nối / 4xx / 5xx"
+
+#: src/omega_stress/infrastructure/exporters/templates/report.html.jinja:89
+msgid "Pic CPU générateur"
+msgstr "Đỉnh CPU của bộ sinh tải"
+
+#: src/omega_stress/infrastructure/exporters/templates/report.html.jinja:92
+msgid "Pic mémoire générateur"
+msgstr "Đỉnh bộ nhớ của bộ sinh tải"
+
+#: src/omega_stress/infrastructure/exporters/templates/report.html.jinja:92
+#, python-brace-format
+msgid "{value} Mo"
+msgstr "{value} MB"
+
+#: src/omega_stress/infrastructure/exporters/templates/report.html.jinja:99
+msgid "Graphiques"
+msgstr "Biểu đồ"
+
+#: src/omega_stress/infrastructure/exporters/templates/report.html.jinja:110
+#, python-brace-format
+msgid "Chronologie ({samples} mesures)"
+msgstr "Dòng thời gian ({samples} lần đo)"
+
+#: src/omega_stress/infrastructure/exporters/templates/report.html.jinja:114
+msgid "Seconde"
+msgstr "Giây"
+
+#: src/omega_stress/infrastructure/exporters/templates/report.html.jinja:114
+msgid "Débit (req/min)"
+msgstr "Thông lượng (yc/phút)"
+
+#: src/omega_stress/infrastructure/exporters/templates/report.html.jinja:139
+msgid "Diagnostic"
+msgstr "Chẩn đoán"

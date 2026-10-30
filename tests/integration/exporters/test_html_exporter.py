@@ -87,7 +87,7 @@ def test_peak_system_metrics_appear_in_metrics_box(tmp_path, report_content_with
 
     with open(written_path, encoding="utf-8") as handle:
         html = handle.read()
-    assert "Pic CPU generateur" in html
+    assert "Pic CPU générateur" in html
     assert "22" in html
 
 

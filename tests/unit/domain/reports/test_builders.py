@@ -82,7 +82,7 @@ def test_significant_rate_gap_flags_local_bottleneck():
 
     content = build_report_content(degraded, target_address="https://example.org/")
 
-    assert any("goulot d'etranglement" in rec for rec in content.diagnostic.recommendations)
+    assert any("goulot d'étranglement" in rec for rec in content.diagnostic.recommendations)
 
 
 def test_minor_rate_gap_does_not_flag_bottleneck():
@@ -98,7 +98,7 @@ def test_high_generator_cpu_peak_flags_a_recommendation():
 
     content = build_report_content(hot_generator, target_address="https://example.org/")
 
-    assert any("generateur" in rec.lower() for rec in content.diagnostic.recommendations)
+    assert any("générateur" in rec.lower() for rec in content.diagnostic.recommendations)
 
 
 def test_low_generator_cpu_peak_does_not_flag_a_recommendation():
@@ -127,13 +127,13 @@ def test_manual_stop_headline_is_distinct_from_threshold_headline():
     )
     manual_headline = verdict_headline(RunVerdict.AUTO_STOPPED, last_event_kind="manual_stop")
 
-    assert "depassement de seuil" in threshold_headline
-    assert "depassement de seuil" not in manual_headline
+    assert "dépassement de seuil" in threshold_headline
+    assert "dépassement de seuil" not in manual_headline
     assert "manuellement" in manual_headline
 
 
 def test_auto_stopped_headline_without_event_kind_defaults_to_threshold_wording():
-    assert "depassement de seuil" in verdict_headline(RunVerdict.AUTO_STOPPED, last_event_kind=None)
+    assert "dépassement de seuil" in verdict_headline(RunVerdict.AUTO_STOPPED, last_event_kind=None)
 
 
 def test_manually_stopped_run_shows_the_manual_headline_in_its_report():
@@ -144,7 +144,7 @@ def test_manually_stopped_run_shows_the_manual_headline_in_its_report():
                 RunEvent(
                     occurred_at=FINISHED,
                     kind="manual_stop",
-                    message="Arrete manuellement par l'utilisateur.",
+                    message="Arrêté manuellement par l'utilisateur.",
                 ),
             ),
         )
@@ -153,7 +153,7 @@ def test_manually_stopped_run_shows_the_manual_headline_in_its_report():
     content = build_report_content(stopped, target_address="https://example.org/")
 
     assert "manuellement" in content.diagnostic.headline
-    assert "depassement de seuil" not in content.diagnostic.headline
+    assert "dépassement de seuil" not in content.diagnostic.headline
 
 
 def test_run_events_are_surfaced_as_recommendations():

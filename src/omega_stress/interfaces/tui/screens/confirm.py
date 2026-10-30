@@ -7,6 +7,8 @@ from textual.containers import Center, Container, Horizontal, Middle, Vertical
 from textual.screen import Screen
 from textual.widgets import Button, Static
 
+from omega_stress.shared.i18n import _
+
 
 class ConfirmScreen(Screen[bool]):
     """Demande confirmation avant une action irreversible (titre/message
@@ -25,9 +27,9 @@ class ConfirmScreen(Screen[bool]):
             yield Static(self._message, classes="omega-confirm-message")
             with Horizontal(classes="omega-confirm-buttons"):
                 with Container(classes="omega-btn-frame"):
-                    yield Button("Oui, confirmer", id="confirm", variant="error")
+                    yield Button(_("Oui, confirmer"), id="confirm", variant="error")
                 with Container(classes="omega-btn-frame"):
-                    yield Button("Non, annuler", id="cancel", variant="primary")
+                    yield Button(_("Non, annuler"), id="cancel", variant="primary")
 
     def on_button_pressed(self, event: Button.Pressed) -> None:
         self.dismiss(event.button.id == "confirm")

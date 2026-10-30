@@ -10,6 +10,7 @@ from omega_stress.core.enums import IntensityLevel, TestFamily
 from omega_stress.domain.load.models import Duration, Thresholds
 from omega_stress.domain.profiles.models import Profile
 from omega_stress.infrastructure.exceptions import StorageError
+from omega_stress.shared.i18n import _
 
 
 class SqliteProfileRepository:
@@ -52,7 +53,9 @@ class SqliteProfileRepository:
             )
             self._connection.commit()
         except sqlite3.Error as exc:
-            raise StorageError(f"Echec de sauvegarde du profil {profile.id!r} : {exc}") from exc
+            raise StorageError(
+                _("Échec de sauvegarde du profil {id!r} : {exc}").format(id=profile.id, exc=exc)
+            ) from exc
 
     def get(self, profile_id: str) -> Profile | None:
         try:
@@ -60,14 +63,18 @@ class SqliteProfileRepository:
                 "SELECT * FROM profiles WHERE id = ?", (profile_id,)
             ).fetchone()
         except sqlite3.Error as exc:
-            raise StorageError(f"Echec de lecture du profil {profile_id!r} : {exc}") from exc
+            raise StorageError(
+                _("Échec de lecture du profil {profile_id!r} : {exc}").format(
+                    profile_id=profile_id, exc=exc
+                )
+            ) from exc
         return _row_to_profile(row) if row is not None else None
 
     def list_all(self) -> tuple[Profile, ...]:
         try:
             rows = self._connection.execute("SELECT * FROM profiles").fetchall()
         except sqlite3.Error as exc:
-            raise StorageError(f"Echec de listage des profils : {exc}") from exc
+            raise StorageError(_("Échec de listage des profils : {exc}").format(exc=exc)) from exc
         return tuple(_row_to_profile(row) for row in rows)
 
     def delete(self, profile_id: str) -> None:
@@ -75,7 +82,11 @@ class SqliteProfileRepository:
             self._connection.execute("DELETE FROM profiles WHERE id = ?", (profile_id,))
             self._connection.commit()
         except sqlite3.Error as exc:
-            raise StorageError(f"Echec de suppression du profil {profile_id!r} : {exc}") from exc
+            raise StorageError(
+                _("Échec de suppression du profil {profile_id!r} : {exc}").format(
+                    profile_id=profile_id, exc=exc
+                )
+            ) from exc
 
 
 def _row_to_profile(row: sqlite3.Row) -> Profile:
@@ -98,6 +109,7 @@ def _row_to_profile(row: sqlite3.Row) -> Profile:
         favorite=bool(row["favorite"]),
         archived=bool(row["archived"]),
     )
+
 
 # <-- INFO DEV ---------------------------------------------------------
 # Role :
@@ -122,4 +134,4 @@ def _row_to_profile(row: sqlite3.Row) -> Profile:
 # Comment il sera utilise (apercu) :
 # - app/dependency_container.py cree une instance unique, injectee dans
 #   les commands/queries de application/ via le port.
-#---------------------------------------------------------------------->
+# ---------------------------------------------------------------------->

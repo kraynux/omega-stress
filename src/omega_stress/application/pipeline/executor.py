@@ -31,6 +31,7 @@ from omega_stress.domain.runs.models import IntervalSample, LoadRun, RunEvent
 from omega_stress.domain.runs.service import aggregate_samples, finish
 from omega_stress.ports.load_runner import LoadRunner
 from omega_stress.ports.run_progress_notifier import RunProgressNotifier
+from omega_stress.shared.i18n import _
 from omega_stress.shared.typing import Clock
 
 
@@ -105,11 +106,11 @@ async def execute(
                 RunEvent(
                     occurred_at=stopped_at,
                     kind="manual_stop",
-                    message="Arrete manuellement par l'utilisateur.",
+                    message=_("Arrêté manuellement par l'utilisateur."),
                 ),
             ),
         )
-        notify_auto_stop("Test arrete manuellement.", sink=notification_sink)
+        notify_auto_stop(_("Test arrêté manuellement."), sink=notification_sink)
         return stopped
 
     verdict = _final_verdict(tuple(collected), bottleneck_detected=bottleneck_notified)
@@ -152,10 +153,13 @@ def _finish_with_verdict(
     finished = finish(run, result=result, now=now)
     if isinstance(finished, Err):
         raise UseCaseExecutionError(
-            f"Impossible de cloturer le run {run.id} : {finished.error}"
+            _("Impossible de clôturer le run {id} : {error}").format(
+                id=run.id, error=finished.error
+            )
         ) from None
     emit_run_finished(finished.value, sink=audit_sink)
     return finished.value
+
 
 # <-- INFO DEV ---------------------------------------------------------
 # Role :
@@ -251,4 +255,4 @@ def _finish_with_verdict(
 # - application/commands/run_request_load.py, run_connection_load.py,
 #   run_ramp_load.py (a construire) appellent execute() apres
 #   application/pipeline/planner.py::prepare_plan().
-#---------------------------------------------------------------------->
+# ---------------------------------------------------------------------->

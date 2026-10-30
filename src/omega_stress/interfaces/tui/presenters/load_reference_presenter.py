@@ -13,6 +13,7 @@ from omega_stress.domain.load.policies import (
     is_precheck_optional,
 )
 from omega_stress.domain.load.presets import fixed_rate_preset, ramp_preset
+from omega_stress.shared.i18n import _
 
 
 @dataclass(frozen=True, slots=True)
@@ -54,7 +55,7 @@ def _duration_label(level: IntensityLevel) -> str:
     mentionnee seulement si le pre-check en debloque reellement)."""
     default = allowed_durations_minutes(level)
     if not is_precheck_mandatory(level) and not is_precheck_optional(level):
-        return f"{default[0]} a {default[-1]} min"
+        return _("{value} à {value2} min").format(value=default[0], value2=default[-1])
     default_text = " ou ".join(f"{m} min" for m in default)
     if is_precheck_mandatory(level):
         return default_text
@@ -63,15 +64,17 @@ def _duration_label(level: IntensityLevel) -> str:
     if not extra:
         return default_text
     extra_text = " ou ".join(f"{m} min" for m in extra)
-    return f"{default_text} ({extra_text} si pre-check)"
+    return _("{default_text} ({extra_text} si pré-check)").format(
+        default_text=default_text, extra_text=extra_text
+    )
 
 
 def _precheck_label(level: IntensityLevel) -> str:
     if is_precheck_mandatory(level):
-        return "Oui"
+        return _("Oui")
     if is_precheck_optional(level):
-        return "Non/Oui"
-    return "Non"
+        return _("Non/Oui")
+    return _("Non")
 
 
 def load_reference_rows() -> tuple[LoadReferenceRow, ...]:
@@ -87,11 +90,15 @@ def load_reference_rows() -> tuple[LoadReferenceRow, ...]:
         preset = fixed_rate_preset(level)
         rows.append(
             LoadReferenceRow(
-                test_type="Test requetes",
+                test_type=_("Test requêtes"),
                 level=level.value.capitalize(),
-                dimension="Debit",
-                target=f"{preset.requests_per_minute} req/min",
-                burst=f"~{_burst_per_second(preset.requests_per_minute)} req/s en rafale",
+                dimension=_("Débit"),
+                target=_("{requests_per_minute} req/min").format(
+                    requests_per_minute=preset.requests_per_minute
+                ),
+                burst=_("~{value} req/s en rafale").format(
+                    value=_burst_per_second(preset.requests_per_minute)
+                ),
                 precheck=_precheck_label(level),
                 durations=_duration_label(level),
             )
@@ -101,11 +108,15 @@ def load_reference_rows() -> tuple[LoadReferenceRow, ...]:
         preset = fixed_rate_preset(level)
         rows.append(
             LoadReferenceRow(
-                test_type="Test connexions",
+                test_type=_("Test connexions"),
                 level=level.value.capitalize(),
-                dimension="Connexions simultanees",
-                target=f"{preset.concurrent_connections} connexions",
-                burst=f"{preset.concurrent_connections} en parallele, chaque seconde",
+                dimension=_("Connexions simultanées"),
+                target=_("{concurrent_connections} connexions").format(
+                    concurrent_connections=preset.concurrent_connections
+                ),
+                burst=_("{concurrent_connections} en parallèle, chaque seconde").format(
+                    concurrent_connections=preset.concurrent_connections
+                ),
                 precheck=_precheck_label(level),
                 durations=_duration_label(level),
             )
@@ -115,13 +126,19 @@ def load_reference_rows() -> tuple[LoadReferenceRow, ...]:
         ramp = ramp_preset(level)
         rows.append(
             LoadReferenceRow(
-                test_type="Test charge",
+                test_type=_("Test charge"),
                 level=level.value.capitalize(),
-                dimension="Debit (montee puis plateau)",
-                target=f"pic {ramp.peak_requests_per_minute} req/min",
+                dimension=_("Débit (montée puis plateau)"),
+                target=_("pic {peak_requests_per_minute} req/min").format(
+                    peak_requests_per_minute=ramp.peak_requests_per_minute
+                ),
                 burst=(
-                    f"rampe {ramp.ramp_up_minutes:g} min "
-                    f"-> plateau {ramp.plateau_minutes_min:g} min"
+                    _(
+                        "rampe {ramp_up_minutes:g} min -> plateau {plateau_minutes_min:g} min"
+                    ).format(
+                        ramp_up_minutes=ramp.ramp_up_minutes,
+                        plateau_minutes_min=ramp.plateau_minutes_min,
+                    )
                 ),
                 precheck=_precheck_label(level),
                 durations=_duration_label(level),
@@ -132,9 +149,9 @@ def load_reference_rows() -> tuple[LoadReferenceRow, ...]:
 
 
 _FAMILY_LABELS: dict[TestFamily, str] = {
-    TestFamily.REQUEST: "Requetes",
-    TestFamily.CONNECTION: "Connexions",
-    TestFamily.RAMP: "Charge",
+    TestFamily.REQUEST: _("Requêtes"),
+    TestFamily.CONNECTION: _("Connexions"),
+    TestFamily.RAMP: _("Charge"),
 }
 
 
@@ -174,13 +191,14 @@ def load_reference_family_note(family: TestFamily) -> str:
     pas dans cette famille precise (voir infrastructure/runner/
     engine_params.py::target_for_interval, seule source de verite)."""
     if family is TestFamily.REQUEST:
-        return "Seul le debit (req/min) pilote ce test ; la simultaneite en decoule."
+        return _("Seul le débit (req/min) pilote ce test ; la simultanéité en découle.")
     if family is TestFamily.CONNECTION:
-        return "Seule la simultaneite (connexions) pilote ce test ; aucun debit cible."
-    return (
-        "Seul le debit au pic pilote ce test, atteint progressivement : sur une duree "
-        "choisie plus courte que la rampe indiquee, le pic n'est jamais atteint."
+        return _("Seule la simultanéité (connexions) pilote ce test ; aucun débit cible.")
+    return _(
+        "Seul le débit au pic pilote ce test, atteint progressivement : sur une durée "
+        "choisie plus courte que la rampe indiquée, le pic n'est jamais atteint."
     )
+
 
 # <-- INFO DEV ---------------------------------------------------------
 # Role :
@@ -237,4 +255,4 @@ def load_reference_family_note(family: TestFamily) -> str:
 # - interfaces/tui/widgets/load_reference_table.py (DataTable),
 #   interfaces/tui/widgets/duration_preset_table.py (DataTable D1-D6),
 #   interfaces/tui/screens/help_screen.py (section "Reperes de charge").
-#---------------------------------------------------------------------->
+# ---------------------------------------------------------------------->

@@ -8,6 +8,7 @@ from typing import Any
 from omega_stress.domain.reports.models import ExportJob, ReportContent
 from omega_stress.infrastructure.exceptions import StorageError
 from omega_stress.infrastructure.exporters.destination_resolver import resolve_destination_file
+from omega_stress.shared.i18n import _
 
 
 class JsonReportExporter:
@@ -23,7 +24,9 @@ class JsonReportExporter:
             with path.open("w", encoding="utf-8") as handle:
                 json.dump(payload, handle, indent=2, ensure_ascii=False)
         except OSError as exc:
-            raise StorageError(f"Echec d'ecriture JSON vers {path} : {exc}") from exc
+            raise StorageError(
+                _("Échec d'écriture JSON vers {path} : {exc}").format(path=path, exc=exc)
+            ) from exc
         return str(path)
 
 
@@ -112,6 +115,7 @@ def _content_to_dict(content: ReportContent) -> dict[str, Any]:
         },
     }
 
+
 # <-- INFO DEV ---------------------------------------------------------
 # Role :
 # - Serialise un ReportContent en JSON indente, sans reference cyclique
@@ -141,4 +145,4 @@ def _content_to_dict(content: ReportContent) -> dict[str, Any]:
 # - app/dependency_container.py l'enregistre sous ExportFormat.JSON dans
 #   le dict `exporters` passe a
 #   application/commands/export_run_report.py.
-#---------------------------------------------------------------------->
+# ---------------------------------------------------------------------->

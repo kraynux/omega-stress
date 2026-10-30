@@ -16,6 +16,7 @@ from omega_stress.interfaces.tui.screens.export_dialog import ExportDialogScreen
 from omega_stress.interfaces.tui.screens.run_details import RunDetailsScreen
 from omega_stress.interfaces.tui.widgets.history_table import HistoryTable
 from omega_stress.interfaces.tui.widgets.notification_bar import NotificationBar
+from omega_stress.shared.i18n import _
 
 if TYPE_CHECKING:
     from omega_stress.app.dependency_container import DependencyContainer
@@ -34,17 +35,17 @@ class HistoryScreen(OmegaScreen):
     def compose(self) -> ComposeResult:
         yield Header()
         with Vertical(classes="omega-panel"):
-            yield Static("HISTORIQUE", classes="omega-title")
+            yield Static(_("HISTORIQUE"), classes="omega-title")
             yield HistoryTable(id="history")
             with Horizontal(classes="omega-actions"):
                 with Container(classes="omega-btn-frame"):
-                    yield Button("Voir le detail", id="details")
+                    yield Button(_("Voir le détail"), id="details")
                 with Container(classes="omega-btn-frame"):
-                    yield Button("Exporter", id="export")
+                    yield Button(_("Exporter"), id="export")
                 with Container(classes="omega-btn-frame"):
-                    yield Button("Rejouer", id="replay", variant="primary")
+                    yield Button(_("Rejouer"), id="replay", variant="primary")
                 with Container(classes="omega-btn-frame"):
-                    yield Button("Retour", id="back")
+                    yield Button(_("Retour"), id="back")
             yield NotificationBar(id="notifications")
         yield Footer()
 
@@ -95,7 +96,7 @@ class HistoryScreen(OmegaScreen):
         if isinstance(result, Err):
             notification_bar(str(result.error))
             return
-        notification_bar(f"Relance terminee : {verdict_label(result.value)}")
+        notification_bar(_("Relance terminée : {value}").format(value=verdict_label(result.value)))
         self._refresh()
 
 

@@ -6,6 +6,7 @@ from omega_stress.core.enums import IntensityLevel
 from omega_stress.core.results import Err, Ok, Result
 from omega_stress.domain.errors import PrecheckRequiredError
 from omega_stress.domain.load.policies import is_precheck_mandatory
+from omega_stress.shared.i18n import _
 
 
 def check_precheck(
@@ -17,11 +18,13 @@ def check_precheck(
     if is_precheck_mandatory(level) and not precheck_validated:
         return Err(
             PrecheckRequiredError(
-                f"Le niveau {level.value} exige un pre-check automatique valide "
-                f"avant de demarrer."
+                _(
+                    "Le niveau {value} exige un pré-check automatique validé avant de démarrer."
+                ).format(value=level.value)
             )
         )
     return Ok(None)
+
 
 # <-- INFO DEV ---------------------------------------------------------
 # Role :
@@ -50,4 +53,4 @@ def check_precheck(
 # Comment il sera utilise (apercu) :
 # - application/pipeline/planner.py (ou les commands run_*_load) appelle
 #   ce guard juste apres authorization_guard.
-#---------------------------------------------------------------------->
+# ---------------------------------------------------------------------->

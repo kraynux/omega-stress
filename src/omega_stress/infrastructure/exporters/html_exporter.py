@@ -16,6 +16,7 @@ from omega_stress.infrastructure.exporters.time_series_chart import (
     TimeSeriesLine,
     render_time_series_chart,
 )
+from omega_stress.shared.i18n import TRANSLATOR, _
 
 _TEMPLATE_DIR = Path(__file__).parent / "templates"
 _TEMPLATE_NAME = "report.html.jinja"
@@ -29,6 +30,15 @@ class HtmlReportExporter:
         self._environment = jinja2.Environment(
             loader=jinja2.FileSystemLoader(_TEMPLATE_DIR),
             autoescape=jinja2.select_autoescape(["html", "jinja"]),
+        )
+        # Lot N (langue des exports) : texte des gabarits traduit par `_` dans la langue active
+        # (celle des exports sous translating_as) ; lang= et dir= du document suivent.
+        self._environment.globals.update(
+            _=_, html_lang=TRANSLATOR.html_lang, html_dir=TRANSLATOR.html_dir
+        )
+        # R1 : texte enregistre en francais (titre, impact...) retraduit dans la langue de l'export.
+        self._environment.filters["tr"] = lambda value: (
+            _(value) if isinstance(value, str) and value else value
         )
 
     def export(self, content: ReportContent, job: ExportJob) -> str:
@@ -47,7 +57,9 @@ class HtmlReportExporter:
             path.parent.mkdir(parents=True, exist_ok=True)
             path.write_text(html, encoding="utf-8")
         except OSError as exc:
-            raise StorageError(f"Echec d'ecriture HTML vers {path} : {exc}") from exc
+            raise StorageError(
+                _("Échec d'écriture HTML vers {path} : {exc}").format(path=path, exc=exc)
+            ) from exc
         return str(path)
 
 
@@ -63,16 +75,18 @@ def _render_charts(samples: tuple[IntervalSample, ...], palette: Palette) -> dic
     return {
         "rps_chart": render_time_series_chart(
             samples,
-            title="Debit (requetes/min)",
+            title=_("Débit (requêtes/min)"),
             palette=palette,
             series=(
-                TimeSeriesLine("Demande", palette.secondary, lambda s: s.requested_rate_per_minute),
-                TimeSeriesLine("Reel", palette.accent, lambda s: s.observed_rate_per_minute),
+                TimeSeriesLine(
+                    _("Demandé"), palette.secondary, lambda s: s.requested_rate_per_minute
+                ),
+                TimeSeriesLine(_("Réel"), palette.accent, lambda s: s.observed_rate_per_minute),
             ),
         ),
         "latency_chart": render_time_series_chart(
             samples,
-            title="Latence (ms)",
+            title=_("Latence (ms)"),
             palette=palette,
             series=(
                 TimeSeriesLine("p50", palette.success, lambda s: s.p50_latency_ms),
@@ -82,27 +96,29 @@ def _render_charts(samples: tuple[IntervalSample, ...], palette: Palette) -> dic
         ),
         "errors_chart": render_time_series_chart(
             samples,
-            title="Erreurs par categorie",
+            title=_("Erreurs par catégorie"),
             palette=palette,
             series=(
-                TimeSeriesLine("Timeout", palette.warning, lambda s: float(s.errors.timeout)),
-                TimeSeriesLine("Connexion", palette.error, lambda s: float(s.errors.connection)),
-                TimeSeriesLine("HTTP 4xx", palette.secondary, lambda s: float(s.errors.http_4xx)),
-                TimeSeriesLine("HTTP 5xx", palette.accent, lambda s: float(s.errors.http_5xx)),
+                TimeSeriesLine(_("Timeout"), palette.warning, lambda s: float(s.errors.timeout)),
+                TimeSeriesLine(_("Connexion"), palette.error, lambda s: float(s.errors.connection)),
+                TimeSeriesLine(
+                    _("HTTP 4xx"), palette.secondary, lambda s: float(s.errors.http_4xx)
+                ),
+                TimeSeriesLine(_("HTTP 5xx"), palette.accent, lambda s: float(s.errors.http_5xx)),
             ),
         ),
         "cpu_chart": render_time_series_chart(
             samples,
-            title="CPU (%)",
+            title=_("CPU (%)"),
             palette=palette,
             series=(
                 TimeSeriesLine(
-                    "Generateur",
+                    _("Générateur"),
                     palette.accent,
                     lambda s: s.system.cpu_percent_generator if s.system else None,
                 ),
                 TimeSeriesLine(
-                    "Systeme",
+                    _("Système"),
                     palette.secondary,
                     lambda s: s.system.cpu_percent_global if s.system else None,
                 ),
@@ -110,22 +126,23 @@ def _render_charts(samples: tuple[IntervalSample, ...], palette: Palette) -> dic
         ),
         "memory_chart": render_time_series_chart(
             samples,
-            title="Memoire (Mo)",
+            title=_("Mémoire (Mo)"),
             palette=palette,
             series=(
                 TimeSeriesLine(
-                    "RSS generateur",
+                    _("RSS générateur"),
                     palette.accent,
                     lambda s: s.system.memory_rss_mb if s.system else None,
                 ),
                 TimeSeriesLine(
-                    "Swap utilise",
+                    _("Swap utilisé"),
                     palette.warning,
                     lambda s: s.system.swap_used_mb if s.system else None,
                 ),
             ),
         ),
     }
+
 
 # <-- INFO DEV ---------------------------------------------------------
 # Role :
@@ -176,4 +193,4 @@ def _render_charts(samples: tuple[IntervalSample, ...], palette: Palette) -> dic
 #   apres installation alors que les tests locaux passent.
 # Comment il sera utilise (apercu) :
 # - app/dependency_container.py l'enregistre sous ExportFormat.HTML.
-#---------------------------------------------------------------------->
+# ---------------------------------------------------------------------->

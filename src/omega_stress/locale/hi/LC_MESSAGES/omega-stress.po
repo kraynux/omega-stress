@@ -1,0 +1,1451 @@
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: omega-stress\n"
+"Language: hi\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Omega-Status: testing\n"
+
+#: src/omega_stress/application/commands/export_run_report.py:36 src/omega_stress/application/commands/replay_run.py:61 src/omega_stress/interfaces/tui/screens/run_details.py:63
+msgid "Run {run_id!r} introuvable."
+msgstr "रन {run_id!r} नहीं मिला।"
+
+#: src/omega_stress/application/commands/export_run_report.py:40
+msgid "Run {run_id!r} n'est pas encore terminé."
+msgstr "रन {run_id!r} अभी पूरा नहीं हुआ है।"
+
+#: src/omega_stress/application/commands/export_run_report.py:48
+msgid "Format d'export {format!r} inconnu."
+msgstr "अज्ञात निर्यात प्रारूप {format!r}।"
+
+#: src/omega_stress/application/commands/freeze_profile.py:26
+msgid "Profil {profile_id!r} introuvable."
+msgstr "प्रोफ़ाइल {profile_id!r} नहीं मिली।"
+
+#: src/omega_stress/application/commands/replay_run.py:65
+msgid "Le run {run_id!r} ne référence aucun profil et ne peut pas être rejoué."
+msgstr "रन {run_id!r} किसी प्रोफ़ाइल का संदर्भ नहीं देता और फिर से नहीं चलाया जा सकता।"
+
+#: src/omega_stress/application/commands/replay_run.py:75
+msgid "Profil {profile_id!r} introuvable, impossible de rejouer ce run."
+msgstr "प्रोफ़ाइल {profile_id!r} नहीं मिली, यह रन फिर से नहीं चलाया जा सकता।"
+
+#: src/omega_stress/application/commands/replay_run.py:85
+msgid "Cible {target_id!r} introuvable, impossible de rejouer ce run."
+msgstr "लक्ष्य {target_id!r} नहीं मिला, यह रन फिर से नहीं चलाया जा सकता।"
+
+#: src/omega_stress/application/commands/run_calibration.py:98
+#, python-brace-format
+msgid "Palier {name} : {value}{value2}"
+msgstr "चरण {name}: {value}{value2}"
+
+#: src/omega_stress/application/commands/run_calibration.py:100 src/omega_stress/interfaces/tui/presenters/calibration_presenter.py:108
+msgid "dégradé"
+msgstr "गिरावट"
+
+#: src/omega_stress/application/commands/run_calibration.py:100
+msgid "sain"
+msgstr "स्वस्थ"
+
+#: src/omega_stress/application/pipeline/abort.py:48
+#, python-brace-format
+msgid "Impossible de clôturer le run {id} après arrêt automatique : {error}"
+msgstr "स्वचालित रोक के बाद रन {id} बंद नहीं किया जा सका: {error}"
+
+#: src/omega_stress/application/pipeline/executor.py:109
+msgid "Arrêté manuellement par l'utilisateur."
+msgstr "उपयोगकर्ता द्वारा मैन्युअल रूप से रोका गया।"
+
+#: src/omega_stress/application/pipeline/executor.py:113
+msgid "Test arrêté manuellement."
+msgstr "परीक्षण मैन्युअल रूप से रोका गया।"
+
+#: src/omega_stress/application/pipeline/executor.py:156
+#, python-brace-format
+msgid "Impossible de clôturer le run {id} : {error}"
+msgstr "रन {id} बंद नहीं किया जा सका: {error}"
+
+#: src/omega_stress/application/pipeline/guards/authorization_guard.py:23
+msgid "Cible {target_id!r} non autorisée : ni épinglée, ni confirmation explicite fournie pour ce run."
+msgstr "लक्ष्य {target_id!r} अधिकृत नहीं है: न पिन किया गया, न इस रन के लिए स्पष्ट पुष्टि दी गई।"
+
+#: src/omega_stress/application/pipeline/guards/capability_guard.py:22
+msgid "Capacité {capability_name!r} indisponible (statut : {value})."
+msgstr "क्षमता {capability_name!r} उपलब्ध नहीं (स्थिति: {value})।"
+
+#: src/omega_stress/application/pipeline/guards/precheck_guard.py:22 src/omega_stress/domain/load/validators.py:40
+#, python-brace-format
+msgid "Le niveau {value} exige un pré-check automatique validé avant de démarrer."
+msgstr "स्तर {value} के लिए शुरू करने से पहले स्वचालित पूर्व-जाँच का सफल होना आवश्यक है।"
+
+#: src/omega_stress/application/pipeline/hooks/notification_hook.py:16
+#, python-brace-format
+msgid "Arrêt automatique : {reason}"
+msgstr "स्वचालित रोक: {reason}"
+
+#: src/omega_stress/application/pipeline/hooks/notification_hook.py:21
+msgid "Le générateur local semble devenir le goulot d'étranglement (débit observé significativement inférieur au débit demandé)."
+msgstr "स्थानीय जनरेटर बाधा बनता दिख रहा है (देखी गई थ्रूपुट माँगी गई से काफ़ी कम)।"
+
+#: src/omega_stress/domain/calibration/validators.py:39
+msgid "Un calibrage ou un test est déjà en cours sur ce poste."
+msgstr "इस कंप्यूटर पर पहले से एक कैलिब्रेशन या परीक्षण चल रहा है।"
+
+#: src/omega_stress/domain/calibration/validators.py:49
+#, python-brace-format
+msgid "CPU global {cpu_global_percent:.0f}% > seuil {CALIBRATION_PRECONDITION_CPU_GLOBAL_MAX_PERCENT:.0f}% : machine déjà sous pression."
+msgstr "कुल CPU {cpu_global_percent:.0f}% > सीमा {CALIBRATION_PRECONDITION_CPU_GLOBAL_MAX_PERCENT:.0f}%: मशीन पहले से दबाव में है।"
+
+#: src/omega_stress/domain/calibration/validators.py:66
+#, python-brace-format
+msgid "Mémoire disponible {memory_available_percent:.0f}% < seuil {CALIBRATION_PRECONDITION_MEMORY_AVAILABLE_MIN_PERCENT:.0f}%."
+msgstr "उपलब्ध मेमोरी {memory_available_percent:.0f}% < सीमा {CALIBRATION_PRECONDITION_MEMORY_AVAILABLE_MIN_PERCENT:.0f}%।"
+
+#: src/omega_stress/domain/calibration/validators.py:77
+msgid "Swap déjà activé ou en croissance : machine déjà sous pression."
+msgstr "स्वैप पहले से उपयोग में है या बढ़ रहा है: मशीन पहले से दबाव में है।"
+
+#: src/omega_stress/domain/calibration/validators.py:84
+#, python-brace-format
+msgid "Load average 1 min {load_average_1min:.1f} > {logical_cpu_count} coeurs logiques."
+msgstr "1 मिनट का लोड औसत {load_average_1min:.1f} > {logical_cpu_count} लॉजिकल कोर।"
+
+#: src/omega_stress/domain/load/models.py:27
+msgid "max_error_rate doit être compris entre 0.0 et 1.0, reçu {max_error_rate!r}"
+msgstr "max_error_rate 0.0 और 1.0 के बीच होना चाहिए, मिला {max_error_rate!r}"
+
+#: src/omega_stress/domain/load/models.py:33
+msgid "max_p95_latency_ms doit être strictement positif, reçu {max_p95_latency_ms!r}"
+msgstr "max_p95_latency_ms धनात्मक होना चाहिए, मिला {max_p95_latency_ms!r}"
+
+#: src/omega_stress/domain/load/models.py:57
+#, python-brace-format
+msgid "Durée {minutes} min non autorisée pour le niveau {value} (choix fermés : {allowed})"
+msgstr "स्तर {value} के लिए {minutes} मिनट की अवधि अनुमत नहीं (विकल्प: {allowed})"
+
+#: src/omega_stress/domain/load/models.py:83
+msgid "{field_name} doit être compris entre 0.0 et 1.0, reçu {value!r}"
+msgstr "{field_name} 0.0 और 1.0 के बीच होना चाहिए, मिला {value!r}"
+
+#: src/omega_stress/domain/load/models.py:90
+msgid "duration_minutes doit être strictement positif, reçu {duration_minutes!r}"
+msgstr "duration_minutes धनात्मक होना चाहिए, मिला {duration_minutes!r}"
+
+#: src/omega_stress/domain/load/policies.py:241
+msgid "Le mode sécurité (actif par défaut) arrête automatiquement un test si CETTE machine - pas la cible testée - semble en danger (CPU/mémoire du générateur). Le désactiver ne change rien aux protections de la cible (taux d'erreur, latence : toujours activés) : seul le risque de ralentir ou geler temporairement VOTRE ordinateur pendant la durée du test augmente, surtout sur les niveaux intensifs (Connexions Agressif et au-delà, Requêtes Maximum). À désactiver si vous savez que votre machine peut encaisser plus que ce que le mode sécurité suppose par défaut."
+msgstr "सुरक्षा मोड (डिफ़ॉल्ट रूप से चालू) परीक्षण को अपने आप रोक देता है यदि यह मशीन — परीक्षित लक्ष्य नहीं — खतरे में दिखे (जनरेटर का CPU/मेमोरी)। इसे बंद करने से लक्ष्य की सुरक्षा (त्रुटि दर, विलंबता: हमेशा चालू) में कोई बदलाव नहीं होता: केवल परीक्षण के दौरान आपके कंप्यूटर के धीमा होने या कुछ समय के लिए अटकने का जोखिम बढ़ता है, खासकर तीव्र स्तरों पर (कनेक्शन आक्रामक और ऊपर, अनुरोध अधिकतम)। इसे तभी बंद करें जब आप जानते हों कि आपकी मशीन सुरक्षा मोड की डिफ़ॉल्ट धारणा से अधिक भार सह सकती है।"
+
+#: src/omega_stress/domain/load/validators.py:32
+msgid "Aucun run ne peut démarrer sans confirmation d'autorisation de la cible."
+msgstr "लक्ष्य की अनुमति की पुष्टि के बिना कोई रन शुरू नहीं हो सकता।"
+
+#: src/omega_stress/domain/load/validators.py:50
+#, python-brace-format
+msgid "Le profil {name} n'est pas compatible avec la famille {value}."
+msgstr "प्रोफ़ाइल {name} परिवार {value} के अनुकूल नहीं है।"
+
+#: src/omega_stress/domain/load/validators.py:59
+#, python-brace-format
+msgid "Durée {minutes} min incohérente avec le profil {name} ({total_minutes} min attendues)."
+msgstr "{minutes} मिनट की अवधि प्रोफ़ाइल {name} से मेल नहीं खाती ({total_minutes} मिनट अपेक्षित)।"
+
+#: src/omega_stress/domain/load/validators.py:80
+#, python-brace-format
+msgid "Durée {minutes} min non autorisée pour le niveau {value}."
+msgstr "स्तर {value} के लिए {minutes} मिनट की अवधि अनुमत नहीं।"
+
+#: src/omega_stress/domain/load/validators.py:87
+msgid "Un Test charge doit définir au moins une étape de rampe."
+msgstr "लोड परीक्षण में कम से कम एक रैंप चरण होना चाहिए।"
+
+#: src/omega_stress/domain/load/validators.py:95
+msgid "Seul un Test charge (ou un Test connexions avec profil de durée) peut définir des étapes de rampe."
+msgstr "केवल लोड परीक्षण (या अवधि प्रोफ़ाइल वाला कनेक्शन परीक्षण) ही रैंप चरण तय कर सकता है।"
+
+#: src/omega_stress/domain/load/validators.py:117
+#, python-brace-format
+msgid "Taux d'erreur observé {observed_error_rate:.1%} > seuil {max_error_rate:.1%}"
+msgstr "देखी गई त्रुटि दर {observed_error_rate:.1%} > सीमा {max_error_rate:.1%}"
+
+#: src/omega_stress/domain/load/validators.py:132
+#, python-brace-format
+msgid "Latence p95 observée {observed_p95_latency_ms:.0f}ms > seuil {max_p95_latency_ms:.0f}ms"
+msgstr "देखी गई p95 विलंबता {observed_p95_latency_ms:.0f}ms > सीमा {max_p95_latency_ms:.0f}ms"
+
+#: src/omega_stress/domain/load/validators.py:175
+#, python-brace-format
+msgid "Le niveau {value} pour le profil {name} ({total_minutes} min) exige la confirmation renforcée exacte."
+msgstr "प्रोफ़ाइल {name} ({total_minutes} मिनट) के स्तर {value} के लिए सटीक सुदृढ़ पुष्टि आवश्यक है।"
+
+#: src/omega_stress/domain/load/validators.py:184
+#, python-brace-format
+msgid "Le niveau {value} n'est pas proposé pour le profil {name} ({total_minutes} min)."
+msgstr "प्रोफ़ाइल {name} ({total_minutes} मिनट) के लिए स्तर {value} उपलब्ध नहीं है।"
+
+#: src/omega_stress/domain/load/validators.py:209
+#, python-brace-format
+msgid "{CRITICAL_WINDOW_SECONDS:.0f}s critique"
+msgstr "{CRITICAL_WINDOW_SECONDS:.0f}s गंभीर"
+
+#: src/omega_stress/domain/load/validators.py:227
+#, python-brace-format
+msgid "Taux de timeout {timeout_rate:.1%} sur fenêtre {window_label} >= seuil {WINDOW_TIMEOUT_RATE_ABORT_THRESHOLD:.0%}"
+msgstr "विंडो {window_label} में टाइमआउट दर {timeout_rate:.1%} >= सीमा {WINDOW_TIMEOUT_RATE_ABORT_THRESHOLD:.0%}"
+
+#: src/omega_stress/domain/load/validators.py:243
+#, python-brace-format
+msgid "Taux d'erreurs HTTP 5xx {http_5xx_rate:.1%} sur fenêtre {window_label} >= seuil {WINDOW_HTTP_5XX_RATE_ABORT_THRESHOLD:.0%}"
+msgstr "विंडो {window_label} में HTTP 5xx त्रुटि दर {http_5xx_rate:.1%} >= सीमा {WINDOW_HTTP_5XX_RATE_ABORT_THRESHOLD:.0%}"
+
+#: src/omega_stress/domain/load/validators.py:259
+#, python-brace-format
+msgid "Taux d'erreurs total {total_error_rate:.1%} sur fenêtre {window_label} >= seuil {WINDOW_TOTAL_ERROR_RATE_ABORT_THRESHOLD:.0%}"
+msgstr "विंडो {window_label} में कुल त्रुटि दर {total_error_rate:.1%} >= सीमा {WINDOW_TOTAL_ERROR_RATE_ABORT_THRESHOLD:.0%}"
+
+#: src/omega_stress/domain/load/validators.py:310
+#, python-brace-format
+msgid "CPU générateur >= {threshold_text} (~{GENERATOR_CPU_ABORT_RATIO_OF_SINGLE_CORE:.0%} d'un coeur) ET CPU machine >= {GENERATOR_CPU_ABORT_GLOBAL_THRESHOLD_PERCENT:.0f}% pendant {GENERATOR_CPU_ABORT_SUSTAINED_SAMPLES}s : la machine hôte elle-même est sous pression, pas seulement le générateur"
+msgstr "जनरेटर CPU >= {threshold_text} (एक कोर का ~{GENERATOR_CPU_ABORT_RATIO_OF_SINGLE_CORE:.0%}) और मशीन CPU >= {GENERATOR_CPU_ABORT_GLOBAL_THRESHOLD_PERCENT:.0f}% लगातार {GENERATOR_CPU_ABORT_SUSTAINED_SAMPLES}s तक: केवल जनरेटर नहीं, होस्ट मशीन स्वयं दबाव में है"
+
+#: src/omega_stress/domain/load/validators.py:333
+#, python-brace-format
+msgid "Mémoire disponible {memory_available_percent:.0f}% < seuil {MEMORY_AVAILABLE_ABORT_THRESHOLD_PERCENT:.0f}%"
+msgstr "उपलब्ध मेमोरी {memory_available_percent:.0f}% < सीमा {MEMORY_AVAILABLE_ABORT_THRESHOLD_PERCENT:.0f}%"
+
+#: src/omega_stress/domain/load/validators.py:353
+#, python-brace-format
+msgid "Descripteurs de fichiers {open_files}/{open_files_soft_limit} >= {OPEN_FILES_ABORT_RATIO:.0%} de la limite"
+msgstr "फ़ाइल डिस्क्रिप्टर {open_files}/{open_files_soft_limit} >= सीमा का {OPEN_FILES_ABORT_RATIO:.0%}"
+
+#: src/omega_stress/domain/profiles/validation.py:17
+msgid "Le nom du profil ne peut pas être vide."
+msgstr "प्रोफ़ाइल का नाम खाली नहीं हो सकता।"
+
+#: src/omega_stress/domain/profiles/validation.py:26
+#, python-brace-format
+msgid "Durée {minutes} min non autorisée pour le niveau {value} dans ce profil (extended_duration_authorized={extended_duration_authorized})."
+msgstr "इस प्रोफ़ाइल में स्तर {value} के लिए {minutes} मिनट की अवधि अनुमत नहीं (extended_duration_authorized={extended_duration_authorized})।"
+
+#: src/omega_stress/domain/reports/builders.py:17
+msgid "Le test s'est déroulé normalement, sans dépassement de seuil."
+msgstr "परीक्षण सामान्य रूप से चला, कोई सीमा पार नहीं हुई।"
+
+#: src/omega_stress/domain/reports/builders.py:19
+msgid "Le test s'est terminé avec une dégradation observée, sans dépassement de seuil critique."
+msgstr "परीक्षण देखी गई गिरावट के साथ समाप्त हुआ, गंभीर सीमा पार नहीं हुई।"
+
+#: src/omega_stress/domain/reports/builders.py:23
+msgid "Le test a été arrêté automatiquement suite à un dépassement de seuil."
+msgstr "सीमा पार होने पर परीक्षण अपने आप रोक दिया गया।"
+
+#: src/omega_stress/domain/reports/builders.py:25
+msgid "Le test a échoué avant d'avoir pu produire un résultat exploitable."
+msgstr "उपयोगी परिणाम देने से पहले ही परीक्षण विफल हो गया।"
+
+#: src/omega_stress/domain/reports/builders.py:28
+msgid "Le test a été arrêté manuellement par l'utilisateur."
+msgstr "परीक्षण उपयोगकर्ता द्वारा मैन्युअल रूप से रोका गया।"
+
+#: src/omega_stress/domain/reports/builders.py:93
+#, python-brace-format
+msgid "{error_count} erreur(s) sur {total_requests} requêtes : vérifier les journaux de la cible sur la période du test."
+msgstr "{total_requests} अनुरोधों में {error_count} त्रुटियाँ: परीक्षण अवधि के लिए लक्ष्य के लॉग जाँचें।"
+
+#: src/omega_stress/domain/reports/builders.py:106
+msgid "Débit observé significativement inférieur au débit demandé : le générateur local peut être devenu le goulot d'étranglement (voir plan produit, Configuration minimale du générateur)."
+msgstr "देखी गई थ्रूपुट माँगी गई से काफ़ी कम है: स्थानीय जनरेटर बाधा बन गया हो सकता है (उत्पाद योजना, जनरेटर का न्यूनतम कॉन्फ़िगरेशन देखें)।"
+
+#: src/omega_stress/domain/reports/builders.py:118
+#, python-brace-format
+msgid "CPU du générateur monté à {peak_cpu_percent_generator:.0f} % au pic pendant le test : les résultats peuvent en partie refléter une limite du générateur local plutôt que celle de la cible."
+msgstr "परीक्षण के दौरान जनरेटर CPU शिखर पर {peak_cpu_percent_generator:.0f} % तक पहुँचा: परिणाम आंशिक रूप से लक्ष्य के बजाय स्थानीय जनरेटर की सीमा दर्शा सकते हैं।"
+
+#: src/omega_stress/domain/reports/service.py:26
+msgid "Thème d'export {export_theme!r} inconnu (catalogue : {value})."
+msgstr "अज्ञात निर्यात थीम {export_theme!r} (कैटलॉग: {value})।"
+
+#: src/omega_stress/domain/runs/service.py:104
+#, python-brace-format
+msgid "Le run {id} est déjà terminé."
+msgstr "रन {id} पहले ही समाप्त हो चुका है।"
+
+#: src/omega_stress/domain/runs/validators.py:18
+#, python-brace-format
+msgid "Le run {id} a une date de fin antérieure à sa date de départ."
+msgstr "रन {id} की समाप्ति तिथि उसकी आरंभ तिथि से पहले है।"
+
+#: src/omega_stress/domain/targets/service.py:24
+#, python-brace-format
+msgid "Impossible d'épingler {base_url} sans confirmation d'autorisation."
+msgstr "अनुमति की पुष्टि के बिना {base_url} पिन नहीं किया जा सकता।"
+
+#: src/omega_stress/domain/targets/validation.py:25
+msgid "L'adresse de la cible ne peut pas être vide."
+msgstr "लक्ष्य का पता खाली नहीं हो सकता।"
+
+#: src/omega_stress/domain/targets/validation.py:32
+msgid "Schéma {scheme!r} non supporté : seuls http et https sont acceptés."
+msgstr "स्कीम {scheme!r} समर्थित नहीं: केवल http और https स्वीकार्य हैं।"
+
+#: src/omega_stress/domain/targets/validation.py:39
+msgid "Adresse invalide, hôte introuvable dans {raw!r}."
+msgstr "अमान्य पता, {raw!r} में होस्ट नहीं मिला।"
+
+#: src/omega_stress/infrastructure/calibration/local_server.py:32
+msgid "Content-Type"
+msgstr "Content-Type"
+
+#: src/omega_stress/infrastructure/calibration/local_server.py:33
+msgid "Content-Length"
+msgstr "Content-Length"
+
+#: src/omega_stress/infrastructure/probe/local_probe.py:42
+#, python-brace-format
+msgid "{cpu_count} coeur(s) détecté(s)"
+msgstr "{cpu_count} कोर मिले"
+
+#: src/omega_stress/infrastructure/probe/local_probe.py:51
+#, python-brace-format
+msgid "limite douce de {soft_limit} descripteurs"
+msgstr "{soft_limit} डिस्क्रिप्टर की सॉफ़्ट सीमा"
+
+#: src/omega_stress/infrastructure/probe/local_probe.py:61
+#, python-brace-format
+msgid "{total_memory_mb} Mo détectés"
+msgstr "{total_memory_mb} MB मिले"
+
+#: src/omega_stress/infrastructure/probe/local_probe.py:65
+msgid "non mesurable"
+msgstr "मापने योग्य नहीं"
+
+#: src/omega_stress/infrastructure/probe/local_probe.py:72
+msgid "agrégat de "
+msgstr "का समुच्चय "
+
+#: src/omega_stress/infrastructure/runner/httpx_load_generator.py:117
+msgid "Cible {target_url!r} injoignable dès le départ : {exc}"
+msgstr "लक्ष्य {target_url!r} शुरुआत से ही पहुँच से बाहर: {exc}"
+
+#: src/omega_stress/infrastructure/storage/files/json_calibration_store.py:40
+#, python-brace-format
+msgid "Échec d'écriture du calibrage vers {path} : {exc}"
+msgstr "{path} में कैलिब्रेशन लिखने में विफल: {exc}"
+
+#: src/omega_stress/infrastructure/storage/files/json_calibration_store.py:52
+#, python-brace-format
+msgid "Échec de lecture du calibrage depuis {path} : {exc}"
+msgstr "{path} से कैलिब्रेशन पढ़ने में विफल: {exc}"
+
+#: src/omega_stress/infrastructure/storage/sqlite/export_repository.py:40
+msgid "Échec de sauvegarde du job d'export {id!r} : {exc}"
+msgstr "निर्यात कार्य {id!r} सहेजने में विफल: {exc}"
+
+#: src/omega_stress/infrastructure/storage/sqlite/export_repository.py:50
+msgid "Échec de listage des exports du run {run_id!r} : {exc}"
+msgstr "रन {run_id!r} के निर्यातों की सूची बनाने में विफल: {exc}"
+
+#: src/omega_stress/infrastructure/storage/sqlite/profile_repository.py:57
+msgid "Échec de sauvegarde du profil {id!r} : {exc}"
+msgstr "प्रोफ़ाइल {id!r} सहेजने में विफल: {exc}"
+
+#: src/omega_stress/infrastructure/storage/sqlite/profile_repository.py:67
+msgid "Échec de lecture du profil {profile_id!r} : {exc}"
+msgstr "प्रोफ़ाइल {profile_id!r} पढ़ने में विफल: {exc}"
+
+#: src/omega_stress/infrastructure/storage/sqlite/profile_repository.py:77
+#, python-brace-format
+msgid "Échec de listage des profils : {exc}"
+msgstr "प्रोफ़ाइलों की सूची बनाने में विफल: {exc}"
+
+#: src/omega_stress/infrastructure/storage/sqlite/profile_repository.py:86
+msgid "Échec de suppression du profil {profile_id!r} : {exc}"
+msgstr "प्रोफ़ाइल {profile_id!r} हटाने में विफल: {exc}"
+
+#: src/omega_stress/infrastructure/storage/sqlite/run_repository.py:75
+msgid "Échec de sauvegarde du run {id!r} : {exc}"
+msgstr "रन {id!r} सहेजने में विफल: {exc}"
+
+#: src/omega_stress/infrastructure/storage/sqlite/run_repository.py:83
+msgid "Échec de lecture du run {run_id!r} : {exc}"
+msgstr "रन {run_id!r} पढ़ने में विफल: {exc}"
+
+#: src/omega_stress/infrastructure/storage/sqlite/run_repository.py:109
+#, python-brace-format
+msgid "Échec de listage de l'historique des runs : {exc}"
+msgstr "रन इतिहास की सूची बनाने में विफल: {exc}"
+
+#: src/omega_stress/infrastructure/storage/sqlite/run_repository.py:119
+#, python-brace-format
+msgid "Échec de purge de l'historique des runs : {exc}"
+msgstr "रन इतिहास साफ़ करने में विफल: {exc}"
+
+#: src/omega_stress/infrastructure/storage/sqlite/target_repository.py:35
+msgid "Échec de sauvegarde de la cible {id!r} : {exc}"
+msgstr "लक्ष्य {id!r} सहेजने में विफल: {exc}"
+
+#: src/omega_stress/infrastructure/storage/sqlite/target_repository.py:56
+msgid "Échec d'épinglage de la cible {id!r} : {exc}"
+msgstr "लक्ष्य {id!r} पिन करने में विफल: {exc}"
+
+#: src/omega_stress/infrastructure/storage/sqlite/target_repository.py:72
+msgid "Échec de lecture de la cible {target_id!r} : {exc}"
+msgstr "लक्ष्य {target_id!r} पढ़ने में विफल: {exc}"
+
+#: src/omega_stress/infrastructure/storage/sqlite/target_repository.py:85
+msgid "Échec de lecture de la cible épinglée {target_id!r} : {exc}"
+msgstr "पिन किया गया लक्ष्य {target_id!r} पढ़ने में विफल: {exc}"
+
+#: src/omega_stress/infrastructure/storage/sqlite/target_repository.py:109
+#, python-brace-format
+msgid "Échec de listage des cibles récentes : {exc}"
+msgstr "हाल के लक्ष्यों की सूची बनाने में विफल: {exc}"
+
+#: src/omega_stress/infrastructure/storage/sqlite/target_repository.py:119
+msgid "Échec de désépinglage de la cible {target_id!r} : {exc}"
+msgstr "लक्ष्य {target_id!r} अनपिन करने में विफल: {exc}"
+
+#: src/omega_stress/infrastructure/storage/sqlite/target_repository.py:130
+#, python-brace-format
+msgid "Échec de purge des cibles récentes : {exc}"
+msgstr "हाल के लक्ष्य साफ़ करने में विफल: {exc}"
+
+#: src/omega_stress/infrastructure/storage/sqlite/target_repository.py:140
+#, python-brace-format
+msgid "Échec de purge de toutes les cibles : {exc}"
+msgstr "सभी लक्ष्य साफ़ करने में विफल: {exc}"
+
+#: src/omega_stress/interfaces/tui/app.py:44
+msgid "🗲 OMEGA-STRESS"
+msgstr "🗲 OMEGA-STRESS"
+
+#: src/omega_stress/interfaces/tui/app.py:57
+msgid "Palette de commandes"
+msgstr "कमांड पैलेट"
+
+#: src/omega_stress/interfaces/tui/app.py:63
+msgid "Quitter l'application (avec confirmation)."
+msgstr "एप्लिकेशन से बाहर निकलें (पुष्टि के साथ)।"
+
+#: src/omega_stress/interfaces/tui/app.py:128
+#, python-brace-format
+msgid "Thème non changé (échec d'enregistrement) : {exc}"
+msgstr "थीम नहीं बदली (सहेजना विफल): {exc}"
+
+#: src/omega_stress/interfaces/tui/app.py:175
+msgid "Rechercher une commande…"
+msgstr "कमांड खोजें…"
+
+#: src/omega_stress/interfaces/tui/app.py:190
+msgid "Masquer l'aide des raccourcis"
+msgstr "शॉर्टकट सहायता छिपाएँ"
+
+#: src/omega_stress/interfaces/tui/app.py:190 src/omega_stress/interfaces/tui/app.py:194
+msgid "Raccourcis"
+msgstr "शॉर्टकट"
+
+#: src/omega_stress/interfaces/tui/app.py:195
+msgid "Afficher l'aide du widget sélectionné et les raccourcis disponibles"
+msgstr "चयनित विजेट की सहायता और उपलब्ध शॉर्टकट दिखाएँ"
+
+#: src/omega_stress/interfaces/tui/presenters/calibration_presenter.py:24
+msgid "échec précoce"
+msgstr "शुरुआती विफलता"
+
+#: src/omega_stress/interfaces/tui/presenters/calibration_presenter.py:25
+#, python-brace-format
+msgid "Aucune enveloppe exploitable ({reason})."
+msgstr "कोई उपयोगी सीमा-क्षेत्र नहीं ({reason})।"
+
+#: src/omega_stress/interfaces/tui/presenters/calibration_presenter.py:31
+#, python-brace-format
+msgid "VU_safe {vu_safe} | RPS_safe {rps_safe} | confiance {confidence} (dernier palier sain : {last_healthy_name})"
+msgstr "VU_safe {vu_safe} | RPS_safe {rps_safe} | विश्वसनीयता {confidence} (अंतिम स्वस्थ चरण: {last_healthy_name})"
+
+#: src/omega_stress/interfaces/tui/presenters/calibration_presenter.py:79
+msgid "Aucun calibrage exploitable pour cette machine — vous ne connaissez pas ses limites réelles. Nous recommandons d'en faire un depuis l'écran Calibrage avant de désactiver le mode sécurité sur un niveau intensif. Vous choisissez de dépasser les garde-fous de CETTE machine : la fiabilité du résultat et la stabilité de votre ordinateur restent sous votre responsabilité."
+msgstr "इस मशीन के लिए कोई उपयोगी कैलिब्रेशन नहीं — आप इसकी वास्तविक सीमाएँ नहीं जानते। तीव्र स्तर पर सुरक्षा मोड बंद करने से पहले हम कैलिब्रेशन स्क्रीन से एक कैलिब्रेशन करने की सलाह देते हैं। आप इस मशीन की सुरक्षा सीमाओं को पार करना चुन रहे हैं: परिणाम की विश्वसनीयता और आपके कंप्यूटर की स्थिरता आपकी ज़िम्मेदारी है।"
+
+#: src/omega_stress/interfaces/tui/presenters/calibration_presenter.py:87
+msgid "AU-DESSUS"
+msgstr "ऊपर"
+
+#: src/omega_stress/interfaces/tui/presenters/calibration_presenter.py:87
+msgid "en dessous"
+msgstr "नीचे"
+
+#: src/omega_stress/interfaces/tui/presenters/calibration_presenter.py:89
+#, python-brace-format
+msgid "Dernier calibrage : {safe_value} {unit} jugés sûrs pour cette machine (confiance {confidence}). Ce niveau vise {target_value:.0f} {unit} — {comparison} de cette enveloppe. Au-delà, la fiabilité du résultat (nombre de connexions/requêtes/charge réellement atteint) peut baisser, et votre machine pourrait ralentir ou geler temporairement : c'est votre responsabilité."
+msgstr "अंतिम कैलिब्रेशन: {safe_value} {unit} इस मशीन के लिए सुरक्षित माने गए (विश्वसनीयता {confidence})। यह स्तर {target_value:.0f} {unit} का लक्ष्य रखता है — इस सीमा-क्षेत्र से {comparison}। इससे आगे परिणाम की विश्वसनीयता (वास्तव में पहुँचे कनेक्शन/अनुरोध/भार) घट सकती है, और आपकी मशीन धीमी हो सकती है या कुछ समय के लिए अटक सकती है: यह आपकी ज़िम्मेदारी है।"
+
+#: src/omega_stress/interfaces/tui/presenters/calibration_presenter.py:111
+#, python-brace-format
+msgid "{name} : {rps_achieved:.0f}/{rps_target} req/s ({status}{reason})"
+msgstr "{name}: {rps_achieved:.0f}/{rps_target} अनुरोध/से ({status}{reason})"
+
+#: src/omega_stress/interfaces/tui/presenters/level_presenter.py:10
+msgid "faible"
+msgstr "मंद"
+
+#: src/omega_stress/interfaces/tui/presenters/level_presenter.py:11
+msgid "bas"
+msgstr "कम"
+
+#: src/omega_stress/interfaces/tui/presenters/level_presenter.py:12
+msgid "moyen"
+msgstr "मध्यम"
+
+#: src/omega_stress/interfaces/tui/presenters/level_presenter.py:13
+msgid "haut"
+msgstr "उच्च"
+
+#: src/omega_stress/interfaces/tui/presenters/level_presenter.py:14
+msgid "puissant"
+msgstr "शक्तिशाली"
+
+#: src/omega_stress/interfaces/tui/presenters/level_presenter.py:15
+msgid "agressif"
+msgstr "आक्रामक"
+
+#: src/omega_stress/interfaces/tui/presenters/level_presenter.py:16
+msgid "violent"
+msgstr "प्रचंड"
+
+#: src/omega_stress/interfaces/tui/presenters/level_presenter.py:17
+msgid "maximum"
+msgstr "अधिकतम"
+
+#: src/omega_stress/interfaces/tui/presenters/load_reference_presenter.py:58
+#, python-brace-format
+msgid "{value} à {value2} min"
+msgstr "{value} से {value2} मिनट"
+
+#: src/omega_stress/interfaces/tui/presenters/load_reference_presenter.py:67
+#, python-brace-format
+msgid "{default_text} ({extra_text} si pré-check)"
+msgstr "{default_text} (पूर्व-जाँच हो तो {extra_text})"
+
+#: src/omega_stress/interfaces/tui/presenters/load_reference_presenter.py:76
+msgid "Non/Oui"
+msgstr "नहीं/हाँ"
+
+#: src/omega_stress/interfaces/tui/presenters/load_reference_presenter.py:93 src/omega_stress/interfaces/tui/screens/home.py:40
+msgid "Test requêtes"
+msgstr "अनुरोध परीक्षण"
+
+#: src/omega_stress/interfaces/tui/presenters/load_reference_presenter.py:95
+msgid "Débit"
+msgstr "ट्रैफ़िक"
+
+#: src/omega_stress/interfaces/tui/presenters/load_reference_presenter.py:96
+#, python-brace-format
+msgid "{requests_per_minute} req/min"
+msgstr "{requests_per_minute} अनुरोध/मिनट"
+
+#: src/omega_stress/interfaces/tui/presenters/load_reference_presenter.py:99
+#, python-brace-format
+msgid "~{value} req/s en rafale"
+msgstr "बौछार में ~{value} अनुरोध/से"
+
+#: src/omega_stress/interfaces/tui/presenters/load_reference_presenter.py:111 src/omega_stress/interfaces/tui/screens/home.py:36
+msgid "Test connexions"
+msgstr "कनेक्शन परीक्षण"
+
+#: src/omega_stress/interfaces/tui/presenters/load_reference_presenter.py:113
+msgid "Connexions simultanées"
+msgstr "एक साथ कनेक्शन"
+
+#: src/omega_stress/interfaces/tui/presenters/load_reference_presenter.py:114
+#, python-brace-format
+msgid "{concurrent_connections} connexions"
+msgstr "{concurrent_connections} कनेक्शन"
+
+#: src/omega_stress/interfaces/tui/presenters/load_reference_presenter.py:117
+#, python-brace-format
+msgid "{concurrent_connections} en parallèle, chaque seconde"
+msgstr "{concurrent_connections} समानांतर, हर सेकंड"
+
+#: src/omega_stress/interfaces/tui/presenters/load_reference_presenter.py:129 src/omega_stress/interfaces/tui/screens/home.py:38
+msgid "Test charge"
+msgstr "लोड परीक्षण"
+
+#: src/omega_stress/interfaces/tui/presenters/load_reference_presenter.py:131
+msgid "Débit (montée puis plateau)"
+msgstr "थ्रूपुट (बढ़ोतरी फिर स्थिर)"
+
+#: src/omega_stress/interfaces/tui/presenters/load_reference_presenter.py:132
+#, python-brace-format
+msgid "pic {peak_requests_per_minute} req/min"
+msgstr "शिखर {peak_requests_per_minute} अनुरोध/मिनट"
+
+#: src/omega_stress/interfaces/tui/presenters/load_reference_presenter.py:137
+#, python-brace-format
+msgid "rampe {ramp_up_minutes:g} min -> plateau {plateau_minutes_min:g} min"
+msgstr "रैंप {ramp_up_minutes:g} मिनट -> स्थिर {plateau_minutes_min:g} मिनट"
+
+#: src/omega_stress/interfaces/tui/presenters/load_reference_presenter.py:152
+msgid "Requêtes"
+msgstr "अनुरोध"
+
+#: src/omega_stress/interfaces/tui/presenters/load_reference_presenter.py:153
+msgid "Connexions"
+msgstr "कनेक्शन"
+
+#: src/omega_stress/interfaces/tui/presenters/load_reference_presenter.py:154
+msgid "Charge"
+msgstr "लोड"
+
+#: src/omega_stress/interfaces/tui/presenters/load_reference_presenter.py:194
+msgid "Seul le débit (req/min) pilote ce test ; la simultanéité en découle."
+msgstr "यह परीक्षण केवल थ्रूपुट (अनुरोध/मिनट) से नियंत्रित होता है; समानांतरता उसी से तय होती है।"
+
+#: src/omega_stress/interfaces/tui/presenters/load_reference_presenter.py:196
+msgid "Seule la simultanéité (connexions) pilote ce test ; aucun débit cible."
+msgstr "यह परीक्षण केवल समानांतरता (कनेक्शन) से नियंत्रित होता है; कोई लक्ष्य थ्रूपुट नहीं।"
+
+#: src/omega_stress/interfaces/tui/presenters/load_reference_presenter.py:198
+msgid "Seul le débit au pic pilote ce test, atteint progressivement : sur une durée choisie plus courte que la rampe indiquée, le pic n'est jamais atteint."
+msgstr "यह परीक्षण केवल धीरे-धीरे पहुँचे शिखर थ्रूपुट से नियंत्रित होता है: यदि चुनी गई अवधि बताए गए रैंप से छोटी है, तो शिखर कभी नहीं पहुँचता।"
+
+#: src/omega_stress/interfaces/tui/presenters/profile_presenter.py:17
+msgid "Figé"
+msgstr "स्थिर"
+
+#: src/omega_stress/interfaces/tui/presenters/profile_presenter.py:17
+msgid "Modifiable"
+msgstr "संपादन योग्य"
+
+#: src/omega_stress/interfaces/tui/presenters/run_presenter.py:13
+msgid "Réussi"
+msgstr "सफल"
+
+#: src/omega_stress/interfaces/tui/presenters/run_presenter.py:14
+msgid "Dégradé"
+msgstr "गिरावट"
+
+#: src/omega_stress/interfaces/tui/presenters/run_presenter.py:15
+msgid "Arrêt automatique"
+msgstr "स्वचालित रोक"
+
+#: src/omega_stress/interfaces/tui/presenters/run_presenter.py:16
+msgid "Échec"
+msgstr "विफल"
+
+#: src/omega_stress/interfaces/tui/presenters/run_presenter.py:27
+msgid "En cours"
+msgstr "जारी"
+
+#: src/omega_stress/interfaces/tui/presenters/run_presenter.py:61
+#, python-brace-format
+msgid "{observed_rate_per_minute:.0f} req/min | {errors}/{total} erreurs | p95 {p95:.0f} ms"
+msgstr "{observed_rate_per_minute:.0f} अनुरोध/मिनट | {errors}/{total} त्रुटियाँ | p95 {p95:.0f} ms"
+
+#: src/omega_stress/interfaces/tui/presenters/run_presenter.py:85
+#, python-brace-format
+msgid "{at_second:>5.0f}s  {bar}  {errors} err / {requests} req"
+msgstr "{at_second:>5.0f}s  {bar}  {errors} त्रुटि / {requests} अनुरोध"
+
+#: src/omega_stress/interfaces/tui/presenters/theme_presenter.py:34
+#, python-brace-format
+msgid "{theme_name} (repli depuis {fell_back_from})"
+msgstr "{theme_name} ({fell_back_from} के स्थान पर)"
+
+#: src/omega_stress/interfaces/tui/screens/_base.py:20
+msgid "Focus suivant"
+msgstr "अगला फ़ोकस"
+
+#: src/omega_stress/interfaces/tui/screens/_base.py:21
+msgid "Focus précédent"
+msgstr "पिछला फ़ोकस"
+
+#: src/omega_stress/interfaces/tui/screens/_base.py:22
+msgid "Copier le texte sélectionné"
+msgstr "चयनित टेक्स्ट कॉपी करें"
+
+#: src/omega_stress/interfaces/tui/screens/calibration_screen.py:77
+msgid "CALIBRAGE"
+msgstr "कैलिब्रेशन"
+
+#: src/omega_stress/interfaces/tui/screens/calibration_screen.py:79
+msgid "Mesure la capacité réelle de CETTE machine (pas la cible testée) via un serveur de boucle locale, par paliers de charge croissante. Le résultat n'est pas encore appliqué aux tests réels : consultation seule pour l'instant."
+msgstr "स्थानीय लूपबैक सर्वर के ज़रिए, बढ़ते भार के चरणों में, इस मशीन (परीक्षित लक्ष्य नहीं) की वास्तविक क्षमता मापता है। परिणाम अभी वास्तविक परीक्षणों पर लागू नहीं होता: फ़िलहाल केवल देखने के लिए।"
+
+#: src/omega_stress/interfaces/tui/screens/calibration_screen.py:88
+msgid "Lancer le calibrage"
+msgstr "कैलिब्रेशन शुरू करें"
+
+#: src/omega_stress/interfaces/tui/screens/calibration_screen.py:107
+msgid "Aucun calibrage connu pour cette machine."
+msgstr "इस मशीन के लिए कोई ज्ञात कैलिब्रेशन नहीं।"
+
+#: src/omega_stress/interfaces/tui/screens/calibration_screen.py:111
+#, python-brace-format
+msgid ""
+"{value}\n"
+"{value2}"
+msgstr ""
+"{value}\n"
+"{value2}"
+
+#: src/omega_stress/interfaces/tui/screens/calibration_screen.py:145
+#, python-brace-format
+msgid "Calibrage refusé : {error}"
+msgstr "कैलिब्रेशन अस्वीकृत: {error}"
+
+#: src/omega_stress/interfaces/tui/screens/confirm.py:30
+msgid "Oui, confirmer"
+msgstr "हाँ, पुष्टि करें"
+
+#: src/omega_stress/interfaces/tui/screens/confirm.py:32
+msgid "Non, annuler"
+msgstr "नहीं, रद्द करें"
+
+#: src/omega_stress/interfaces/tui/screens/connection_panel.py:49 src/omega_stress/interfaces/tui/screens/ramp_panel.py:49 src/omega_stress/interfaces/tui/screens/request_panel.py:49
+#, python-brace-format
+msgid "{value:.1f}"
+msgstr "{value:.1f}"
+
+#: src/omega_stress/interfaces/tui/screens/connection_panel.py:51 src/omega_stress/interfaces/tui/screens/connection_panel.py:213 src/omega_stress/interfaces/tui/screens/ramp_panel.py:51 src/omega_stress/interfaces/tui/screens/ramp_panel.py:208 src/omega_stress/interfaces/tui/screens/request_panel.py:51 src/omega_stress/interfaces/tui/screens/request_panel.py:217
+#, python-brace-format
+msgid "{m} min"
+msgstr "{m} मिनट"
+
+#: src/omega_stress/interfaces/tui/screens/connection_panel.py:54 src/omega_stress/interfaces/tui/screens/ramp_panel.py:54 src/omega_stress/interfaces/tui/screens/request_panel.py:57
+msgid "Manuel (1-5 min)"
+msgstr "मैन्युअल (1-5 मिनट)"
+
+#: src/omega_stress/interfaces/tui/screens/connection_panel.py:54 src/omega_stress/interfaces/tui/screens/ramp_panel.py:54 src/omega_stress/interfaces/tui/screens/request_panel.py:57
+msgid "Profil D1-D6"
+msgstr "प्रोफ़ाइल D1-D6"
+
+#: src/omega_stress/interfaces/tui/screens/connection_panel.py:57 src/omega_stress/interfaces/tui/screens/ramp_panel.py:57 src/omega_stress/interfaces/tui/screens/request_panel.py:60
+#, python-brace-format
+msgid "{upper} {name} ({total_minutes} min)"
+msgstr "{upper} {name} ({total_minutes} मिनट)"
+
+#: src/omega_stress/interfaces/tui/screens/connection_panel.py:106
+msgid "TEST CONNEXIONS"
+msgstr "कनेक्शन परीक्षण"
+
+#: src/omega_stress/interfaces/tui/screens/connection_panel.py:107 src/omega_stress/interfaces/tui/screens/ramp_panel.py:107 src/omega_stress/interfaces/tui/screens/request_panel.py:113
+msgid "Profil figé (optionnel)"
+msgstr "स्थिर प्रोफ़ाइल (वैकल्पिक)"
+
+#: src/omega_stress/interfaces/tui/screens/connection_panel.py:111 src/omega_stress/interfaces/tui/screens/ramp_panel.py:111 src/omega_stress/interfaces/tui/screens/request_panel.py:117
+msgid "Critères du test"
+msgstr "परीक्षण मानदंड"
+
+#: src/omega_stress/interfaces/tui/screens/connection_panel.py:112 src/omega_stress/interfaces/tui/screens/profile_wizard.py:47 src/omega_stress/interfaces/tui/screens/ramp_panel.py:112 src/omega_stress/interfaces/tui/screens/request_panel.py:118 src/omega_stress/infrastructure/exporters/templates/report.html.jinja:62
+msgid "Intensité"
+msgstr "तीव्रता"
+
+#: src/omega_stress/interfaces/tui/screens/connection_panel.py:115 src/omega_stress/interfaces/tui/screens/ramp_panel.py:115 src/omega_stress/interfaces/tui/screens/request_panel.py:121
+msgid "Mode durée"
+msgstr "अवधि मोड"
+
+#: src/omega_stress/interfaces/tui/screens/connection_panel.py:121 src/omega_stress/interfaces/tui/screens/profile_wizard.py:48 src/omega_stress/interfaces/tui/screens/ramp_panel.py:121 src/omega_stress/interfaces/tui/screens/request_panel.py:127
+msgid "Durée (minutes)"
+msgstr "अवधि (मिनट)"
+
+#: src/omega_stress/interfaces/tui/screens/connection_panel.py:127 src/omega_stress/interfaces/tui/screens/ramp_panel.py:127 src/omega_stress/interfaces/tui/screens/request_panel.py:133
+msgid "Profil de durée"
+msgstr "अवधि प्रोफ़ाइल"
+
+#: src/omega_stress/interfaces/tui/screens/connection_panel.py:132 src/omega_stress/interfaces/tui/screens/ramp_panel.py:132 src/omega_stress/interfaces/tui/screens/request_panel.py:138
+msgid "Confirmation renforcée requise pour ce niveau :"
+msgstr "इस स्तर के लिए सुदृढ़ पुष्टि आवश्यक है:"
+
+#: src/omega_stress/interfaces/tui/screens/connection_panel.py:133 src/omega_stress/interfaces/tui/screens/ramp_panel.py:133 src/omega_stress/interfaces/tui/screens/request_panel.py:139
+msgid "Texte de confirmation exact"
+msgstr "पुष्टि का सटीक टेक्स्ट"
+
+#: src/omega_stress/interfaces/tui/screens/connection_panel.py:136 src/omega_stress/interfaces/tui/screens/ramp_panel.py:136 src/omega_stress/interfaces/tui/screens/request_panel.py:142
+msgid "Taux d'erreur maximal"
+msgstr "अधिकतम त्रुटि दर"
+
+#: src/omega_stress/interfaces/tui/screens/connection_panel.py:146 src/omega_stress/interfaces/tui/screens/ramp_panel.py:146 src/omega_stress/interfaces/tui/screens/request_panel.py:152 src/omega_stress/interfaces/tui/widgets/load_reference_table.py:26
+msgid "Pré-check"
+msgstr "पूर्व-जाँच"
+
+#: src/omega_stress/interfaces/tui/screens/connection_panel.py:196
+msgid "Aucun profil figé pour Test connexions (des profils figés existent pour d'autres types de test — Requêtes/Rampe)."
+msgstr "कनेक्शन परीक्षण के लिए कोई स्थिर प्रोफ़ाइल नहीं (अन्य परीक्षण प्रकारों — अनुरोध/रैंप — के लिए स्थिर प्रोफ़ाइल हैं)।"
+
+#: src/omega_stress/interfaces/tui/screens/connection_panel.py:202 src/omega_stress/interfaces/tui/screens/ramp_panel.py:197 src/omega_stress/interfaces/tui/screens/request_panel.py:203
+msgid "Aucun profil figé pour l'instant (des profils existent mais aucun n'est figé)."
+msgstr "अभी कोई स्थिर प्रोफ़ाइल नहीं (प्रोफ़ाइल हैं, पर कोई स्थिर नहीं)।"
+
+#: src/omega_stress/interfaces/tui/screens/connection_panel.py:205 src/omega_stress/interfaces/tui/screens/ramp_panel.py:200 src/omega_stress/interfaces/tui/screens/request_panel.py:206
+msgid "Aucun profil figé pour l'instant — créez-en un depuis l'écran Profils."
+msgstr "अभी कोई स्थिर प्रोफ़ाइल नहीं — प्रोफ़ाइल स्क्रीन से एक बनाएँ।"
+
+#: src/omega_stress/interfaces/tui/screens/connection_panel.py:221 src/omega_stress/interfaces/tui/screens/ramp_panel.py:216 src/omega_stress/interfaces/tui/screens/request_panel.py:225
+#, python-brace-format
+msgid "Durée ramenée à {value} min : {value2} ne propose pas {keep_value} min."
+msgstr "अवधि {value} मिनट कर दी गई: {value2} में {keep_value} मिनट उपलब्ध नहीं।"
+
+#: src/omega_stress/interfaces/tui/screens/connection_panel.py:377 src/omega_stress/interfaces/tui/screens/ramp_panel.py:364 src/omega_stress/interfaces/tui/screens/request_panel.py:377
+#, python-brace-format
+msgid "Cible fixée par le profil « {name} » : {address}"
+msgstr "प्रोफ़ाइल “{name}” द्वारा तय लक्ष्य: {address}"
+
+#: src/omega_stress/interfaces/tui/screens/connection_panel.py:396 src/omega_stress/interfaces/tui/screens/ramp_panel.py:383 src/omega_stress/interfaces/tui/screens/request_panel.py:396
+msgid "Choisissez ou saisissez une cible avant le pré-check."
+msgstr "पूर्व-जाँच से पहले लक्ष्य चुनें या दर्ज करें।"
+
+#: src/omega_stress/interfaces/tui/screens/connection_panel.py:400 src/omega_stress/interfaces/tui/screens/ramp_panel.py:387 src/omega_stress/interfaces/tui/screens/request_panel.py:400
+msgid "Pré-check en cours…"
+msgstr "पूर्व-जाँच जारी…"
+
+#: src/omega_stress/interfaces/tui/screens/connection_panel.py:419 src/omega_stress/interfaces/tui/screens/ramp_panel.py:406 src/omega_stress/interfaces/tui/screens/request_panel.py:419
+#, python-brace-format
+msgid "Pré-check échoué : {error}"
+msgstr "पूर्व-जाँच विफल: {error}"
+
+#: src/omega_stress/interfaces/tui/screens/connection_panel.py:422 src/omega_stress/interfaces/tui/screens/ramp_panel.py:409 src/omega_stress/interfaces/tui/screens/request_panel.py:422
+#, python-brace-format
+msgid "Pré-check réussi ({value}) — vous pouvez lancer le test."
+msgstr "पूर्व-जाँच सफल ({value}) — आप परीक्षण शुरू कर सकते हैं।"
+
+#: src/omega_stress/interfaces/tui/screens/connection_panel.py:437 src/omega_stress/interfaces/tui/screens/ramp_panel.py:424 src/omega_stress/interfaces/tui/screens/request_panel.py:437
+msgid "Lancement en cours…"
+msgstr "शुरू हो रहा है…"
+
+#: src/omega_stress/interfaces/tui/screens/connection_panel.py:440 src/omega_stress/interfaces/tui/screens/ramp_panel.py:427 src/omega_stress/interfaces/tui/screens/request_panel.py:440
+msgid "Choisissez ou saisissez une cible."
+msgstr "लक्ष्य चुनें या दर्ज करें।"
+
+#: src/omega_stress/interfaces/tui/screens/connection_panel.py:446 src/omega_stress/interfaces/tui/screens/ramp_panel.py:433 src/omega_stress/interfaces/tui/screens/request_panel.py:446
+msgid "Choisissez un niveau d'intensité."
+msgstr "तीव्रता स्तर चुनें।"
+
+#: src/omega_stress/interfaces/tui/screens/connection_panel.py:451 src/omega_stress/interfaces/tui/screens/ramp_panel.py:438 src/omega_stress/interfaces/tui/screens/request_panel.py:451
+msgid "Choisissez un taux d'erreur."
+msgstr "त्रुटि दर चुनें।"
+
+#: src/omega_stress/interfaces/tui/screens/connection_panel.py:457 src/omega_stress/interfaces/tui/screens/ramp_panel.py:444 src/omega_stress/interfaces/tui/screens/request_panel.py:457
+msgid "Choisissez un profil de durée."
+msgstr "अवधि प्रोफ़ाइल चुनें।"
+
+#: src/omega_stress/interfaces/tui/screens/connection_panel.py:465 src/omega_stress/interfaces/tui/screens/ramp_panel.py:452 src/omega_stress/interfaces/tui/screens/request_panel.py:465
+msgid "Choisissez une durée."
+msgstr "अवधि चुनें।"
+
+#: src/omega_stress/interfaces/tui/screens/connection_panel.py:499 src/omega_stress/interfaces/tui/screens/ramp_panel.py:486 src/omega_stress/interfaces/tui/screens/request_panel.py:499
+#, python-brace-format
+msgid "Terminé — {value} (voir le détail)."
+msgstr "पूरा हुआ — {value} (विवरण देखें)।"
+
+#: src/omega_stress/interfaces/tui/screens/export_dialog.py:51
+msgid "EXPORTER LE RAPPORT"
+msgstr "रिपोर्ट निर्यात करें"
+
+#: src/omega_stress/interfaces/tui/screens/export_dialog.py:59
+msgid "Dossier de destination"
+msgstr "गंतव्य फ़ोल्डर"
+
+#: src/omega_stress/interfaces/tui/screens/export_dialog.py:92
+msgid "Choisissez un format."
+msgstr "प्रारूप चुनें।"
+
+#: src/omega_stress/interfaces/tui/screens/export_dialog.py:95
+msgid "Indiquez un dossier de destination."
+msgstr "गंतव्य फ़ोल्डर बताएँ।"
+
+#: src/omega_stress/interfaces/tui/screens/export_dialog.py:115
+#, python-brace-format
+msgid "Rapport écrit : {written_path}"
+msgstr "रिपोर्ट लिखी गई: {written_path}"
+
+#: src/omega_stress/interfaces/tui/screens/help_screen.py:30
+msgid "Test requêtes / connexions / charge"
+msgstr "अनुरोध / कनेक्शन / लोड परीक्षण"
+
+#: src/omega_stress/interfaces/tui/screens/help_screen.py:31
+msgid "Trois familles de test encadrées : débit constant, nombre de connexions simultanées, ou montée progressive. Chaque lancement exige une cible (saisie manuelle ou cible épinglée) et une confirmation d'autorisation, sauf cible déjà épinglée-autorisée."
+msgstr "तीन नियंत्रित परीक्षण परिवार: स्थिर थ्रूपुट, एक साथ कनेक्शनों की संख्या, या क्रमिक बढ़ोतरी। हर शुरुआत के लिए एक लक्ष्य (मैन्युअल या पिन किया गया) और अनुमति की पुष्टि चाहिए, जब तक लक्ष्य पहले से पिन और अधिकृत न हो।"
+
+#: src/omega_stress/interfaces/tui/screens/help_screen.py:38
+msgid "Un profil fige un jeu de paramètres (cible, type de test, intensité, durée, seuils) pour le réutiliser tel quel — créer, puis figer, un profil depuis cet écran."
+msgstr "प्रोफ़ाइल पैरामीटरों का एक समूह (लक्ष्य, परीक्षण प्रकार, तीव्रता, अवधि, सीमाएँ) स्थिर करती है ताकि उसे जस का तस फिर से उपयोग किया जा सके — इस स्क्रीन से प्रोफ़ाइल बनाएँ, फिर स्थिर करें।"
+
+#: src/omega_stress/interfaces/tui/screens/help_screen.py:43
+msgid "Épingler une adresse dispense de recocher la confirmation d'autorisation à chaque lancement sur cette même cible."
+msgstr "किसी पते को पिन करने से उसी लक्ष्य पर हर शुरुआत में अनुमति की पुष्टि दोबारा चिह्नित नहीं करनी पड़ती।"
+
+#: src/omega_stress/interfaces/tui/screens/help_screen.py:48
+msgid "Liste tous les runs passés : détail complet, ou relecture (uniquement pour un run lié à un profil figé)."
+msgstr "सभी पिछले रन की सूची: पूर्ण विवरण, या फिर से चलाना (केवल स्थिर प्रोफ़ाइल से जुड़े रन के लिए)।"
+
+#: src/omega_stress/interfaces/tui/screens/help_screen.py:53
+msgid "Depuis le détail d'un run terminé : JSON (données brutes, réimportables), CSV (analyse tabulaire), ou HTML (rapport lisible avec chronologie complète par intervalle)."
+msgstr "पूरे हुए रन के विवरण से: JSON (कच्चा डेटा, फिर से आयात योग्य), CSV (तालिका विश्लेषण), या HTML (अंतराल के अनुसार पूर्ण समयरेखा वाली पठनीय रिपोर्ट)।"
+
+#: src/omega_stress/interfaces/tui/screens/help_screen.py:58 src/omega_stress/interfaces/tui/screens/help_screen.py:112
+msgid "Profils de durée D1-D6 (mode profil)"
+msgstr "अवधि प्रोफ़ाइल D1-D6 (प्रोफ़ाइल मोड)"
+
+#: src/omega_stress/interfaces/tui/screens/help_screen.py:59
+msgid "En plus de la durée manuelle (1 à 5 min selon le niveau), chaque écran de lancement propose un mode profil : une durée fixe nommée (1 à 120 min) qui limite les niveaux accessibles, avec un niveau supplémentaire débloqué par une confirmation renforcée (texte exact à saisir). Voir le tableau ci-dessous."
+msgstr "मैन्युअल अवधि (स्तर के अनुसार 1 से 5 मिनट) के अलावा, हर शुरुआत स्क्रीन एक प्रोफ़ाइल मोड देती है: एक नामित निश्चित अवधि (1 से 120 मिनट) जो उपलब्ध स्तरों को सीमित करती है, साथ में एक अतिरिक्त स्तर जो सुदृढ़ पुष्टि (टाइप करने के लिए सटीक टेक्स्ट) से खुलता है। नीचे तालिका देखें।"
+
+#: src/omega_stress/interfaces/tui/screens/help_screen.py:65 src/omega_stress/interfaces/tui/screens/home.py:33
+msgid "Calibrage"
+msgstr "कैलिब्रेशन"
+
+#: src/omega_stress/interfaces/tui/screens/help_screen.py:66
+msgid "Mesure la capacité réelle de CETTE machine (pas la cible testée) via un serveur de boucle locale, par paliers de charge croissante. Le résultat (VU_safe/RPS_safe) n'est pas appliqué automatiquement aux tests réels : consultable depuis l'écran Calibrage, et utile comme repère quand le mode sécurité est désactivé (voir ci-dessous)."
+msgstr "स्थानीय लूपबैक सर्वर के ज़रिए, बढ़ते भार के चरणों में, इस मशीन (परीक्षित लक्ष्य नहीं) की वास्तविक क्षमता मापता है। परिणाम (VU_safe/RPS_safe) वास्तविक परीक्षणों पर अपने आप लागू नहीं होता: कैलिब्रेशन स्क्रीन पर देखा जा सकता है, और सुरक्षा मोड बंद होने पर संदर्भ के रूप में उपयोगी है (नीचे देखें)।"
+
+#: src/omega_stress/interfaces/tui/screens/help_screen.py:73 src/omega_stress/infrastructure/exporters/templates/report.html.jinja:69
+msgid "Mode sécurité"
+msgstr "सुरक्षा मोड"
+
+#: src/omega_stress/interfaces/tui/screens/help_screen.py:75
+msgid " Si un calibrage a été effectué sur cette machine, l'écran de lancement compare le niveau choisi à son enveloppe dès que la case est décochée."
+msgstr " यदि इस मशीन पर कैलिब्रेशन किया गया है, तो बॉक्स अचिह्नित होते ही शुरुआत स्क्रीन चुने गए स्तर की तुलना उसके सीमा-क्षेत्र से करती है।"
+
+#: src/omega_stress/interfaces/tui/screens/help_screen.py:98
+msgid "Repères de charge (valeurs exactes par niveau)"
+msgstr "भार के संदर्भ (स्तर के अनुसार सटीक मान)"
+
+#: src/omega_stress/interfaces/tui/screens/help_screen.py:102
+#, python-brace-format
+msgid ""
+"[b]Test requêtes[/b] — {value}\n"
+"[b]Test connexions[/b] — {value2}\n"
+"[b]Test charge[/b] — {value3}\n"
+msgstr ""
+"[b]अनुरोध परीक्षण[/b] — {value}\n"
+"[b]कनेक्शन परीक्षण[/b] — {value2}\n"
+"[b]लोड परीक्षण[/b] — {value3}\n"
+
+#: src/omega_stress/interfaces/tui/screens/history.py:99
+#, python-brace-format
+msgid "Relance terminée : {value}"
+msgstr "फिर से चलाना पूरा: {value}"
+
+#: src/omega_stress/interfaces/tui/screens/profile_wizard.py:40
+msgid "NOUVEAU PROFIL"
+msgstr "नई प्रोफ़ाइल"
+
+#: src/omega_stress/interfaces/tui/screens/profile_wizard.py:41
+msgid "Nom du profil"
+msgstr "प्रोफ़ाइल का नाम"
+
+#: src/omega_stress/interfaces/tui/screens/profile_wizard.py:42
+msgid "Description (optionnelle)"
+msgstr "विवरण (वैकल्पिक)"
+
+#: src/omega_stress/interfaces/tui/screens/profile_wizard.py:45
+msgid "Famille de test"
+msgstr "परीक्षण परिवार"
+
+#: src/omega_stress/interfaces/tui/screens/profile_wizard.py:49
+msgid "Taux d'erreur maximal (0.0-1.0)"
+msgstr "अधिकतम त्रुटि दर (0.0-1.0)"
+
+#: src/omega_stress/interfaces/tui/screens/profile_wizard.py:91
+msgid "Nom et cible par défaut sont obligatoires."
+msgstr "नाम और डिफ़ॉल्ट लक्ष्य अनिवार्य हैं।"
+
+#: src/omega_stress/interfaces/tui/screens/profile_wizard.py:94
+msgid "Choisissez une famille et une intensité."
+msgstr "परिवार और तीव्रता चुनें।"
+
+#: src/omega_stress/interfaces/tui/screens/profile_wizard.py:100
+msgid "Durée et taux d'erreur doivent être numériques."
+msgstr "अवधि और त्रुटि दर संख्याएँ होनी चाहिए।"
+
+#: src/omega_stress/interfaces/tui/screens/profiles.py:42
+msgid "Nouveau profil"
+msgstr "नई प्रोफ़ाइल"
+
+#: src/omega_stress/interfaces/tui/screens/profiles.py:44
+msgid "Figer le profil sélectionné"
+msgstr "चयनित प्रोफ़ाइल स्थिर करें"
+
+#: src/omega_stress/interfaces/tui/screens/profiles.py:46
+msgid "Supprimer le profil sélectionné"
+msgstr "चयनित प्रोफ़ाइल हटाएँ"
+
+#: src/omega_stress/interfaces/tui/screens/profiles.py:73
+#, python-brace-format
+msgid "{name} — {value}"
+msgstr "{name} — {value}"
+
+#: src/omega_stress/interfaces/tui/screens/profiles.py:107
+#, python-brace-format
+msgid "{name} figé."
+msgstr "{name} स्थिर की गई।"
+
+#: src/omega_stress/interfaces/tui/screens/profiles.py:116
+msgid "SUPPRIMER CE PROFIL ?"
+msgstr "यह प्रोफ़ाइल हटाएँ?"
+
+#: src/omega_stress/interfaces/tui/screens/profiles.py:118
+msgid "Définitif. Un run passé lié à ce profil ne pourra plus être rejoué."
+msgstr "स्थायी। इस प्रोफ़ाइल से जुड़ा पिछला रन फिर से नहीं चलाया जा सकेगा।"
+
+#: src/omega_stress/interfaces/tui/screens/profiles.py:130
+msgid "Profil supprimé."
+msgstr "प्रोफ़ाइल हटाई गई।"
+
+#: src/omega_stress/interfaces/tui/screens/quit_confirm.py:21
+msgid "QUITTER OMEGA-STRESS ?"
+msgstr "OMEGA-STRESS से बाहर निकलें?"
+
+#: src/omega_stress/interfaces/tui/screens/quit_confirm.py:23
+msgid "Tout test en cours sera interrompu."
+msgstr "चल रहा कोई भी परीक्षण बीच में रोक दिया जाएगा।"
+
+#: src/omega_stress/interfaces/tui/screens/ramp_panel.py:106
+msgid "TEST CHARGE"
+msgstr "लोड परीक्षण"
+
+#: src/omega_stress/interfaces/tui/screens/ramp_panel.py:191
+msgid "Aucun profil figé pour Test charge (des profils figés existent pour d'autres types de test — Connexions/Requêtes)."
+msgstr "लोड परीक्षण के लिए कोई स्थिर प्रोफ़ाइल नहीं (अन्य परीक्षण प्रकारों — कनेक्शन/अनुरोध — के लिए स्थिर प्रोफ़ाइल हैं)।"
+
+#: src/omega_stress/interfaces/tui/screens/request_panel.py:112
+msgid "TEST REQUÊTES"
+msgstr "अनुरोध परीक्षण"
+
+#: src/omega_stress/interfaces/tui/screens/request_panel.py:197
+msgid "Aucun profil figé pour Test requêtes (des profils figés existent pour d'autres types de test — Connexions/Rampe)."
+msgstr "अनुरोध परीक्षण के लिए कोई स्थिर प्रोफ़ाइल नहीं (अन्य परीक्षण प्रकारों — कनेक्शन/रैंप — के लिए स्थिर प्रोफ़ाइल हैं)।"
+
+#: src/omega_stress/interfaces/tui/screens/run_details.py:39
+msgid "DÉTAIL DU RUN"
+msgstr "रन का विवरण"
+
+#: src/omega_stress/interfaces/tui/screens/run_details.py:41 src/omega_stress/interfaces/tui/widgets/history_table.py:16 src/omega_stress/infrastructure/exporters/templates/report.html.jinja:74
+msgid "Verdict"
+msgstr "Verdict"
+
+#: src/omega_stress/interfaces/tui/screens/run_details.py:42 src/omega_stress/interfaces/tui/widgets/progress_panel.py:23 src/omega_stress/infrastructure/exporters/templates/report.html.jinja:82
+msgid "Débit observé"
+msgstr "देखी गई थ्रूपुट"
+
+#: src/omega_stress/interfaces/tui/screens/run_details.py:44 src/omega_stress/interfaces/tui/widgets/progress_panel.py:25 src/omega_stress/infrastructure/exporters/templates/report.html.jinja:84
+msgid "Latence p95"
+msgstr "p95 विलंबता"
+
+#: src/omega_stress/interfaces/tui/screens/run_details.py:70 src/omega_stress/interfaces/tui/widgets/progress_panel.py:30
+#, python-brace-format
+msgid "{observed_rate_per_minute:.0f} req/min"
+msgstr "{observed_rate_per_minute:.0f} अनुरोध/मिनट"
+
+#: src/omega_stress/interfaces/tui/screens/run_details.py:85
+msgid " (personnalisé — au moins un critère réel diffère du profil figé référence)"
+msgstr " (कस्टम — कम से कम एक वास्तविक मानदंड संदर्भ स्थिर प्रोफ़ाइल से अलग है)"
+
+#: src/omega_stress/interfaces/tui/screens/run_details.py:90
+#, python-brace-format
+msgid ""
+"{id}\n"
+"Cible : {target_address}\n"
+"Famille/niveau : {family}/{level}{profile_note}\n"
+"Démarré : {started_at}"
+msgstr ""
+"{id}\n"
+"लक्ष्य: {target_address}\n"
+"परिवार/स्तर: {family}/{level}{profile_note}\n"
+"शुरू: {started_at}"
+
+#: src/omega_stress/interfaces/tui/screens/run_details.py:102
+#, python-brace-format
+msgid ""
+"\n"
+"Diagnostic : {reason}"
+msgstr ""
+"\n"
+"निदान: {reason}"
+
+#: src/omega_stress/interfaces/tui/screens/run_details.py:105
+#, python-brace-format
+msgid ""
+"\n"
+"Erreurs : {errors_timeout} timeout, {errors_connection} connexion, {errors_http_4xx} 4xx, {errors_http_5xx} 5xx"
+msgstr ""
+"\n"
+"त्रुटियाँ: {errors_timeout} टाइमआउट, {errors_connection} कनेक्शन, {errors_http_4xx} 4xx, {errors_http_5xx} 5xx"
+
+#: src/omega_stress/interfaces/tui/screens/run_details.py:122
+#, python-brace-format
+msgid ""
+"\n"
+"Pic générateur : {cpu} CPU, {memory} RAM"
+msgstr ""
+"\n"
+"जनरेटर शिखर: {cpu} CPU, {memory} RAM"
+
+#: src/omega_stress/interfaces/tui/screens/run_details.py:125
+#, python-brace-format
+msgid ""
+"\n"
+"{sample_count} mesures enregistrées (détail exhaustif : export JSON/HTML)."
+msgstr ""
+"\n"
+"{sample_count} माप दर्ज (पूर्ण विवरण: JSON/HTML निर्यात)।"
+
+#: src/omega_stress/interfaces/tui/screens/run_details.py:133
+msgid "Chronologie — temps | taux d'erreur (barre) | erreurs/requêtes par palier\n"
+msgstr "समयरेखा — समय | त्रुटि दर (पट्टी) | चरण के अनुसार त्रुटियाँ/अनुरोध\n"
+
+#: src/omega_stress/interfaces/tui/screens/run_details.py:139
+msgid "Aucune mesure enregistrée : le test s'est terminé avant la première mesure (voir le diagnostic ci-dessus)."
+msgstr "कोई माप दर्ज नहीं: पहले माप से पहले ही परीक्षण समाप्त हो गया (ऊपर निदान देखें)।"
+
+#: src/omega_stress/interfaces/tui/screens/settings_screen.py:84
+msgid "Dossier d'export par défaut"
+msgstr "डिफ़ॉल्ट निर्यात फ़ोल्डर"
+
+#: src/omega_stress/interfaces/tui/screens/settings_screen.py:87
+msgid "Dossier des captures d'écran par défaut"
+msgstr "डिफ़ॉल्ट स्क्रीनशॉट फ़ोल्डर"
+
+#: src/omega_stress/interfaces/tui/screens/settings_screen.py:93
+msgid "Vider les cibles récentes"
+msgstr "हाल के लक्ष्य खाली करें"
+
+#: src/omega_stress/interfaces/tui/screens/settings_screen.py:122
+msgid "VIDER LES CIBLES RÉCENTES ?"
+msgstr "हाल के लक्ष्य खाली करें?"
+
+#: src/omega_stress/interfaces/tui/screens/settings_screen.py:123
+msgid "Les cibles épinglées ne sont pas concernées."
+msgstr "पिन किए गए लक्ष्य प्रभावित नहीं होते।"
+
+#: src/omega_stress/interfaces/tui/screens/settings_screen.py:132
+msgid "Y compris les cibles épinglées : les autorisations déjà accordées seront perdues."
+msgstr "पिन किए गए लक्ष्यों सहित: पहले दी गई अनुमतियाँ खो जाएँगी।"
+
+#: src/omega_stress/interfaces/tui/screens/settings_screen.py:142
+msgid "Tous les runs enregistrés seront effacés définitivement."
+msgstr "सहेजे गए सभी रन स्थायी रूप से हटा दिए जाएँगे।"
+
+#: src/omega_stress/interfaces/tui/screens/settings_screen.py:169
+msgid "Cibles récentes vidées."
+msgstr "हाल के लक्ष्य खाली किए गए।"
+
+#: src/omega_stress/interfaces/tui/screens/settings_screen.py:175
+msgid "Toutes les cibles ont été effacées."
+msgstr "सभी लक्ष्य हटा दिए गए।"
+
+#: src/omega_stress/interfaces/tui/screens/splash.py:40
+msgid "Appuyez sur une touche pour continuer…"
+msgstr "जारी रखने के लिए कोई कुंजी दबाएँ…"
+
+#: src/omega_stress/interfaces/tui/screens/targets.py:36
+msgid "Cibles épinglées : illimitées | Cibles récentes : 10 maximum"
+msgstr "पिन किए गए लक्ष्य: असीमित | हाल के लक्ष्य: अधिकतम 10"
+
+#: src/omega_stress/interfaces/tui/screens/targets.py:42
+msgid "Nouvelle adresse (ex. https://exemple.org)"
+msgstr "नया पता (उदा. https://example.org)"
+
+#: src/omega_stress/interfaces/tui/screens/targets.py:49
+msgid "Désépingler la cible sélectionnée"
+msgstr "चयनित लक्ष्य अनपिन करें"
+
+#: src/omega_stress/interfaces/tui/screens/targets.py:83
+msgid "Saisissez une adresse à épingler."
+msgstr "पिन करने के लिए पता दर्ज करें।"
+
+#: src/omega_stress/interfaces/tui/screens/targets.py:93
+#, python-brace-format
+msgid "{base_url} épinglée."
+msgstr "{base_url} पिन किया गया।"
+
+#: src/omega_stress/interfaces/tui/screens/targets.py:106
+msgid "Cible désépinglée."
+msgstr "लक्ष्य अनपिन किया गया।"
+
+#: src/omega_stress/interfaces/tui/widgets/authorization_checkbox.py:11
+msgid "Je confirme être autorisé à tester cette cible"
+msgstr "मैं पुष्टि करता/करती हूँ कि मुझे इस लक्ष्य का परीक्षण करने की अनुमति है"
+
+#: src/omega_stress/interfaces/tui/widgets/duration_preset_table.py:24 src/omega_stress/interfaces/tui/widgets/history_table.py:16
+msgid "ID"
+msgstr "ID"
+
+#: src/omega_stress/interfaces/tui/widgets/duration_preset_table.py:26
+msgid "Durée totale"
+msgstr "कुल अवधि"
+
+#: src/omega_stress/interfaces/tui/widgets/duration_preset_table.py:27
+msgid "Familles compatibles"
+msgstr "अनुकूल परिवार"
+
+#: src/omega_stress/interfaces/tui/widgets/duration_preset_table.py:28
+msgid "Niveaux libres"
+msgstr "मुक्त स्तर"
+
+#: src/omega_stress/interfaces/tui/widgets/duration_preset_table.py:29
+msgid "Niveau renforcé"
+msgstr "सुदृढ़ स्तर"
+
+#: src/omega_stress/interfaces/tui/widgets/duration_preset_table.py:35
+#, python-brace-format
+msgid "{total_minutes} min"
+msgstr "{total_minutes} मिनट"
+
+#: src/omega_stress/interfaces/tui/widgets/history_table.py:16
+msgid "Démarré"
+msgstr "शुरू"
+
+#: src/omega_stress/interfaces/tui/widgets/history_table.py:37
+msgid "en cours"
+msgstr "जारी"
+
+#: src/omega_stress/interfaces/tui/widgets/load_reference_table.py:21 src/omega_stress/infrastructure/exporters/templates/report.html.jinja:61
+msgid "Type de test"
+msgstr "परीक्षण प्रकार"
+
+#: src/omega_stress/interfaces/tui/widgets/load_reference_table.py:22
+msgid "Niveau"
+msgstr "स्तर"
+
+#: src/omega_stress/interfaces/tui/widgets/load_reference_table.py:23
+msgid "Dimension pilotée"
+msgstr "नियंत्रित आयाम"
+
+#: src/omega_stress/interfaces/tui/widgets/load_reference_table.py:24
+msgid "Cible visée"
+msgstr "लक्षित मान"
+
+#: src/omega_stress/interfaces/tui/widgets/load_reference_table.py:25
+msgid "Simultanéité réelle"
+msgstr "वास्तविक समानांतरता"
+
+#: src/omega_stress/interfaces/tui/widgets/load_reference_table.py:27
+msgid "Durées disponibles"
+msgstr "उपलब्ध अवधियाँ"
+
+#: src/omega_stress/interfaces/tui/widgets/profile_list.py:16 src/omega_stress/infrastructure/exporters/templates/report.html.jinja:65
+msgid "Durée"
+msgstr "अवधि"
+
+#: src/omega_stress/interfaces/tui/widgets/profile_list.py:26
+#, python-brace-format
+msgid "{duration_minutes} min"
+msgstr "{duration_minutes} मिनट"
+
+#: src/omega_stress/interfaces/tui/widgets/progress_panel.py:26
+msgid "CPU / RAM"
+msgstr "CPU / RAM"
+
+#: src/omega_stress/interfaces/tui/widgets/run_progress.py:45 src/omega_stress/interfaces/tui/widgets/run_progress.py:58
+#, python-brace-format
+msgid "Test en cours… (reste {value})"
+msgstr "परीक्षण जारी… (शेष {value})"
+
+#: src/omega_stress/interfaces/tui/widgets/run_progress.py:63
+#, python-brace-format
+msgid "Test en cours… (dépasse la durée prévue de {overrun})"
+msgstr "परीक्षण जारी… (नियोजित अवधि से {overrun} अधिक)"
+
+#: src/omega_stress/interfaces/tui/widgets/safety_mode_checkbox.py:11
+msgid "Mode sécurité (protège cette machine)"
+msgstr "सुरक्षा मोड (इस मशीन की रक्षा करता है)"
+
+#: src/omega_stress/interfaces/tui/widgets/target_picker.py:30
+msgid "ou saisir une adresse (ex. https://exemple.org)"
+msgstr "या पता दर्ज करें (उदा. https://example.org)"
+
+#: src/omega_stress/interfaces/tui/widgets/target_table.py:17
+msgid "Adresse"
+msgstr "पता"
+
+#: src/omega_stress/interfaces/tui/widgets/target_table.py:17
+msgid "Dernière utilisation"
+msgstr "अंतिम उपयोग"
+
+#: src/omega_stress/interfaces/tui/presenters/calibration_presenter.py:49
+#, python-brace-format
+msgid "Âge du calibrage : {age_days} j — renouvellement OBLIGATOIRE (> {CALIBRATION_VALIDITY_DAYS_MANDATORY} j)."
+msgstr "कैलिब्रेशन की आयु: {age_days} दिन — नवीनीकरण अनिवार्य (> {CALIBRATION_VALIDITY_DAYS_MANDATORY} दिन)।"
+
+#: src/omega_stress/interfaces/tui/presenters/calibration_presenter.py:57
+#, python-brace-format
+msgid "Âge du calibrage : {age_days} j — renouvellement recommandé (> {CALIBRATION_VALIDITY_DAYS_RECOMMENDED} j)."
+msgstr "कैलिब्रेशन की आयु: {age_days} दिन — नवीनीकरण अनुशंसित (> {CALIBRATION_VALIDITY_DAYS_RECOMMENDED} दिन)।"
+
+#: src/omega_stress/interfaces/tui/presenters/calibration_presenter.py:63
+#, python-brace-format
+msgid "Âge du calibrage : {age_days} j."
+msgstr "कैलिब्रेशन की आयु: {age_days} दिन।"
+
+#: src/omega_stress/infrastructure/exporters/csv_exporter.py:57
+#, python-brace-format
+msgid "Échec d'écriture CSV vers {path} : {exc}"
+msgstr "{path} में CSV लिखने में विफल: {exc}"
+
+#: src/omega_stress/infrastructure/exporters/html_exporter.py:61
+#, python-brace-format
+msgid "Échec d'écriture HTML vers {path} : {exc}"
+msgstr "{path} में HTML लिखने में विफल: {exc}"
+
+#: src/omega_stress/infrastructure/exporters/html_exporter.py:78
+msgid "Débit (requêtes/min)"
+msgstr "थ्रूपुट (अनुरोध/मिनट)"
+
+#: src/omega_stress/infrastructure/exporters/html_exporter.py:82
+msgid "Demandé"
+msgstr "माँगा गया"
+
+#: src/omega_stress/infrastructure/exporters/html_exporter.py:84
+msgid "Réel"
+msgstr "वास्तविक"
+
+#: src/omega_stress/infrastructure/exporters/html_exporter.py:89
+msgid "Latence (ms)"
+msgstr "विलंबता (ms)"
+
+#: src/omega_stress/infrastructure/exporters/html_exporter.py:99
+msgid "Erreurs par catégorie"
+msgstr "श्रेणी के अनुसार त्रुटियाँ"
+
+#: src/omega_stress/infrastructure/exporters/html_exporter.py:102
+msgid "Timeout"
+msgstr "Timeout"
+
+#: src/omega_stress/infrastructure/exporters/html_exporter.py:103
+msgid "Connexion"
+msgstr "कनेक्शन"
+
+#: src/omega_stress/infrastructure/exporters/html_exporter.py:105
+msgid "HTTP 4xx"
+msgstr "HTTP 4xx"
+
+#: src/omega_stress/infrastructure/exporters/html_exporter.py:107
+msgid "HTTP 5xx"
+msgstr "HTTP 5xx"
+
+#: src/omega_stress/infrastructure/exporters/html_exporter.py:112
+msgid "CPU (%)"
+msgstr "CPU (%)"
+
+#: src/omega_stress/infrastructure/exporters/html_exporter.py:116
+msgid "Générateur"
+msgstr "जनरेटर"
+
+#: src/omega_stress/infrastructure/exporters/html_exporter.py:121
+msgid "Système"
+msgstr "सिस्टम"
+
+#: src/omega_stress/infrastructure/exporters/html_exporter.py:129
+msgid "Mémoire (Mo)"
+msgstr "मेमोरी (MB)"
+
+#: src/omega_stress/infrastructure/exporters/html_exporter.py:133
+msgid "RSS générateur"
+msgstr "जनरेटर RSS"
+
+#: src/omega_stress/infrastructure/exporters/html_exporter.py:138
+msgid "Swap utilisé"
+msgstr "उपयोग किया गया स्वैप"
+
+#: src/omega_stress/infrastructure/exporters/json_exporter.py:28
+#, python-brace-format
+msgid "Échec d'écriture JSON vers {path} : {exc}"
+msgstr "{path} में JSON लिखने में विफल: {exc}"
+
+#: src/omega_stress/infrastructure/exporters/templates/report.html.jinja:5
+#, python-brace-format
+msgid "Rapport omega-stress — {run_id}"
+msgstr "omega-stress रिपोर्ट — {run_id}"
+
+#: src/omega_stress/infrastructure/exporters/templates/report.html.jinja:55
+#, python-brace-format
+msgid "Rapport de test — {run_id}"
+msgstr "परीक्षण रिपोर्ट — {run_id}"
+
+#: src/omega_stress/infrastructure/exporters/templates/report.html.jinja:63
+msgid "Début"
+msgstr "शुरुआत"
+
+#: src/omega_stress/infrastructure/exporters/templates/report.html.jinja:64
+msgid "Fin"
+msgstr "अंत"
+
+#: src/omega_stress/infrastructure/exporters/templates/report.html.jinja:65
+#, python-brace-format
+msgid "{value} min"
+msgstr "{value} मिनट"
+
+#: src/omega_stress/infrastructure/exporters/templates/report.html.jinja:69
+msgid "Actif"
+msgstr "सक्रिय"
+
+#: src/omega_stress/infrastructure/exporters/templates/report.html.jinja:69
+msgid "Désactivé"
+msgstr "बंद"
+
+#: src/omega_stress/infrastructure/exporters/templates/report.html.jinja:79
+msgid "Métriques"
+msgstr "मेट्रिक्स"
+
+#: src/omega_stress/infrastructure/exporters/templates/report.html.jinja:81
+msgid "Débit demandé"
+msgstr "माँगा गया थ्रूपुट"
+
+#: src/omega_stress/infrastructure/exporters/templates/report.html.jinja:81
+#, python-brace-format
+msgid "{requested_rate_per_minute} req/min"
+msgstr "{requested_rate_per_minute} अनुरोध/मिनट"
+
+#: src/omega_stress/infrastructure/exporters/templates/report.html.jinja:82
+#, python-brace-format
+msgid "{observed_rate_per_minute} req/min"
+msgstr "{observed_rate_per_minute} अनुरोध/मिनट"
+
+#: src/omega_stress/infrastructure/exporters/templates/report.html.jinja:83
+msgid "Latence p50"
+msgstr "विलंबता p50"
+
+#: src/omega_stress/infrastructure/exporters/templates/report.html.jinja:85
+msgid "Latence p99"
+msgstr "विलंबता p99"
+
+#: src/omega_stress/infrastructure/exporters/templates/report.html.jinja:87
+msgid "Dont timeout / connexion / 4xx / 5xx"
+msgstr "इनमें टाइमआउट / कनेक्शन / 4xx / 5xx"
+
+#: src/omega_stress/infrastructure/exporters/templates/report.html.jinja:89
+msgid "Pic CPU générateur"
+msgstr "जनरेटर CPU शिखर"
+
+#: src/omega_stress/infrastructure/exporters/templates/report.html.jinja:92
+msgid "Pic mémoire générateur"
+msgstr "जनरेटर मेमोरी शिखर"
+
+#: src/omega_stress/infrastructure/exporters/templates/report.html.jinja:92
+#, python-brace-format
+msgid "{value} Mo"
+msgstr "{value} MB"
+
+#: src/omega_stress/infrastructure/exporters/templates/report.html.jinja:99
+msgid "Graphiques"
+msgstr "चार्ट"
+
+#: src/omega_stress/infrastructure/exporters/templates/report.html.jinja:110
+#, python-brace-format
+msgid "Chronologie ({samples} mesures)"
+msgstr "समयरेखा ({samples} माप)"
+
+#: src/omega_stress/infrastructure/exporters/templates/report.html.jinja:114
+msgid "Seconde"
+msgstr "सेकंड"
+
+#: src/omega_stress/infrastructure/exporters/templates/report.html.jinja:114
+msgid "Débit (req/min)"
+msgstr "थ्रूपुट (अनुरोध/मिनट)"
+
+#: src/omega_stress/infrastructure/exporters/templates/report.html.jinja:139
+msgid "Diagnostic"
+msgstr "निदान"

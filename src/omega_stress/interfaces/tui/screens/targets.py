@@ -13,6 +13,7 @@ from omega_stress.interfaces.tui.controllers import load_controller
 from omega_stress.interfaces.tui.screens._base import OmegaScreen
 from omega_stress.interfaces.tui.widgets.authorization_checkbox import AuthorizationCheckbox
 from omega_stress.interfaces.tui.widgets.target_table import TargetTable
+from omega_stress.shared.i18n import _
 
 if TYPE_CHECKING:
     from omega_stress.app.dependency_container import DependencyContainer
@@ -30,22 +31,24 @@ class TargetsScreen(OmegaScreen):
     def compose(self) -> ComposeResult:
         yield Header()
         with Vertical(classes="omega-panel"):
-            yield Static("CIBLES", classes="omega-title")
+            yield Static(_("CIBLES"), classes="omega-title")
             yield Static(
-                "Cibles epinglees : illimitees | Cibles recentes : 10 maximum",
+                _("Cibles épinglées : illimitées | Cibles récentes : 10 maximum"),
                 classes="omega-subtitle",
             )
             yield TargetTable(id="targets")
             yield Static("", id="status")
-            yield Input(placeholder="Nouvelle adresse (ex. https://exemple.org)", id="new-address")
+            yield Input(
+                placeholder=_("Nouvelle adresse (ex. https://exemple.org)"), id="new-address"
+            )
             yield AuthorizationCheckbox(id="authorization")
             with Horizontal(classes="omega-actions"):
                 with Container(classes="omega-btn-frame"):
-                    yield Button("Epingler", id="pin", variant="primary")
+                    yield Button(_("Épingler"), id="pin", variant="primary")
                 with Container(classes="omega-btn-frame"):
-                    yield Button("Desepingler la cible selectionnee", id="unpin")
+                    yield Button(_("Désépingler la cible sélectionnée"), id="unpin")
                 with Container(classes="omega-btn-frame"):
-                    yield Button("Retour", id="back")
+                    yield Button(_("Retour"), id="back")
         yield Footer()
 
     def on_mount(self) -> None:
@@ -77,7 +80,7 @@ class TargetsScreen(OmegaScreen):
         status = self.query_one("#status", Static)
         raw_address = self.query_one("#new-address", Input).value.strip()
         if not raw_address:
-            status.update("Saisissez une adresse a epingler.")
+            status.update(_("Saisissez une adresse à épingler."))
             return
         result = load_controller.pin_new_target(
             target_repository=self._container.target_repository,
@@ -87,7 +90,7 @@ class TargetsScreen(OmegaScreen):
         if isinstance(result, Err):
             status.update(str(result.error))
             return
-        status.update(f"{result.value.base_url} epinglee.")
+        status.update(_("{base_url} épinglée.").format(base_url=result.value.base_url))
         self.query_one("#new-address", Input).value = ""
         self.query_one(AuthorizationCheckbox).value = False
         self._refresh()
@@ -95,14 +98,15 @@ class TargetsScreen(OmegaScreen):
     def _unpin(self) -> None:
         status = self.query_one("#status", Static)
         if self._selected_target_id is None:
-            status.update("Selectionnez d'abord une cible.")
+            status.update(_("Sélectionnez d'abord une cible."))
             return
         load_controller.unpin_existing_target(
             self._selected_target_id, target_repository=self._container.target_repository
         )
-        status.update("Cible desepinglee.")
+        status.update(_("Cible désépinglée."))
         self._selected_target_id = None
         self._refresh()
+
 
 # <-- INFO DEV ---------------------------------------------------------
 # Role :
@@ -146,4 +150,4 @@ class TargetsScreen(OmegaScreen):
 #   l'utilisateur ("a combien sont-elles au max d'affichage").
 # Comment il sera utilise :
 # - interfaces/tui/screens/home.py (bouton "Cibles").
-#---------------------------------------------------------------------->
+# ---------------------------------------------------------------------->

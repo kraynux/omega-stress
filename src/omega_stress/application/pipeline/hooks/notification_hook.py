@@ -4,6 +4,8 @@ from __future__ import annotations
 
 from collections.abc import Callable
 
+from omega_stress.shared.i18n import _
+
 NotificationSink = Callable[[str], None]
 """Destination d'un message de notification, fournie par l'appelant
 (typiquement interfaces/tui/widgets/notification_bar.py en production) —
@@ -11,13 +13,13 @@ local a ce module, meme principe que AuditSink dans audit_hook.py."""
 
 
 def notify_auto_stop(reason: str, *, sink: NotificationSink) -> None:
-    sink(f"Arret automatique : {reason}")
+    sink(_("Arrêt automatique : {reason}").format(reason=reason))
 
 
 def notify_local_bottleneck(*, sink: NotificationSink) -> None:
     sink(
-        "Le generateur local semble devenir le goulot d'etranglement "
-        "(debit observe significativement inferieur au debit demande)."
+        _("Le générateur local semble devenir le goulot d'étranglement (débit observé "
+          "significativement inférieur au débit demandé).")
     )
 
 # <-- INFO DEV ---------------------------------------------------------

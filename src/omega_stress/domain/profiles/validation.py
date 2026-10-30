@@ -6,6 +6,7 @@ from omega_stress.core.results import Err, Ok, Result
 from omega_stress.domain.errors import ValidationError
 from omega_stress.domain.load import policies
 from omega_stress.domain.profiles.models import Profile
+from omega_stress.shared.i18n import _
 
 
 def validate_profile(profile: Profile) -> Result[Profile, ValidationError]:
@@ -13,7 +14,7 @@ def validate_profile(profile: Profile) -> Result[Profile, ValidationError]:
     politiques de domain/load/ — ne verifie pas la joignabilite de la
     cible par defaut (role du pre-check, pas une regle de profil)."""
     if not profile.name.strip():
-        return Err(ValidationError("Le nom du profil ne peut pas etre vide."))
+        return Err(ValidationError(_("Le nom du profil ne peut pas être vide.")))
 
     allowed = policies.allowed_durations_minutes(
         profile.level, extended_authorized=profile.extended_duration_authorized
@@ -21,13 +22,19 @@ def validate_profile(profile: Profile) -> Result[Profile, ValidationError]:
     if profile.duration.minutes not in allowed:
         return Err(
             ValidationError(
-                f"Duree {profile.duration.minutes} min non autorisee pour le niveau "
-                f"{profile.level.value} dans ce profil "
-                f"(extended_duration_authorized={profile.extended_duration_authorized})."
+                _(
+                    "Durée {minutes} min non autorisée pour le niveau {value} dans ce profil "
+                    "(extended_duration_authorized={extended_duration_authorized})."
+                ).format(
+                    minutes=profile.duration.minutes,
+                    value=profile.level.value,
+                    extended_duration_authorized=profile.extended_duration_authorized,
+                )
             )
         )
 
     return Ok(profile)
+
 
 # <-- INFO DEV ---------------------------------------------------------
 # Role :
@@ -54,4 +61,4 @@ def validate_profile(profile: Profile) -> Result[Profile, ValidationError]:
 # - application/commands/create_profile.py et freeze_profile.py appellent
 #   validate_profile() avant toute persistance.
 # - domain/profiles/service.py::freeze() l'appelle avant de figer.
-#---------------------------------------------------------------------->
+# ---------------------------------------------------------------------->

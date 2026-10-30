@@ -7,12 +7,13 @@ import math
 from omega_stress.application.dto.run_dto import IntervalSampleDTO, RunDTO
 from omega_stress.core.enums import RunVerdict
 from omega_stress.domain.reports.builders import verdict_headline
+from omega_stress.shared.i18n import _
 
 _VERDICT_LABELS: dict[str, str] = {
-    "success": "Reussi",
-    "degraded": "Degrade",
-    "auto_stopped": "Arret automatique",
-    "failed": "Echec",
+    "success": _("Réussi"),
+    "degraded": _("Dégradé"),
+    "auto_stopped": _("Arrêt automatique"),
+    "failed": _("Échec"),
 }
 
 _CHRONOLOGY_MAX_ROWS = 15
@@ -23,7 +24,7 @@ def verdict_label(run: RunDTO) -> str:
     """Libelle humain du verdict, ou "En cours" tant que le run n'est pas
     termine (RunDTO.verdict est None dans ce cas)."""
     if run.verdict is None:
-        return "En cours"
+        return _("En cours")
     return _VERDICT_LABELS.get(run.verdict, run.verdict)
 
 
@@ -45,7 +46,7 @@ def diagnostic_message(run: RunDTO) -> str:
     run en cours, reussi, ou degrade sans evenement notable."""
     if not run.events:
         return ""
-    return run.events[-1].message
+    return _(run.events[-1].message)
 
 
 def metrics_summary(run: RunDTO) -> str:
@@ -56,9 +57,10 @@ def metrics_summary(run: RunDTO) -> str:
     errors = run.error_count or 0
     total = run.total_requests or 0
     p95 = run.p95_latency_ms or 0.0
-    return (
-        f"{run.observed_rate_per_minute:.0f} req/min | "
-        f"{errors}/{total} erreurs | p95 {p95:.0f} ms"
+    return _(
+        "{observed_rate_per_minute:.0f} req/min | {errors}/{total} erreurs | p95 {p95:.0f} ms"
+    ).format(
+        observed_rate_per_minute=run.observed_rate_per_minute, errors=errors, total=total, p95=p95
     )
 
 
@@ -79,8 +81,13 @@ def chronology_lines(samples: tuple[IntervalSampleDTO, ...]) -> tuple[str, ...]:
         ratio = errors / requests if requests else 0.0
         filled = round(ratio * _CHRONOLOGY_BAR_WIDTH)
         bar = "█" * filled + "░" * (_CHRONOLOGY_BAR_WIDTH - filled)
-        lines.append(f"{chunk[0].at_second:>5.0f}s  {bar}  {errors} err / {requests} req")
+        lines.append(
+            _("{at_second:>5.0f}s  {bar}  {errors} err / {requests} req").format(
+                at_second=chunk[0].at_second, bar=bar, errors=errors, requests=requests
+            )
+        )
     return tuple(lines)
+
 
 # <-- INFO DEV ---------------------------------------------------------
 # Role :
@@ -142,4 +149,4 @@ def chronology_lines(samples: tuple[IntervalSampleDTO, ...]) -> tuple[str, ...]:
 #   affichee en complement de metrics_summary() quand celle-ci est vide),
 #   screens/run_details.py (chronology_lines() et verdict_explanation()
 #   y compris), widgets/history_table.py (colonne verdict).
-#---------------------------------------------------------------------->
+# ---------------------------------------------------------------------->

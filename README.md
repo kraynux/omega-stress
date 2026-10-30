@@ -17,8 +17,9 @@ Page officielle : [OMEGA-STRESS](https://kraynux.snake-mackarel.ts.net/omega-str
 [![Platform](https://img.shields.io/badge/Platform-Linux-informational.svg)](https://www.linux.org/)
 [![Interface](https://img.shields.io/badge/Interface-TUI%20%2B%20Rich-cyan.svg)](https://github.com/Textualize/rich)
 
-**Langues:**  
-[Français](README.md) · [English](README.en.md) · [Español](README.es.md) · [Русский](README.ru.md) · [中文](README.zh-CN.md)
+🌐 Interface et rapports exportés disponibles en **17 langues** — voir [Langues de l'interface](#langues-de-linterface).  
+**Langues :**  
+<img src="https://flagcdn.com/w20/fr.png" alt="Français" style="height:14px;"> [Français](README.md) · <img src="https://flagcdn.com/w20/gb.png" alt="English" style="height:14px;"> [English](docs/translation/en/README.md) · <img src="https://flagcdn.com/w20/es.png" alt="Español" style="height:14px;"> [Español](docs/translation/es/README.md) · <img src="https://flagcdn.com/w20/br.png" alt="Português (Brasil)" style="height:14px;"> [Português (Brasil)](docs/translation/pt-BR/README.md) · <img src="https://flagcdn.com/w20/it.png" alt="Italiano" style="height:14px;"> [Italiano](docs/translation/it/README.md) · <img src="https://flagcdn.com/w20/de.png" alt="Deutsch" style="height:14px;"> [Deutsch](docs/translation/de/README.md) · <img src="https://flagcdn.com/w20/nl.png" alt="Nederlands" style="height:14px;"> [Nederlands](docs/translation/nl/README.md) · <img src="https://flagcdn.com/w20/pl.png" alt="Polski" style="height:14px;"> [Polski](docs/translation/pl/README.md) · <img src="https://flagcdn.com/w20/ru.png" alt="Русский" style="height:14px;"> [Русский](docs/translation/ru/README.md) · <img src="https://flagcdn.com/w20/cn.png" alt="中文" style="height:14px;"> [中文](docs/translation/zh-CN/README.md) · <img src="https://flagcdn.com/w20/vn.png" alt="Tiếng Việt" style="height:14px;"> [Tiếng Việt](docs/translation/vi/README.md) · <img src="https://flagcdn.com/w20/th.png" alt="ไทย" style="height:14px;"> [ไทย](docs/translation/th/README.md) · <img src="https://flagcdn.com/w20/id.png" alt="Bahasa Indonesia" style="height:14px;"> [Bahasa Indonesia](docs/translation/id/README.md) · <img src="https://flagcdn.com/w20/jp.png" alt="日本語" style="height:14px;"> [日本語](docs/translation/ja/README.md) · <img src="https://flagcdn.com/w20/kr.png" alt="한국어" style="height:14px;"> [한국어](docs/translation/ko/README.md) · <img src="https://flagcdn.com/w20/in.png" alt="हिन्दी" style="height:14px;"> [हिन्दी](docs/translation/hi/README.md) · <img src="https://flagcdn.com/w20/ae.png" alt="العربية" style="height:14px;"> [العربية](docs/translation/ar/README.md)
 
 
 
@@ -34,7 +35,7 @@ Le projet est conçu selon les principes de la **Clean Architecture**, avec une 
 - [Architecture](#architecture)
 - [Prérequis](#prérequis)
 - [Installation](#installation)
-- [Utilisation](#utilisation)
+- [Utilisation](#lancement)
 - [Profils de durée D1-D6](#profils-de-durée-d1-d6-mode-profil)
 - [Mode sécurité](#mode-sécurité)
 - [Calibrage local](#calibrage-local)
@@ -78,7 +79,7 @@ Le projet est conçu selon les principes de la **Clean Architecture**, avec une 
 - **Calibrage local persistant** : mesure ce que la machine peut réellement encaisser (7 paliers de charge croissante contre un serveur de boucle locale intégré), consultable depuis l'écran Calibrage — voir [Calibrage local](#calibrage-local).
 - **Cibles épinglées** : une adresse épinglée dispense de recocher l'autorisation à chaque lancement ; les cibles récentes non épinglées restent visibles (10 maximum) sans autorisation implicite. Une cible épinglée s'utilise de deux façons, indépendantes l'une de l'autre : directement, pour lancer un test en mode manuel sans aucun profil, ou comme cible par défaut lors de la création d'un profil figé.
 - **Historique complet** : chaque run est journalisé (verdict, métriques, chronologie par intervalle, mode sécurité utilisé) ; un run lié à un profil figé peut être rejoué à l'identique.
-- **Exports détaillés** JSON (données brutes réimportables), CSV (analyse tabulaire) ou HTML (rapport lisible, avec thème au choix parmi les 10 palettes du projet).
+- **Exports détaillés** JSON (données brutes réimportables), CSV (analyse tabulaire) ou HTML (rapport lisible, avec thème au choix parmi les 10 palettes du projet). Le rapport HTML s'écrit dans la langue choisie dans les Réglages (« Langue des exports », par défaut celle de l'interface) ; JSON et CSV restent des données, non traduites.
 - **Pré-check** automatique et obligatoire avant tout test Violent/Maximum, facultatif (mais débloquant des durées supplémentaires) sur Puissant/Agressif, avec fenêtre de validité (24 h).
 - **Suivi en direct** d'un test en cours : jauge de progression avec décompte fiable (temps restant calculé directement, jamais estimé), débit/erreurs/latence p95 mis à jour à chaque intervalle, arrêt manuel possible sans quitter l'application.
 - **Réglages centralisés** : thème (10 palettes Omega + tous les thèmes Textual intégrés, soit 31 au total via la palette de commandes), profil de rendu (auto ou forcé), dossiers d'export et de capture d'écran, purge des cibles/de l'historique.
@@ -184,6 +185,10 @@ Le lanceur :
 1. Détecte `.venv`, `venv` ou Python système.
 2. Configure `PYTHONPATH` vers `src/`.
 3. Lance `python -m omega_stress` — sans argument, ouvre le TUI ; avec un argument, dispatche vers le CLI.
+
+### Langues de l'interface
+
+L'interface est disponible en 17 langues : français, anglais, espagnol, portugais (Brésil), italien, allemand, néerlandais, polonais, russe, chinois simplifié, vietnamien, thaï, indonésien, japonais, coréen, hindi et arabe. Le choix se fait dans les Réglages (« Langue / Language ») et s'applique après un redémarrage de l'interface ; la variable `OMEGA_STRESS_LANG` (par exemple `OMEGA_STRESS_LANG=en ./omega-stress.sh`) force une langue le temps d'une session. Lancé depuis omega-suite, omega-stress prend la langue de la suite. Sur une console texte Linux (TTY), les langues à écriture non latine s'affichent en anglais pour la session. La ligne de commande reste en français.
 
 ### Utilisation en CLI
 

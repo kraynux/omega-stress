@@ -14,6 +14,7 @@ from omega_stress.domain.load.policies import (
 )
 from omega_stress.infrastructure.probe.env_reader import read_total_memory_mb
 from omega_stress.infrastructure.probe.limits_reader import read_open_file_limit
+from omega_stress.shared.i18n import _
 
 CPU_CAPABILITY = "system.cpu_count"
 MEMORY_CAPABILITY = "system.memory"
@@ -38,7 +39,7 @@ def probe_system_capabilities() -> tuple[Capability, ...]:
             if cpu_count >= MINIMUM_VIABLE_CPU_COUNT
             else CapabilityStatus.DEGRADED
         ),
-        detail=f"{cpu_count} coeur(s) detecte(s)",
+        detail=_("{cpu_count} coeur(s) détecté(s)").format(cpu_count=cpu_count),
     )
     open_files = Capability(
         name=OPEN_FILES_CAPABILITY,
@@ -47,7 +48,7 @@ def probe_system_capabilities() -> tuple[Capability, ...]:
             if soft_limit >= MINIMUM_OPEN_FILES_SOFT_LIMIT
             else CapabilityStatus.DEGRADED
         ),
-        detail=f"limite douce de {soft_limit} descripteurs",
+        detail=_("limite douce de {soft_limit} descripteurs").format(soft_limit=soft_limit),
     )
     if total_memory_mb is not None:
         memory = Capability(
@@ -57,18 +58,18 @@ def probe_system_capabilities() -> tuple[Capability, ...]:
                 if total_memory_mb >= MINIMUM_VIABLE_RAM_MB
                 else CapabilityStatus.DEGRADED
             ),
-            detail=f"{total_memory_mb} Mo detectes",
+            detail=_("{total_memory_mb} Mo détectés").format(total_memory_mb=total_memory_mb),
         )
     else:
         memory = Capability(
-            name=MEMORY_CAPABILITY, status=CapabilityStatus.MISSING, detail="non mesurable"
+            name=MEMORY_CAPABILITY, status=CapabilityStatus.MISSING, detail=_("non mesurable")
         )
 
     individual = (cpu, open_files, memory)
     overall = Capability(
         name=LOAD_CAPACITY_CAPABILITY,
         status=_worst_status(c.status for c in individual),
-        detail="agregat de " + ", ".join(c.name for c in individual),
+        detail=_("agrégat de ") + ", ".join(c.name for c in individual),
     )
     return (*individual, overall)
 

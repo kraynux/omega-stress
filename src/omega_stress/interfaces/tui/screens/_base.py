@@ -5,6 +5,8 @@ from __future__ import annotations
 from textual.binding import Binding
 from textual.screen import Screen
 
+from omega_stress.shared.i18n import _
+
 
 class OmegaScreen(Screen[None]):
     """Ecran navigable standard : ajoute `echap` -> retour a tous les
@@ -14,10 +16,10 @@ class OmegaScreen(Screen[None]):
     metier, ce fichier ne connait rien du domaine."""
 
     BINDINGS = [
-        Binding("escape", "back", "Retour", show=True),
-        Binding("tab", "app.focus_next", "Focus suivant", show=False),
-        Binding("shift+tab", "app.focus_previous", "Focus precedent", show=False),
-        Binding("ctrl+c,super+c", "screen.copy_text", "Copier le texte selectionne", show=False),
+        Binding("escape", "back", _("Retour"), show=True),
+        Binding("tab", "app.focus_next", _("Focus suivant"), show=False),
+        Binding("shift+tab", "app.focus_previous", _("Focus précédent"), show=False),
+        Binding("ctrl+c,super+c", "screen.copy_text", _("Copier le texte sélectionné"), show=False),
     ]
 
     def action_back(self) -> None:

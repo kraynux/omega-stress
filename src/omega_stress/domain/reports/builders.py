@@ -9,19 +9,23 @@ from omega_stress.domain.load.policies import (
 )
 from omega_stress.domain.reports.models import ReportContent, ReportDiagnostic, ReportSummary
 from omega_stress.domain.runs.models import LoadResult, LoadRun
+from omega_stress.shared.i18n import N_, _
 
+# Lot N : N_() ici, traduit par _() a chaque appel (verdict_headline) - un rapport exporte dans
+# une autre langue que l'interface relit donc la phrase dans la langue de l'export.
 VERDICT_HEADLINES: dict[RunVerdict, str] = {
-    RunVerdict.SUCCESS: "Le test s'est deroule normalement, sans depassement de seuil.",
+    RunVerdict.SUCCESS: N_("Le test s'est déroulé normalement, sans dépassement de seuil."),
     RunVerdict.DEGRADED: (
-        "Le test s'est termine avec une degradation observee, sans depassement de seuil critique."
+        N_("Le test s'est terminé avec une dégradation observée, sans dépassement de seuil "
+          "critique.")
     ),
     RunVerdict.AUTO_STOPPED: (
-        "Le test a ete arrete automatiquement suite a un depassement de seuil."
+        N_("Le test a été arrêté automatiquement suite à un dépassement de seuil.")
     ),
-    RunVerdict.FAILED: "Le test a echoue avant d'avoir pu produire un resultat exploitable.",
+    RunVerdict.FAILED: N_("Le test a échoué avant d'avoir pu produire un résultat exploitable."),
 }
 
-MANUAL_STOP_HEADLINE = "Le test a ete arrete manuellement par l'utilisateur."
+MANUAL_STOP_HEADLINE = N_("Le test a été arrêté manuellement par l'utilisateur.")
 """Bug reel rapporte (2026-09-01, capture d'ecran fournie) : un arret
 manuel (bouton "Arreter") partage le verdict AUTO_STOPPED avec un arret
 automatique par seuil (voir application/pipeline/executor.py, INFO DEV,
@@ -43,8 +47,8 @@ def verdict_headline(verdict: RunVerdict, *, last_event_kind: str | None = None)
     acces direct a VERDICT_HEADLINES[...] : jamais deux endroits qui
     pourraient diverger sur ce cas particulier."""
     if verdict is RunVerdict.AUTO_STOPPED and last_event_kind == "manual_stop":
-        return MANUAL_STOP_HEADLINE
-    return VERDICT_HEADLINES[verdict]
+        return _(MANUAL_STOP_HEADLINE)
+    return _(VERDICT_HEADLINES[verdict])
 
 
 def build_report_content(run: LoadRun, *, target_address: str) -> ReportContent:
@@ -85,8 +89,10 @@ def _build_diagnostic(result: LoadResult) -> ReportDiagnostic:
 
     if result.error_count > 0:
         recommendations.append(
-            f"{result.error_count} erreur(s) sur {result.total_requests} requetes : "
-            f"verifier les journaux de la cible sur la periode du test."
+            _(
+                "{error_count} erreur(s) sur {total_requests} requêtes : vérifier les journaux "
+                "de la cible sur la période du test."
+            ).format(error_count=result.error_count, total_requests=result.total_requests)
         )
 
     if (
@@ -96,9 +102,11 @@ def _build_diagnostic(result: LoadResult) -> ReportDiagnostic:
         < result.requested_rate_per_minute * LOCAL_BOTTLENECK_RATIO_THRESHOLD
     ):
         recommendations.append(
-            "Debit observe significativement inferieur au debit demande : "
-            "le generateur local peut etre devenu le goulot d'etranglement "
-            "(voir plan produit, Configuration minimale du generateur)."
+            _(
+                "Débit observé significativement inférieur au débit demandé : le générateur "
+                "local peut être devenu le goulot d'étranglement (voir plan produit, "
+                "Configuration minimale du générateur)."
+            )
         )
 
     if (
@@ -106,14 +114,17 @@ def _build_diagnostic(result: LoadResult) -> ReportDiagnostic:
         and result.peak_cpu_percent_generator >= GENERATOR_CPU_WARNING_THRESHOLD
     ):
         recommendations.append(
-            f"CPU du generateur monte a {result.peak_cpu_percent_generator:.0f} % au pic "
-            f"pendant le test : les resultats peuvent en partie refleter une limite du "
-            f"generateur local plutot que celle de la cible."
+            _(
+                "CPU du générateur monté à {peak_cpu_percent_generator:.0f} % au pic pendant le "
+                "test : les résultats peuvent en partie refléter une limite du générateur local "
+                "plutôt que celle de la cible."
+            ).format(peak_cpu_percent_generator=result.peak_cpu_percent_generator)
         )
 
     return ReportDiagnostic(
         verdict=result.verdict, headline=headline, recommendations=tuple(recommendations)
     )
+
 
 # <-- INFO DEV ---------------------------------------------------------
 # Role :
@@ -174,4 +185,4 @@ def _build_diagnostic(result: LoadResult) -> ReportDiagnostic:
 # - interfaces/tui/presenters/run_presenter.py::verdict_explanation() lit
 #   VERDICT_HEADLINES directement (domain/ reste en amont d'interfaces/,
 #   sens de dependance autorise).
-#---------------------------------------------------------------------->
+# ---------------------------------------------------------------------->

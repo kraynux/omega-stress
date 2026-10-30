@@ -15,6 +15,7 @@ from omega_stress.interfaces.tui.screens._base import OmegaScreen
 from omega_stress.interfaces.tui.screens.confirm import ConfirmScreen
 from omega_stress.interfaces.tui.screens.profile_wizard import ProfileWizardScreen
 from omega_stress.interfaces.tui.widgets.profile_list import ProfileList
+from omega_stress.shared.i18n import _
 
 if TYPE_CHECKING:
     from omega_stress.app.dependency_container import DependencyContainer
@@ -33,18 +34,18 @@ class ProfilesScreen(OmegaScreen):
     def compose(self) -> ComposeResult:
         yield Header()
         with Vertical(classes="omega-panel"):
-            yield Static("PROFILS", classes="omega-title")
+            yield Static(_("PROFILS"), classes="omega-title")
             yield ProfileList(id="profiles")
             yield Static("", id="status")
             with Horizontal(classes="omega-actions"):
                 with Container(classes="omega-btn-frame"):
-                    yield Button("Nouveau profil", id="new-profile", variant="primary")
+                    yield Button(_("Nouveau profil"), id="new-profile", variant="primary")
                 with Container(classes="omega-btn-frame"):
-                    yield Button("Figer le profil selectionne", id="freeze-profile")
+                    yield Button(_("Figer le profil sélectionné"), id="freeze-profile")
                 with Container(classes="omega-btn-frame"):
-                    yield Button("Supprimer le profil selectionne", id="delete-profile")
+                    yield Button(_("Supprimer le profil sélectionné"), id="delete-profile")
                 with Container(classes="omega-btn-frame"):
-                    yield Button("Retour", id="back")
+                    yield Button(_("Retour"), id="back")
         yield Footer()
 
     def on_mount(self) -> None:
@@ -69,7 +70,7 @@ class ProfilesScreen(OmegaScreen):
         ):
             if profile.id == profile_id:
                 self.query_one("#status", Static).update(
-                    f"{profile.name} — {status_label(profile)}"
+                    _("{name} — {value}").format(name=profile.name, value=status_label(profile))
                 )
                 break
 
@@ -95,7 +96,7 @@ class ProfilesScreen(OmegaScreen):
     def _freeze_selected(self) -> None:
         status_widget = self.query_one("#status", Static)
         if self._selected_profile_id is None:
-            status_widget.update("Selectionnez d'abord un profil.")
+            status_widget.update(_("Sélectionnez d'abord un profil."))
             return
         result = profile_controller.freeze(
             self._selected_profile_id, profile_repository=self._container.profile_repository
@@ -103,18 +104,18 @@ class ProfilesScreen(OmegaScreen):
         if isinstance(result, Err):
             status_widget.update(str(result.error))
             return
-        status_widget.update(f"{result.value.name} fige.")
+        status_widget.update(_("{name} figé.").format(name=result.value.name))
         self._refresh()
 
     def _confirm_delete_selected(self) -> None:
         if self._selected_profile_id is None:
-            self.query_one("#status", Static).update("Selectionnez d'abord un profil.")
+            self.query_one("#status", Static).update(_("Sélectionnez d'abord un profil."))
             return
         self.app.push_screen(
             ConfirmScreen(
-                title="SUPPRIMER CE PROFIL ?",
+                title=_("SUPPRIMER CE PROFIL ?"),
                 message=(
-                    "Definitif. Un run passe lie a ce profil ne pourra plus etre rejoue."
+                    _("Définitif. Un run passé lié à ce profil ne pourra plus être rejoué.")
                 ),
             ),
             self._delete_selected_if_confirmed,
@@ -126,7 +127,7 @@ class ProfilesScreen(OmegaScreen):
         profile_controller.delete(
             self._selected_profile_id, profile_repository=self._container.profile_repository
         )
-        self.query_one("#status", Static).update("Profil supprime.")
+        self.query_one("#status", Static).update(_("Profil supprimé."))
         self._refresh()
 
 # <-- INFO DEV ---------------------------------------------------------

@@ -1,0 +1,1451 @@
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: omega-stress\n"
+"Language: id\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"X-Omega-Status: testing\n"
+
+#: src/omega_stress/application/commands/export_run_report.py:36 src/omega_stress/application/commands/replay_run.py:61 src/omega_stress/interfaces/tui/screens/run_details.py:63
+msgid "Run {run_id!r} introuvable."
+msgstr "Run {run_id!r} tidak ditemukan."
+
+#: src/omega_stress/application/commands/export_run_report.py:40
+msgid "Run {run_id!r} n'est pas encore terminé."
+msgstr "Run {run_id!r} belum selesai."
+
+#: src/omega_stress/application/commands/export_run_report.py:48
+msgid "Format d'export {format!r} inconnu."
+msgstr "Format ekspor {format!r} tidak dikenal."
+
+#: src/omega_stress/application/commands/freeze_profile.py:26
+msgid "Profil {profile_id!r} introuvable."
+msgstr "Profil {profile_id!r} tidak ditemukan."
+
+#: src/omega_stress/application/commands/replay_run.py:65
+msgid "Le run {run_id!r} ne référence aucun profil et ne peut pas être rejoué."
+msgstr "Run {run_id!r} tidak merujuk profil apa pun dan tidak dapat diulang."
+
+#: src/omega_stress/application/commands/replay_run.py:75
+msgid "Profil {profile_id!r} introuvable, impossible de rejouer ce run."
+msgstr "Profil {profile_id!r} tidak ditemukan, tidak dapat mengulang run ini."
+
+#: src/omega_stress/application/commands/replay_run.py:85
+msgid "Cible {target_id!r} introuvable, impossible de rejouer ce run."
+msgstr "Target {target_id!r} tidak ditemukan, tidak dapat mengulang run ini."
+
+#: src/omega_stress/application/commands/run_calibration.py:98
+#, python-brace-format
+msgid "Palier {name} : {value}{value2}"
+msgstr "Tahap {name}: {value}{value2}"
+
+#: src/omega_stress/application/commands/run_calibration.py:100 src/omega_stress/interfaces/tui/presenters/calibration_presenter.py:108
+msgid "dégradé"
+msgstr "menurun"
+
+#: src/omega_stress/application/commands/run_calibration.py:100
+msgid "sain"
+msgstr "sehat"
+
+#: src/omega_stress/application/pipeline/abort.py:48
+#, python-brace-format
+msgid "Impossible de clôturer le run {id} après arrêt automatique : {error}"
+msgstr "Tidak dapat menutup run {id} setelah berhenti otomatis: {error}"
+
+#: src/omega_stress/application/pipeline/executor.py:109
+msgid "Arrêté manuellement par l'utilisateur."
+msgstr "Dihentikan secara manual oleh pengguna."
+
+#: src/omega_stress/application/pipeline/executor.py:113
+msgid "Test arrêté manuellement."
+msgstr "Uji dihentikan secara manual."
+
+#: src/omega_stress/application/pipeline/executor.py:156
+#, python-brace-format
+msgid "Impossible de clôturer le run {id} : {error}"
+msgstr "Tidak dapat menutup run {id}: {error}"
+
+#: src/omega_stress/application/pipeline/guards/authorization_guard.py:23
+msgid "Cible {target_id!r} non autorisée : ni épinglée, ni confirmation explicite fournie pour ce run."
+msgstr "Target {target_id!r} tidak diizinkan: tidak disematkan dan tidak ada konfirmasi eksplisit untuk run ini."
+
+#: src/omega_stress/application/pipeline/guards/capability_guard.py:22
+msgid "Capacité {capability_name!r} indisponible (statut : {value})."
+msgstr "Kemampuan {capability_name!r} tidak tersedia (status: {value})."
+
+#: src/omega_stress/application/pipeline/guards/precheck_guard.py:22 src/omega_stress/domain/load/validators.py:40
+#, python-brace-format
+msgid "Le niveau {value} exige un pré-check automatique validé avant de démarrer."
+msgstr "Level {value} memerlukan pra-pemeriksaan otomatis yang lolos sebelum dimulai."
+
+#: src/omega_stress/application/pipeline/hooks/notification_hook.py:16
+#, python-brace-format
+msgid "Arrêt automatique : {reason}"
+msgstr "Berhenti otomatis: {reason}"
+
+#: src/omega_stress/application/pipeline/hooks/notification_hook.py:21
+msgid "Le générateur local semble devenir le goulot d'étranglement (débit observé significativement inférieur au débit demandé)."
+msgstr "Generator lokal tampaknya menjadi hambatan (throughput teramati jauh lebih rendah dari yang diminta)."
+
+#: src/omega_stress/domain/calibration/validators.py:39
+msgid "Un calibrage ou un test est déjà en cours sur ce poste."
+msgstr "Kalibrasi atau uji sudah berjalan di komputer ini."
+
+#: src/omega_stress/domain/calibration/validators.py:49
+#, python-brace-format
+msgid "CPU global {cpu_global_percent:.0f}% > seuil {CALIBRATION_PRECONDITION_CPU_GLOBAL_MAX_PERCENT:.0f}% : machine déjà sous pression."
+msgstr "CPU total {cpu_global_percent:.0f}% > ambang {CALIBRATION_PRECONDITION_CPU_GLOBAL_MAX_PERCENT:.0f}%: mesin sudah terbebani."
+
+#: src/omega_stress/domain/calibration/validators.py:66
+#, python-brace-format
+msgid "Mémoire disponible {memory_available_percent:.0f}% < seuil {CALIBRATION_PRECONDITION_MEMORY_AVAILABLE_MIN_PERCENT:.0f}%."
+msgstr "Memori tersedia {memory_available_percent:.0f}% < ambang {CALIBRATION_PRECONDITION_MEMORY_AVAILABLE_MIN_PERCENT:.0f}%."
+
+#: src/omega_stress/domain/calibration/validators.py:77
+msgid "Swap déjà activé ou en croissance : machine déjà sous pression."
+msgstr "Swap sudah dipakai atau terus bertambah: mesin sudah terbebani."
+
+#: src/omega_stress/domain/calibration/validators.py:84
+#, python-brace-format
+msgid "Load average 1 min {load_average_1min:.1f} > {logical_cpu_count} coeurs logiques."
+msgstr "Load average 1 menit {load_average_1min:.1f} > {logical_cpu_count} inti logis."
+
+#: src/omega_stress/domain/load/models.py:27
+msgid "max_error_rate doit être compris entre 0.0 et 1.0, reçu {max_error_rate!r}"
+msgstr "max_error_rate harus antara 0.0 dan 1.0, diterima {max_error_rate!r}"
+
+#: src/omega_stress/domain/load/models.py:33
+msgid "max_p95_latency_ms doit être strictement positif, reçu {max_p95_latency_ms!r}"
+msgstr "max_p95_latency_ms harus positif, diterima {max_p95_latency_ms!r}"
+
+#: src/omega_stress/domain/load/models.py:57
+#, python-brace-format
+msgid "Durée {minutes} min non autorisée pour le niveau {value} (choix fermés : {allowed})"
+msgstr "Durasi {minutes} menit tidak diizinkan untuk level {value} (pilihan: {allowed})"
+
+#: src/omega_stress/domain/load/models.py:83
+msgid "{field_name} doit être compris entre 0.0 et 1.0, reçu {value!r}"
+msgstr "{field_name} harus antara 0.0 dan 1.0, diterima {value!r}"
+
+#: src/omega_stress/domain/load/models.py:90
+msgid "duration_minutes doit être strictement positif, reçu {duration_minutes!r}"
+msgstr "duration_minutes harus positif, diterima {duration_minutes!r}"
+
+#: src/omega_stress/domain/load/policies.py:241
+msgid "Le mode sécurité (actif par défaut) arrête automatiquement un test si CETTE machine - pas la cible testée - semble en danger (CPU/mémoire du générateur). Le désactiver ne change rien aux protections de la cible (taux d'erreur, latence : toujours activés) : seul le risque de ralentir ou geler temporairement VOTRE ordinateur pendant la durée du test augmente, surtout sur les niveaux intensifs (Connexions Agressif et au-delà, Requêtes Maximum). À désactiver si vous savez que votre machine peut encaisser plus que ce que le mode sécurité suppose par défaut."
+msgstr "Mode keamanan (aktif secara bawaan) otomatis menghentikan uji jika MESIN INI — bukan target yang diuji — tampak dalam bahaya (CPU/memori generator). Menonaktifkannya tidak mengubah perlindungan target (tingkat galat, latensi: selalu aktif): hanya risiko melambat atau membekunya KOMPUTER ANDA sementara selama uji yang meningkat, terutama pada level intensif (Koneksi Agresif ke atas, Permintaan Maksimum). Nonaktifkan jika Anda tahu mesin Anda sanggup menahan lebih dari yang diasumsikan mode keamanan secara bawaan."
+
+#: src/omega_stress/domain/load/validators.py:32
+msgid "Aucun run ne peut démarrer sans confirmation d'autorisation de la cible."
+msgstr "Tidak ada run yang dapat dimulai tanpa konfirmasi izin atas target."
+
+#: src/omega_stress/domain/load/validators.py:50
+#, python-brace-format
+msgid "Le profil {name} n'est pas compatible avec la famille {value}."
+msgstr "Profil {name} tidak kompatibel dengan keluarga {value}."
+
+#: src/omega_stress/domain/load/validators.py:59
+#, python-brace-format
+msgid "Durée {minutes} min incohérente avec le profil {name} ({total_minutes} min attendues)."
+msgstr "Durasi {minutes} menit tidak sesuai dengan profil {name} (seharusnya {total_minutes} menit)."
+
+#: src/omega_stress/domain/load/validators.py:80
+#, python-brace-format
+msgid "Durée {minutes} min non autorisée pour le niveau {value}."
+msgstr "Durasi {minutes} menit tidak diizinkan untuk level {value}."
+
+#: src/omega_stress/domain/load/validators.py:87
+msgid "Un Test charge doit définir au moins une étape de rampe."
+msgstr "Uji beban harus menetapkan setidaknya satu tahap kenaikan."
+
+#: src/omega_stress/domain/load/validators.py:95
+msgid "Seul un Test charge (ou un Test connexions avec profil de durée) peut définir des étapes de rampe."
+msgstr "Hanya Uji beban (atau Uji koneksi dengan profil durasi) yang dapat menetapkan tahap kenaikan."
+
+#: src/omega_stress/domain/load/validators.py:117
+#, python-brace-format
+msgid "Taux d'erreur observé {observed_error_rate:.1%} > seuil {max_error_rate:.1%}"
+msgstr "Tingkat galat teramati {observed_error_rate:.1%} > ambang {max_error_rate:.1%}"
+
+#: src/omega_stress/domain/load/validators.py:132
+#, python-brace-format
+msgid "Latence p95 observée {observed_p95_latency_ms:.0f}ms > seuil {max_p95_latency_ms:.0f}ms"
+msgstr "Latensi p95 teramati {observed_p95_latency_ms:.0f}ms > ambang {max_p95_latency_ms:.0f}ms"
+
+#: src/omega_stress/domain/load/validators.py:175
+#, python-brace-format
+msgid "Le niveau {value} pour le profil {name} ({total_minutes} min) exige la confirmation renforcée exacte."
+msgstr "Level {value} untuk profil {name} ({total_minutes} menit) memerlukan konfirmasi diperkuat yang persis."
+
+#: src/omega_stress/domain/load/validators.py:184
+#, python-brace-format
+msgid "Le niveau {value} n'est pas proposé pour le profil {name} ({total_minutes} min)."
+msgstr "Level {value} tidak tersedia untuk profil {name} ({total_minutes} menit)."
+
+#: src/omega_stress/domain/load/validators.py:209
+#, python-brace-format
+msgid "{CRITICAL_WINDOW_SECONDS:.0f}s critique"
+msgstr "{CRITICAL_WINDOW_SECONDS:.0f}s kritis"
+
+#: src/omega_stress/domain/load/validators.py:227
+#, python-brace-format
+msgid "Taux de timeout {timeout_rate:.1%} sur fenêtre {window_label} >= seuil {WINDOW_TIMEOUT_RATE_ABORT_THRESHOLD:.0%}"
+msgstr "Tingkat timeout {timeout_rate:.1%} pada jendela {window_label} >= ambang {WINDOW_TIMEOUT_RATE_ABORT_THRESHOLD:.0%}"
+
+#: src/omega_stress/domain/load/validators.py:243
+#, python-brace-format
+msgid "Taux d'erreurs HTTP 5xx {http_5xx_rate:.1%} sur fenêtre {window_label} >= seuil {WINDOW_HTTP_5XX_RATE_ABORT_THRESHOLD:.0%}"
+msgstr "Tingkat galat HTTP 5xx {http_5xx_rate:.1%} pada jendela {window_label} >= ambang {WINDOW_HTTP_5XX_RATE_ABORT_THRESHOLD:.0%}"
+
+#: src/omega_stress/domain/load/validators.py:259
+#, python-brace-format
+msgid "Taux d'erreurs total {total_error_rate:.1%} sur fenêtre {window_label} >= seuil {WINDOW_TOTAL_ERROR_RATE_ABORT_THRESHOLD:.0%}"
+msgstr "Tingkat galat total {total_error_rate:.1%} pada jendela {window_label} >= ambang {WINDOW_TOTAL_ERROR_RATE_ABORT_THRESHOLD:.0%}"
+
+#: src/omega_stress/domain/load/validators.py:310
+#, python-brace-format
+msgid "CPU générateur >= {threshold_text} (~{GENERATOR_CPU_ABORT_RATIO_OF_SINGLE_CORE:.0%} d'un coeur) ET CPU machine >= {GENERATOR_CPU_ABORT_GLOBAL_THRESHOLD_PERCENT:.0f}% pendant {GENERATOR_CPU_ABORT_SUSTAINED_SAMPLES}s : la machine hôte elle-même est sous pression, pas seulement le générateur"
+msgstr "CPU generator >= {threshold_text} (~{GENERATOR_CPU_ABORT_RATIO_OF_SINGLE_CORE:.0%} dari satu inti) DAN CPU mesin >= {GENERATOR_CPU_ABORT_GLOBAL_THRESHOLD_PERCENT:.0f}% selama {GENERATOR_CPU_ABORT_SUSTAINED_SAMPLES}s: mesin host itu sendiri yang terbebani, bukan hanya generatornya"
+
+#: src/omega_stress/domain/load/validators.py:333
+#, python-brace-format
+msgid "Mémoire disponible {memory_available_percent:.0f}% < seuil {MEMORY_AVAILABLE_ABORT_THRESHOLD_PERCENT:.0f}%"
+msgstr "Memori tersedia {memory_available_percent:.0f}% < ambang {MEMORY_AVAILABLE_ABORT_THRESHOLD_PERCENT:.0f}%"
+
+#: src/omega_stress/domain/load/validators.py:353
+#, python-brace-format
+msgid "Descripteurs de fichiers {open_files}/{open_files_soft_limit} >= {OPEN_FILES_ABORT_RATIO:.0%} de la limite"
+msgstr "Deskriptor file {open_files}/{open_files_soft_limit} >= {OPEN_FILES_ABORT_RATIO:.0%} dari batas"
+
+#: src/omega_stress/domain/profiles/validation.py:17
+msgid "Le nom du profil ne peut pas être vide."
+msgstr "Nama profil tidak boleh kosong."
+
+#: src/omega_stress/domain/profiles/validation.py:26
+#, python-brace-format
+msgid "Durée {minutes} min non autorisée pour le niveau {value} dans ce profil (extended_duration_authorized={extended_duration_authorized})."
+msgstr "Durasi {minutes} menit tidak diizinkan untuk level {value} dalam profil ini (extended_duration_authorized={extended_duration_authorized})."
+
+#: src/omega_stress/domain/reports/builders.py:17
+msgid "Le test s'est déroulé normalement, sans dépassement de seuil."
+msgstr "Uji berjalan normal, tanpa melampaui ambang."
+
+#: src/omega_stress/domain/reports/builders.py:19
+msgid "Le test s'est terminé avec une dégradation observée, sans dépassement de seuil critique."
+msgstr "Uji selesai dengan penurunan teramati, tanpa melampaui ambang kritis."
+
+#: src/omega_stress/domain/reports/builders.py:23
+msgid "Le test a été arrêté automatiquement suite à un dépassement de seuil."
+msgstr "Uji dihentikan otomatis karena melampaui ambang."
+
+#: src/omega_stress/domain/reports/builders.py:25
+msgid "Le test a échoué avant d'avoir pu produire un résultat exploitable."
+msgstr "Uji gagal sebelum dapat menghasilkan hasil yang berguna."
+
+#: src/omega_stress/domain/reports/builders.py:28
+msgid "Le test a été arrêté manuellement par l'utilisateur."
+msgstr "Uji dihentikan secara manual oleh pengguna."
+
+#: src/omega_stress/domain/reports/builders.py:93
+#, python-brace-format
+msgid "{error_count} erreur(s) sur {total_requests} requêtes : vérifier les journaux de la cible sur la période du test."
+msgstr "{error_count} galat dari {total_requests} permintaan: periksa log target selama periode uji."
+
+#: src/omega_stress/domain/reports/builders.py:106
+msgid "Débit observé significativement inférieur au débit demandé : le générateur local peut être devenu le goulot d'étranglement (voir plan produit, Configuration minimale du générateur)."
+msgstr "Throughput teramati jauh lebih rendah dari yang diminta: generator lokal mungkin menjadi hambatan (lihat rencana produk, Konfigurasi minimum generator)."
+
+#: src/omega_stress/domain/reports/builders.py:118
+#, python-brace-format
+msgid "CPU du générateur monté à {peak_cpu_percent_generator:.0f} % au pic pendant le test : les résultats peuvent en partie refléter une limite du générateur local plutôt que celle de la cible."
+msgstr "CPU generator mencapai puncak {peak_cpu_percent_generator:.0f} % selama uji: hasil mungkin sebagian mencerminkan batas generator lokal, bukan batas target."
+
+#: src/omega_stress/domain/reports/service.py:26
+msgid "Thème d'export {export_theme!r} inconnu (catalogue : {value})."
+msgstr "Tema ekspor {export_theme!r} tidak dikenal (katalog: {value})."
+
+#: src/omega_stress/domain/runs/service.py:104
+#, python-brace-format
+msgid "Le run {id} est déjà terminé."
+msgstr "Run {id} sudah selesai."
+
+#: src/omega_stress/domain/runs/validators.py:18
+#, python-brace-format
+msgid "Le run {id} a une date de fin antérieure à sa date de départ."
+msgstr "Run {id} memiliki waktu selesai lebih awal dari waktu mulai."
+
+#: src/omega_stress/domain/targets/service.py:24
+#, python-brace-format
+msgid "Impossible d'épingler {base_url} sans confirmation d'autorisation."
+msgstr "Tidak dapat menyematkan {base_url} tanpa konfirmasi izin."
+
+#: src/omega_stress/domain/targets/validation.py:25
+msgid "L'adresse de la cible ne peut pas être vide."
+msgstr "Alamat target tidak boleh kosong."
+
+#: src/omega_stress/domain/targets/validation.py:32
+msgid "Schéma {scheme!r} non supporté : seuls http et https sont acceptés."
+msgstr "Skema {scheme!r} tidak didukung: hanya http dan https yang diterima."
+
+#: src/omega_stress/domain/targets/validation.py:39
+msgid "Adresse invalide, hôte introuvable dans {raw!r}."
+msgstr "Alamat tidak valid, host tidak ditemukan dalam {raw!r}."
+
+#: src/omega_stress/infrastructure/calibration/local_server.py:32
+msgid "Content-Type"
+msgstr "Content-Type"
+
+#: src/omega_stress/infrastructure/calibration/local_server.py:33
+msgid "Content-Length"
+msgstr "Content-Length"
+
+#: src/omega_stress/infrastructure/probe/local_probe.py:42
+#, python-brace-format
+msgid "{cpu_count} coeur(s) détecté(s)"
+msgstr "{cpu_count} inti terdeteksi"
+
+#: src/omega_stress/infrastructure/probe/local_probe.py:51
+#, python-brace-format
+msgid "limite douce de {soft_limit} descripteurs"
+msgstr "batas lunak {soft_limit} deskriptor"
+
+#: src/omega_stress/infrastructure/probe/local_probe.py:61
+#, python-brace-format
+msgid "{total_memory_mb} Mo détectés"
+msgstr "{total_memory_mb} MB terdeteksi"
+
+#: src/omega_stress/infrastructure/probe/local_probe.py:65
+msgid "non mesurable"
+msgstr "tidak terukur"
+
+#: src/omega_stress/infrastructure/probe/local_probe.py:72
+msgid "agrégat de "
+msgstr "agregat dari "
+
+#: src/omega_stress/infrastructure/runner/httpx_load_generator.py:117
+msgid "Cible {target_url!r} injoignable dès le départ : {exc}"
+msgstr "Target {target_url!r} tidak terjangkau sejak awal: {exc}"
+
+#: src/omega_stress/infrastructure/storage/files/json_calibration_store.py:40
+#, python-brace-format
+msgid "Échec d'écriture du calibrage vers {path} : {exc}"
+msgstr "Gagal menulis kalibrasi ke {path}: {exc}"
+
+#: src/omega_stress/infrastructure/storage/files/json_calibration_store.py:52
+#, python-brace-format
+msgid "Échec de lecture du calibrage depuis {path} : {exc}"
+msgstr "Gagal membaca kalibrasi dari {path}: {exc}"
+
+#: src/omega_stress/infrastructure/storage/sqlite/export_repository.py:40
+msgid "Échec de sauvegarde du job d'export {id!r} : {exc}"
+msgstr "Gagal menyimpan tugas ekspor {id!r}: {exc}"
+
+#: src/omega_stress/infrastructure/storage/sqlite/export_repository.py:50
+msgid "Échec de listage des exports du run {run_id!r} : {exc}"
+msgstr "Gagal menampilkan ekspor run {run_id!r}: {exc}"
+
+#: src/omega_stress/infrastructure/storage/sqlite/profile_repository.py:57
+msgid "Échec de sauvegarde du profil {id!r} : {exc}"
+msgstr "Gagal menyimpan profil {id!r}: {exc}"
+
+#: src/omega_stress/infrastructure/storage/sqlite/profile_repository.py:67
+msgid "Échec de lecture du profil {profile_id!r} : {exc}"
+msgstr "Gagal membaca profil {profile_id!r}: {exc}"
+
+#: src/omega_stress/infrastructure/storage/sqlite/profile_repository.py:77
+#, python-brace-format
+msgid "Échec de listage des profils : {exc}"
+msgstr "Gagal menampilkan profil: {exc}"
+
+#: src/omega_stress/infrastructure/storage/sqlite/profile_repository.py:86
+msgid "Échec de suppression du profil {profile_id!r} : {exc}"
+msgstr "Gagal menghapus profil {profile_id!r}: {exc}"
+
+#: src/omega_stress/infrastructure/storage/sqlite/run_repository.py:75
+msgid "Échec de sauvegarde du run {id!r} : {exc}"
+msgstr "Gagal menyimpan run {id!r}: {exc}"
+
+#: src/omega_stress/infrastructure/storage/sqlite/run_repository.py:83
+msgid "Échec de lecture du run {run_id!r} : {exc}"
+msgstr "Gagal membaca run {run_id!r}: {exc}"
+
+#: src/omega_stress/infrastructure/storage/sqlite/run_repository.py:109
+#, python-brace-format
+msgid "Échec de listage de l'historique des runs : {exc}"
+msgstr "Gagal menampilkan riwayat run: {exc}"
+
+#: src/omega_stress/infrastructure/storage/sqlite/run_repository.py:119
+#, python-brace-format
+msgid "Échec de purge de l'historique des runs : {exc}"
+msgstr "Gagal membersihkan riwayat run: {exc}"
+
+#: src/omega_stress/infrastructure/storage/sqlite/target_repository.py:35
+msgid "Échec de sauvegarde de la cible {id!r} : {exc}"
+msgstr "Gagal menyimpan target {id!r}: {exc}"
+
+#: src/omega_stress/infrastructure/storage/sqlite/target_repository.py:56
+msgid "Échec d'épinglage de la cible {id!r} : {exc}"
+msgstr "Gagal menyematkan target {id!r}: {exc}"
+
+#: src/omega_stress/infrastructure/storage/sqlite/target_repository.py:72
+msgid "Échec de lecture de la cible {target_id!r} : {exc}"
+msgstr "Gagal membaca target {target_id!r}: {exc}"
+
+#: src/omega_stress/infrastructure/storage/sqlite/target_repository.py:85
+msgid "Échec de lecture de la cible épinglée {target_id!r} : {exc}"
+msgstr "Gagal membaca target yang disematkan {target_id!r}: {exc}"
+
+#: src/omega_stress/infrastructure/storage/sqlite/target_repository.py:109
+#, python-brace-format
+msgid "Échec de listage des cibles récentes : {exc}"
+msgstr "Gagal menampilkan target terbaru: {exc}"
+
+#: src/omega_stress/infrastructure/storage/sqlite/target_repository.py:119
+msgid "Échec de désépinglage de la cible {target_id!r} : {exc}"
+msgstr "Gagal melepas sematan target {target_id!r}: {exc}"
+
+#: src/omega_stress/infrastructure/storage/sqlite/target_repository.py:130
+#, python-brace-format
+msgid "Échec de purge des cibles récentes : {exc}"
+msgstr "Gagal membersihkan target terbaru: {exc}"
+
+#: src/omega_stress/infrastructure/storage/sqlite/target_repository.py:140
+#, python-brace-format
+msgid "Échec de purge de toutes les cibles : {exc}"
+msgstr "Gagal membersihkan semua target: {exc}"
+
+#: src/omega_stress/interfaces/tui/app.py:44
+msgid "🗲 OMEGA-STRESS"
+msgstr "🗲 OMEGA-STRESS"
+
+#: src/omega_stress/interfaces/tui/app.py:57
+msgid "Palette de commandes"
+msgstr "Palet perintah"
+
+#: src/omega_stress/interfaces/tui/app.py:63
+msgid "Quitter l'application (avec confirmation)."
+msgstr "Keluar dari aplikasi (dengan konfirmasi)."
+
+#: src/omega_stress/interfaces/tui/app.py:128
+#, python-brace-format
+msgid "Thème non changé (échec d'enregistrement) : {exc}"
+msgstr "Tema tidak diubah (gagal menyimpan): {exc}"
+
+#: src/omega_stress/interfaces/tui/app.py:175
+msgid "Rechercher une commande…"
+msgstr "Cari perintah…"
+
+#: src/omega_stress/interfaces/tui/app.py:190
+msgid "Masquer l'aide des raccourcis"
+msgstr "Sembunyikan bantuan pintasan"
+
+#: src/omega_stress/interfaces/tui/app.py:190 src/omega_stress/interfaces/tui/app.py:194
+msgid "Raccourcis"
+msgstr "Pintasan"
+
+#: src/omega_stress/interfaces/tui/app.py:195
+msgid "Afficher l'aide du widget sélectionné et les raccourcis disponibles"
+msgstr "Tampilkan bantuan widget terpilih dan pintasan yang tersedia"
+
+#: src/omega_stress/interfaces/tui/presenters/calibration_presenter.py:24
+msgid "échec précoce"
+msgstr "gagal dini"
+
+#: src/omega_stress/interfaces/tui/presenters/calibration_presenter.py:25
+#, python-brace-format
+msgid "Aucune enveloppe exploitable ({reason})."
+msgstr "Tidak ada amplop yang dapat dipakai ({reason})."
+
+#: src/omega_stress/interfaces/tui/presenters/calibration_presenter.py:31
+#, python-brace-format
+msgid "VU_safe {vu_safe} | RPS_safe {rps_safe} | confiance {confidence} (dernier palier sain : {last_healthy_name})"
+msgstr "VU_safe {vu_safe} | RPS_safe {rps_safe} | keyakinan {confidence} (tahap sehat terakhir: {last_healthy_name})"
+
+#: src/omega_stress/interfaces/tui/presenters/calibration_presenter.py:79
+msgid "Aucun calibrage exploitable pour cette machine — vous ne connaissez pas ses limites réelles. Nous recommandons d'en faire un depuis l'écran Calibrage avant de désactiver le mode sécurité sur un niveau intensif. Vous choisissez de dépasser les garde-fous de CETTE machine : la fiabilité du résultat et la stabilité de votre ordinateur restent sous votre responsabilité."
+msgstr "Tidak ada kalibrasi yang dapat dipakai untuk mesin ini — Anda tidak mengetahui batas sebenarnya. Kami menyarankan melakukannya dari layar Kalibrasi sebelum menonaktifkan mode keamanan pada level intensif. Anda memilih melampaui pembatas MESIN INI: keandalan hasil dan kestabilan komputer Anda menjadi tanggung jawab Anda."
+
+#: src/omega_stress/interfaces/tui/presenters/calibration_presenter.py:87
+msgid "AU-DESSUS"
+msgstr "DI ATAS"
+
+#: src/omega_stress/interfaces/tui/presenters/calibration_presenter.py:87
+msgid "en dessous"
+msgstr "di bawah"
+
+#: src/omega_stress/interfaces/tui/presenters/calibration_presenter.py:89
+#, python-brace-format
+msgid "Dernier calibrage : {safe_value} {unit} jugés sûrs pour cette machine (confiance {confidence}). Ce niveau vise {target_value:.0f} {unit} — {comparison} de cette enveloppe. Au-delà, la fiabilité du résultat (nombre de connexions/requêtes/charge réellement atteint) peut baisser, et votre machine pourrait ralentir ou geler temporairement : c'est votre responsabilité."
+msgstr "Kalibrasi terakhir: {safe_value} {unit} dinilai aman untuk mesin ini (keyakinan {confidence}). Level ini menargetkan {target_value:.0f} {unit} — {comparison} amplop tersebut. Di atasnya, keandalan hasil (jumlah koneksi/permintaan/beban yang benar-benar tercapai) bisa menurun, dan mesin Anda bisa melambat atau membeku sementara: itu tanggung jawab Anda."
+
+#: src/omega_stress/interfaces/tui/presenters/calibration_presenter.py:111
+#, python-brace-format
+msgid "{name} : {rps_achieved:.0f}/{rps_target} req/s ({status}{reason})"
+msgstr "{name}: {rps_achieved:.0f}/{rps_target} perm/dtk ({status}{reason})"
+
+#: src/omega_stress/interfaces/tui/presenters/level_presenter.py:10
+msgid "faible"
+msgstr "lemah"
+
+#: src/omega_stress/interfaces/tui/presenters/level_presenter.py:11
+msgid "bas"
+msgstr "rendah"
+
+#: src/omega_stress/interfaces/tui/presenters/level_presenter.py:12
+msgid "moyen"
+msgstr "sedang"
+
+#: src/omega_stress/interfaces/tui/presenters/level_presenter.py:13
+msgid "haut"
+msgstr "tinggi"
+
+#: src/omega_stress/interfaces/tui/presenters/level_presenter.py:14
+msgid "puissant"
+msgstr "kuat"
+
+#: src/omega_stress/interfaces/tui/presenters/level_presenter.py:15
+msgid "agressif"
+msgstr "agresif"
+
+#: src/omega_stress/interfaces/tui/presenters/level_presenter.py:16
+msgid "violent"
+msgstr "brutal"
+
+#: src/omega_stress/interfaces/tui/presenters/level_presenter.py:17
+msgid "maximum"
+msgstr "maksimum"
+
+#: src/omega_stress/interfaces/tui/presenters/load_reference_presenter.py:58
+#, python-brace-format
+msgid "{value} à {value2} min"
+msgstr "{value} hingga {value2} menit"
+
+#: src/omega_stress/interfaces/tui/presenters/load_reference_presenter.py:67
+#, python-brace-format
+msgid "{default_text} ({extra_text} si pré-check)"
+msgstr "{default_text} ({extra_text} jika pra-pemeriksaan)"
+
+#: src/omega_stress/interfaces/tui/presenters/load_reference_presenter.py:76
+msgid "Non/Oui"
+msgstr "Tidak/Ya"
+
+#: src/omega_stress/interfaces/tui/presenters/load_reference_presenter.py:93 src/omega_stress/interfaces/tui/screens/home.py:40
+msgid "Test requêtes"
+msgstr "Uji permintaan"
+
+#: src/omega_stress/interfaces/tui/presenters/load_reference_presenter.py:95
+msgid "Débit"
+msgstr "Laju"
+
+#: src/omega_stress/interfaces/tui/presenters/load_reference_presenter.py:96
+#, python-brace-format
+msgid "{requests_per_minute} req/min"
+msgstr "{requests_per_minute} perm/menit"
+
+#: src/omega_stress/interfaces/tui/presenters/load_reference_presenter.py:99
+#, python-brace-format
+msgid "~{value} req/s en rafale"
+msgstr "~{value} perm/dtk dalam lonjakan"
+
+#: src/omega_stress/interfaces/tui/presenters/load_reference_presenter.py:111 src/omega_stress/interfaces/tui/screens/home.py:36
+msgid "Test connexions"
+msgstr "Uji koneksi"
+
+#: src/omega_stress/interfaces/tui/presenters/load_reference_presenter.py:113
+msgid "Connexions simultanées"
+msgstr "Koneksi serentak"
+
+#: src/omega_stress/interfaces/tui/presenters/load_reference_presenter.py:114
+#, python-brace-format
+msgid "{concurrent_connections} connexions"
+msgstr "{concurrent_connections} koneksi"
+
+#: src/omega_stress/interfaces/tui/presenters/load_reference_presenter.py:117
+#, python-brace-format
+msgid "{concurrent_connections} en parallèle, chaque seconde"
+msgstr "{concurrent_connections} paralel, setiap detik"
+
+#: src/omega_stress/interfaces/tui/presenters/load_reference_presenter.py:129 src/omega_stress/interfaces/tui/screens/home.py:38
+msgid "Test charge"
+msgstr "Uji beban"
+
+#: src/omega_stress/interfaces/tui/presenters/load_reference_presenter.py:131
+msgid "Débit (montée puis plateau)"
+msgstr "Throughput (naik lalu datar)"
+
+#: src/omega_stress/interfaces/tui/presenters/load_reference_presenter.py:132
+#, python-brace-format
+msgid "pic {peak_requests_per_minute} req/min"
+msgstr "puncak {peak_requests_per_minute} perm/menit"
+
+#: src/omega_stress/interfaces/tui/presenters/load_reference_presenter.py:137
+#, python-brace-format
+msgid "rampe {ramp_up_minutes:g} min -> plateau {plateau_minutes_min:g} min"
+msgstr "kenaikan {ramp_up_minutes:g} menit -> datar {plateau_minutes_min:g} menit"
+
+#: src/omega_stress/interfaces/tui/presenters/load_reference_presenter.py:152
+msgid "Requêtes"
+msgstr "Permintaan"
+
+#: src/omega_stress/interfaces/tui/presenters/load_reference_presenter.py:153
+msgid "Connexions"
+msgstr "Koneksi"
+
+#: src/omega_stress/interfaces/tui/presenters/load_reference_presenter.py:154
+msgid "Charge"
+msgstr "Beban"
+
+#: src/omega_stress/interfaces/tui/presenters/load_reference_presenter.py:194
+msgid "Seul le débit (req/min) pilote ce test ; la simultanéité en découle."
+msgstr "Hanya throughput (perm/menit) yang mengendalikan uji ini; keserentakan mengikutinya."
+
+#: src/omega_stress/interfaces/tui/presenters/load_reference_presenter.py:196
+msgid "Seule la simultanéité (connexions) pilote ce test ; aucun débit cible."
+msgstr "Hanya keserentakan (koneksi) yang mengendalikan uji ini; tidak ada target throughput."
+
+#: src/omega_stress/interfaces/tui/presenters/load_reference_presenter.py:198
+msgid "Seul le débit au pic pilote ce test, atteint progressivement : sur une durée choisie plus courte que la rampe indiquée, le pic n'est jamais atteint."
+msgstr "Hanya throughput puncak, yang dicapai bertahap, yang mengendalikan uji ini: jika durasi yang dipilih lebih pendek dari kenaikan yang tertera, puncak tidak akan pernah tercapai."
+
+#: src/omega_stress/interfaces/tui/presenters/profile_presenter.py:17
+msgid "Figé"
+msgstr "Dibekukan"
+
+#: src/omega_stress/interfaces/tui/presenters/profile_presenter.py:17
+msgid "Modifiable"
+msgstr "Dapat diubah"
+
+#: src/omega_stress/interfaces/tui/presenters/run_presenter.py:13
+msgid "Réussi"
+msgstr "Berhasil"
+
+#: src/omega_stress/interfaces/tui/presenters/run_presenter.py:14
+msgid "Dégradé"
+msgstr "Menurun"
+
+#: src/omega_stress/interfaces/tui/presenters/run_presenter.py:15
+msgid "Arrêt automatique"
+msgstr "Berhenti otomatis"
+
+#: src/omega_stress/interfaces/tui/presenters/run_presenter.py:16
+msgid "Échec"
+msgstr "Gagal"
+
+#: src/omega_stress/interfaces/tui/presenters/run_presenter.py:27
+msgid "En cours"
+msgstr "Berjalan"
+
+#: src/omega_stress/interfaces/tui/presenters/run_presenter.py:61
+#, python-brace-format
+msgid "{observed_rate_per_minute:.0f} req/min | {errors}/{total} erreurs | p95 {p95:.0f} ms"
+msgstr "{observed_rate_per_minute:.0f} perm/menit | {errors}/{total} galat | p95 {p95:.0f} ms"
+
+#: src/omega_stress/interfaces/tui/presenters/run_presenter.py:85
+#, python-brace-format
+msgid "{at_second:>5.0f}s  {bar}  {errors} err / {requests} req"
+msgstr "{at_second:>5.0f}s  {bar}  {errors} galat / {requests} perm"
+
+#: src/omega_stress/interfaces/tui/presenters/theme_presenter.py:34
+#, python-brace-format
+msgid "{theme_name} (repli depuis {fell_back_from})"
+msgstr "{theme_name} (pengganti untuk {fell_back_from})"
+
+#: src/omega_stress/interfaces/tui/screens/_base.py:20
+msgid "Focus suivant"
+msgstr "Fokus berikutnya"
+
+#: src/omega_stress/interfaces/tui/screens/_base.py:21
+msgid "Focus précédent"
+msgstr "Fokus sebelumnya"
+
+#: src/omega_stress/interfaces/tui/screens/_base.py:22
+msgid "Copier le texte sélectionné"
+msgstr "Salin teks terpilih"
+
+#: src/omega_stress/interfaces/tui/screens/calibration_screen.py:77
+msgid "CALIBRAGE"
+msgstr "KALIBRASI"
+
+#: src/omega_stress/interfaces/tui/screens/calibration_screen.py:79
+msgid "Mesure la capacité réelle de CETTE machine (pas la cible testée) via un serveur de boucle locale, par paliers de charge croissante. Le résultat n'est pas encore appliqué aux tests réels : consultation seule pour l'instant."
+msgstr "Mengukur kapasitas nyata MESIN INI (bukan target yang diuji) melalui server loopback lokal, dalam tahap beban yang terus naik. Hasilnya belum diterapkan pada uji nyata: untuk saat ini hanya untuk dilihat."
+
+#: src/omega_stress/interfaces/tui/screens/calibration_screen.py:88
+msgid "Lancer le calibrage"
+msgstr "Mulai kalibrasi"
+
+#: src/omega_stress/interfaces/tui/screens/calibration_screen.py:107
+msgid "Aucun calibrage connu pour cette machine."
+msgstr "Belum ada kalibrasi untuk mesin ini."
+
+#: src/omega_stress/interfaces/tui/screens/calibration_screen.py:111
+#, python-brace-format
+msgid ""
+"{value}\n"
+"{value2}"
+msgstr ""
+"{value}\n"
+"{value2}"
+
+#: src/omega_stress/interfaces/tui/screens/calibration_screen.py:145
+#, python-brace-format
+msgid "Calibrage refusé : {error}"
+msgstr "Kalibrasi ditolak: {error}"
+
+#: src/omega_stress/interfaces/tui/screens/confirm.py:30
+msgid "Oui, confirmer"
+msgstr "Ya, konfirmasi"
+
+#: src/omega_stress/interfaces/tui/screens/confirm.py:32
+msgid "Non, annuler"
+msgstr "Tidak, batal"
+
+#: src/omega_stress/interfaces/tui/screens/connection_panel.py:49 src/omega_stress/interfaces/tui/screens/ramp_panel.py:49 src/omega_stress/interfaces/tui/screens/request_panel.py:49
+#, python-brace-format
+msgid "{value:.1f}"
+msgstr "{value:.1f}"
+
+#: src/omega_stress/interfaces/tui/screens/connection_panel.py:51 src/omega_stress/interfaces/tui/screens/connection_panel.py:213 src/omega_stress/interfaces/tui/screens/ramp_panel.py:51 src/omega_stress/interfaces/tui/screens/ramp_panel.py:208 src/omega_stress/interfaces/tui/screens/request_panel.py:51 src/omega_stress/interfaces/tui/screens/request_panel.py:217
+#, python-brace-format
+msgid "{m} min"
+msgstr "{m} menit"
+
+#: src/omega_stress/interfaces/tui/screens/connection_panel.py:54 src/omega_stress/interfaces/tui/screens/ramp_panel.py:54 src/omega_stress/interfaces/tui/screens/request_panel.py:57
+msgid "Manuel (1-5 min)"
+msgstr "Manual (1-5 menit)"
+
+#: src/omega_stress/interfaces/tui/screens/connection_panel.py:54 src/omega_stress/interfaces/tui/screens/ramp_panel.py:54 src/omega_stress/interfaces/tui/screens/request_panel.py:57
+msgid "Profil D1-D6"
+msgstr "Profil D1-D6"
+
+#: src/omega_stress/interfaces/tui/screens/connection_panel.py:57 src/omega_stress/interfaces/tui/screens/ramp_panel.py:57 src/omega_stress/interfaces/tui/screens/request_panel.py:60
+#, python-brace-format
+msgid "{upper} {name} ({total_minutes} min)"
+msgstr "{upper} {name} ({total_minutes} menit)"
+
+#: src/omega_stress/interfaces/tui/screens/connection_panel.py:106
+msgid "TEST CONNEXIONS"
+msgstr "UJI KONEKSI"
+
+#: src/omega_stress/interfaces/tui/screens/connection_panel.py:107 src/omega_stress/interfaces/tui/screens/ramp_panel.py:107 src/omega_stress/interfaces/tui/screens/request_panel.py:113
+msgid "Profil figé (optionnel)"
+msgstr "Profil beku (opsional)"
+
+#: src/omega_stress/interfaces/tui/screens/connection_panel.py:111 src/omega_stress/interfaces/tui/screens/ramp_panel.py:111 src/omega_stress/interfaces/tui/screens/request_panel.py:117
+msgid "Critères du test"
+msgstr "Kriteria uji"
+
+#: src/omega_stress/interfaces/tui/screens/connection_panel.py:112 src/omega_stress/interfaces/tui/screens/profile_wizard.py:47 src/omega_stress/interfaces/tui/screens/ramp_panel.py:112 src/omega_stress/interfaces/tui/screens/request_panel.py:118 src/omega_stress/infrastructure/exporters/templates/report.html.jinja:62
+msgid "Intensité"
+msgstr "Intensitas"
+
+#: src/omega_stress/interfaces/tui/screens/connection_panel.py:115 src/omega_stress/interfaces/tui/screens/ramp_panel.py:115 src/omega_stress/interfaces/tui/screens/request_panel.py:121
+msgid "Mode durée"
+msgstr "Mode durasi"
+
+#: src/omega_stress/interfaces/tui/screens/connection_panel.py:121 src/omega_stress/interfaces/tui/screens/profile_wizard.py:48 src/omega_stress/interfaces/tui/screens/ramp_panel.py:121 src/omega_stress/interfaces/tui/screens/request_panel.py:127
+msgid "Durée (minutes)"
+msgstr "Durasi (menit)"
+
+#: src/omega_stress/interfaces/tui/screens/connection_panel.py:127 src/omega_stress/interfaces/tui/screens/ramp_panel.py:127 src/omega_stress/interfaces/tui/screens/request_panel.py:133
+msgid "Profil de durée"
+msgstr "Profil durasi"
+
+#: src/omega_stress/interfaces/tui/screens/connection_panel.py:132 src/omega_stress/interfaces/tui/screens/ramp_panel.py:132 src/omega_stress/interfaces/tui/screens/request_panel.py:138
+msgid "Confirmation renforcée requise pour ce niveau :"
+msgstr "Konfirmasi diperkuat diperlukan untuk level ini:"
+
+#: src/omega_stress/interfaces/tui/screens/connection_panel.py:133 src/omega_stress/interfaces/tui/screens/ramp_panel.py:133 src/omega_stress/interfaces/tui/screens/request_panel.py:139
+msgid "Texte de confirmation exact"
+msgstr "Teks konfirmasi persis"
+
+#: src/omega_stress/interfaces/tui/screens/connection_panel.py:136 src/omega_stress/interfaces/tui/screens/ramp_panel.py:136 src/omega_stress/interfaces/tui/screens/request_panel.py:142
+msgid "Taux d'erreur maximal"
+msgstr "Tingkat galat maksimum"
+
+#: src/omega_stress/interfaces/tui/screens/connection_panel.py:146 src/omega_stress/interfaces/tui/screens/ramp_panel.py:146 src/omega_stress/interfaces/tui/screens/request_panel.py:152 src/omega_stress/interfaces/tui/widgets/load_reference_table.py:26
+msgid "Pré-check"
+msgstr "Pra-pemeriksaan"
+
+#: src/omega_stress/interfaces/tui/screens/connection_panel.py:196
+msgid "Aucun profil figé pour Test connexions (des profils figés existent pour d'autres types de test — Requêtes/Rampe)."
+msgstr "Tidak ada profil beku untuk Uji koneksi (profil beku ada untuk jenis uji lain — Permintaan/Kenaikan)."
+
+#: src/omega_stress/interfaces/tui/screens/connection_panel.py:202 src/omega_stress/interfaces/tui/screens/ramp_panel.py:197 src/omega_stress/interfaces/tui/screens/request_panel.py:203
+msgid "Aucun profil figé pour l'instant (des profils existent mais aucun n'est figé)."
+msgstr "Belum ada profil beku (profil ada tetapi belum ada yang dibekukan)."
+
+#: src/omega_stress/interfaces/tui/screens/connection_panel.py:205 src/omega_stress/interfaces/tui/screens/ramp_panel.py:200 src/omega_stress/interfaces/tui/screens/request_panel.py:206
+msgid "Aucun profil figé pour l'instant — créez-en un depuis l'écran Profils."
+msgstr "Belum ada profil beku — buat satu dari layar Profil."
+
+#: src/omega_stress/interfaces/tui/screens/connection_panel.py:221 src/omega_stress/interfaces/tui/screens/ramp_panel.py:216 src/omega_stress/interfaces/tui/screens/request_panel.py:225
+#, python-brace-format
+msgid "Durée ramenée à {value} min : {value2} ne propose pas {keep_value} min."
+msgstr "Durasi disesuaikan menjadi {value} menit: {value2} tidak menyediakan {keep_value} menit."
+
+#: src/omega_stress/interfaces/tui/screens/connection_panel.py:377 src/omega_stress/interfaces/tui/screens/ramp_panel.py:364 src/omega_stress/interfaces/tui/screens/request_panel.py:377
+#, python-brace-format
+msgid "Cible fixée par le profil « {name} » : {address}"
+msgstr "Target ditetapkan oleh profil “{name}”: {address}"
+
+#: src/omega_stress/interfaces/tui/screens/connection_panel.py:396 src/omega_stress/interfaces/tui/screens/ramp_panel.py:383 src/omega_stress/interfaces/tui/screens/request_panel.py:396
+msgid "Choisissez ou saisissez une cible avant le pré-check."
+msgstr "Pilih atau masukkan target sebelum pra-pemeriksaan."
+
+#: src/omega_stress/interfaces/tui/screens/connection_panel.py:400 src/omega_stress/interfaces/tui/screens/ramp_panel.py:387 src/omega_stress/interfaces/tui/screens/request_panel.py:400
+msgid "Pré-check en cours…"
+msgstr "Pra-pemeriksaan berjalan…"
+
+#: src/omega_stress/interfaces/tui/screens/connection_panel.py:419 src/omega_stress/interfaces/tui/screens/ramp_panel.py:406 src/omega_stress/interfaces/tui/screens/request_panel.py:419
+#, python-brace-format
+msgid "Pré-check échoué : {error}"
+msgstr "Pra-pemeriksaan gagal: {error}"
+
+#: src/omega_stress/interfaces/tui/screens/connection_panel.py:422 src/omega_stress/interfaces/tui/screens/ramp_panel.py:409 src/omega_stress/interfaces/tui/screens/request_panel.py:422
+#, python-brace-format
+msgid "Pré-check réussi ({value}) — vous pouvez lancer le test."
+msgstr "Pra-pemeriksaan berhasil ({value}) — Anda dapat memulai uji."
+
+#: src/omega_stress/interfaces/tui/screens/connection_panel.py:437 src/omega_stress/interfaces/tui/screens/ramp_panel.py:424 src/omega_stress/interfaces/tui/screens/request_panel.py:437
+msgid "Lancement en cours…"
+msgstr "Memulai…"
+
+#: src/omega_stress/interfaces/tui/screens/connection_panel.py:440 src/omega_stress/interfaces/tui/screens/ramp_panel.py:427 src/omega_stress/interfaces/tui/screens/request_panel.py:440
+msgid "Choisissez ou saisissez une cible."
+msgstr "Pilih atau masukkan target."
+
+#: src/omega_stress/interfaces/tui/screens/connection_panel.py:446 src/omega_stress/interfaces/tui/screens/ramp_panel.py:433 src/omega_stress/interfaces/tui/screens/request_panel.py:446
+msgid "Choisissez un niveau d'intensité."
+msgstr "Pilih level intensitas."
+
+#: src/omega_stress/interfaces/tui/screens/connection_panel.py:451 src/omega_stress/interfaces/tui/screens/ramp_panel.py:438 src/omega_stress/interfaces/tui/screens/request_panel.py:451
+msgid "Choisissez un taux d'erreur."
+msgstr "Pilih tingkat galat."
+
+#: src/omega_stress/interfaces/tui/screens/connection_panel.py:457 src/omega_stress/interfaces/tui/screens/ramp_panel.py:444 src/omega_stress/interfaces/tui/screens/request_panel.py:457
+msgid "Choisissez un profil de durée."
+msgstr "Pilih profil durasi."
+
+#: src/omega_stress/interfaces/tui/screens/connection_panel.py:465 src/omega_stress/interfaces/tui/screens/ramp_panel.py:452 src/omega_stress/interfaces/tui/screens/request_panel.py:465
+msgid "Choisissez une durée."
+msgstr "Pilih durasi."
+
+#: src/omega_stress/interfaces/tui/screens/connection_panel.py:499 src/omega_stress/interfaces/tui/screens/ramp_panel.py:486 src/omega_stress/interfaces/tui/screens/request_panel.py:499
+#, python-brace-format
+msgid "Terminé — {value} (voir le détail)."
+msgstr "Selesai — {value} (lihat detail)."
+
+#: src/omega_stress/interfaces/tui/screens/export_dialog.py:51
+msgid "EXPORTER LE RAPPORT"
+msgstr "EKSPOR LAPORAN"
+
+#: src/omega_stress/interfaces/tui/screens/export_dialog.py:59
+msgid "Dossier de destination"
+msgstr "Folder tujuan"
+
+#: src/omega_stress/interfaces/tui/screens/export_dialog.py:92
+msgid "Choisissez un format."
+msgstr "Pilih format."
+
+#: src/omega_stress/interfaces/tui/screens/export_dialog.py:95
+msgid "Indiquez un dossier de destination."
+msgstr "Tentukan folder tujuan."
+
+#: src/omega_stress/interfaces/tui/screens/export_dialog.py:115
+#, python-brace-format
+msgid "Rapport écrit : {written_path}"
+msgstr "Laporan ditulis: {written_path}"
+
+#: src/omega_stress/interfaces/tui/screens/help_screen.py:30
+msgid "Test requêtes / connexions / charge"
+msgstr "Uji permintaan / koneksi / beban"
+
+#: src/omega_stress/interfaces/tui/screens/help_screen.py:31
+msgid "Trois familles de test encadrées : débit constant, nombre de connexions simultanées, ou montée progressive. Chaque lancement exige une cible (saisie manuelle ou cible épinglée) et une confirmation d'autorisation, sauf cible déjà épinglée-autorisée."
+msgstr "Tiga keluarga uji terkendali: throughput konstan, jumlah koneksi serentak, atau kenaikan bertahap. Setiap peluncuran memerlukan target (diisi manual atau disematkan) dan konfirmasi izin, kecuali target sudah disematkan dan diizinkan."
+
+#: src/omega_stress/interfaces/tui/screens/help_screen.py:38
+msgid "Un profil fige un jeu de paramètres (cible, type de test, intensité, durée, seuils) pour le réutiliser tel quel — créer, puis figer, un profil depuis cet écran."
+msgstr "Profil membekukan satu set parameter (target, jenis uji, intensitas, durasi, ambang) untuk dipakai ulang apa adanya — buat, lalu bekukan, profil dari layar ini."
+
+#: src/omega_stress/interfaces/tui/screens/help_screen.py:43
+msgid "Épingler une adresse dispense de recocher la confirmation d'autorisation à chaque lancement sur cette même cible."
+msgstr "Menyematkan alamat membebaskan Anda dari mencentang ulang konfirmasi izin di setiap peluncuran pada target yang sama."
+
+#: src/omega_stress/interfaces/tui/screens/help_screen.py:48
+msgid "Liste tous les runs passés : détail complet, ou relecture (uniquement pour un run lié à un profil figé)."
+msgstr "Daftar semua run sebelumnya: detail lengkap, atau pengulangan (hanya untuk run yang terkait profil beku)."
+
+#: src/omega_stress/interfaces/tui/screens/help_screen.py:53
+msgid "Depuis le détail d'un run terminé : JSON (données brutes, réimportables), CSV (analyse tabulaire), ou HTML (rapport lisible avec chronologie complète par intervalle)."
+msgstr "Dari detail run yang selesai: JSON (data mentah, dapat diimpor ulang), CSV (analisis tabel), atau HTML (laporan mudah dibaca dengan kronologi lengkap per interval)."
+
+#: src/omega_stress/interfaces/tui/screens/help_screen.py:58 src/omega_stress/interfaces/tui/screens/help_screen.py:112
+msgid "Profils de durée D1-D6 (mode profil)"
+msgstr "Profil durasi D1-D6 (mode profil)"
+
+#: src/omega_stress/interfaces/tui/screens/help_screen.py:59
+msgid "En plus de la durée manuelle (1 à 5 min selon le niveau), chaque écran de lancement propose un mode profil : une durée fixe nommée (1 à 120 min) qui limite les niveaux accessibles, avec un niveau supplémentaire débloqué par une confirmation renforcée (texte exact à saisir). Voir le tableau ci-dessous."
+msgstr "Selain durasi manual (1 hingga 5 menit tergantung level), setiap layar peluncuran menawarkan mode profil: durasi tetap bernama (1 hingga 120 menit) yang membatasi level yang tersedia, dengan satu level tambahan yang dibuka lewat konfirmasi diperkuat (teks persis yang harus diketik). Lihat tabel di bawah."
+
+#: src/omega_stress/interfaces/tui/screens/help_screen.py:65 src/omega_stress/interfaces/tui/screens/home.py:33
+msgid "Calibrage"
+msgstr "Kalibrasi"
+
+#: src/omega_stress/interfaces/tui/screens/help_screen.py:66
+msgid "Mesure la capacité réelle de CETTE machine (pas la cible testée) via un serveur de boucle locale, par paliers de charge croissante. Le résultat (VU_safe/RPS_safe) n'est pas appliqué automatiquement aux tests réels : consultable depuis l'écran Calibrage, et utile comme repère quand le mode sécurité est désactivé (voir ci-dessous)."
+msgstr "Mengukur kapasitas nyata MESIN INI (bukan target yang diuji) melalui server loopback lokal, dalam tahap beban yang terus naik. Hasilnya (VU_safe/RPS_safe) tidak diterapkan otomatis pada uji nyata: dapat dilihat dari layar Kalibrasi, dan berguna sebagai acuan saat mode keamanan dinonaktifkan (lihat di bawah)."
+
+#: src/omega_stress/interfaces/tui/screens/help_screen.py:73 src/omega_stress/infrastructure/exporters/templates/report.html.jinja:69
+msgid "Mode sécurité"
+msgstr "Mode keamanan"
+
+#: src/omega_stress/interfaces/tui/screens/help_screen.py:75
+msgid " Si un calibrage a été effectué sur cette machine, l'écran de lancement compare le niveau choisi à son enveloppe dès que la case est décochée."
+msgstr " Jika kalibrasi telah dilakukan di mesin ini, layar peluncuran membandingkan level yang dipilih dengan amplopnya begitu kotak itu tidak dicentang."
+
+#: src/omega_stress/interfaces/tui/screens/help_screen.py:98
+msgid "Repères de charge (valeurs exactes par niveau)"
+msgstr "Acuan beban (nilai persis per level)"
+
+#: src/omega_stress/interfaces/tui/screens/help_screen.py:102
+#, python-brace-format
+msgid ""
+"[b]Test requêtes[/b] — {value}\n"
+"[b]Test connexions[/b] — {value2}\n"
+"[b]Test charge[/b] — {value3}\n"
+msgstr ""
+"[b]Uji permintaan[/b] — {value}\n"
+"[b]Uji koneksi[/b] — {value2}\n"
+"[b]Uji beban[/b] — {value3}\n"
+
+#: src/omega_stress/interfaces/tui/screens/history.py:99
+#, python-brace-format
+msgid "Relance terminée : {value}"
+msgstr "Pengulangan selesai: {value}"
+
+#: src/omega_stress/interfaces/tui/screens/profile_wizard.py:40
+msgid "NOUVEAU PROFIL"
+msgstr "PROFIL BARU"
+
+#: src/omega_stress/interfaces/tui/screens/profile_wizard.py:41
+msgid "Nom du profil"
+msgstr "Nama profil"
+
+#: src/omega_stress/interfaces/tui/screens/profile_wizard.py:42
+msgid "Description (optionnelle)"
+msgstr "Deskripsi (opsional)"
+
+#: src/omega_stress/interfaces/tui/screens/profile_wizard.py:45
+msgid "Famille de test"
+msgstr "Keluarga uji"
+
+#: src/omega_stress/interfaces/tui/screens/profile_wizard.py:49
+msgid "Taux d'erreur maximal (0.0-1.0)"
+msgstr "Tingkat galat maksimum (0.0-1.0)"
+
+#: src/omega_stress/interfaces/tui/screens/profile_wizard.py:91
+msgid "Nom et cible par défaut sont obligatoires."
+msgstr "Nama dan target bawaan wajib diisi."
+
+#: src/omega_stress/interfaces/tui/screens/profile_wizard.py:94
+msgid "Choisissez une famille et une intensité."
+msgstr "Pilih keluarga dan intensitas."
+
+#: src/omega_stress/interfaces/tui/screens/profile_wizard.py:100
+msgid "Durée et taux d'erreur doivent être numériques."
+msgstr "Durasi dan tingkat galat harus berupa angka."
+
+#: src/omega_stress/interfaces/tui/screens/profiles.py:42
+msgid "Nouveau profil"
+msgstr "Profil baru"
+
+#: src/omega_stress/interfaces/tui/screens/profiles.py:44
+msgid "Figer le profil sélectionné"
+msgstr "Bekukan profil terpilih"
+
+#: src/omega_stress/interfaces/tui/screens/profiles.py:46
+msgid "Supprimer le profil sélectionné"
+msgstr "Hapus profil terpilih"
+
+#: src/omega_stress/interfaces/tui/screens/profiles.py:73
+#, python-brace-format
+msgid "{name} — {value}"
+msgstr "{name} — {value}"
+
+#: src/omega_stress/interfaces/tui/screens/profiles.py:107
+#, python-brace-format
+msgid "{name} figé."
+msgstr "{name} dibekukan."
+
+#: src/omega_stress/interfaces/tui/screens/profiles.py:116
+msgid "SUPPRIMER CE PROFIL ?"
+msgstr "HAPUS PROFIL INI?"
+
+#: src/omega_stress/interfaces/tui/screens/profiles.py:118
+msgid "Définitif. Un run passé lié à ce profil ne pourra plus être rejoué."
+msgstr "Permanen. Run sebelumnya yang terkait profil ini tidak akan bisa diulang lagi."
+
+#: src/omega_stress/interfaces/tui/screens/profiles.py:130
+msgid "Profil supprimé."
+msgstr "Profil dihapus."
+
+#: src/omega_stress/interfaces/tui/screens/quit_confirm.py:21
+msgid "QUITTER OMEGA-STRESS ?"
+msgstr "KELUAR DARI OMEGA-STRESS?"
+
+#: src/omega_stress/interfaces/tui/screens/quit_confirm.py:23
+msgid "Tout test en cours sera interrompu."
+msgstr "Setiap uji yang sedang berjalan akan dihentikan."
+
+#: src/omega_stress/interfaces/tui/screens/ramp_panel.py:106
+msgid "TEST CHARGE"
+msgstr "UJI BEBAN"
+
+#: src/omega_stress/interfaces/tui/screens/ramp_panel.py:191
+msgid "Aucun profil figé pour Test charge (des profils figés existent pour d'autres types de test — Connexions/Requêtes)."
+msgstr "Tidak ada profil beku untuk Uji beban (profil beku ada untuk jenis uji lain — Koneksi/Permintaan)."
+
+#: src/omega_stress/interfaces/tui/screens/request_panel.py:112
+msgid "TEST REQUÊTES"
+msgstr "UJI PERMINTAAN"
+
+#: src/omega_stress/interfaces/tui/screens/request_panel.py:197
+msgid "Aucun profil figé pour Test requêtes (des profils figés existent pour d'autres types de test — Connexions/Rampe)."
+msgstr "Tidak ada profil beku untuk Uji permintaan (profil beku ada untuk jenis uji lain — Koneksi/Kenaikan)."
+
+#: src/omega_stress/interfaces/tui/screens/run_details.py:39
+msgid "DÉTAIL DU RUN"
+msgstr "DETAIL RUN"
+
+#: src/omega_stress/interfaces/tui/screens/run_details.py:41 src/omega_stress/interfaces/tui/widgets/history_table.py:16 src/omega_stress/infrastructure/exporters/templates/report.html.jinja:74
+msgid "Verdict"
+msgstr "Verdict"
+
+#: src/omega_stress/interfaces/tui/screens/run_details.py:42 src/omega_stress/interfaces/tui/widgets/progress_panel.py:23 src/omega_stress/infrastructure/exporters/templates/report.html.jinja:82
+msgid "Débit observé"
+msgstr "Throughput teramati"
+
+#: src/omega_stress/interfaces/tui/screens/run_details.py:44 src/omega_stress/interfaces/tui/widgets/progress_panel.py:25 src/omega_stress/infrastructure/exporters/templates/report.html.jinja:84
+msgid "Latence p95"
+msgstr "Latensi p95"
+
+#: src/omega_stress/interfaces/tui/screens/run_details.py:70 src/omega_stress/interfaces/tui/widgets/progress_panel.py:30
+#, python-brace-format
+msgid "{observed_rate_per_minute:.0f} req/min"
+msgstr "{observed_rate_per_minute:.0f} perm/menit"
+
+#: src/omega_stress/interfaces/tui/screens/run_details.py:85
+msgid " (personnalisé — au moins un critère réel diffère du profil figé référence)"
+msgstr " (kustom — setidaknya satu kriteria nyata berbeda dari profil beku acuan)"
+
+#: src/omega_stress/interfaces/tui/screens/run_details.py:90
+#, python-brace-format
+msgid ""
+"{id}\n"
+"Cible : {target_address}\n"
+"Famille/niveau : {family}/{level}{profile_note}\n"
+"Démarré : {started_at}"
+msgstr ""
+"{id}\n"
+"Target: {target_address}\n"
+"Keluarga/level: {family}/{level}{profile_note}\n"
+"Dimulai: {started_at}"
+
+#: src/omega_stress/interfaces/tui/screens/run_details.py:102
+#, python-brace-format
+msgid ""
+"\n"
+"Diagnostic : {reason}"
+msgstr ""
+"\n"
+"Diagnosis: {reason}"
+
+#: src/omega_stress/interfaces/tui/screens/run_details.py:105
+#, python-brace-format
+msgid ""
+"\n"
+"Erreurs : {errors_timeout} timeout, {errors_connection} connexion, {errors_http_4xx} 4xx, {errors_http_5xx} 5xx"
+msgstr ""
+"\n"
+"Galat: {errors_timeout} timeout, {errors_connection} koneksi, {errors_http_4xx} 4xx, {errors_http_5xx} 5xx"
+
+#: src/omega_stress/interfaces/tui/screens/run_details.py:122
+#, python-brace-format
+msgid ""
+"\n"
+"Pic générateur : {cpu} CPU, {memory} RAM"
+msgstr ""
+"\n"
+"Puncak generator: {cpu} CPU, {memory} RAM"
+
+#: src/omega_stress/interfaces/tui/screens/run_details.py:125
+#, python-brace-format
+msgid ""
+"\n"
+"{sample_count} mesures enregistrées (détail exhaustif : export JSON/HTML)."
+msgstr ""
+"\n"
+"{sample_count} pengukuran tercatat (detail lengkap: ekspor JSON/HTML)."
+
+#: src/omega_stress/interfaces/tui/screens/run_details.py:133
+msgid "Chronologie — temps | taux d'erreur (barre) | erreurs/requêtes par palier\n"
+msgstr "Kronologi — waktu | tingkat galat (batang) | galat/permintaan per tahap\n"
+
+#: src/omega_stress/interfaces/tui/screens/run_details.py:139
+msgid "Aucune mesure enregistrée : le test s'est terminé avant la première mesure (voir le diagnostic ci-dessus)."
+msgstr "Tidak ada pengukuran tercatat: uji selesai sebelum pengukuran pertama (lihat diagnosis di atas)."
+
+#: src/omega_stress/interfaces/tui/screens/settings_screen.py:84
+msgid "Dossier d'export par défaut"
+msgstr "Folder ekspor bawaan"
+
+#: src/omega_stress/interfaces/tui/screens/settings_screen.py:87
+msgid "Dossier des captures d'écran par défaut"
+msgstr "Folder tangkapan layar bawaan"
+
+#: src/omega_stress/interfaces/tui/screens/settings_screen.py:93
+msgid "Vider les cibles récentes"
+msgstr "Kosongkan target terbaru"
+
+#: src/omega_stress/interfaces/tui/screens/settings_screen.py:122
+msgid "VIDER LES CIBLES RÉCENTES ?"
+msgstr "KOSONGKAN TARGET TERBARU?"
+
+#: src/omega_stress/interfaces/tui/screens/settings_screen.py:123
+msgid "Les cibles épinglées ne sont pas concernées."
+msgstr "Target yang disematkan tidak terpengaruh."
+
+#: src/omega_stress/interfaces/tui/screens/settings_screen.py:132
+msgid "Y compris les cibles épinglées : les autorisations déjà accordées seront perdues."
+msgstr "Termasuk target yang disematkan: izin yang sudah diberikan akan hilang."
+
+#: src/omega_stress/interfaces/tui/screens/settings_screen.py:142
+msgid "Tous les runs enregistrés seront effacés définitivement."
+msgstr "Semua run yang tersimpan akan dihapus secara permanen."
+
+#: src/omega_stress/interfaces/tui/screens/settings_screen.py:169
+msgid "Cibles récentes vidées."
+msgstr "Target terbaru dikosongkan."
+
+#: src/omega_stress/interfaces/tui/screens/settings_screen.py:175
+msgid "Toutes les cibles ont été effacées."
+msgstr "Semua target telah dihapus."
+
+#: src/omega_stress/interfaces/tui/screens/splash.py:40
+msgid "Appuyez sur une touche pour continuer…"
+msgstr "Tekan tombol apa saja untuk melanjutkan…"
+
+#: src/omega_stress/interfaces/tui/screens/targets.py:36
+msgid "Cibles épinglées : illimitées | Cibles récentes : 10 maximum"
+msgstr "Target disematkan: tanpa batas | Target terbaru: maksimal 10"
+
+#: src/omega_stress/interfaces/tui/screens/targets.py:42
+msgid "Nouvelle adresse (ex. https://exemple.org)"
+msgstr "Alamat baru (mis. https://example.org)"
+
+#: src/omega_stress/interfaces/tui/screens/targets.py:49
+msgid "Désépingler la cible sélectionnée"
+msgstr "Lepas sematan target terpilih"
+
+#: src/omega_stress/interfaces/tui/screens/targets.py:83
+msgid "Saisissez une adresse à épingler."
+msgstr "Masukkan alamat yang akan disematkan."
+
+#: src/omega_stress/interfaces/tui/screens/targets.py:93
+#, python-brace-format
+msgid "{base_url} épinglée."
+msgstr "{base_url} disematkan."
+
+#: src/omega_stress/interfaces/tui/screens/targets.py:106
+msgid "Cible désépinglée."
+msgstr "Sematan target dilepas."
+
+#: src/omega_stress/interfaces/tui/widgets/authorization_checkbox.py:11
+msgid "Je confirme être autorisé à tester cette cible"
+msgstr "Saya mengonfirmasi bahwa saya berwenang menguji target ini"
+
+#: src/omega_stress/interfaces/tui/widgets/duration_preset_table.py:24 src/omega_stress/interfaces/tui/widgets/history_table.py:16
+msgid "ID"
+msgstr "ID"
+
+#: src/omega_stress/interfaces/tui/widgets/duration_preset_table.py:26
+msgid "Durée totale"
+msgstr "Durasi total"
+
+#: src/omega_stress/interfaces/tui/widgets/duration_preset_table.py:27
+msgid "Familles compatibles"
+msgstr "Keluarga kompatibel"
+
+#: src/omega_stress/interfaces/tui/widgets/duration_preset_table.py:28
+msgid "Niveaux libres"
+msgstr "Level bebas"
+
+#: src/omega_stress/interfaces/tui/widgets/duration_preset_table.py:29
+msgid "Niveau renforcé"
+msgstr "Level diperkuat"
+
+#: src/omega_stress/interfaces/tui/widgets/duration_preset_table.py:35
+#, python-brace-format
+msgid "{total_minutes} min"
+msgstr "{total_minutes} menit"
+
+#: src/omega_stress/interfaces/tui/widgets/history_table.py:16
+msgid "Démarré"
+msgstr "Dimulai"
+
+#: src/omega_stress/interfaces/tui/widgets/history_table.py:37
+msgid "en cours"
+msgstr "berjalan"
+
+#: src/omega_stress/interfaces/tui/widgets/load_reference_table.py:21 src/omega_stress/infrastructure/exporters/templates/report.html.jinja:61
+msgid "Type de test"
+msgstr "Jenis uji"
+
+#: src/omega_stress/interfaces/tui/widgets/load_reference_table.py:22
+msgid "Niveau"
+msgstr "Level"
+
+#: src/omega_stress/interfaces/tui/widgets/load_reference_table.py:23
+msgid "Dimension pilotée"
+msgstr "Dimensi yang dikendalikan"
+
+#: src/omega_stress/interfaces/tui/widgets/load_reference_table.py:24
+msgid "Cible visée"
+msgstr "Nilai sasaran"
+
+#: src/omega_stress/interfaces/tui/widgets/load_reference_table.py:25
+msgid "Simultanéité réelle"
+msgstr "Keserentakan nyata"
+
+#: src/omega_stress/interfaces/tui/widgets/load_reference_table.py:27
+msgid "Durées disponibles"
+msgstr "Durasi tersedia"
+
+#: src/omega_stress/interfaces/tui/widgets/profile_list.py:16 src/omega_stress/infrastructure/exporters/templates/report.html.jinja:65
+msgid "Durée"
+msgstr "Durasi"
+
+#: src/omega_stress/interfaces/tui/widgets/profile_list.py:26
+#, python-brace-format
+msgid "{duration_minutes} min"
+msgstr "{duration_minutes} menit"
+
+#: src/omega_stress/interfaces/tui/widgets/progress_panel.py:26
+msgid "CPU / RAM"
+msgstr "CPU / RAM"
+
+#: src/omega_stress/interfaces/tui/widgets/run_progress.py:45 src/omega_stress/interfaces/tui/widgets/run_progress.py:58
+#, python-brace-format
+msgid "Test en cours… (reste {value})"
+msgstr "Uji berjalan… (sisa {value})"
+
+#: src/omega_stress/interfaces/tui/widgets/run_progress.py:63
+#, python-brace-format
+msgid "Test en cours… (dépasse la durée prévue de {overrun})"
+msgstr "Uji berjalan… (melebihi durasi rencana sebesar {overrun})"
+
+#: src/omega_stress/interfaces/tui/widgets/safety_mode_checkbox.py:11
+msgid "Mode sécurité (protège cette machine)"
+msgstr "Mode keamanan (melindungi mesin ini)"
+
+#: src/omega_stress/interfaces/tui/widgets/target_picker.py:30
+msgid "ou saisir une adresse (ex. https://exemple.org)"
+msgstr "atau masukkan alamat (mis. https://example.org)"
+
+#: src/omega_stress/interfaces/tui/widgets/target_table.py:17
+msgid "Adresse"
+msgstr "Alamat"
+
+#: src/omega_stress/interfaces/tui/widgets/target_table.py:17
+msgid "Dernière utilisation"
+msgstr "Terakhir dipakai"
+
+#: src/omega_stress/interfaces/tui/presenters/calibration_presenter.py:49
+#, python-brace-format
+msgid "Âge du calibrage : {age_days} j — renouvellement OBLIGATOIRE (> {CALIBRATION_VALIDITY_DAYS_MANDATORY} j)."
+msgstr "Usia kalibrasi: {age_days} hari — pembaruan WAJIB (> {CALIBRATION_VALIDITY_DAYS_MANDATORY} hari)."
+
+#: src/omega_stress/interfaces/tui/presenters/calibration_presenter.py:57
+#, python-brace-format
+msgid "Âge du calibrage : {age_days} j — renouvellement recommandé (> {CALIBRATION_VALIDITY_DAYS_RECOMMENDED} j)."
+msgstr "Usia kalibrasi: {age_days} hari — pembaruan disarankan (> {CALIBRATION_VALIDITY_DAYS_RECOMMENDED} hari)."
+
+#: src/omega_stress/interfaces/tui/presenters/calibration_presenter.py:63
+#, python-brace-format
+msgid "Âge du calibrage : {age_days} j."
+msgstr "Usia kalibrasi: {age_days} hari."
+
+#: src/omega_stress/infrastructure/exporters/csv_exporter.py:57
+#, python-brace-format
+msgid "Échec d'écriture CSV vers {path} : {exc}"
+msgstr "Gagal menulis CSV ke {path}: {exc}"
+
+#: src/omega_stress/infrastructure/exporters/html_exporter.py:61
+#, python-brace-format
+msgid "Échec d'écriture HTML vers {path} : {exc}"
+msgstr "Gagal menulis HTML ke {path}: {exc}"
+
+#: src/omega_stress/infrastructure/exporters/html_exporter.py:78
+msgid "Débit (requêtes/min)"
+msgstr "Throughput (permintaan/menit)"
+
+#: src/omega_stress/infrastructure/exporters/html_exporter.py:82
+msgid "Demandé"
+msgstr "Diminta"
+
+#: src/omega_stress/infrastructure/exporters/html_exporter.py:84
+msgid "Réel"
+msgstr "Aktual"
+
+#: src/omega_stress/infrastructure/exporters/html_exporter.py:89
+msgid "Latence (ms)"
+msgstr "Latensi (ms)"
+
+#: src/omega_stress/infrastructure/exporters/html_exporter.py:99
+msgid "Erreurs par catégorie"
+msgstr "Galat per kategori"
+
+#: src/omega_stress/infrastructure/exporters/html_exporter.py:102
+msgid "Timeout"
+msgstr "Timeout"
+
+#: src/omega_stress/infrastructure/exporters/html_exporter.py:103
+msgid "Connexion"
+msgstr "Koneksi"
+
+#: src/omega_stress/infrastructure/exporters/html_exporter.py:105
+msgid "HTTP 4xx"
+msgstr "HTTP 4xx"
+
+#: src/omega_stress/infrastructure/exporters/html_exporter.py:107
+msgid "HTTP 5xx"
+msgstr "HTTP 5xx"
+
+#: src/omega_stress/infrastructure/exporters/html_exporter.py:112
+msgid "CPU (%)"
+msgstr "CPU (%)"
+
+#: src/omega_stress/infrastructure/exporters/html_exporter.py:116
+msgid "Générateur"
+msgstr "Generator"
+
+#: src/omega_stress/infrastructure/exporters/html_exporter.py:121
+msgid "Système"
+msgstr "Sistem"
+
+#: src/omega_stress/infrastructure/exporters/html_exporter.py:129
+msgid "Mémoire (Mo)"
+msgstr "Memori (MB)"
+
+#: src/omega_stress/infrastructure/exporters/html_exporter.py:133
+msgid "RSS générateur"
+msgstr "RSS generator"
+
+#: src/omega_stress/infrastructure/exporters/html_exporter.py:138
+msgid "Swap utilisé"
+msgstr "Swap terpakai"
+
+#: src/omega_stress/infrastructure/exporters/json_exporter.py:28
+#, python-brace-format
+msgid "Échec d'écriture JSON vers {path} : {exc}"
+msgstr "Gagal menulis JSON ke {path}: {exc}"
+
+#: src/omega_stress/infrastructure/exporters/templates/report.html.jinja:5
+#, python-brace-format
+msgid "Rapport omega-stress — {run_id}"
+msgstr "Laporan omega-stress — {run_id}"
+
+#: src/omega_stress/infrastructure/exporters/templates/report.html.jinja:55
+#, python-brace-format
+msgid "Rapport de test — {run_id}"
+msgstr "Laporan uji — {run_id}"
+
+#: src/omega_stress/infrastructure/exporters/templates/report.html.jinja:63
+msgid "Début"
+msgstr "Awal"
+
+#: src/omega_stress/infrastructure/exporters/templates/report.html.jinja:64
+msgid "Fin"
+msgstr "Akhir"
+
+#: src/omega_stress/infrastructure/exporters/templates/report.html.jinja:65
+#, python-brace-format
+msgid "{value} min"
+msgstr "{value} menit"
+
+#: src/omega_stress/infrastructure/exporters/templates/report.html.jinja:69
+msgid "Actif"
+msgstr "Aktif"
+
+#: src/omega_stress/infrastructure/exporters/templates/report.html.jinja:69
+msgid "Désactivé"
+msgstr "Nonaktif"
+
+#: src/omega_stress/infrastructure/exporters/templates/report.html.jinja:79
+msgid "Métriques"
+msgstr "Metrik"
+
+#: src/omega_stress/infrastructure/exporters/templates/report.html.jinja:81
+msgid "Débit demandé"
+msgstr "Throughput yang diminta"
+
+#: src/omega_stress/infrastructure/exporters/templates/report.html.jinja:81
+#, python-brace-format
+msgid "{requested_rate_per_minute} req/min"
+msgstr "{requested_rate_per_minute} perm/menit"
+
+#: src/omega_stress/infrastructure/exporters/templates/report.html.jinja:82
+#, python-brace-format
+msgid "{observed_rate_per_minute} req/min"
+msgstr "{observed_rate_per_minute} perm/menit"
+
+#: src/omega_stress/infrastructure/exporters/templates/report.html.jinja:83
+msgid "Latence p50"
+msgstr "Latensi p50"
+
+#: src/omega_stress/infrastructure/exporters/templates/report.html.jinja:85
+msgid "Latence p99"
+msgstr "Latensi p99"
+
+#: src/omega_stress/infrastructure/exporters/templates/report.html.jinja:87
+msgid "Dont timeout / connexion / 4xx / 5xx"
+msgstr "Di antaranya timeout / koneksi / 4xx / 5xx"
+
+#: src/omega_stress/infrastructure/exporters/templates/report.html.jinja:89
+msgid "Pic CPU générateur"
+msgstr "Puncak CPU generator"
+
+#: src/omega_stress/infrastructure/exporters/templates/report.html.jinja:92
+msgid "Pic mémoire générateur"
+msgstr "Puncak memori generator"
+
+#: src/omega_stress/infrastructure/exporters/templates/report.html.jinja:92
+#, python-brace-format
+msgid "{value} Mo"
+msgstr "{value} MB"
+
+#: src/omega_stress/infrastructure/exporters/templates/report.html.jinja:99
+msgid "Graphiques"
+msgstr "Grafik"
+
+#: src/omega_stress/infrastructure/exporters/templates/report.html.jinja:110
+#, python-brace-format
+msgid "Chronologie ({samples} mesures)"
+msgstr "Kronologi ({samples} pengukuran)"
+
+#: src/omega_stress/infrastructure/exporters/templates/report.html.jinja:114
+msgid "Seconde"
+msgstr "Detik"
+
+#: src/omega_stress/infrastructure/exporters/templates/report.html.jinja:114
+msgid "Débit (req/min)"
+msgstr "Throughput (perm/menit)"
+
+#: src/omega_stress/infrastructure/exporters/templates/report.html.jinja:139
+msgid "Diagnostic"
+msgstr "Diagnosis"

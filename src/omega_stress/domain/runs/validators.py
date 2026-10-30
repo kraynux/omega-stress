@@ -5,6 +5,7 @@ from __future__ import annotations
 from omega_stress.core.results import Err, Ok, Result
 from omega_stress.domain.errors import ValidationError
 from omega_stress.domain.runs.models import LoadRun
+from omega_stress.shared.i18n import _
 
 
 def validate_run_timing(run: LoadRun) -> Result[LoadRun, ValidationError]:
@@ -13,7 +14,9 @@ def validate_run_timing(run: LoadRun) -> Result[LoadRun, ValidationError]:
     metier."""
     if run.finished_at is not None and run.finished_at < run.started_at:
         return Err(
-            ValidationError(f"Le run {run.id} a une date de fin anterieure a sa date de depart.")
+            ValidationError(
+                _("Le run {id} a une date de fin antérieure à sa date de départ.").format(id=run.id)
+            )
         )
     return Ok(run)
 
@@ -23,6 +26,7 @@ def can_be_replayed(run: LoadRun) -> bool:
     run manuel (sans profil) ne peut pas etre relance a l'identique, faute
     de configuration reutilisable (voir plan produit, "relancer un run")."""
     return run.profile_id is not None
+
 
 # <-- INFO DEV ---------------------------------------------------------
 # Role :
@@ -48,4 +52,4 @@ def can_be_replayed(run: LoadRun) -> bool:
 # - application/services/run_replayer.py appelle can_be_replayed() avant
 #   de tenter une relance, et validate_run_timing() apres reconstruction
 #   d'un LoadRun depuis le repository.
-#---------------------------------------------------------------------->
+# ---------------------------------------------------------------------->

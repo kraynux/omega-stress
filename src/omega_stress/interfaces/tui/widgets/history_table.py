@@ -5,6 +5,7 @@ from __future__ import annotations
 from textual.widgets import DataTable
 
 from omega_stress.application.dto.run_dto import RunDTO
+from omega_stress.shared.i18n import _
 
 
 class HistoryTable(DataTable):
@@ -12,7 +13,7 @@ class HistoryTable(DataTable):
 
     def on_mount(self) -> None:
         self.cursor_type = "row"
-        self.add_columns("ID", "Cible", "Profil", "Demarre", "Verdict")
+        self.add_columns(_("ID"), _("Cible"), _("Profil"), _("Démarré"), _("Verdict"))
 
     def load_runs(self, runs: tuple[RunDTO, ...]) -> None:
         self.clear()
@@ -33,7 +34,7 @@ class HistoryTable(DataTable):
                 run.target_address,
                 profile_cell,
                 run.started_at,
-                run.verdict or "en cours",
+                run.verdict or _("en cours"),
                 key=run.id,
             )
 

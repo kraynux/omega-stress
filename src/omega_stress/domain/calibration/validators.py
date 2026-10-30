@@ -14,6 +14,7 @@ from omega_stress.domain.calibration.models import (
     CalibrationStageResult,
 )
 from omega_stress.domain.runs.models import SystemSnapshot
+from omega_stress.shared.i18n import _
 
 
 def evaluate_preconditions(
@@ -35,7 +36,7 @@ def evaluate_preconditions(
     if another_calibration_or_run_active:
         return Err(
             CalibrationPreconditionError(
-                "Un calibrage ou un test est deja en cours sur ce poste."
+                _("Un calibrage ou un test est déjà en cours sur ce poste.")
             )
         )
     if (
@@ -44,9 +45,14 @@ def evaluate_preconditions(
     ):
         return Err(
             CalibrationPreconditionError(
-                f"CPU global {cpu_global_percent:.0f}% > seuil "
-                f"{policies.CALIBRATION_PRECONDITION_CPU_GLOBAL_MAX_PERCENT:.0f}% : "
-                f"machine deja sous pression."
+                _(
+                    "CPU global {cpu_global_percent:.0f}% > seuil "
+                    "{CALIBRATION_PRECONDITION_CPU_GLOBAL_MAX_PERCENT:.0f}% : machine déjà sous "
+                    "pression."
+                ).format(
+                    cpu_global_percent=cpu_global_percent,
+                    CALIBRATION_PRECONDITION_CPU_GLOBAL_MAX_PERCENT=policies.CALIBRATION_PRECONDITION_CPU_GLOBAL_MAX_PERCENT,
+                )
             )
         )
     if (
@@ -56,21 +62,28 @@ def evaluate_preconditions(
     ):
         return Err(
             CalibrationPreconditionError(
-                f"Memoire disponible {memory_available_percent:.0f}% < seuil "
-                f"{policies.CALIBRATION_PRECONDITION_MEMORY_AVAILABLE_MIN_PERCENT:.0f}%."
+                _(
+                    "Mémoire disponible {memory_available_percent:.0f}% < seuil "
+                    "{CALIBRATION_PRECONDITION_MEMORY_AVAILABLE_MIN_PERCENT:.0f}%."
+                ).format(
+                    memory_available_percent=memory_available_percent,
+                    CALIBRATION_PRECONDITION_MEMORY_AVAILABLE_MIN_PERCENT=policies.CALIBRATION_PRECONDITION_MEMORY_AVAILABLE_MIN_PERCENT,
+                )
             )
         )
     if swap_active_or_growing:
         return Err(
             CalibrationPreconditionError(
-                "Swap deja active ou en croissance : machine deja sous pression."
+                _("Swap déjà activé ou en croissance : machine déjà sous pression.")
             )
         )
     if load_average_1min is not None and load_average_1min > logical_cpu_count:
         return Err(
             CalibrationPreconditionError(
-                f"Load average 1 min {load_average_1min:.1f} > {logical_cpu_count} "
-                f"coeurs logiques."
+                _(
+                    "Load average 1 min {load_average_1min:.1f} > {logical_cpu_count} coeurs "
+                    "logiques."
+                ).format(load_average_1min=load_average_1min, logical_cpu_count=logical_cpu_count)
             )
         )
     return Ok(None)
@@ -111,8 +124,7 @@ def _sustained_cpu_stop(
         100.0 / logical_cpu_count
     )
     return all(
-        s.cpu_percent_generator is not None and s.cpu_percent_generator >= threshold
-        for s in window
+        s.cpu_percent_generator is not None and s.cpu_percent_generator >= threshold for s in window
     )
 
 
@@ -175,14 +187,20 @@ def evaluate_stage_outcome(
         stop_reason = "rps_achieved_low_consecutive_stages"
 
     is_healthy = stop_reason is None and (
-        (peak_cpu_generator is None
-         or peak_cpu_generator
-         < policies.CALIBRATION_HEALTHY_CPU_GENERATOR_MAX_RATIO_OF_SINGLE_CORE
-         * (100.0 / logical_cpu_count))
-        and (peak_cpu_global is None
-             or peak_cpu_global < policies.CALIBRATION_HEALTHY_CPU_GLOBAL_MAX_PERCENT)
-        and (memory_min is None
-             or memory_min > policies.CALIBRATION_HEALTHY_MEMORY_AVAILABLE_MIN_PERCENT)
+        (
+            peak_cpu_generator is None
+            or peak_cpu_generator
+            < policies.CALIBRATION_HEALTHY_CPU_GENERATOR_MAX_RATIO_OF_SINGLE_CORE
+            * (100.0 / logical_cpu_count)
+        )
+        and (
+            peak_cpu_global is None
+            or peak_cpu_global < policies.CALIBRATION_HEALTHY_CPU_GLOBAL_MAX_PERCENT
+        )
+        and (
+            memory_min is None
+            or memory_min > policies.CALIBRATION_HEALTHY_MEMORY_AVAILABLE_MIN_PERCENT
+        )
         and error_rate < policies.CALIBRATION_HEALTHY_ERROR_RATE_MAX
         and rps_ratio >= policies.CALIBRATION_HEALTHY_RPS_ACHIEVED_RATIO_MIN
     )
@@ -240,6 +258,7 @@ def compute_envelope(
         confidence=confidence,
     )
 
+
 # <-- INFO DEV ---------------------------------------------------------
 # Role :
 # - evaluate_preconditions() : verification pure des 4 preconditions
@@ -281,4 +300,4 @@ def compute_envelope(
 # Comment il sera utilise (apercu) :
 # - application/commands/run_calibration.py appelle les trois fonctions
 #   dans l'ordre (preconditions -> paliers un par un -> enveloppe finale).
-#---------------------------------------------------------------------->
+# ---------------------------------------------------------------------->

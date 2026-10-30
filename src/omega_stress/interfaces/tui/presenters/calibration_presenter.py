@@ -11,6 +11,7 @@ from omega_stress.domain.calibration.policies import (
     CALIBRATION_VALIDITY_DAYS_MANDATORY,
     CALIBRATION_VALIDITY_DAYS_RECOMMENDED,
 )
+from omega_stress.shared.i18n import _
 
 _STAGE_NAMES: dict[str, str] = {stage.id: stage.name for stage in CALIBRATION_STAGES}
 
@@ -20,15 +21,20 @@ def envelope_summary(result: CalibrationResult) -> str:
     enveloppe n'a pu etre calculee (le premier palier exploitable a deja
     echoue — voir domain/calibration/models.py::CalibrationResult.envelope)."""
     if result.envelope is None:
-        reason = result.overall_stop_reason or "echec precoce"
-        return f"Aucune enveloppe exploitable ({reason})."
+        reason = result.overall_stop_reason or _("échec précoce")
+        return _("Aucune enveloppe exploitable ({reason}).").format(reason=reason)
     envelope = result.envelope
     last_healthy_name = _STAGE_NAMES.get(
         envelope.last_healthy_stage_id, envelope.last_healthy_stage_id
     )
-    return (
-        f"VU_safe {envelope.vu_safe} | RPS_safe {envelope.rps_safe} | "
-        f"confiance {envelope.confidence} (dernier palier sain : {last_healthy_name})"
+    return _(
+        "VU_safe {vu_safe} | RPS_safe {rps_safe} | confiance {confidence} (dernier palier "
+        "sain : {last_healthy_name})"
+    ).format(
+        vu_safe=envelope.vu_safe,
+        rps_safe=envelope.rps_safe,
+        confidence=envelope.confidence,
+        last_healthy_name=last_healthy_name,
     )
 
 
@@ -38,18 +44,23 @@ def age_reminder(result: CalibrationResult, *, now: datetime) -> str:
     persistant") — affichage seul, aucun blocage applicatif (angle mort
     assume de ce chantier, voir plan)."""
     age_days = (now - result.started_at).days
-    plural = "s" if age_days != 1 else ""
     if age_days >= CALIBRATION_VALIDITY_DAYS_MANDATORY:
-        return (
-            f"Calibrage vieux de {age_days} jour{plural} — renouvellement "
-            f"OBLIGATOIRE (> {CALIBRATION_VALIDITY_DAYS_MANDATORY}j)."
+        return _(
+            "Âge du calibrage : {age_days} j — renouvellement OBLIGATOIRE (> "
+            "{CALIBRATION_VALIDITY_DAYS_MANDATORY} j)."
+        ).format(
+            age_days=age_days,
+            CALIBRATION_VALIDITY_DAYS_MANDATORY=CALIBRATION_VALIDITY_DAYS_MANDATORY,
         )
     if age_days >= CALIBRATION_VALIDITY_DAYS_RECOMMENDED:
-        return (
-            f"Calibrage vieux de {age_days} jour{plural} — renouvellement "
-            f"recommande (> {CALIBRATION_VALIDITY_DAYS_RECOMMENDED}j)."
+        return _(
+            "Âge du calibrage : {age_days} j — renouvellement recommandé (> "
+            "{CALIBRATION_VALIDITY_DAYS_RECOMMENDED} j)."
+        ).format(
+            age_days=age_days,
+            CALIBRATION_VALIDITY_DAYS_RECOMMENDED=CALIBRATION_VALIDITY_DAYS_RECOMMENDED,
         )
-    return f"Calibrage vieux de {age_days} jour{plural}."
+    return _("Âge du calibrage : {age_days} j.").format(age_days=age_days)
 
 
 def envelope_comparison_message(
@@ -64,22 +75,28 @@ def envelope_comparison_message(
     responsabilite d'aller au-dela reste explicitement celle de
     l'utilisateur."""
     if result is None or result.envelope is None:
-        return (
+        return _(
             "Aucun calibrage exploitable pour cette machine — vous ne connaissez pas ses "
-            "limites reelles. Nous recommandons d'en faire un depuis l'ecran Calibrage avant "
-            "de desactiver le mode securite sur un niveau intensif. Vous choisissez de "
-            "depasser les garde-fous de CETTE machine : la fiabilite du resultat et la "
-            "stabilite de votre ordinateur restent sous votre responsabilite."
+            "limites réelles. Nous recommandons d'en faire un depuis l'écran Calibrage avant "
+            "de désactiver le mode sécurité sur un niveau intensif. Vous choisissez de "
+            "dépasser les garde-fous de CETTE machine : la fiabilité du résultat et la "
+            "stabilité de votre ordinateur restent sous votre responsabilité."
         )
     envelope = result.envelope
     safe_value = envelope.connections_safe if family is TestFamily.CONNECTION else envelope.rps_safe
-    comparison = "AU-DESSUS" if target_value > safe_value else "en dessous"
-    return (
-        f"Dernier calibrage : {safe_value} {unit} juges surs pour cette machine "
-        f"(confiance {envelope.confidence}). Ce niveau vise {target_value:.0f} {unit} — "
-        f"{comparison} de cette enveloppe. Au-dela, la fiabilite du resultat (nombre de "
-        f"connexions/requetes/charge reellement atteint) peut baisser, et votre machine "
-        f"pourrait ralentir ou geler temporairement : c'est votre responsabilite."
+    comparison = _("AU-DESSUS") if target_value > safe_value else _("en dessous")
+    return _(
+        "Dernier calibrage : {safe_value} {unit} jugés sûrs pour cette machine (confiance "
+        "{confidence}). Ce niveau vise {target_value:.0f} {unit} — {comparison} de cette "
+        "enveloppe. Au-delà, la fiabilité du résultat (nombre de connexions/requêtes/charge "
+        "réellement atteint) peut baisser, et votre machine pourrait ralentir ou geler "
+        "temporairement : c'est votre responsabilité."
+    ).format(
+        safe_value=safe_value,
+        unit=unit,
+        confidence=envelope.confidence,
+        target_value=target_value,
+        comparison=comparison,
     )
 
 
@@ -88,13 +105,19 @@ def stage_lines(result: CalibrationResult) -> tuple[str, ...]:
     lines = []
     for stage_result in result.stages:
         name = _STAGE_NAMES.get(stage_result.stage_id, stage_result.stage_id)
-        status = "sain" if stage_result.is_healthy else "degrade"
+        status = "sain" if stage_result.is_healthy else _("dégradé")
         reason = f" — {stage_result.stop_reason}" if stage_result.stop_reason else ""
         lines.append(
-            f"{name} : {stage_result.rps_achieved:.0f}/{stage_result.rps_target} req/s "
-            f"({status}{reason})"
+            _("{name} : {rps_achieved:.0f}/{rps_target} req/s ({status}{reason})").format(
+                name=name,
+                rps_achieved=stage_result.rps_achieved,
+                rps_target=stage_result.rps_target,
+                status=status,
+                reason=reason,
+            )
         )
     return tuple(lines)
+
 
 # <-- INFO DEV ---------------------------------------------------------
 # Role :
@@ -135,4 +158,4 @@ def stage_lines(result: CalibrationResult) -> tuple[str, ...]:
 #   et affichage de la progression apres un nouveau calibrage).
 # - screens/{request_panel,connection_panel,ramp_panel}.py (comparaison
 #   affichee des que "Mode securite" est decoche).
-#---------------------------------------------------------------------->
+# ---------------------------------------------------------------------->

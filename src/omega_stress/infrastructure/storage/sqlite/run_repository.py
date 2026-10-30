@@ -16,6 +16,7 @@ from omega_stress.domain.runs.models import (
     SystemSnapshot,
 )
 from omega_stress.infrastructure.exceptions import StorageError
+from omega_stress.shared.i18n import _
 
 
 class SqliteRunRepository:
@@ -70,13 +71,17 @@ class SqliteRunRepository:
             )
             self._connection.commit()
         except sqlite3.Error as exc:
-            raise StorageError(f"Echec de sauvegarde du run {run.id!r} : {exc}") from exc
+            raise StorageError(
+                _("Échec de sauvegarde du run {id!r} : {exc}").format(id=run.id, exc=exc)
+            ) from exc
 
     def get(self, run_id: str) -> LoadRun | None:
         try:
             row = self._connection.execute("SELECT * FROM runs WHERE id = ?", (run_id,)).fetchone()
         except sqlite3.Error as exc:
-            raise StorageError(f"Echec de lecture du run {run_id!r} : {exc}") from exc
+            raise StorageError(
+                _("Échec de lecture du run {run_id!r} : {exc}").format(run_id=run_id, exc=exc)
+            ) from exc
         return _row_to_run(row) if row is not None else None
 
     def list_history(
@@ -100,7 +105,9 @@ class SqliteRunRepository:
         try:
             rows = self._connection.execute(query, params).fetchall()
         except sqlite3.Error as exc:
-            raise StorageError(f"Echec de listage de l'historique des runs : {exc}") from exc
+            raise StorageError(
+                _("Échec de listage de l'historique des runs : {exc}").format(exc=exc)
+            ) from exc
         return tuple(_row_to_run(row) for row in rows)
 
     def clear(self) -> None:
@@ -108,7 +115,9 @@ class SqliteRunRepository:
             self._connection.execute("DELETE FROM runs")
             self._connection.commit()
         except sqlite3.Error as exc:
-            raise StorageError(f"Echec de purge de l'historique des runs : {exc}") from exc
+            raise StorageError(
+                _("Échec de purge de l'historique des runs : {exc}").format(exc=exc)
+            ) from exc
 
 
 def _serialize_events(events: tuple[RunEvent, ...]) -> str:
@@ -281,11 +290,12 @@ def _row_to_run(row: sqlite3.Row) -> LoadRun:
             if row["duration_preset_id"] is not None
             else None
         ),
-        safety_mode=(
-            bool(row["safety_mode"]) if row["safety_mode"] is not None else True
-        ),
-        profile_customized=bool(row["profile_customized"]) if row["profile_customized"] is not None else False,
+        safety_mode=(bool(row["safety_mode"]) if row["safety_mode"] is not None else True),
+        profile_customized=bool(row["profile_customized"])
+        if row["profile_customized"] is not None
+        else False,
     )
+
 
 # <-- INFO DEV ---------------------------------------------------------
 # Role :
@@ -342,4 +352,4 @@ def _row_to_run(row: sqlite3.Row) -> LoadRun:
 # - application/pipeline/executor.py (indirectement, via l'appelant qui
 #   persiste le LoadRun retourne), application/queries/list_history.py,
 #   get_run_details.py.
-#---------------------------------------------------------------------->
+# ---------------------------------------------------------------------->

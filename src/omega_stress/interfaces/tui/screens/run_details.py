@@ -18,6 +18,7 @@ from omega_stress.interfaces.tui.presenters.run_presenter import (
 from omega_stress.interfaces.tui.screens._base import OmegaScreen
 from omega_stress.interfaces.tui.screens.export_dialog import ExportDialogScreen
 from omega_stress.interfaces.tui.widgets.stat_card import StatCard
+from omega_stress.shared.i18n import _
 
 if TYPE_CHECKING:
     from omega_stress.app.dependency_container import DependencyContainer
@@ -35,20 +36,20 @@ class RunDetailsScreen(OmegaScreen):
     def compose(self) -> ComposeResult:
         yield Header()
         with Vertical(classes="omega-panel"):
-            yield Static("DETAIL DU RUN", classes="omega-title")
+            yield Static(_("DÉTAIL DU RUN"), classes="omega-title")
             with Horizontal(id="stats", classes="omega-stat-row"):
-                yield StatCard("Verdict", id="stat-verdict")
-                yield StatCard("Debit observe", id="stat-rate")
-                yield StatCard("Erreurs", id="stat-errors")
-                yield StatCard("Latence p95", id="stat-p95")
+                yield StatCard(_("Verdict"), id="stat-verdict")
+                yield StatCard(_("Débit observé"), id="stat-rate")
+                yield StatCard(_("Erreurs"), id="stat-errors")
+                yield StatCard(_("Latence p95"), id="stat-p95")
             yield Static("", id="verdict-explanation")
             yield Static("", id="summary")
             yield Static("", id="chronology")
             with Horizontal(classes="omega-actions"):
                 with Container(classes="omega-btn-frame"):
-                    yield Button("Exporter", id="export", variant="primary")
+                    yield Button(_("Exporter"), id="export", variant="primary")
                 with Container(classes="omega-btn-frame"):
-                    yield Button("Retour", id="back")
+                    yield Button(_("Retour"), id="back")
         yield Footer()
 
     def on_mount(self) -> None:
@@ -59,14 +60,16 @@ class RunDetailsScreen(OmegaScreen):
         )
         summary = self.query_one("#summary", Static)
         if run is None:
-            summary.update(f"Run {self._run_id!r} introuvable.")
+            summary.update(_("Run {run_id!r} introuvable.").format(run_id=self._run_id))
             self.query_one("#export", Button).disabled = True
             return
 
         self.query_one("#stat-verdict", StatCard).update_value(verdict_label(run))
         if run.observed_rate_per_minute is not None:
             self.query_one("#stat-rate", StatCard).update_value(
-                f"{run.observed_rate_per_minute:.0f} req/min"
+                _("{observed_rate_per_minute:.0f} req/min").format(
+                    observed_rate_per_minute=run.observed_rate_per_minute
+                )
             )
             errors = run.error_count or 0
             total = run.total_requests or 0
@@ -79,22 +82,33 @@ class RunDetailsScreen(OmegaScreen):
             self.query_one("#verdict-explanation", Static).update(explanation)
 
         profile_note = (
-            " (personnalise — au moins un critere reel differe du profil fige reference)"
+            _(" (personnalisé — au moins un critère réel diffère du profil figé référence)")
             if run.profile_id is not None and run.profile_customized
             else ""
         )
-        text = (
-            f"{run.id}\nCible : {run.target_address}\n"
-            f"Famille/niveau : {run.family}/{run.level}{profile_note}\n"
-            f"Demarre : {run.started_at}"
+        text = _(
+            "{id}\nCible : {target_address}\nFamille/niveau : "
+            "{family}/{level}{profile_note}\nDémarré : {started_at}"
+        ).format(
+            id=run.id,
+            target_address=run.target_address,
+            family=run.family,
+            level=run.level,
+            profile_note=profile_note,
+            started_at=run.started_at,
         )
         reason = diagnostic_message(run)
         if reason:
-            text += f"\nDiagnostic : {reason}"
+            text += _("\nDiagnostic : {reason}").format(reason=reason)
         if run.error_count:
-            text += (
-                f"\nErreurs : {run.errors_timeout} timeout, {run.errors_connection} connexion, "
-                f"{run.errors_http_4xx} 4xx, {run.errors_http_5xx} 5xx"
+            text += _(
+                "\nErreurs : {errors_timeout} timeout, {errors_connection} connexion, "
+                "{errors_http_4xx} 4xx, {errors_http_5xx} 5xx"
+            ).format(
+                errors_timeout=run.errors_timeout,
+                errors_connection=run.errors_connection,
+                errors_http_4xx=run.errors_http_4xx,
+                errors_http_5xx=run.errors_http_5xx,
             )
         if run.peak_cpu_percent_generator is not None or run.peak_memory_rss_mb is not None:
             cpu = (
@@ -105,25 +119,26 @@ class RunDetailsScreen(OmegaScreen):
             memory = (
                 f"{run.peak_memory_rss_mb:.0f} Mo" if run.peak_memory_rss_mb is not None else "?"
             )
-            text += f"\nPic generateur : {cpu} CPU, {memory} RAM"
+            text += _("\nPic générateur : {cpu} CPU, {memory} RAM").format(cpu=cpu, memory=memory)
         if run.sample_count:
-            text += (
-                f"\n{run.sample_count} mesures enregistrees "
-                "(detail exhaustif : export JSON/HTML)."
-            )
+            text += _(
+                "\n{sample_count} mesures enregistrées (détail exhaustif : export JSON/HTML)."
+            ).format(sample_count=run.sample_count)
         summary.update(text)
 
         lines = chronology_lines(run.samples)
         chronology = self.query_one("#chronology", Static)
         if lines:
             chronology.update(
-                "Chronologie — temps | taux d'erreur (barre) | erreurs/requetes par palier\n"
+                _("Chronologie — temps | taux d'erreur (barre) | erreurs/requêtes par palier\n")
                 + "\n".join(lines)
             )
         else:
             chronology.update(
-                "Aucune mesure enregistree : le test s'est termine avant la premiere "
-                "mesure (voir le diagnostic ci-dessus)."
+                _(
+                    "Aucune mesure enregistrée : le test s'est terminé avant la première mesure "
+                    "(voir le diagnostic ci-dessus)."
+                )
             )
 
     def on_button_pressed(self, event: Button.Pressed) -> None:
@@ -131,6 +146,7 @@ class RunDetailsScreen(OmegaScreen):
             self.dismiss()
         elif event.button.id == "export":
             self.app.push_screen(ExportDialogScreen(container=self._container, run_id=self._run_id))
+
 
 # <-- INFO DEV ---------------------------------------------------------
 # Role :
@@ -190,4 +206,4 @@ class RunDetailsScreen(OmegaScreen):
 #   apres un run termine avec succes (Ok(RunDTO)) au lieu de se contenter
 #   d'une ligne dans #result — voir leur propre INFO DEV
 #   (screens/request_panel.py notamment).
-#---------------------------------------------------------------------->
+# ---------------------------------------------------------------------->
