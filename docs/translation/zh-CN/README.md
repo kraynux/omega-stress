@@ -7,8 +7,7 @@
 
 **受控的 HTTP 负载测试工作台**
 
-> 由 **kraynux** 为 **Omega-server** 打造 
-[https://kraynux.snake-mackarel.ts.net](https://kraynux.snake-mackarel.ts.net)
+> 由 [kraynux](https://github.com/kraynux) 为 [Omega-Server](https://kraynux.snake-mackarel.ts.net) 打造   
 
 官方页面：[OMEGA-STRESS](https://kraynux.snake-mackarel.ts.net/omega-stress/) &nbsp; 截图：[Screenshots](https://kraynux.snake-mackarel.ts.net/omega-stress/screenshots/)  
 

@@ -7,8 +7,7 @@
 
 **สถานีทดสอบโหลด HTTP แบบมีการควบคุม**
 
-> พัฒนาโดย **kraynux** สำหรับ **Omega-server** 
-[https://kraynux.snake-mackarel.ts.net](https://kraynux.snake-mackarel.ts.net)
+> พัฒนาโดย [kraynux](https://github.com/kraynux) สำหรับ [Omega-Server](https://kraynux.snake-mackarel.ts.net)   
 
 หน้าทางการ: [OMEGA-STRESS](https://kraynux.snake-mackarel.ts.net/omega-stress/) &nbsp; ภาพหน้าจอ: [Screenshots](https://kraynux.snake-mackarel.ts.net/omega-stress/screenshots/)  
 

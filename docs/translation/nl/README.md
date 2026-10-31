@@ -7,8 +7,7 @@
 
 **Werkplek voor gecontroleerde HTTP-belastingtests**
 
-> Gemaakt door **kraynux** voor **Omega-server** 
-[https://kraynux.snake-mackarel.ts.net](https://kraynux.snake-mackarel.ts.net)
+> Gemaakt door [kraynux](https://github.com/kraynux) voor [Omega-Server](https://kraynux.snake-mackarel.ts.net)   
 
 Officiële pagina: [OMEGA-STRESS](https://kraynux.snake-mackarel.ts.net/omega-stress/) &nbsp; Voorbeeld: [Screenshots](https://kraynux.snake-mackarel.ts.net/omega-stress/screenshots/)  
 

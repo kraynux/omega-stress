@@ -7,8 +7,7 @@
 
 **制御された HTTP 負荷テストステーション**
 
-> **kraynux** が **Omega-server** のために開発 
-[https://kraynux.snake-mackarel.ts.net](https://kraynux.snake-mackarel.ts.net)
+> [kraynux](https://github.com/kraynux) が [Omega-Server](https://kraynux.snake-mackarel.ts.net) のために開発   
 
 公式ページ: [OMEGA-STRESS](https://kraynux.snake-mackarel.ts.net/omega-stress/) &nbsp; プレビュー: [Screenshots](https://kraynux.snake-mackarel.ts.net/omega-stress/screenshots/)  
 

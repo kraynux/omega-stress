@@ -7,8 +7,7 @@
 
 **Puesto de pruebas de carga HTTP controladas**
 
-> Desarrollado por **kraynux** para **Omega-server** 
-[https://kraynux.snake-mackarel.ts.net](https://kraynux.snake-mackarel.ts.net)
+> Desarrollado por [kraynux](https://github.com/kraynux) para [Omega-Server](https://kraynux.snake-mackarel.ts.net)   
 
 Página oficial: [OMEGA-STRESS](https://kraynux.snake-mackarel.ts.net/omega-stress/) &nbsp; Capturas: [Screenshots](https://kraynux.snake-mackarel.ts.net/omega-stress/screenshots/)  
 
