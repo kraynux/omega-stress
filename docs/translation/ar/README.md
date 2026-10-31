@@ -7,8 +7,7 @@
 
 **محطة اختبار تحميل HTTP مضبوطة**
 
-> طوّره **kraynux** من أجل **Omega-server** 
-[https://kraynux.snake-mackarel.ts.net](https://kraynux.snake-mackarel.ts.net)
+> طوّره [kraynux](https://github.com/kraynux) من أجل [Omega-Server](https://kraynux.snake-mackarel.ts.net)   
 
 الصفحة الرسمية: [OMEGA-STRESS](https://kraynux.snake-mackarel.ts.net/omega-stress/) &nbsp; معاينة: [Screenshots](https://kraynux.snake-mackarel.ts.net/omega-stress/screenshots/)  
 
