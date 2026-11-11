@@ -7,7 +7,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
-"X-Omega-Status: testing\n"
+"X-Omega-Status: validated\n"
 
 #: src/omega_stress/application/commands/export_run_report.py:36 src/omega_stress/application/commands/replay_run.py:61 src/omega_stress/interfaces/tui/screens/run_details.py:63
 msgid "Run {run_id!r} introuvable."
@@ -860,59 +860,59 @@ msgstr "Podaj katalog docelowy."
 msgid "Rapport écrit : {written_path}"
 msgstr "Raport zapisany: {written_path}"
 
-#: src/omega_stress/interfaces/tui/screens/help_screen.py:30
+#: src/omega_stress/interfaces/tui/screens/help_screen.py:31
 msgid "Test requêtes / connexions / charge"
 msgstr "Test żądań / połączeń / obciążenia"
 
-#: src/omega_stress/interfaces/tui/screens/help_screen.py:31
+#: src/omega_stress/interfaces/tui/screens/help_screen.py:32
 msgid "Trois familles de test encadrées : débit constant, nombre de connexions simultanées, ou montée progressive. Chaque lancement exige une cible (saisie manuelle ou cible épinglée) et une confirmation d'autorisation, sauf cible déjà épinglée-autorisée."
 msgstr "Trzy kontrolowane rodziny testów: stała przepustowość, liczba połączeń równoczesnych lub stopniowe narastanie. Każde uruchomienie wymaga celu (wpisanego ręcznie lub przypiętego) i potwierdzenia autoryzacji, chyba że cel jest już przypięty i autoryzowany."
 
-#: src/omega_stress/interfaces/tui/screens/help_screen.py:38
+#: src/omega_stress/interfaces/tui/screens/help_screen.py:39
 msgid "Un profil fige un jeu de paramètres (cible, type de test, intensité, durée, seuils) pour le réutiliser tel quel — créer, puis figer, un profil depuis cet écran."
 msgstr "Profil zamraża zestaw parametrów (cel, typ testu, intensywność, czas trwania, progi), aby użyć go ponownie bez zmian — utwórz, a następnie zamroź profil na tym ekranie."
 
-#: src/omega_stress/interfaces/tui/screens/help_screen.py:43
+#: src/omega_stress/interfaces/tui/screens/help_screen.py:44
 msgid "Épingler une adresse dispense de recocher la confirmation d'autorisation à chaque lancement sur cette même cible."
 msgstr "Przypięcie adresu zwalnia z ponownego zaznaczania potwierdzenia autoryzacji przy każdym uruchomieniu na tym samym celu."
 
-#: src/omega_stress/interfaces/tui/screens/help_screen.py:48
+#: src/omega_stress/interfaces/tui/screens/help_screen.py:49
 msgid "Liste tous les runs passés : détail complet, ou relecture (uniquement pour un run lié à un profil figé)."
 msgstr "Lista wszystkich wcześniejszych przebiegów: pełne szczegóły lub ponowne odtworzenie (tylko dla przebiegu powiązanego z zamrożonym profilem)."
 
-#: src/omega_stress/interfaces/tui/screens/help_screen.py:53
+#: src/omega_stress/interfaces/tui/screens/help_screen.py:54
 msgid "Depuis le détail d'un run terminé : JSON (données brutes, réimportables), CSV (analyse tabulaire), ou HTML (rapport lisible avec chronologie complète par intervalle)."
 msgstr "Ze szczegółów zakończonego przebiegu: JSON (surowe dane, możliwe do ponownego importu), CSV (analiza tabelaryczna) lub HTML (czytelny raport z pełną chronologią według interwałów)."
 
-#: src/omega_stress/interfaces/tui/screens/help_screen.py:58 src/omega_stress/interfaces/tui/screens/help_screen.py:112
+#: src/omega_stress/interfaces/tui/screens/help_screen.py:59 src/omega_stress/interfaces/tui/screens/help_screen.py:119
 msgid "Profils de durée D1-D6 (mode profil)"
 msgstr "Profile czasu trwania D1-D6 (tryb profilu)"
 
-#: src/omega_stress/interfaces/tui/screens/help_screen.py:59
+#: src/omega_stress/interfaces/tui/screens/help_screen.py:60
 msgid "En plus de la durée manuelle (1 à 5 min selon le niveau), chaque écran de lancement propose un mode profil : une durée fixe nommée (1 à 120 min) qui limite les niveaux accessibles, avec un niveau supplémentaire débloqué par une confirmation renforcée (texte exact à saisir). Voir le tableau ci-dessous."
 msgstr "Oprócz ręcznego czasu trwania (od 1 do 5 min zależnie od poziomu) każdy ekran uruchamiania oferuje tryb profilu: nazwany stały czas trwania (od 1 do 120 min), który ogranicza dostępne poziomy, z dodatkowym poziomem odblokowywanym wzmocnionym potwierdzeniem (dokładny tekst do wpisania). Zobacz tabelę poniżej."
 
-#: src/omega_stress/interfaces/tui/screens/help_screen.py:65 src/omega_stress/interfaces/tui/screens/home.py:33
+#: src/omega_stress/interfaces/tui/screens/help_screen.py:66 src/omega_stress/interfaces/tui/screens/home.py:33
 msgid "Calibrage"
 msgstr "Kalibracja"
 
-#: src/omega_stress/interfaces/tui/screens/help_screen.py:66
+#: src/omega_stress/interfaces/tui/screens/help_screen.py:67
 msgid "Mesure la capacité réelle de CETTE machine (pas la cible testée) via un serveur de boucle locale, par paliers de charge croissante. Le résultat (VU_safe/RPS_safe) n'est pas appliqué automatiquement aux tests réels : consultable depuis l'écran Calibrage, et utile comme repère quand le mode sécurité est désactivé (voir ci-dessous)."
 msgstr "Mierzy rzeczywistą wydajność TEJ maszyny (nie testowanego celu) za pomocą lokalnego serwera pętli zwrotnej, etapami o rosnącym obciążeniu. Wynik (VU_safe/RPS_safe) nie jest automatycznie stosowany do rzeczywistych testów: można go sprawdzić na ekranie Kalibracja i jest przydatny jako punkt odniesienia, gdy tryb bezpieczeństwa jest wyłączony (zobacz niżej)."
 
-#: src/omega_stress/interfaces/tui/screens/help_screen.py:73 src/omega_stress/infrastructure/exporters/templates/report.html.jinja:69
+#: src/omega_stress/interfaces/tui/screens/help_screen.py:74 src/omega_stress/infrastructure/exporters/templates/report.html.jinja:69
 msgid "Mode sécurité"
 msgstr "Tryb bezpieczeństwa"
 
-#: src/omega_stress/interfaces/tui/screens/help_screen.py:75
+#: src/omega_stress/interfaces/tui/screens/help_screen.py:76
 msgid " Si un calibrage a été effectué sur cette machine, l'écran de lancement compare le niveau choisi à son enveloppe dès que la case est décochée."
 msgstr " Jeśli na tej maszynie wykonano kalibrację, ekran uruchamiania porównuje wybrany poziom z jej obwiednią, gdy tylko pole zostanie odznaczone."
 
-#: src/omega_stress/interfaces/tui/screens/help_screen.py:98
+#: src/omega_stress/interfaces/tui/screens/help_screen.py:105
 msgid "Repères de charge (valeurs exactes par niveau)"
 msgstr "Punkty odniesienia obciążenia (dokładne wartości dla poziomu)"
 
-#: src/omega_stress/interfaces/tui/screens/help_screen.py:102
+#: src/omega_stress/interfaces/tui/screens/help_screen.py:109
 #, python-brace-format
 msgid ""
 "[b]Test requêtes[/b] — {value}\n"

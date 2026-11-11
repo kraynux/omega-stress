@@ -132,7 +132,7 @@ class OmegaStressApp(App[None]):
         self.theme = status.theme_name
 
     def action_help(self) -> None:
-        self.push_screen(HelpScreen())
+        self.push_screen(HelpScreen(container=self._container))
 
     def action_refresh_terminal(self) -> None:
         """Touche `r` : redetecte la taille/famille du terminal (le

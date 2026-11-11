@@ -101,6 +101,7 @@ class HttpxCalibrationStageRunner:
         max_consecutive_timeouts = 0
         current_timeout_streak = 0
 
+        real_duration = 0.0
         for _second in range(stage.window_seconds):
             started = time.perf_counter()
             if stage.rps_target > 0:
@@ -129,13 +130,14 @@ class HttpxCalibrationStageRunner:
             remaining = SAMPLE_INTERVAL_SECONDS - elapsed
             if remaining > 0:
                 await self._sleep(remaining)
+            real_duration += max(elapsed, SAMPLE_INTERVAL_SECONDS)
             system_samples.append(self._system_sampler.sample())
             stage_progress_notifier.notify(stage.id, _second + 1, stage.window_seconds)
 
         error_rate = total_errors / total_requests if total_requests > 0 else 0.0
-        rps_achieved = (
-            total_requests / stage.window_seconds if stage.window_seconds > 0 else 0.0
-        )
+        # Duree REELLE du palier (correctif 2026-11-10) : diviser par window_seconds rendait toujours le
+        # debit vise, meme quand chaque seconde du palier durait plus d'une seconde.
+        rps_achieved = total_requests / real_duration if real_duration > 0 else 0.0
         return StageMeasurement(
             rps_achieved=rps_achieved,
             error_rate=error_rate,

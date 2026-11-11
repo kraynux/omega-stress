@@ -91,8 +91,8 @@ class HttpxLoadGenerator:
 
             for interval_index in range(total_intervals(plan)):
                 target = target_for_interval(plan, interval_index)
-                outcomes = await self._run_interval(client, target_url, target, semaphore)
-                sample = parse_interval(interval_index * SAMPLE_INTERVAL_SECONDS, outcomes)
+                outcomes, duration = await self._run_interval(client, target_url, target, semaphore)
+                sample = parse_interval(interval_index * SAMPLE_INTERVAL_SECONDS, outcomes, duration)
                 yield replace(
                     sample,
                     requested_rate_per_minute=(
@@ -100,7 +100,9 @@ class HttpxLoadGenerator:
                         if target.requests_per_second > 0
                         else None
                     ),
-                    active_connections=target.concurrency,
+                    # Nombre REELLEMENT en vol (correctif 2026-11-10) : le semaphore borne a
+                    # GENERATOR_MAX_CONCURRENT_REQUESTS_PER_INTERVAL, jamais le niveau annonce.
+                    active_connections=min(target.concurrency, GENERATOR_MAX_CONCURRENT_REQUESTS_PER_INTERVAL),
                     system=self._system_sampler.sample(),
                 )
 
@@ -125,7 +127,8 @@ class HttpxLoadGenerator:
         target_url: str,
         target: IntervalTarget,
         semaphore: asyncio.Semaphore,
-    ) -> list[RequestOutcome]:
+    ) -> tuple[list[RequestOutcome], float]:
+        """Rend les resultats et la duree REELLE de l'intervalle (au moins SAMPLE_INTERVAL_SECONDS)."""
         request_count = (
             round(target.requests_per_second * SAMPLE_INTERVAL_SECONDS)
             if target.requests_per_second > 0
@@ -148,7 +151,7 @@ class HttpxLoadGenerator:
         if remaining > 0:
             await self._sleep(remaining)
 
-        return outcomes
+        return outcomes, max(elapsed, SAMPLE_INTERVAL_SECONDS)
 
 
 # <-- INFO DEV ---------------------------------------------------------

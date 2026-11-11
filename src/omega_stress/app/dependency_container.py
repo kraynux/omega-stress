@@ -7,7 +7,10 @@ from collections.abc import Callable
 from dataclasses import dataclass, field
 from pathlib import Path
 
+from omega_lib.infrastructure.declaration import build_contact_support
+from omega_lib.infrastructure.declaration.app_version import project_version
 from omega_lib.infrastructure.terminal.detector import SystemTerminalDetector
+from omega_lib.ports.declaration import ContactSupportServices
 
 from omega_stress.core.capability_registry import CapabilityRegistry
 from omega_stress.core.enums import ExportFormat
@@ -37,6 +40,11 @@ from omega_stress.ports.calibration_local_server import CalibrationServer
 from omega_stress.ports.calibration_stage_runner import CalibrationStageRunner
 from omega_stress.ports.report_exporter import ReportExporter
 
+SOFTWARE = "omega-stress"
+"""Nom du logiciel pour la reception des declarations et le site (download/)."""
+PROJECT_ROOT = Path(__file__).resolve().parents[3]
+"""Racine du projet : pyproject.toml, seule source de la version."""
+
 
 @dataclass(frozen=True, slots=True)
 class DependencyContainer:
@@ -65,6 +73,9 @@ class DependencyContainer:
     export_dir: Path = field(default_factory=paths.exports_dir)
     screenshot_dir: Path = field(default_factory=paths.screenshots_dir)
     exporters: dict[ExportFormat, ReportExporter] = field(default_factory=dict)
+    contact_support: ContactSupportServices | None = None
+    """Aide -> Contact et support (omega-lib, D-016, 2026-11-09) : declaration anonyme une seule
+    fois, mises a jour, navigateur. None : bouton masque (conteneur partiel des tests)."""
 
 
 def build_container(*, var_dir: Path | None = None) -> DependencyContainer:
@@ -77,6 +88,9 @@ def build_container(*, var_dir: Path | None = None) -> DependencyContainer:
     apply_schema(connection)
 
     return DependencyContainer(
+        contact_support=build_contact_support(
+            SOFTWARE, project_version(PROJECT_ROOT, SOFTWARE), base
+        ),
         connection=connection,
         profile_repository=SqliteProfileRepository(connection),
         target_repository=SqliteTargetRepository(connection),

@@ -74,3 +74,21 @@ def test_percentiles_use_nearest_rank_on_sorted_latencies():
     assert sample.p50_latency_ms == 50.0
     assert sample.p95_latency_ms == 94.0
     assert sample.p99_latency_ms == 98.0
+
+
+def test_rate_uses_real_interval_duration_when_generator_lags():
+    """Correctif 2026-11-10 : 300 requetes sur un intervalle qui a reellement dure 1,5 s = 200 req/s,
+    pas 300 (avant, le debit observe valait toujours le debit demande)."""
+    outcomes = [RequestOutcome(latency_ms=10.0, success=True) for _ in range(300)]
+
+    sample = parse_interval(0.0, outcomes, duration_seconds=1.5)
+
+    assert sample.observed_rate_per_minute == 300 * 60.0 / 1.5
+
+
+def test_rate_never_divided_by_less_than_the_interval():
+    outcomes = [RequestOutcome(latency_ms=10.0, success=True) for _ in range(5)]
+
+    sample = parse_interval(0.0, outcomes, duration_seconds=0.2)
+
+    assert sample.observed_rate_per_minute == 300.0

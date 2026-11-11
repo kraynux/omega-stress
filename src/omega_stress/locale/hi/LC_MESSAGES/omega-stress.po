@@ -7,7 +7,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Omega-Status: testing\n"
+"X-Omega-Status: validated\n"
 
 #: src/omega_stress/application/commands/export_run_report.py:36 src/omega_stress/application/commands/replay_run.py:61 src/omega_stress/interfaces/tui/screens/run_details.py:63
 msgid "Run {run_id!r} introuvable."
@@ -860,59 +860,59 @@ msgstr "गंतव्य फ़ोल्डर बताएँ।"
 msgid "Rapport écrit : {written_path}"
 msgstr "रिपोर्ट लिखी गई: {written_path}"
 
-#: src/omega_stress/interfaces/tui/screens/help_screen.py:30
+#: src/omega_stress/interfaces/tui/screens/help_screen.py:31
 msgid "Test requêtes / connexions / charge"
 msgstr "अनुरोध / कनेक्शन / लोड परीक्षण"
 
-#: src/omega_stress/interfaces/tui/screens/help_screen.py:31
+#: src/omega_stress/interfaces/tui/screens/help_screen.py:32
 msgid "Trois familles de test encadrées : débit constant, nombre de connexions simultanées, ou montée progressive. Chaque lancement exige une cible (saisie manuelle ou cible épinglée) et une confirmation d'autorisation, sauf cible déjà épinglée-autorisée."
 msgstr "तीन नियंत्रित परीक्षण परिवार: स्थिर थ्रूपुट, एक साथ कनेक्शनों की संख्या, या क्रमिक बढ़ोतरी। हर शुरुआत के लिए एक लक्ष्य (मैन्युअल या पिन किया गया) और अनुमति की पुष्टि चाहिए, जब तक लक्ष्य पहले से पिन और अधिकृत न हो।"
 
-#: src/omega_stress/interfaces/tui/screens/help_screen.py:38
+#: src/omega_stress/interfaces/tui/screens/help_screen.py:39
 msgid "Un profil fige un jeu de paramètres (cible, type de test, intensité, durée, seuils) pour le réutiliser tel quel — créer, puis figer, un profil depuis cet écran."
 msgstr "प्रोफ़ाइल पैरामीटरों का एक समूह (लक्ष्य, परीक्षण प्रकार, तीव्रता, अवधि, सीमाएँ) स्थिर करती है ताकि उसे जस का तस फिर से उपयोग किया जा सके — इस स्क्रीन से प्रोफ़ाइल बनाएँ, फिर स्थिर करें।"
 
-#: src/omega_stress/interfaces/tui/screens/help_screen.py:43
+#: src/omega_stress/interfaces/tui/screens/help_screen.py:44
 msgid "Épingler une adresse dispense de recocher la confirmation d'autorisation à chaque lancement sur cette même cible."
 msgstr "किसी पते को पिन करने से उसी लक्ष्य पर हर शुरुआत में अनुमति की पुष्टि दोबारा चिह्नित नहीं करनी पड़ती।"
 
-#: src/omega_stress/interfaces/tui/screens/help_screen.py:48
+#: src/omega_stress/interfaces/tui/screens/help_screen.py:49
 msgid "Liste tous les runs passés : détail complet, ou relecture (uniquement pour un run lié à un profil figé)."
 msgstr "सभी पिछले रन की सूची: पूर्ण विवरण, या फिर से चलाना (केवल स्थिर प्रोफ़ाइल से जुड़े रन के लिए)।"
 
-#: src/omega_stress/interfaces/tui/screens/help_screen.py:53
+#: src/omega_stress/interfaces/tui/screens/help_screen.py:54
 msgid "Depuis le détail d'un run terminé : JSON (données brutes, réimportables), CSV (analyse tabulaire), ou HTML (rapport lisible avec chronologie complète par intervalle)."
 msgstr "पूरे हुए रन के विवरण से: JSON (कच्चा डेटा, फिर से आयात योग्य), CSV (तालिका विश्लेषण), या HTML (अंतराल के अनुसार पूर्ण समयरेखा वाली पठनीय रिपोर्ट)।"
 
-#: src/omega_stress/interfaces/tui/screens/help_screen.py:58 src/omega_stress/interfaces/tui/screens/help_screen.py:112
+#: src/omega_stress/interfaces/tui/screens/help_screen.py:59 src/omega_stress/interfaces/tui/screens/help_screen.py:119
 msgid "Profils de durée D1-D6 (mode profil)"
 msgstr "अवधि प्रोफ़ाइल D1-D6 (प्रोफ़ाइल मोड)"
 
-#: src/omega_stress/interfaces/tui/screens/help_screen.py:59
+#: src/omega_stress/interfaces/tui/screens/help_screen.py:60
 msgid "En plus de la durée manuelle (1 à 5 min selon le niveau), chaque écran de lancement propose un mode profil : une durée fixe nommée (1 à 120 min) qui limite les niveaux accessibles, avec un niveau supplémentaire débloqué par une confirmation renforcée (texte exact à saisir). Voir le tableau ci-dessous."
 msgstr "मैन्युअल अवधि (स्तर के अनुसार 1 से 5 मिनट) के अलावा, हर शुरुआत स्क्रीन एक प्रोफ़ाइल मोड देती है: एक नामित निश्चित अवधि (1 से 120 मिनट) जो उपलब्ध स्तरों को सीमित करती है, साथ में एक अतिरिक्त स्तर जो सुदृढ़ पुष्टि (टाइप करने के लिए सटीक टेक्स्ट) से खुलता है। नीचे तालिका देखें।"
 
-#: src/omega_stress/interfaces/tui/screens/help_screen.py:65 src/omega_stress/interfaces/tui/screens/home.py:33
+#: src/omega_stress/interfaces/tui/screens/help_screen.py:66 src/omega_stress/interfaces/tui/screens/home.py:33
 msgid "Calibrage"
 msgstr "कैलिब्रेशन"
 
-#: src/omega_stress/interfaces/tui/screens/help_screen.py:66
+#: src/omega_stress/interfaces/tui/screens/help_screen.py:67
 msgid "Mesure la capacité réelle de CETTE machine (pas la cible testée) via un serveur de boucle locale, par paliers de charge croissante. Le résultat (VU_safe/RPS_safe) n'est pas appliqué automatiquement aux tests réels : consultable depuis l'écran Calibrage, et utile comme repère quand le mode sécurité est désactivé (voir ci-dessous)."
 msgstr "स्थानीय लूपबैक सर्वर के ज़रिए, बढ़ते भार के चरणों में, इस मशीन (परीक्षित लक्ष्य नहीं) की वास्तविक क्षमता मापता है। परिणाम (VU_safe/RPS_safe) वास्तविक परीक्षणों पर अपने आप लागू नहीं होता: कैलिब्रेशन स्क्रीन पर देखा जा सकता है, और सुरक्षा मोड बंद होने पर संदर्भ के रूप में उपयोगी है (नीचे देखें)।"
 
-#: src/omega_stress/interfaces/tui/screens/help_screen.py:73 src/omega_stress/infrastructure/exporters/templates/report.html.jinja:69
+#: src/omega_stress/interfaces/tui/screens/help_screen.py:74 src/omega_stress/infrastructure/exporters/templates/report.html.jinja:69
 msgid "Mode sécurité"
 msgstr "सुरक्षा मोड"
 
-#: src/omega_stress/interfaces/tui/screens/help_screen.py:75
+#: src/omega_stress/interfaces/tui/screens/help_screen.py:76
 msgid " Si un calibrage a été effectué sur cette machine, l'écran de lancement compare le niveau choisi à son enveloppe dès que la case est décochée."
 msgstr " यदि इस मशीन पर कैलिब्रेशन किया गया है, तो बॉक्स अचिह्नित होते ही शुरुआत स्क्रीन चुने गए स्तर की तुलना उसके सीमा-क्षेत्र से करती है।"
 
-#: src/omega_stress/interfaces/tui/screens/help_screen.py:98
+#: src/omega_stress/interfaces/tui/screens/help_screen.py:105
 msgid "Repères de charge (valeurs exactes par niveau)"
 msgstr "भार के संदर्भ (स्तर के अनुसार सटीक मान)"
 
-#: src/omega_stress/interfaces/tui/screens/help_screen.py:102
+#: src/omega_stress/interfaces/tui/screens/help_screen.py:109
 #, python-brace-format
 msgid ""
 "[b]Test requêtes[/b] — {value}\n"
