@@ -59,7 +59,7 @@ class SettingsScreen(OmegaScreen):
         current_theme = self.app.theme
         stored_profile_raw = self._container.settings_store.get("render_profile")
         current_profile = RenderProfile(stored_profile_raw) if stored_profile_raw else None
-        with Vertical(classes="omega-panel"):
+        with Vertical(classes="omega-panel omega-settings-panel"):
             yield Static(_("RÉGLAGES"), classes="omega-title")
             yield Static(_("Thème"), classes="omega-subtitle")
             yield ThemeBadge(current_theme, id="theme-badge")

@@ -2,14 +2,22 @@
 """Agregation des resultats de requetes brutes d'un intervalle en IntervalSample."""
 from __future__ import annotations
 
+from omega_stress.domain.load.policies import SAMPLE_INTERVAL_SECONDS
 from omega_stress.domain.runs.models import ErrorBreakdown, IntervalSample
 from omega_stress.infrastructure.runner.async_worker import RequestOutcome
 
 
-def parse_interval(at_second: float, outcomes: list[RequestOutcome]) -> IntervalSample:
+def parse_interval(
+    at_second: float, outcomes: list[RequestOutcome], duration_seconds: float = SAMPLE_INTERVAL_SECONDS
+) -> IntervalSample:
     """Agrege les resultats bruts d'un intervalle en un IntervalSample.
     Un intervalle sans requete (Test connexions au repos, ou palier de
-    rampe a 0) produit un echantillon a zero, jamais une erreur."""
+    rampe a 0) produit un echantillon a zero, jamais une erreur.
+
+    duration_seconds = duree REELLE de l'intervalle (correctif 2026-11-10) : un intervalle logique
+    d'1 s dure plus longtemps quand le generateur ne suit pas ; le debit observe est divise par cette
+    duree, sinon il valait toujours le debit demande et le decrochage restait invisible.
+    `at_second` reste le temps logique du plan (progression voulue)."""
     if not outcomes:
         return IntervalSample(
             at_second=at_second,
@@ -27,7 +35,7 @@ def parse_interval(at_second: float, outcomes: list[RequestOutcome]) -> Interval
 
     return IntervalSample(
         at_second=at_second,
-        observed_rate_per_minute=len(outcomes) * 60.0,
+        observed_rate_per_minute=len(outcomes) * 60.0 / max(duration_seconds, SAMPLE_INTERVAL_SECONDS),
         p50_latency_ms=_percentile(latencies, 0.50),
         p95_latency_ms=_percentile(latencies, 0.95),
         p99_latency_ms=_percentile(latencies, 0.99),

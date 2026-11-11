@@ -77,7 +77,8 @@ def test_connection_row_target_matches_concurrent_connections():
         r for r in rows if r.test_type == "Test connexions" and r.level == "Maximum"
     )
     assert maximum_connection_row.target == "5000 connexions"
-    assert maximum_connection_row.burst == "5000 en parallèle, chaque seconde"
+    # Vrai nombre en vol, borne par le generateur (correctif 2026-11-10), pas le niveau annonce.
+    assert maximum_connection_row.burst == "200 en parallèle, chaque seconde"
 
 
 def test_family_notes_are_distinct_per_family():

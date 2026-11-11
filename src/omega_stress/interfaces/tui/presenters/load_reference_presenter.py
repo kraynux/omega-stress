@@ -8,6 +8,7 @@ from dataclasses import dataclass
 from omega_stress.core.enums import DurationPresetId, IntensityLevel, TestFamily
 from omega_stress.domain.load.duration_presets import DURATION_PRESETS
 from omega_stress.domain.load.policies import (
+    GENERATOR_MAX_CONCURRENT_REQUESTS_PER_INTERVAL,
     allowed_durations_minutes,
     is_precheck_mandatory,
     is_precheck_optional,
@@ -114,8 +115,12 @@ def load_reference_rows() -> tuple[LoadReferenceRow, ...]:
                 target=_("{concurrent_connections} connexions").format(
                     concurrent_connections=preset.concurrent_connections
                 ),
+                # Vrai nombre en vol (correctif 2026-11-10) : borne par le generateur
+                # (GENERATOR_MAX_CONCURRENT_REQUESTS_PER_INTERVAL), jamais le niveau annonce.
                 burst=_("{concurrent_connections} en parallèle, chaque seconde").format(
-                    concurrent_connections=preset.concurrent_connections
+                    concurrent_connections=min(
+                        preset.concurrent_connections, GENERATOR_MAX_CONCURRENT_REQUESTS_PER_INTERVAL
+                    )
                 ),
                 precheck=_precheck_label(level),
                 durations=_duration_label(level),

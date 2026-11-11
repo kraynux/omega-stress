@@ -7,7 +7,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Omega-Status: testing\n"
+"X-Omega-Status: validated\n"
 
 #: src/omega_stress/application/commands/export_run_report.py:36 src/omega_stress/application/commands/replay_run.py:61 src/omega_stress/interfaces/tui/screens/run_details.py:63
 msgid "Run {run_id!r} introuvable."
@@ -860,59 +860,59 @@ msgstr "대상 폴더를 지정하세요."
 msgid "Rapport écrit : {written_path}"
 msgstr "보고서 기록됨: {written_path}"
 
-#: src/omega_stress/interfaces/tui/screens/help_screen.py:30
+#: src/omega_stress/interfaces/tui/screens/help_screen.py:31
 msgid "Test requêtes / connexions / charge"
 msgstr "요청 / 연결 / 부하 테스트"
 
-#: src/omega_stress/interfaces/tui/screens/help_screen.py:31
+#: src/omega_stress/interfaces/tui/screens/help_screen.py:32
 msgid "Trois familles de test encadrées : débit constant, nombre de connexions simultanées, ou montée progressive. Chaque lancement exige une cible (saisie manuelle ou cible épinglée) et une confirmation d'autorisation, sauf cible déjà épinglée-autorisée."
 msgstr "통제된 세 가지 테스트 계열: 일정한 처리량, 동시 연결 수, 또는 점진적 증가. 실행할 때마다 대상(직접 입력 또는 고정된 대상)과 권한 확인이 필요하며, 이미 고정되고 허가된 대상은 예외입니다."
 
-#: src/omega_stress/interfaces/tui/screens/help_screen.py:38
+#: src/omega_stress/interfaces/tui/screens/help_screen.py:39
 msgid "Un profil fige un jeu de paramètres (cible, type de test, intensité, durée, seuils) pour le réutiliser tel quel — créer, puis figer, un profil depuis cet écran."
 msgstr "프로필은 매개변수 묶음(대상, 테스트 유형, 강도, 시간, 임계값)을 고정해 그대로 재사용하게 해 줍니다 — 이 화면에서 프로필을 만든 뒤 고정하세요."
 
-#: src/omega_stress/interfaces/tui/screens/help_screen.py:43
+#: src/omega_stress/interfaces/tui/screens/help_screen.py:44
 msgid "Épingler une adresse dispense de recocher la confirmation d'autorisation à chaque lancement sur cette même cible."
 msgstr "주소를 고정하면 같은 대상에서 실행할 때마다 권한 확인을 다시 체크할 필요가 없습니다."
 
-#: src/omega_stress/interfaces/tui/screens/help_screen.py:48
+#: src/omega_stress/interfaces/tui/screens/help_screen.py:49
 msgid "Liste tous les runs passés : détail complet, ou relecture (uniquement pour un run lié à un profil figé)."
 msgstr "지난 모든 실행 목록: 전체 상세, 또는 다시 실행(고정 프로필에 연결된 실행만)."
 
-#: src/omega_stress/interfaces/tui/screens/help_screen.py:53
+#: src/omega_stress/interfaces/tui/screens/help_screen.py:54
 msgid "Depuis le détail d'un run terminé : JSON (données brutes, réimportables), CSV (analyse tabulaire), ou HTML (rapport lisible avec chronologie complète par intervalle)."
 msgstr "끝난 실행의 상세에서: JSON(원시 데이터, 다시 가져오기 가능), CSV(표 분석), HTML(구간별 전체 타임라인이 포함된 읽기 쉬운 보고서)."
 
-#: src/omega_stress/interfaces/tui/screens/help_screen.py:58 src/omega_stress/interfaces/tui/screens/help_screen.py:112
+#: src/omega_stress/interfaces/tui/screens/help_screen.py:59 src/omega_stress/interfaces/tui/screens/help_screen.py:119
 msgid "Profils de durée D1-D6 (mode profil)"
 msgstr "시간 프로필 D1-D6 (프로필 모드)"
 
-#: src/omega_stress/interfaces/tui/screens/help_screen.py:59
+#: src/omega_stress/interfaces/tui/screens/help_screen.py:60
 msgid "En plus de la durée manuelle (1 à 5 min selon le niveau), chaque écran de lancement propose un mode profil : une durée fixe nommée (1 à 120 min) qui limite les niveaux accessibles, avec un niveau supplémentaire débloqué par une confirmation renforcée (texte exact à saisir). Voir le tableau ci-dessous."
 msgstr "수동 시간(레벨에 따라 1~5분) 외에도 각 실행 화면에는 프로필 모드가 있습니다: 이름이 붙은 고정 시간(1~120분)으로 사용 가능한 레벨을 제한하며, 강화 확인(정확히 입력할 문구)으로 추가 레벨이 열립니다. 아래 표를 참고하세요."
 
-#: src/omega_stress/interfaces/tui/screens/help_screen.py:65 src/omega_stress/interfaces/tui/screens/home.py:33
+#: src/omega_stress/interfaces/tui/screens/help_screen.py:66 src/omega_stress/interfaces/tui/screens/home.py:33
 msgid "Calibrage"
 msgstr "보정"
 
-#: src/omega_stress/interfaces/tui/screens/help_screen.py:66
+#: src/omega_stress/interfaces/tui/screens/help_screen.py:67
 msgid "Mesure la capacité réelle de CETTE machine (pas la cible testée) via un serveur de boucle locale, par paliers de charge croissante. Le résultat (VU_safe/RPS_safe) n'est pas appliqué automatiquement aux tests réels : consultable depuis l'écran Calibrage, et utile comme repère quand le mode sécurité est désactivé (voir ci-dessous)."
 msgstr "로컬 루프백 서버를 통해 단계적으로 부하를 높여 이 머신(테스트 대상이 아님)의 실제 성능을 측정합니다. 결과(VU_safe/RPS_safe)는 실제 테스트에 자동 적용되지 않습니다: 보정 화면에서 볼 수 있으며, 안전 모드를 끈 경우 기준점으로 유용합니다(아래 참고)."
 
-#: src/omega_stress/interfaces/tui/screens/help_screen.py:73 src/omega_stress/infrastructure/exporters/templates/report.html.jinja:69
+#: src/omega_stress/interfaces/tui/screens/help_screen.py:74 src/omega_stress/infrastructure/exporters/templates/report.html.jinja:69
 msgid "Mode sécurité"
 msgstr "안전 모드"
 
-#: src/omega_stress/interfaces/tui/screens/help_screen.py:75
+#: src/omega_stress/interfaces/tui/screens/help_screen.py:76
 msgid " Si un calibrage a été effectué sur cette machine, l'écran de lancement compare le niveau choisi à son enveloppe dès que la case est décochée."
 msgstr " 이 머신에서 보정을 했다면, 체크를 해제하는 즉시 실행 화면이 선택한 레벨을 그 한계 범위와 비교합니다."
 
-#: src/omega_stress/interfaces/tui/screens/help_screen.py:98
+#: src/omega_stress/interfaces/tui/screens/help_screen.py:105
 msgid "Repères de charge (valeurs exactes par niveau)"
 msgstr "부하 기준점 (레벨별 정확한 값)"
 
-#: src/omega_stress/interfaces/tui/screens/help_screen.py:102
+#: src/omega_stress/interfaces/tui/screens/help_screen.py:109
 #, python-brace-format
 msgid ""
 "[b]Test requêtes[/b] — {value}\n"

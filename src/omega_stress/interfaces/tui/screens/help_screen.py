@@ -12,6 +12,7 @@ from omega_stress.interfaces.tui.presenters.load_reference_presenter import (
     load_reference_family_note,
 )
 from omega_stress.interfaces.tui.screens._base import OmegaScreen
+from omega_stress.interfaces.tui.screens.contact_support import contact_support_screen
 from omega_stress.interfaces.tui.widgets.duration_preset_table import DurationPresetTable
 from omega_stress.interfaces.tui.widgets.load_reference_table import LoadReferenceTable
 from omega_stress.shared.i18n import _
@@ -83,6 +84,12 @@ class HelpScreen(OmegaScreen):
     `a`, voir app.py::action_help()) ou depuis le bouton "Aide" de
     home.py."""
 
+    def __init__(self, *, container: object | None = None) -> None:
+        super().__init__()
+        # Aide -> Contact et support (D-016, 2026-11-09) : services prepares par le conteneur de
+        # l'outil (app/) ; absents (bouton masque) si l'aide est ouverte sans conteneur.
+        self._contact_support = getattr(container, "contact_support", None)
+
     def compose(self) -> ComposeResult:
         yield Header()
         with Vertical(classes="omega-panel"):
@@ -112,13 +119,21 @@ class HelpScreen(OmegaScreen):
             yield Static(_("Profils de durée D1-D6 (mode profil)"), classes="omega-subtitle")
             yield DurationPresetTable(id="duration-preset-reference")
             yield Static("")
-            with Horizontal(classes="omega-actions"), Container(classes="omega-btn-frame"):
-                yield Button(_("Retour"), id="back")
+            with Horizontal(classes="omega-actions"):
+                if self._contact_support is not None:
+                    with Container(classes="omega-btn-frame"):
+                        yield Button(
+                            _("Contact et support"), id="contact-support", variant="primary"
+                        )
+                with Container(classes="omega-btn-frame"):
+                    yield Button(_("Retour"), id="back")
         yield Footer()
 
     def on_button_pressed(self, event: Button.Pressed) -> None:
         if event.button.id == "back":
             self.dismiss()
+        elif event.button.id == "contact-support" and self._contact_support is not None:
+            self.app.push_screen(contact_support_screen(self._contact_support))
 
 
 # <-- INFO DEV ---------------------------------------------------------
