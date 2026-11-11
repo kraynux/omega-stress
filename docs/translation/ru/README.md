@@ -1,6 +1,6 @@
 <!-- Copyright (c) 2026 kraynux - kraynux@proton.me - Лицензия MIT (см. файл LICENSE) -->
 <div align="center">
-  <img src="../../assets/omega-stress.png" alt="Omega-Stress" width="384">
+  <img src="https://raw.githubusercontent.com/kraynux/kraynux/refs/heads/main/docs/assets/omega-stress.png" alt="Omega-Stress" width="512">
 </div>
 
 # 🗲 OMEGA-STRESS
