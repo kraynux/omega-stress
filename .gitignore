@@ -9,18 +9,13 @@ __pycache__/
 .import_linter_cache/
 *.egg-info/
 
-# État runtime généré localement (recréé automatiquement au démarrage)
-var/db/*
-var/exports/*
-var/screenshots/*
-var/calibrations/*
-var/settings.json
-var/*.log
-var/*.jsonl
-!var/db/.gitkeep
-!var/exports/.gitkeep
-!var/screenshots/.gitkeep
-!var/calibrations/.gitkeep
+# État runtime généré localement (recréé automatiquement au démarrage).
+# TOUT var/ est ignoré (clé du coordinateur, traces SSH, jeton, déclaration, journaux, base…) ;
+# seuls les .gitkeep gardent les dossiers. Correctif du 2026-11-22 (var/distributed/ avait été poussé).
+var/**
+!var/
+!var/*/
+!var/*/.gitkeep
 
 # Archives de release (générées, pas du code source)
 
