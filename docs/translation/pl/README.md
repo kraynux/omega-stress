@@ -30,10 +30,12 @@ Projekt jest zbudowany zgodnie z zasadami **Clean Architecture**, z wyraźnym po
 ## Spis treści
 
 <p align="center">
-  <img src="https://raw.githubusercontent.com/kraynux/kraynux/refs/heads/main/docs/translation/pl/omega-stress/A.png" width="24%" />
-  <img src="https://raw.githubusercontent.com/kraynux/kraynux/refs/heads/main/docs/translation/pl/omega-stress/B.png" width="24%" />
-  <img src="https://raw.githubusercontent.com/kraynux/kraynux/refs/heads/main/docs/translation/pl/omega-stress/C.png" width="24%" />
-  <img src="https://raw.githubusercontent.com/kraynux/kraynux/refs/heads/main/docs/translation/pl/omega-stress/D.png" width="24%" />
+  <img src="https://raw.githubusercontent.com/kraynux/kraynux/refs/heads/main/docs/translation/pl/omega-stress/A.png" width="32%" />
+  <img src="https://raw.githubusercontent.com/kraynux/kraynux/refs/heads/main/docs/translation/pl/omega-stress/B.png" width="32%" />
+  <img src="https://raw.githubusercontent.com/kraynux/kraynux/refs/heads/main/docs/translation/pl/omega-stress/C.png" width="32%" />
+  <img src="https://raw.githubusercontent.com/kraynux/kraynux/refs/heads/main/docs/translation/pl/omega-stress/D.png" width="32%" />
+  <img src="https://raw.githubusercontent.com/kraynux/kraynux/refs/heads/main/docs/translation/pl/omega-stress/E.png" width="32%" />
+  <img src="https://raw.githubusercontent.com/kraynux/kraynux/refs/heads/main/docs/translation/pl/omega-stress/F.png" width="32%" />
 </p>
 
 - [Prezentacja](#prezentacja)
@@ -45,6 +47,7 @@ Projekt jest zbudowany zgodnie z zasadami **Clean Architecture**, z wyraźnym po
 - [Profile czasu trwania D1-D6](#profile-czasu-trwania-d1-d6-tryb-profilu)
 - [Tryb bezpieczeństwa](#tryb-bezpieczeństwa)
 - [Kalibracja lokalna](#kalibracja-lokalna)
+- [Obciążenie rozproszone (sieć lokalna)](#obciążenie-rozproszone-sieć-lokalna)
 - [Konfiguracja](#konfiguracja)
 - [Testy i jakość](#testy-i-jakość)
 - [Odinstalowanie](#odinstalowanie)
@@ -72,9 +75,9 @@ Projekt jest zbudowany zgodnie z zasadami **Clean Architecture**, z wyraźnym po
 ## Czego projekt nie robi
 
 - Nie zastępuje narzędzia do skanowania sieci — słownictwo i postawa produktu to świadomie „test obciążenia”, nigdy „skanowanie”.
-- Nie implementuje żadnego zewnętrznego silnika obciążenia (k6 itp.) — natywne generowanie `httpx`/asyncio.
+- Nie implementuje żadnego zewnętrznego silnika obciążenia (k6 itp.) — natywne generowanie asyncio.
 - Nie uruchamia żadnego testu bez granic i bez potwierdzenia autoryzacji.
-- Nie jest narzędziem do rozproszonego obciążenia: generowanie działa na jednej maszynie, w jednym procesie — zobacz [Znane ograniczenia](#znane-ograniczenia).
+- Nie wiąże samodzielnie maszyn ze sobą: to zadanie omega-connect, który przygotowuje obciążenie rozproszone raz na zawsze — zobacz [Obciążenie rozproszone](#obciążenie-rozproszone-sieć-lokalna).
 
 ## Funkcje
 
@@ -105,7 +108,7 @@ src/omega_stress/
 ├── domain/           Czysta logika biznesowa: obciążenie, profile, uruchomienia, cele, motywy, terminal — bez operacji wejścia/wyjścia
 ├── application/      Orkiestracja: commands (akcje), queries (odczyty), potok wykonania (guards/hooks)
 ├── ports/            Kontrakty Protocol/ABC oczekiwane przez adaptery (repozytoria, eksportery, generator obciążenia...)
-├── infrastructure/   Konkretne implementacje: SQLite, eksportery JSON/CSV/HTML, generator httpx/asyncio, wykrywanie terminala, sonda systemowa
+├── infrastructure/   Konkretne implementacje: SQLite, eksportery JSON/CSV/HTML, generator asyncio, wykrywanie terminala, sonda systemowa
 ├── interfaces/       Dwa niezależne adaptery prezentacji: TUI (Textual) i CLI (argparse)
 ├── plugins/          Zarezerwowany punkt rozszerzeń (ładowanie wtyczek) — szkielet obecny, niezaimplementowany w V1
 └── shared/           Wspólne narzędzia bez zależności biznesowych (wstrzykiwalny zegar, generowanie identyfikatorów)
@@ -166,6 +169,7 @@ cd ~/omega-stress && chmod +x install.sh && ./install.sh
 2. Instaluje zależności (`pip install -e .`; `pyproject.toml` pozostaje jedynym źródłem prawdy).
 3. Nadaje plikom `omega-stress.sh` i `install.sh` prawo wykonywania.
 4. Dodaje alias `stress` do `~/.bashrc` i `~/.zshrc` (bez duplikatu, jeśli już istnieje).
+5. Tworzy kartę identyfikacyjną `var/omega-jeton.json` (`./omega-stress.sh synchro jeton`), którą odczytuje omega-connect, aby połączyć narzędzia pakietu; zapisywana na Twoim koncie, nigdy nie trafia do archiwum.
 
 ## Instalacja (deweloperska)
 
@@ -266,11 +270,11 @@ Dodaj `--json` do `history`/`export`/`calibrate`, aby uzyskać wyjście czytelne
 | Test żądań | Słaby | Przepustowość | 250 żąd./min (≈4,2 żąd./s) | Nie | 1 do 5 min |
 | Test żądań | Niski | Przepustowość | 500 żąd./min (≈8,3 żąd./s) | Nie | 1 do 5 min |
 | Test żądań | Średni | Przepustowość | 1000 żąd./min (≈16,7 żąd./s) | Nie | 1 do 5 min |
-| Test żądań | Wysoki | Przepustowość | 2000 żąd./min (≈33,3 żąd./s) | Nie | 1 do 5 min |
+| Test żądań | Wysoki | Przepustowość | 3000 żąd./min (≈50 żąd./s) | Nie | 1 do 5 min |
 | Test żądań | Mocny | Przepustowość | 6000 żąd./min (≈100 żąd./s) | Opcjonalny | 1 do 3 min (5 po zaliczonym pre-checku) |
-| Test żądań | Agresywny | Przepustowość | 10 000 żąd./min (≈167 żąd./s) | Opcjonalny | 1 do 3 min (5 po zaliczonym pre-checku) |
-| Test żądań | Gwałtowny | Przepustowość | 15 000 żąd./min (≈250 żąd./s) | **Obowiązkowy** | Tylko 1 do 3 min |
-| Test żądań | Maksimum | Przepustowość | 20 000 żąd./min (≈333 żąd./s) | **Obowiązkowy** | Tylko 1 do 3 min |
+| Test żądań | Agresywny | Przepustowość | 12 000 żąd./min (≈200 żąd./s) | Opcjonalny | 1 do 3 min (5 po zaliczonym pre-checku) |
+| Test żądań | Gwałtowny | Przepustowość | 25 000 żąd./min (≈417 żąd./s) | **Obowiązkowy** | Tylko 1 do 3 min |
+| Test żądań | Maksimum | Przepustowość | 50 000 żąd./min (≈833 żąd./s) | **Obowiązkowy** | Tylko 1 do 3 min |
 | Test połączeń | Słaby | Połączenia jednoczesne | 25 połączeń | Nie | 1 do 5 min |
 | Test połączeń | Niski | Połączenia jednoczesne | 50 połączeń | Nie | 1 do 5 min |
 | Test połączeń | Średni | Połączenia jednoczesne | 100 połączeń | Nie | 1 do 5 min |
@@ -282,11 +286,13 @@ Dodaj `--json` do `history`/`export`/`calibrate`, aby uzyskać wyjście czytelne
 | Test obciążenia (stopniowy wzrost) | Słaby | Przepustowość, narastająca | szczyt 250 żąd./min | Nie | 1 do 5 min |
 | Test obciążenia (stopniowy wzrost) | Niski | Przepustowość, narastająca | szczyt 500 żąd./min | Nie | 1 do 5 min |
 | Test obciążenia (stopniowy wzrost) | Średni | Przepustowość, narastająca | szczyt 1000 żąd./min | Nie | 1 do 5 min |
-| Test obciążenia (stopniowy wzrost) | Wysoki | Przepustowość, narastająca | szczyt 2000 żąd./min | Nie | 1 do 5 min |
+| Test obciążenia (stopniowy wzrost) | Wysoki | Przepustowość, narastająca | szczyt 3000 żąd./min | Nie | 1 do 5 min |
 | Test obciążenia (stopniowy wzrost) | Mocny | Przepustowość, narastająca | szczyt 6000 żąd./min | Opcjonalny | 1 do 3 min (5 po zaliczonym pre-checku) |
-| Test obciążenia (stopniowy wzrost) | Agresywny | Przepustowość, narastająca | szczyt 10 000 żąd./min | Opcjonalny | 1 do 3 min (5 po zaliczonym pre-checku) |
-| Test obciążenia (stopniowy wzrost) | Gwałtowny | Przepustowość, narastająca | szczyt 15 000 żąd./min | **Obowiązkowy** | Tylko 1 do 3 min |
-| Test obciążenia (stopniowy wzrost) | Maksimum | Przepustowość, narastająca | szczyt 20 000 żąd./min | **Obowiązkowy** | Tylko 1 do 3 min |
+| Test obciążenia (stopniowy wzrost) | Agresywny | Przepustowość, narastająca | szczyt 12 000 żąd./min | Opcjonalny | 1 do 3 min (5 po zaliczonym pre-checku) |
+| Test obciążenia (stopniowy wzrost) | Gwałtowny | Przepustowość, narastająca | szczyt 25 000 żąd./min | **Obowiązkowy** | Tylko 1 do 3 min |
+| Test obciążenia (stopniowy wzrost) | Maksimum | Przepustowość, narastająca | szczyt 50 000 żąd./min | **Obowiązkowy** | Tylko 1 do 3 min |
+
+Test połączeń: N połączeń otwartych i **utrzymywanych** (keep-alive), każde wysyła mniej więcej jedno żądanie co 10 s, z przesunięciem. Test żądań i test obciążenia: żądania wychodzą w stałym rytmie, bez czekania na odpowiedzi (pętla otwarta); zwalniający cel widać w opóźnieniach, zamiast go ukrywać. Jeśli to sama maszyna przestaje nadążać, informuje o tym powiadomienie „lokalne wąskie gardło”.
 
 - **Pre-check Nie**: test startuje od razu, bez warunku dotyczącego czasu.
 - **Pre-check Opcjonalny** (Mocny/Agresywny): test startuje bez pre-checku (czasy 1-3 min), ale zaliczony pre-check odblokowuje też czasy 4-5 min.
@@ -379,7 +385,7 @@ Dostępne także w CLI przez `--unsafe` (domyślnie nieobecne = tryb bezpieczeń
 
 ## Kalibracja lokalna
 
-Mierzy rzeczywistą wydajność **tej maszyny** (nigdy testowanego celu): lokalny serwer pętli zwrotnej wbudowany w Omega-Stress otrzymuje rosnące stopniowo obciążenie, generowane przez ten sam silnik `httpx`/asyncio co prawdziwe testy.
+Mierzy rzeczywistą wydajność **tej maszyny** (nigdy testowanego celu): lokalny serwer pętli zwrotnej wbudowany w Omega-Stress otrzymuje rosnące stopniowo obciążenie, generowane przez ten sam silnik asyncio co prawdziwe testy.
 
 - 7 stopni, od spoczynku (szum tła systemu) do 2000 połączeń / 12 000 żąd./s, każdy oceniany względem progów kondycji (CPU generatora I ogólne, dostępna pamięć, odsetek błędów, osiągnięta przepustowość) — ostatnie 2 stopnie są warunkowe i pomijane, jeśli poprzedni stopień nie był w dobrej kondycji.
 - Wyznacza bezpieczną obwiednię (`VU_safe` / `RPS_safe`) na podstawie ostatniego zdrowego stopnia, z marginesem bezpieczeństwa (~30 % rezerwy) i poziomem pewności rosnącym wraz z osiągniętą głębokością.
@@ -392,6 +398,15 @@ Dostępna z ekranu **Kalibracja** w TUI (przycisk „Uruchom kalibrację”, pos
 omega-stress calibrate run     # uruchamia nową kalibrację
 omega-stress calibrate show    # pokazuje ostatnią znaną kalibrację, bez uruchamiania nowej
 ```
+
+## Obciążenie rozproszone (sieć lokalna)
+
+Jedna maszyna już nie wystarcza? Inne maszyny z zainstalowanym omega-stress mogą obciążać cel razem z twoją, która steruje i mierzy. Nic do wpisywania: wszystko robi się z ekranów.
+
+- **Powiąż raz, w omega-connect** (Synchronizacja → Obciążenie rozproszone): zaznacz pomagające maszyny, wybierz ich zgodę, jeden przycisk. omega-connect przesyła wszystko przez SSH (nic do przepisywania) i otwiera zaporę twojej maszyny tylko dla portu omega-stress, z jednym hasłem.
+- **Decyduje właściciel każdej pomagającej maszyny**: « pytać przy każdym nowym celu » lub « akceptować wszystko od tej maszyny sterującej », maksymalna szybkość i czas; maszyna odrzuca resztę, o cokolwiek zostanie poproszona.
+- **Uruchamiaj z omega-stress**: menu « Obciążenie rozproszone » wybiera uczestniczące maszyny i opisuje zaporę (kto ją otworzył, jakie reguły); na każdym ekranie testu pole « Tryb obciążenia rozproszonego » sprawia, że obciążają cel razem z twoją maszyną, która obciąża też tylko po zaznaczeniu. omega-stress sam uruchamia maszyny i zatrzymuje je na końcu.
+- Jedna krzywa i dokładne opóźnienia dla całości; szczegóły uruchomienia zachowują bilans każdej maszyny (wysłane i zakończone żądania, błędy). Wiersz poleceń (`--machines`) pozostaje dostępny.
 
 ## Konfiguracja
 
@@ -429,7 +444,7 @@ sed -i '/alias stress=/d' ~/.bashrc ~/.zshrc
 
 ## Znane ograniczenia
 
-- Generowanie obciążenia **w obrębie jednego procesu**, na jednej maszynie (`httpx`/asyncio): to nie jest narzędzie rozproszone — rzeczywiste granice (zobacz [Wartości testów](#wartości-testów)) są wyraźnie skromniejsze niż w usłudze SaaS do testów obciążenia (loader.io itp.), celowo, w ramach kontrolowanej postawy produktu. Na skromnym sprzęcie poziomy Agresywny/Gwałtowny/Maksimum w Teście połączeń mogą potrzebować znacznie więcej czasu rzeczywistego niż wybrany czas trwania, aby wysłać całe zamierzone obciążenie — przepustowość ogranicza wtedy wydajność **tej maszyny**, a nie celu; użyj [Kalibracji lokalnej](#kalibracja-lokalna), aby poznać rozsądne wartości dla swojego sprzętu.
+- Obciążenie rozproszone tylko w **sieci lokalnej** (lub w sieci prywatnej typu VPN): jeszcze bez przechodzenia przez internet bez sieci prywatnej. Ile utrzyma maszyna, zależy od jej procesora (pomiar z 21.11.2026 na lokalnym celu: około 5 000 żąd./s na 4 rdzeniach, znacznie powyżej najwyższego poziomu, zob. [Wartości testów](#wartości-testów)); [Kalibracji lokalnej](#kalibracja-lokalna) mierzy, ile utrzyma Twoja, a powiadomienie „lokalne wąskie gardło” informuje, gdy przestaje nadążać.
 - Automatyczne wykrywanie rodziny terminala opiera się na zmiennych środowiskowych: xfce4-terminal nie ma dotąd żadnego znanego niezawodnego znacznika (zobacz [Obsługiwane terminale](#obsługiwane-terminale)).
 - `plugins/` to punkt rozszerzeń przewidziany w architekturze (ładowanie wtyczek wbudowanych/zewnętrznych), niezaimplementowany w V1: szkielet istnieje, nie jest dostarczana żadna wtyczka.
 - `var/` jest względny wobec folderu projektu (nie XDG): pomyślany do lokalnego użytku przez jednego użytkownika, a nie do współdzielenia przez wielu użytkowników tej samej maszyny.

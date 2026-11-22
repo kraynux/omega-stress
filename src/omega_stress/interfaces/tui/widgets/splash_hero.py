@@ -11,6 +11,8 @@ from omega_lib.terminal.models import RenderProfile
 from textual import events
 from textual.widgets import Static
 
+from omega_stress.core.constants import OMEGA_STRESS_VERSION
+
 _FONT_TOKEN = "$foreground"
 """Jeton de theme resolu par le moteur de markup de Content (Textual 8.x) :
 garantit un contraste clair dans les 10 themes du catalogue, meme
@@ -25,11 +27,15 @@ git)."""
 # Ne couvre QUE les 14 premieres lignes (cadre titre + cadre OMEGA-STRESS) :
 # la 15e (accroche "CHARGES | ...") est positionnee separement plus bas,
 # voir son propre commentaire.
+_VERSION_ROW = f"▓▒░v{OMEGA_STRESS_VERSION}░▒▓"
+"""Version sous le cadre « LINUX SERVER TEST » (colonnes 33 a 58, centre 46) : lue dans
+core/constants.py (2026-11-21 ; « v1.5 » etait ecrit en dur), centree quelle que soit sa longueur."""
+
 _SILHOUETTE_ROWS_HEAD: tuple[tuple[int, str, int], ...] = (
     (18, "+-", 33),
     (16, "+%-", 33),
     (12, ".=#%#-", 33),
-    (9, ".+%%%#:", 40),
+    (9, ".+%%%#:", 46 - len(_VERSION_ROW) // 2),
     (7, ".+%%%%*:", 25),
     (5, ":*%%%%%*=======:", 25),
     (2, ":*#%%%%%%%%%%%%%+.", 25),
@@ -46,7 +52,7 @@ _FRAME_BOX_HEAD = (
     "┌────────────────────────┐",
     "│    LINUX SERVER TEST   │",
     "└────────────────────────┘",
-    "▓▒░v1.5░▒▓",
+    _VERSION_ROW,
     "┌─────────────────────────────────────────┐",
     "│ ┌╦═══╦┐ ┌╦═╦═╦┐ ┌╦═══╦┐ ┌╦═══╦┐ ┌╦═══╦┐ │",
     "│ │║   ║│ │║ ║ ║│ ├╬══    │║  ═╦┐ ├╬═══╬┤ │",

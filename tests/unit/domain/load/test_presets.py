@@ -27,11 +27,11 @@ def test_every_intensity_level_has_a_ramp_preset(level):
         (IntensityLevel.FAIBLE, 250, 25),
         (IntensityLevel.BAS, 500, 50),
         (IntensityLevel.MOYEN, 1000, 100),
-        (IntensityLevel.HAUT, 2000, 200),
+        (IntensityLevel.HAUT, 3000, 200),
         (IntensityLevel.PUISSANT, 6000, 1000),
-        (IntensityLevel.AGRESSIF, 10000, 2000),
-        (IntensityLevel.VIOLENT, 15000, 3500),
-        (IntensityLevel.MAXIMUM, 20000, 5000),
+        (IntensityLevel.AGRESSIF, 12000, 2000),
+        (IntensityLevel.VIOLENT, 25000, 3500),
+        (IntensityLevel.MAXIMUM, 50000, 5000),
     ],
 )
 def test_fixed_rate_values_match_product_spec(level, requests_per_minute, connections):

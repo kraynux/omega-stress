@@ -28,15 +28,20 @@ class FixedRatePreset:
     concurrent_connections: int
 
 
+# Plafonds req/min Haut 3 000, Agressif 12 000, Violent 25 000, Maximum 50 000 : decision de
+# l'auteur du
+# 2026-11-21 (STRESS/ETUDE_VERIFICATION_CODE_CHARGE_DISTRIBUEE.md §9) ; Violent/Maximum visent le
+# mode distribue,
+# une machine seule va ou elle peut et l'ecran le dit.
 FIXED_RATE_PRESETS: dict[IntensityLevel, FixedRatePreset] = {
     IntensityLevel.FAIBLE: FixedRatePreset(IntensityLevel.FAIBLE, 250, 25),
     IntensityLevel.BAS: FixedRatePreset(IntensityLevel.BAS, 500, 50),
     IntensityLevel.MOYEN: FixedRatePreset(IntensityLevel.MOYEN, 1000, 100),
-    IntensityLevel.HAUT: FixedRatePreset(IntensityLevel.HAUT, 2000, 200),
+    IntensityLevel.HAUT: FixedRatePreset(IntensityLevel.HAUT, 3000, 200),
     IntensityLevel.PUISSANT: FixedRatePreset(IntensityLevel.PUISSANT, 6000, 1000),
-    IntensityLevel.AGRESSIF: FixedRatePreset(IntensityLevel.AGRESSIF, 10000, 2000),
-    IntensityLevel.VIOLENT: FixedRatePreset(IntensityLevel.VIOLENT, 15000, 3500),
-    IntensityLevel.MAXIMUM: FixedRatePreset(IntensityLevel.MAXIMUM, 20000, 5000),
+    IntensityLevel.AGRESSIF: FixedRatePreset(IntensityLevel.AGRESSIF, 12000, 2000),
+    IntensityLevel.VIOLENT: FixedRatePreset(IntensityLevel.VIOLENT, 25000, 3500),
+    IntensityLevel.MAXIMUM: FixedRatePreset(IntensityLevel.MAXIMUM, 50000, 5000),
 }
 
 
@@ -85,7 +90,7 @@ RAMP_PRESETS: dict[IntensityLevel, RampPreset] = {
         ramp_up_minutes=2,
         plateau_minutes_min=1,
         plateau_minutes_max=3,
-        peak_requests_per_minute=2000,
+        peak_requests_per_minute=3000,
         peak_connections=200,
     ),
     IntensityLevel.PUISSANT: RampPreset(
@@ -101,7 +106,7 @@ RAMP_PRESETS: dict[IntensityLevel, RampPreset] = {
         ramp_up_minutes=3,
         plateau_minutes_min=1,
         plateau_minutes_max=3,
-        peak_requests_per_minute=10000,
+        peak_requests_per_minute=12000,
         peak_connections=2000,
     ),
     IntensityLevel.VIOLENT: RampPreset(
@@ -109,7 +114,7 @@ RAMP_PRESETS: dict[IntensityLevel, RampPreset] = {
         ramp_up_minutes=4,
         plateau_minutes_min=1,
         plateau_minutes_max=2,
-        peak_requests_per_minute=15000,
+        peak_requests_per_minute=25000,
         peak_connections=3500,
     ),
     IntensityLevel.MAXIMUM: RampPreset(
@@ -117,7 +122,7 @@ RAMP_PRESETS: dict[IntensityLevel, RampPreset] = {
         ramp_up_minutes=4,
         plateau_minutes_min=1,
         plateau_minutes_max=2,
-        peak_requests_per_minute=20000,
+        peak_requests_per_minute=50000,
         peak_connections=5000,
     ),
 }

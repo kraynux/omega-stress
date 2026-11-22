@@ -2,8 +2,17 @@
 """Constantes transverses non metier."""
 from __future__ import annotations
 
+from pathlib import Path
+
+from omega_lib.infrastructure.declaration.app_version import project_version
+
 APP_NAME: str = "omega-stress"
 """Nom produit, utilise pour l'affichage et les chemins par defaut."""
+
+OMEGA_STRESS_VERSION: str = project_version(Path(__file__).resolve().parents[3], APP_NAME)
+"""Version affichee (accueil, en-tete, aide) : lue dans pyproject.toml, SEULE source de la
+version (decision de l'auteur, 2026-11-22 : plus de copie a tenir a jour) ; repli sur les
+metadonnees du paquet installe. La meme fonction donne la version de « Contact et support »."""
 
 DEFAULT_EXPORT_DIRNAME: str = "exports"
 """Nom du sous-dossier d'export par defaut sous var/ (infrastructure/config/paths.py)."""

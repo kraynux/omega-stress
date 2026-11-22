@@ -98,6 +98,18 @@ for rc in "$HOME/.bashrc" "$HOME/.zshrc"; do
     fi
 done
 
+# -------------------------------------------------------------------------
+# 5. Jeton d'installation (var/omega-jeton.json, contrats d'interconnexion
+#    2026-11-21) : lu par omega-connect, sans rien exécuter. Écrit sous VOTRE
+#    compte (jamais en root). Un échec ne bloque jamais l'installation.
+# -------------------------------------------------------------------------
+if "$SCRIPT_DIR/omega-stress.sh" synchro jeton >/dev/null 2>&1; then
+    ok "Jeton d'installation à jour (var/omega-jeton.json)."
+else
+    warn "Jeton d'installation non écrit : omega-connect ne verra pas cette installation tant qu'il manque."
+    tip "Créez-le avec : ${SCRIPT_DIR}/omega-stress.sh synchro jeton"
+fi
+
 echo ""
 ok "Installation terminée."
 tip "Lancez Omega-Stress avec : ${SCRIPT_DIR}/omega-stress.sh (ou 'stress' dans un nouveau terminal si l'alias vient d'être ajouté)."

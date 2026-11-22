@@ -2,7 +2,10 @@
 """Detection en direct d'un goulot d'etranglement local pendant un run."""
 from __future__ import annotations
 
-from omega_stress.domain.load.policies import LOCAL_BOTTLENECK_RATIO_THRESHOLD
+from omega_stress.domain.load.policies import (
+    EMISSION_LATE_RATIO_BOTTLENECK,
+    LOCAL_BOTTLENECK_RATIO_THRESHOLD,
+)
 from omega_stress.domain.runs.models import IntervalSample
 
 
@@ -14,6 +17,14 @@ def is_local_bottleneck(sample: IntervalSample, *, requested_rate_per_minute: in
     au fil de l'eau, pas une supervision systeme continue (CPU/RAM) —
     portee V1 explicitement limitee au pre-flight check, voir
     ports/system_probe.py."""
+    if sample.emitted_count or sample.not_emitted_count:
+        # Moteur en boucle ouverte (2026-11-21) : mesure DIRECTE. Un debit termine plus
+        # bas que la demande peut
+        # venir de la cible (qui sature) : seul le retard ou le refus d'emission accuse la
+        # machine locale.
+        planned = sample.emitted_count + sample.not_emitted_count
+        late_limit = planned * EMISSION_LATE_RATIO_BOTTLENECK
+        return sample.not_emitted_count > 0 or sample.late_emitted_count > late_limit
     if requested_rate_per_minute is None or requested_rate_per_minute <= 0:
         return False
     threshold = requested_rate_per_minute * LOCAL_BOTTLENECK_RATIO_THRESHOLD

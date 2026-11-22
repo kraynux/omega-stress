@@ -30,10 +30,12 @@ The project follows the principles of **Clean Architecture**, with a clear separ
 ## Table of contents
 
 <p align="center">
-  <img src="https://raw.githubusercontent.com/kraynux/kraynux/refs/heads/main/docs/translation/en/omega-stress/A.png" width="24%" />
-  <img src="https://raw.githubusercontent.com/kraynux/kraynux/refs/heads/main/docs/translation/en/omega-stress/B.png" width="24%" />
-  <img src="https://raw.githubusercontent.com/kraynux/kraynux/refs/heads/main/docs/translation/en/omega-stress/C.png" width="24%" />
-  <img src="https://raw.githubusercontent.com/kraynux/kraynux/refs/heads/main/docs/translation/en/omega-stress/D.png" width="24%" />
+  <img src="https://raw.githubusercontent.com/kraynux/kraynux/refs/heads/main/docs/translation/en/omega-stress/A.png" width="32%" />
+  <img src="https://raw.githubusercontent.com/kraynux/kraynux/refs/heads/main/docs/translation/en/omega-stress/B.png" width="32%" />
+  <img src="https://raw.githubusercontent.com/kraynux/kraynux/refs/heads/main/docs/translation/en/omega-stress/C.png" width="32%" />
+  <img src="https://raw.githubusercontent.com/kraynux/kraynux/refs/heads/main/docs/translation/en/omega-stress/D.png" width="32%" />
+  <img src="https://raw.githubusercontent.com/kraynux/kraynux/refs/heads/main/docs/translation/en/omega-stress/E.png" width="32%" />
+  <img src="https://raw.githubusercontent.com/kraynux/kraynux/refs/heads/main/docs/translation/en/omega-stress/F.png" width="32%" />
 </p>
 
 - [Overview](#overview)
@@ -45,6 +47,7 @@ The project follows the principles of **Clean Architecture**, with a clear separ
 - [Duration profiles D1-D6](#duration-profiles-d1-d6-profile-mode)
 - [Safety mode](#safety-mode)
 - [Local calibration](#local-calibration)
+- [Distributed load (local network)](#distributed-load-local-network)
 - [Configuration](#configuration)
 - [Tests and quality](#tests-and-quality)
 - [Uninstalling](#uninstalling)
@@ -72,9 +75,9 @@ The project follows the principles of **Clean Architecture**, with a clear separ
 ## What the project does not do
 
 - It does not replace a network scanning tool — the product vocabulary and stance are deliberately "load testing", never "scanning".
-- It implements no external load engine (k6, etc.) — native `httpx`/asyncio generation.
+- It implements no external load engine (k6, etc.) — native asyncio generation.
 - It never starts a run without bounds and authorization confirmation.
-- It is not a distributed load tool: generation runs on a single machine, in a single process — see [Known limitations](#known-limitations).
+- It does not link machines together by itself: that is omega-connect's job, which prepares distributed load once and for all — see [Distributed load](#distributed-load-local-network).
 
 ## Features
 
@@ -105,7 +108,7 @@ src/omega_stress/
 ├── domain/           Pure business logic: load, profiles, runs, targets, themes, terminal — no I/O
 ├── application/      Orchestration: commands (actions), queries (reads), execution pipeline (guards/hooks)
 ├── ports/            Protocol/ABC contracts expected by the adapters (repositories, exporters, load generator...)
-├── infrastructure/   Concrete implementations: SQLite, JSON/CSV/HTML exporters, httpx/asyncio generator, terminal detection, system probe
+├── infrastructure/   Concrete implementations: SQLite, JSON/CSV/HTML exporters, asyncio generator, terminal detection, system probe
 ├── interfaces/       Two independent presentation adapters: TUI (Textual) and CLI (argparse)
 ├── plugins/          Reserved extension point (plugin loading) — scaffolding present, not implemented in V1
 └── shared/           Cross-cutting utilities with no business dependency (injectable clock, identifier generation)
@@ -166,6 +169,7 @@ cd ~/omega-stress && chmod +x install.sh && ./install.sh
 2. Installs the dependencies (`pip install -e .`; `pyproject.toml` remains the single source of truth).
 3. Makes `omega-stress.sh` and `install.sh` executable.
 4. Adds the `stress` alias to `~/.bashrc` and `~/.zshrc` (no duplicate if already present).
+5. Creates the identity card `var/omega-jeton.json` (`./omega-stress.sh synchro jeton`), read by omega-connect to link the tools of the suite; written under your account, never shipped in the archive.
 
 ## Installation (development)
 
@@ -266,11 +270,11 @@ Add `--json` to `history`/`export`/`calibrate` for machine-readable output, usab
 | Requests test | Low | Throughput | 250 req/min (≈4.2 req/s) | No | 1 to 5 min |
 | Requests test | Light | Throughput | 500 req/min (≈8.3 req/s) | No | 1 to 5 min |
 | Requests test | Medium | Throughput | 1000 req/min (≈16.7 req/s) | No | 1 to 5 min |
-| Requests test | High | Throughput | 2000 req/min (≈33.3 req/s) | No | 1 to 5 min |
+| Requests test | High | Throughput | 3000 req/min (≈50 req/s) | No | 1 to 5 min |
 | Requests test | Powerful | Throughput | 6000 req/min (≈100 req/s) | Optional | 1 to 3 min (5 if pre-check passed) |
-| Requests test | Aggressive | Throughput | 10,000 req/min (≈167 req/s) | Optional | 1 to 3 min (5 if pre-check passed) |
-| Requests test | Violent | Throughput | 15,000 req/min (≈250 req/s) | **Mandatory** | 1 to 3 min only |
-| Requests test | Maximum | Throughput | 20,000 req/min (≈333 req/s) | **Mandatory** | 1 to 3 min only |
+| Requests test | Aggressive | Throughput | 12,000 req/min (≈200 req/s) | Optional | 1 to 3 min (5 if pre-check passed) |
+| Requests test | Violent | Throughput | 25,000 req/min (≈417 req/s) | **Mandatory** | 1 to 3 min only |
+| Requests test | Maximum | Throughput | 50,000 req/min (≈833 req/s) | **Mandatory** | 1 to 3 min only |
 | Connections test | Low | Concurrent connections | 25 connections | No | 1 to 5 min |
 | Connections test | Light | Concurrent connections | 50 connections | No | 1 to 5 min |
 | Connections test | Medium | Concurrent connections | 100 connections | No | 1 to 5 min |
@@ -282,11 +286,13 @@ Add `--json` to `history`/`export`/`calibrate` for machine-readable output, usab
 | Load test (gradual ramp-up) | Low | Throughput, ramped | peak 250 req/min | No | 1 to 5 min |
 | Load test (gradual ramp-up) | Light | Throughput, ramped | peak 500 req/min | No | 1 to 5 min |
 | Load test (gradual ramp-up) | Medium | Throughput, ramped | peak 1000 req/min | No | 1 to 5 min |
-| Load test (gradual ramp-up) | High | Throughput, ramped | peak 2000 req/min | No | 1 to 5 min |
+| Load test (gradual ramp-up) | High | Throughput, ramped | peak 3000 req/min | No | 1 to 5 min |
 | Load test (gradual ramp-up) | Powerful | Throughput, ramped | peak 6000 req/min | Optional | 1 to 3 min (5 if pre-check passed) |
-| Load test (gradual ramp-up) | Aggressive | Throughput, ramped | peak 10,000 req/min | Optional | 1 to 3 min (5 if pre-check passed) |
-| Load test (gradual ramp-up) | Violent | Throughput, ramped | peak 15,000 req/min | **Mandatory** | 1 to 3 min only |
-| Load test (gradual ramp-up) | Maximum | Throughput, ramped | peak 20,000 req/min | **Mandatory** | 1 to 3 min only |
+| Load test (gradual ramp-up) | Aggressive | Throughput, ramped | peak 12,000 req/min | Optional | 1 to 3 min (5 if pre-check passed) |
+| Load test (gradual ramp-up) | Violent | Throughput, ramped | peak 25,000 req/min | **Mandatory** | 1 to 3 min only |
+| Load test (gradual ramp-up) | Maximum | Throughput, ramped | peak 50,000 req/min | **Mandatory** | 1 to 3 min only |
+
+Connections test: N connections opened and **held** (keep-alive), each sends about one request every 10 s, staggered. Requests test and Load test: requests leave at a steady pace without waiting for responses (open loop); a target that slows down shows in the latencies instead of being hidden. If the machine itself can no longer keep up, a “local bottleneck” notification says so.
 
 - **Pre-check No**: the test starts directly, with no duration condition.
 - **Pre-check Optional** (Powerful/Aggressive): the test starts without a pre-check (durations 1-3 min), but a passed pre-check also unlocks durations of 4-5 min.
@@ -379,7 +385,7 @@ Also available in the CLI through `--unsafe` (absent by default = safety mode on
 
 ## Local calibration
 
-Measures the real capacity of **this machine** (never the tested target): a local loopback server built into Omega-Stress receives an increasing load in stages, generated by the same `httpx`/asyncio engine as real tests.
+Measures the real capacity of **this machine** (never the tested target): a local loopback server built into Omega-Stress receives an increasing load in stages, generated by the same asyncio engine as real tests.
 
 - 7 stages, from idle (system background noise) up to 2000 connections / 12,000 req/s, each assessed against health thresholds (generator AND overall CPU, available memory, error rate, throughput reached) — the last 2 stages are conditional, skipped if the previous stage is not healthy.
 - Produces a safe envelope (`VU_safe` / `RPS_safe`) from the last healthy stage, with a safety margin (~30 % reserve) and a confidence level that grows with the depth reached.
@@ -392,6 +398,15 @@ Available from the **Calibration** screen of the TUI ("Run the calibration" butt
 omega-stress calibrate run     # runs a new calibration
 omega-stress calibrate show    # shows the last known calibration, without running a new one
 ```
+
+## Distributed load (local network)
+
+One machine is no longer enough? Other machines where omega-stress is installed can load the target together with yours, which leads and measures. Nothing to type: everything is done from the screens.
+
+- **Link once, in omega-connect** (Synchronisation → Distributed load): tick the helping machines, choose their consent, one button. omega-connect sends everything over SSH (nothing to copy) and opens your machine's firewall to the omega-stress port only, with one password.
+- **The owner of each helping machine decides**: « ask for each new target » or « accept everything from this leader », maximum rate and duration; the machine refuses anything else, whatever it is asked.
+- **Start from omega-stress**: the « Distributed load » menu chooses the machines that take part and describes the firewall (who opened it, which rules); in each test screen, the « Distributed load mode » box makes them load the target with your machine, which also loads only if you tick it. omega-stress starts the machines itself and stops them at the end.
+- A single curve and exact latencies across all machines; the run detail keeps each machine's summary (requests sent, completed, errors). The command line (`--machines`) remains available.
 
 ## Configuration
 
@@ -429,7 +444,7 @@ No system package, service or file outside `~/omega-stress/` is created by `inst
 
 ## Known limitations
 
-- **In-process** load generation, on a single machine (`httpx`/asyncio): this is not a distributed tool — the real ceilings (see [Test values](#test-values)) are clearly more modest than a SaaS load testing service (loader.io, etc.), deliberately, as a controlled product stance. On modest hardware, the Aggressive/Violent/Maximum levels of the Connections test can take noticeably more real time than the selected duration to send the whole targeted load — it is then the capacity of **this machine**, not of the target, that limits the real throughput; use [Local calibration](#local-calibration) to find reasonable values for your hardware.
+- Distributed load on a **local network** (or a private network such as a VPN) only: no crossing the internet without a private network yet. What a machine can hold depends on its processor (measured on 2026-11-21 against a local target: about 5,000 req/s on 4 cores, well beyond the highest level, see [Test values](#test-values)); [Local calibration](#local-calibration) measures what yours can hold, and a “local bottleneck” notification tells you when it can no longer keep up.
 - Automatic detection of the terminal family relies on environment variables: xfce4-terminal has no known reliable marker to date (see [Supported terminals](#supported-terminals)).
 - `plugins/` is an extension point planned by the architecture (loading of built-in/external plugins), not implemented in V1: the scaffolding exists, no plugin is shipped.
 - `var/` is relative to the project folder (not XDG): designed for local single-user use, not for multi-user sharing on the same machine.

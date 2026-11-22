@@ -1,0 +1,85 @@
+OMEGA-STRESS 2.0.0 - Ce qui change pour vous
+============================================
+
+Une version majeure : un nouveau moteur de charge, bien plus puissant et honnête, la charge
+répartie sur plusieurs machines, de nouveaux niveaux, un calibrage qui mesure vraiment
+votre machine, et la liaison avec omega-connect. Elle reprend aussi la 1.6.0, jamais publiée seule. Mise à jour conseillée.
+Le détail technique complet reste dans le CHANGELOG.
+
+
+UN NOUVEAU MOTEUR DE CHARGE
+---------------------------
+- La charge part de processus séparés (un par cœur, l'interface garde le sien) :
+  l'interface ne peut plus geler, même au niveau Maximum.
+- Les requêtes partent à cadence régulière sans attendre les réponses : un serveur qui
+  ralentit se voit dans les latences, au lieu d'être caché (avant, le moteur attendait
+  et ralentissait avec lui).
+- Beaucoup plus de puissance : environ 5 000 requêtes par seconde sur une machine à
+  4 cœurs (mesure du 21 novembre, cible locale), contre quelques centaines avant.
+- Test connexions : les connexions sont vraiment ouvertes et tenues, chacune envoie une
+  requête toutes les 10 s environ, comme le font les outils professionnels.
+- Latences p50/p95/p99 exactes sur tout le run (avant : une approximation).
+- Si c'est votre machine qui ne suit plus (et non la cible), la notification
+  « goulot local » le dit.
+
+
+CHARGE DISTRIBUÉE EN RÉSEAU LOCAL
+---------------------------------
+- Une seule machine ne suffit plus ? D'autres machines où omega-stress est installé
+  chargent la cible avec la vôtre, qui pilote et mesure. Rien à taper.
+- Une seule fois, dans omega-connect (Synchronisation → Charge distribuée) : cochez les
+  machines qui aident, choisissez leur accord, un bouton (pare-feu ouvert avec un seul
+  mot de passe, par omega-fire s'il est relié).
+- Menu principal « Charge distribuée » : cochez les machines qui participent, voyez le
+  pare-feu (qui l'a ouvert, quelles règles), supprimez une machine.
+- Dans les écrans de test, la case « Mode charge distribuée » (sous « Mode sécurité ») :
+  omega-stress démarre lui-même les machines cochées et les arrête à la fin. Votre
+  machine ne charge aussi que si vous la cochez. Le détail du test garde le bilan de
+  chaque machine.
+- Le propriétaire de chaque machine qui aide garde la main : il accepte chaque nouvelle
+  cible, ou tout ce qui vient de votre machine, dans ses limites de débit et de durée.
+- Latences exactes sur l'ensemble ; une machine qui refuse ou tombe est signalée.
+
+
+NOUVEAUX NIVEAUX
+----------------
+- Test requêtes et pics du Test charge : Haut 3 000, Agressif 12 000, Violent 25 000,
+  Maximum 50 000 requêtes par minute (avant : 2 000, 10 000, 15 000, 20 000).
+- Le tableau de référence parle de débit « en continu » (plus « en rafale »).
+
+
+UN CALIBRAGE QUI MESURE VOTRE MACHINE
+-------------------------------------
+- Le calibrage utilise le même moteur que les tests : il mesure ce que votre machine
+  émet vraiment à l'heure, et non plus les limites de son petit serveur de test intégré.
+
+
+LIAISON AVEC OMEGA-CONNECT
+--------------------------
+- ./omega-stress.sh synchro jeton dépose une « carte d'identité » (var/omega-jeton.json) :
+  quel outil, où, quelle version. omega-connect la lit pour relier vos outils ; c'est
+  la première étape de la charge répartie sur plusieurs machines.
+- Écrite sous votre compte, sans sudo ; install.sh la crée pour vous.
+
+
+CONTACT ET SUPPORT (1.6.0)
+--------------------------
+- Nouveau bouton « Contact et support » dans l'aide (touche a) : payer un café, contacter
+  le support (adresse mail et formulaire du site, affichés en clair), se déclarer
+  utilisateur (anonyme, une seule fois, volontaire), vérifier les mises à jour.
+- Aucun mail ni formulaire envoyé par l'outil ; sans session graphique (SSH), l'adresse
+  s'affiche au lieu d'ouvrir le navigateur.
+
+
+AFFICHAGE, LANGUES ET CORRECTIFS
+--------------------------------
+- Une connexion que le serveur testé referme entre deux requêtes (Apache le fait au bout de
+  5 s) n'est plus comptée comme une erreur : elle est rouverte.
+- La version (2.0.0) s'affiche à l'accueil (il indiquait encore 1.5), dans l'en-tête et
+  dans l'aide.
+- Nouveaux écrans traduits dans les 17 langues ; README (17 langues) mis à jour, avec
+  4 captures par langue ; site de l'outil en 17 langues.
+- Cases à cocher bien plus visibles ; « Quitter » quitte le menu principal (touches q
+  et Échap).
+- Réglages : écran centré comme dans le reste de la suite, plus de notification à
+  l'ouverture ; la mention « en test » disparaît du sélecteur de langue.

@@ -6,6 +6,7 @@ from textual.app import ComposeResult
 from textual.containers import Container, Horizontal, Vertical
 from textual.widgets import Button, Footer, Header, Static
 
+from omega_stress.core.constants import OMEGA_STRESS_VERSION
 from omega_stress.core.enums import TestFamily
 from omega_stress.domain.load.policies import SAFETY_MODE_DESCRIPTION
 from omega_stress.interfaces.tui.presenters.load_reference_presenter import (
@@ -76,6 +77,27 @@ _SECTIONS = (
         + _(" Si un calibrage a été effectué sur cette machine, l'écran de lancement compare "
             "le niveau choisi à son enveloppe dès que la case est décochée."),
     ),
+    (
+        _("Charge distribuée (plusieurs machines)"),
+        _("Quand une machine ne suffit plus, d'autres machines où omega-stress est installé "
+          "peuvent charger la cible avec celle-ci. Elles se relient une seule fois, uniquement "
+          "dans omega-connect (Synchronisation → Charge distribuée) : rien à taper ici.\n"
+          "- Menu « Charge distribuée » : les machines reliées ; cochez celles qui participent aux "
+          "prochains tests, « cette machine » comprise (décochée par défaut : elle pilote et "
+          "mesure). « Supprimer la machine » retire son accès. Le pare-feu de cette machine y est "
+          "décrit (gestionnaire, règles, qui l'a ouvert et quand), avec « Ouvrir » / « Refermer » "
+          "(un mot de passe sudo, tapé dans le terminal ; seul le port d'omega-stress, pour votre "
+          "réseau local).\n"
+          "- Dans chaque écran de test, sous « Mode sécurité » : cochez « Mode charge "
+          "distribuée » ; la ligne des machines s'affiche, pré-cochée d'après ce choix, et peut "
+          "être changée pour ce test. Sans machine cochée, le test reste local.\n"
+          "- Au lancement, omega-stress démarre lui-même les machines (par SSH) et les arrête à "
+          "la fin ; la barre de notification dit qui a rejoint et qui charge. Le détail du run "
+          "(Historique) garde le bilan de chaque machine : requêtes émises, terminées, erreurs ; "
+          "une machine qui refuse ou qui tombe est signalée.\n"
+          "- Accord « Demander » : la première fois qu'une cible est demandée à une machine, une "
+          "question s'affiche ; « Oui » l'autorise pour toujours sur cette machine."),
+    ),
 )
 
 
@@ -94,6 +116,10 @@ class HelpScreen(OmegaScreen):
         yield Header()
         with Vertical(classes="omega-panel"):
             yield Static(_("AIDE"), classes="omega-title")
+            yield Static(
+                "OMEGA-STRESS " + _("version {version}").format(version=OMEGA_STRESS_VERSION),
+                classes="omega-subtitle",
+            )
             yield Static(_("Raccourcis clavier"), classes="omega-subtitle")
             for key, description in _SHORTCUTS:
                 yield Static(_("{key:<14} {description}").format(key=key, description=description))

@@ -3,6 +3,8 @@
 from __future__ import annotations
 
 import asyncio
+import contextlib
+import dataclasses
 from datetime import datetime
 
 from omega_stress.application.exceptions import RunnerFailureError, UseCaseExecutionError
@@ -57,34 +59,39 @@ async def execute(
     bottleneck_notified = False
 
     try:
-        async for sample in load_runner.run(plan, target_url=target_url):
-            collected.append(sample)
-            publish_sample(run.id, sample, notifier=run_progress_notifier)
+        # aclosing (2026-11-21) : un arret par garde sort de la boucle ; le flux est ferme
+        # AUSSITOT, ce qui arrete
+        # les processus d'emission du moteur en boucle ouverte au lieu d'attendre le
+        # ramasse-miettes.
+        async with contextlib.aclosing(load_runner.run(plan, target_url=target_url)) as stream:
+            async for sample in stream:
+                collected.append(sample)
+                publish_sample(run.id, sample, notifier=run_progress_notifier)
 
-            if not bottleneck_notified and is_local_bottleneck(
-                sample, requested_rate_per_minute=requested_rate_per_minute
-            ):
-                notify_local_bottleneck(sink=notification_sink)
-                bottleneck_notified = True
+                if not bottleneck_notified and is_local_bottleneck(
+                    sample, requested_rate_per_minute=requested_rate_per_minute
+                ):
+                    notify_local_bottleneck(sink=notification_sink)
+                    bottleneck_notified = True
 
-            collected_so_far = tuple(collected)
-            guard_results = [
-                check_threshold(sample, thresholds=plan.thresholds),
-                check_sliding_window(collected_so_far),
-            ]
-            if plan.safety_mode:
-                guard_results.append(check_generator_resources(collected_so_far))
-            for guard_result in guard_results:
-                if isinstance(guard_result, Err):
-                    aborted = abort_run(
-                        run, samples=collected_so_far, reason=guard_result.error, now=now
-                    )
-                    notify_auto_stop(str(guard_result.error), sink=notification_sink)
-                    emit_run_finished(aborted, sink=audit_sink)
-                    return aborted
+                collected_so_far = tuple(collected)
+                guard_results = [
+                    check_threshold(sample, thresholds=plan.thresholds),
+                    check_sliding_window(collected_so_far),
+                ]
+                if plan.safety_mode:
+                    guard_results.append(check_generator_resources(collected_so_far))
+                for guard_result in guard_results:
+                    if isinstance(guard_result, Err):
+                        aborted = abort_run(
+                            run, samples=collected_so_far, reason=guard_result.error, now=now
+                        )
+                        notify_auto_stop(str(guard_result.error), sink=notification_sink)
+                        emit_run_finished(aborted, sink=audit_sink)
+                        return _with_participation(aborted, load_runner, now())
     except RunnerFailureError as exc:
         failed_at = now()
-        return _finish_with_verdict(
+        failed = _finish_with_verdict(
             run,
             samples=tuple(collected),
             verdict=RunVerdict.FAILED,
@@ -93,6 +100,7 @@ async def execute(
             now=failed_at,
             events=(RunEvent(occurred_at=failed_at, kind="runner_failure", message=str(exc)),),
         )
+        return _with_participation(failed, load_runner, failed_at)
     except asyncio.CancelledError:
         stopped_at = now()
         stopped = _finish_with_verdict(
@@ -111,16 +119,37 @@ async def execute(
             ),
         )
         notify_auto_stop(_("Test arrêté manuellement."), sink=notification_sink)
-        return stopped
+        return _with_participation(stopped, load_runner, stopped_at)
 
     verdict = _final_verdict(tuple(collected), bottleneck_detected=bottleneck_notified)
-    return _finish_with_verdict(
+    finished_at = now()
+    finished = _finish_with_verdict(
         run,
         samples=tuple(collected),
         verdict=verdict,
         requested_rate_per_minute=requested_rate_per_minute,
         audit_sink=audit_sink,
-        now=now(),
+        now=finished_at,
+    )
+    return _with_participation(finished, load_runner, finished_at)
+
+
+DISTRIBUTED_EVENT = "distributed"
+"""Evenement « bilan par machine » d'un run distribue : jamais une cause d'arret."""
+
+
+def _with_participation(finished: LoadRun, load_runner: LoadRunner, at: datetime) -> LoadRun:
+    """Charge distribuee : le bilan par machine (requetes emises / terminees, machines ecartees ou
+    perdues) est garde avec le run, AVANT les autres evenements (le dernier reste la cause d'un
+    arret, que le verdict et le diagnostic lisent)."""
+    summary_of = getattr(load_runner, "participation_summary", None)
+    summary = summary_of() if callable(summary_of) else ""
+    if not summary or finished.result is None:
+        return finished
+    event = RunEvent(occurred_at=at, kind=DISTRIBUTED_EVENT, message=summary)
+    return dataclasses.replace(
+        finished,
+        result=dataclasses.replace(finished.result, events=(event, *finished.result.events)),
     )
 
 

@@ -47,6 +47,17 @@ def main(argv: list[str] | None = None) -> int:
     le CLI (au moins un argument), ferme proprement quelle que soit
     l'issue."""
     effective_argv = sys.argv[1:] if argv is None else argv
+    if effective_argv[:1] == ["synchro"]:
+        # Contrats d'interconnexion (2026-11-21) : jeton lu par omega-connect, sans
+        # interface ni demarrage.
+        from omega_stress.app.synchro_runner import run_synchro
+
+        return run_synchro(effective_argv[1:])
+    if effective_argv[:1] in (["worker"], ["coordinateur"]):
+        # Charge distribuee (Phase 2, 2026-11-21) : appairage, autorisation, worker.
+        from omega_stress.app.distributed_runner import main as run_distributed
+
+        return run_distributed(effective_argv)
     if not effective_argv:
         install_language()
 

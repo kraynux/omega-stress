@@ -12,6 +12,7 @@ from omega_stress.interfaces.tui.controllers import history_controller
 from omega_stress.interfaces.tui.presenters.run_presenter import (
     chronology_lines,
     diagnostic_message,
+    participation_message,
     verdict_explanation,
     verdict_label,
 )
@@ -100,6 +101,9 @@ class RunDetailsScreen(OmegaScreen):
         reason = diagnostic_message(run)
         if reason:
             text += _("\nDiagnostic : {reason}").format(reason=reason)
+        machines = participation_message(run)
+        if machines:
+            text += "\n" + machines
         if run.error_count:
             text += _(
                 "\nErreurs : {errors_timeout} timeout, {errors_connection} connexion, "

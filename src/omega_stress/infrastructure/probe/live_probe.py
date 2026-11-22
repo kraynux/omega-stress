@@ -23,6 +23,7 @@ class LiveSystemSampler:
 
     def __init__(self) -> None:
         self._process = psutil.Process()
+        self._known_children: dict[int, psutil.Process] = {}
         # Premier appel purement pour amorcer le compteur interne (delta
         # non exploitable avant un second appel, voir doc psutil) —
         # jamais interprete, seule la valeur des sample() suivants compte.
@@ -56,15 +57,26 @@ class LiveSystemSampler:
         try:
             memory = psutil.virtual_memory()
             swap = psutil.swap_memory()
+            children = self._children()
             return SystemSnapshot(
+                # Processus d'emission du moteur en boucle ouverte compris
+                # (2026-11-21) : la garde de securite
+                # doit voir la vraie charge du generateur, qui ne tourne plus dans ce processus-ci.
                 cpu_percent_generator=(
-                    self._process.cpu_percent(interval=None) / self._logical_cpu_count
+                    (
+                        self._process.cpu_percent(interval=None)
+                        + sum(_child_cpu(c) for c in children)
+                    )
+                    / self._logical_cpu_count
                 ),
                 cpu_percent_global=psutil.cpu_percent(interval=None),
                 memory_available_percent=(
                     (memory.available / memory.total) * 100 if memory.total else None
                 ),
-                memory_rss_mb=self._process.memory_info().rss / _BYTES_PER_MB,
+                memory_rss_mb=(
+                    self._process.memory_info().rss + sum(_child_rss(c) for c in children)
+                )
+                / _BYTES_PER_MB,
                 swap_used_mb=swap.used / _BYTES_PER_MB,
                 open_files=self._safe_open_files(),
                 open_files_soft_limit=self._open_files_soft_limit,
@@ -76,6 +88,22 @@ class LiveSystemSampler:
             # snapshot entierement a None reste un resultat valide.
             return SystemSnapshot()
 
+    def _children(self) -> list[psutil.Process]:
+        """Processus fils vivants, chacun garde d'un appel a l'autre (cpu_percent mesure un
+        DELTA)."""
+        try:
+            current = {child.pid: child for child in self._process.children(recursive=True)}
+        except psutil.Error:
+            return list(self._known_children.values())
+        for pid in list(self._known_children):
+            if pid not in current:
+                del self._known_children[pid]
+        for pid, child in current.items():
+            if pid not in self._known_children:
+                self._known_children[pid] = child
+                _child_cpu(child)  # premier appel : amorce le delta
+        return list(self._known_children.values())
+
     def _safe_open_files(self) -> int | None:
         """num_fds() n'existe que sur Unix (AttributeError sous Windows,
         hors perimetre de ce projet mais garde defensivement) — separe du
@@ -85,6 +113,20 @@ class LiveSystemSampler:
             return int(self._process.num_fds())
         except (psutil.Error, AttributeError):
             return None
+
+def _child_cpu(child: psutil.Process) -> float:
+    try:
+        return float(child.cpu_percent(interval=None))
+    except psutil.Error:
+        return 0.0
+
+
+def _child_rss(child: psutil.Process) -> int:
+    try:
+        return int(child.memory_info().rss)
+    except psutil.Error:
+        return 0
+
 
 # <-- INFO DEV ---------------------------------------------------------
 # Role :

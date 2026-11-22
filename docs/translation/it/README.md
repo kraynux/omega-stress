@@ -30,10 +30,12 @@ Il progetto segue i principi della **Clean Architecture**, con una netta separaz
 ## Indice
 
 <p align="center">
-  <img src="https://raw.githubusercontent.com/kraynux/kraynux/refs/heads/main/docs/translation/it/omega-stress/A.png" width="24%" />
-  <img src="https://raw.githubusercontent.com/kraynux/kraynux/refs/heads/main/docs/translation/it/omega-stress/B.png" width="24%" />
-  <img src="https://raw.githubusercontent.com/kraynux/kraynux/refs/heads/main/docs/translation/it/omega-stress/C.png" width="24%" />
-  <img src="https://raw.githubusercontent.com/kraynux/kraynux/refs/heads/main/docs/translation/it/omega-stress/D.png" width="24%" />
+  <img src="https://raw.githubusercontent.com/kraynux/kraynux/refs/heads/main/docs/translation/it/omega-stress/A.png" width="32%" />
+  <img src="https://raw.githubusercontent.com/kraynux/kraynux/refs/heads/main/docs/translation/it/omega-stress/B.png" width="32%" />
+  <img src="https://raw.githubusercontent.com/kraynux/kraynux/refs/heads/main/docs/translation/it/omega-stress/C.png" width="32%" />
+  <img src="https://raw.githubusercontent.com/kraynux/kraynux/refs/heads/main/docs/translation/it/omega-stress/D.png" width="32%" />
+  <img src="https://raw.githubusercontent.com/kraynux/kraynux/refs/heads/main/docs/translation/it/omega-stress/E.png" width="32%" />
+  <img src="https://raw.githubusercontent.com/kraynux/kraynux/refs/heads/main/docs/translation/it/omega-stress/F.png" width="32%" />
 </p>
 
 - [Presentazione](#presentazione)
@@ -45,6 +47,7 @@ Il progetto segue i principi della **Clean Architecture**, con una netta separaz
 - [Profili di durata D1-D6](#profili-di-durata-d1-d6-modalità-profilo)
 - [Modalità sicurezza](#modalità-sicurezza)
 - [Calibrazione locale](#calibrazione-locale)
+- [Carico distribuito (rete locale)](#carico-distribuito-rete-locale)
 - [Configurazione](#configurazione)
 - [Test e qualità](#test-e-qualità)
 - [Disinstallazione](#disinstallazione)
@@ -72,9 +75,9 @@ Il progetto segue i principi della **Clean Architecture**, con una netta separaz
 ## Cosa il progetto non fa
 
 - Non sostituisce uno strumento di scansione di rete — vocabolario e postura del prodotto dichiaratamente «test di carico», mai «scansione».
-- Non implementa alcun motore di carico esterno (k6 ecc.) — generazione nativa `httpx`/asyncio.
+- Non implementa alcun motore di carico esterno (k6 ecc.) — generazione nativa asyncio.
 - Non avvia alcuna esecuzione senza limiti né conferma di autorizzazione.
-- Non è uno strumento di carico distribuito: la generazione gira su una sola macchina, in un solo processo — vedi [Limiti noti](#limiti-noti).
+- Non collega da sé le macchine tra loro: è il compito di omega-connect, che prepara il carico distribuito una volta per tutte — vedi [Carico distribuito](#carico-distribuito-rete-locale).
 
 ## Funzionalità
 
@@ -105,7 +108,7 @@ src/omega_stress/
 ├── domain/           Logica di business pura: carico, profili, esecuzioni, destinazioni, temi, terminale — senza I/O
 ├── application/      Orchestrazione: commands (azioni), queries (letture), pipeline di esecuzione (guards/hooks)
 ├── ports/            Contratti Protocol/ABC attesi dagli adattatori (repository, esportatori, generatore di carico...)
-├── infrastructure/   Implementazioni concrete: SQLite, esportatori JSON/CSV/HTML, generatore httpx/asyncio, rilevamento del terminale, sonda di sistema
+├── infrastructure/   Implementazioni concrete: SQLite, esportatori JSON/CSV/HTML, generatore asyncio, rilevamento del terminale, sonda di sistema
 ├── interfaces/       Due adattatori di presentazione indipendenti: TUI (Textual) e CLI (argparse)
 ├── plugins/          Punto di estensione riservato (caricamento di plugin) — struttura presente, non implementata nella V1
 └── shared/           Utilità trasversali senza dipendenze di business (orologio iniettabile, generazione di identificatori)
@@ -166,6 +169,7 @@ cd ~/omega-stress && chmod +x install.sh && ./install.sh
 2. Installa le dipendenze (`pip install -e .`; `pyproject.toml` resta l'unica fonte di verità).
 3. Rende eseguibili `omega-stress.sh` e `install.sh`.
 4. Aggiunge l'alias `stress` a `~/.bashrc` e `~/.zshrc` (senza duplicati se già presente).
+5. Crea la carta d'identità `var/omega-jeton.json` (`./omega-stress.sh synchro jeton`), letta da omega-connect per collegare gli strumenti della suite; scritta con il tuo account, mai inclusa nell'archivio.
 
 ## Installazione (sviluppo)
 
@@ -266,11 +270,11 @@ Aggiungi `--json` a `history`/`export`/`calibrate` per un'uscita leggibile dalle
 | Test di richieste | Debole | Portata | 250 rich/min (≈4,2 rich/s) | No | Da 1 a 5 min |
 | Test di richieste | Basso | Portata | 500 rich/min (≈8,3 rich/s) | No | Da 1 a 5 min |
 | Test di richieste | Medio | Portata | 1000 rich/min (≈16,7 rich/s) | No | Da 1 a 5 min |
-| Test di richieste | Alto | Portata | 2000 rich/min (≈33,3 rich/s) | No | Da 1 a 5 min |
+| Test di richieste | Alto | Portata | 3000 rich/min (≈50 rich/s) | No | Da 1 a 5 min |
 | Test di richieste | Potente | Portata | 6000 rich/min (≈100 rich/s) | Facoltativo | Da 1 a 3 min (5 con pre-check superato) |
-| Test di richieste | Aggressivo | Portata | 10.000 rich/min (≈167 rich/s) | Facoltativo | Da 1 a 3 min (5 con pre-check superato) |
-| Test di richieste | Violento | Portata | 15.000 rich/min (≈250 rich/s) | **Obbligatorio** | Solo da 1 a 3 min |
-| Test di richieste | Massimo | Portata | 20.000 rich/min (≈333 rich/s) | **Obbligatorio** | Solo da 1 a 3 min |
+| Test di richieste | Aggressivo | Portata | 12.000 rich/min (≈200 rich/s) | Facoltativo | Da 1 a 3 min (5 con pre-check superato) |
+| Test di richieste | Violento | Portata | 25.000 rich/min (≈417 rich/s) | **Obbligatorio** | Solo da 1 a 3 min |
+| Test di richieste | Massimo | Portata | 50.000 rich/min (≈833 rich/s) | **Obbligatorio** | Solo da 1 a 3 min |
 | Test di connessioni | Debole | Connessioni simultanee | 25 connessioni | No | Da 1 a 5 min |
 | Test di connessioni | Basso | Connessioni simultanee | 50 connessioni | No | Da 1 a 5 min |
 | Test di connessioni | Medio | Connessioni simultanee | 100 connessioni | No | Da 1 a 5 min |
@@ -282,11 +286,13 @@ Aggiungi `--json` a `history`/`export`/`calibrate` per un'uscita leggibile dalle
 | Test di carico (salita progressiva) | Debole | Portata, in rampa | picco di 250 rich/min | No | Da 1 a 5 min |
 | Test di carico (salita progressiva) | Basso | Portata, in rampa | picco di 500 rich/min | No | Da 1 a 5 min |
 | Test di carico (salita progressiva) | Medio | Portata, in rampa | picco di 1000 rich/min | No | Da 1 a 5 min |
-| Test di carico (salita progressiva) | Alto | Portata, in rampa | picco di 2000 rich/min | No | Da 1 a 5 min |
+| Test di carico (salita progressiva) | Alto | Portata, in rampa | picco di 3000 rich/min | No | Da 1 a 5 min |
 | Test di carico (salita progressiva) | Potente | Portata, in rampa | picco di 6000 rich/min | Facoltativo | Da 1 a 3 min (5 con pre-check superato) |
-| Test di carico (salita progressiva) | Aggressivo | Portata, in rampa | picco di 10.000 rich/min | Facoltativo | Da 1 a 3 min (5 con pre-check superato) |
-| Test di carico (salita progressiva) | Violento | Portata, in rampa | picco di 15.000 rich/min | **Obbligatorio** | Solo da 1 a 3 min |
-| Test di carico (salita progressiva) | Massimo | Portata, in rampa | picco di 20.000 rich/min | **Obbligatorio** | Solo da 1 a 3 min |
+| Test di carico (salita progressiva) | Aggressivo | Portata, in rampa | picco di 12.000 rich/min | Facoltativo | Da 1 a 3 min (5 con pre-check superato) |
+| Test di carico (salita progressiva) | Violento | Portata, in rampa | picco di 25.000 rich/min | **Obbligatorio** | Solo da 1 a 3 min |
+| Test di carico (salita progressiva) | Massimo | Portata, in rampa | picco di 50.000 rich/min | **Obbligatorio** | Solo da 1 a 3 min |
+
+Test connessioni: N connessioni aperte e **mantenute** (keep-alive), ognuna invia circa una richiesta ogni 10 s, sfalsate. Test richieste e test di carico: le richieste partono a ritmo costante senza attendere le risposte (anello aperto); un target che rallenta si vede nelle latenze invece di essere nascosto. Se è la macchina stessa a non reggere più, una notifica «collo di bottiglia locale» lo segnala.
 
 - **Pre-check No**: il test parte direttamente, senza condizioni di durata.
 - **Pre-check Facoltativo** (Potente/Aggressivo): il test parte senza pre-check (durate 1-3 min), ma un pre-check superato sblocca anche le durate di 4-5 min.
@@ -379,7 +385,7 @@ Disponibile anche da CLI tramite `--unsafe` (assente per impostazione predefinit
 
 ## Calibrazione locale
 
-Misura la capacità reale di **questa macchina** (mai della destinazione testata): un server di loopback locale integrato in Omega-Stress riceve un carico crescente a gradini, generato dallo stesso motore `httpx`/asyncio dei test reali.
+Misura la capacità reale di **questa macchina** (mai della destinazione testata): un server di loopback locale integrato in Omega-Stress riceve un carico crescente a gradini, generato dallo stesso motore asyncio dei test reali.
 
 - 7 gradini, dal riposo (rumore di fondo del sistema) fino a 2000 connessioni / 12.000 rich/s, ciascuno valutato rispetto a soglie di salute (CPU del generatore E complessiva, memoria disponibile, tasso di errore, portata raggiunta) — gli ultimi 2 gradini sono condizionali, saltati se il gradino precedente non è sano.
 - Produce un involucro sicuro (`VU_safe` / `RPS_safe`) a partire dall'ultimo gradino sano, con un margine di sicurezza (~30 % di riserva) e un livello di fiducia che cresce con la profondità raggiunta.
@@ -392,6 +398,15 @@ Accessibile dalla schermata **Calibrazione** della TUI (pulsante «Avvia la cali
 omega-stress calibrate run     # avvia una nuova calibrazione
 omega-stress calibrate show    # mostra l'ultima calibrazione nota, senza avviarne un'altra
 ```
+
+## Carico distribuito (rete locale)
+
+Una sola macchina non basta più? Altre macchine su cui è installato omega-stress possono caricare il bersaglio insieme alla vostra, che pilota e misura. Niente da digitare: tutto si fa dalle schermate.
+
+- **Collegare una sola volta, in omega-connect** (Sincronizzazione → Carico distribuito): spuntate le macchine che aiutano, scegliete il loro consenso, un pulsante. omega-connect trasmette tutto via SSH (niente da copiare) e apre il firewall della vostra macchina solo alla porta di omega-stress, con una password.
+- **Decide il proprietario di ogni macchina che aiuta**: « chiedere per ogni nuovo bersaglio » o « accettare tutto da questo pilota », velocità e durata massime; la macchina rifiuta il resto, qualunque cosa le si chieda.
+- **Avviare da omega-stress**: il menu « Carico distribuito » sceglie le macchine che partecipano e descrive il firewall (chi l'ha aperto, quali regole); in ogni schermata di test, la casella « Modalità carico distribuito » le fa caricare il bersaglio con la vostra macchina, che carica anche solo se la spuntate. omega-stress avvia da sé le macchine e le ferma alla fine.
+- Una sola curva e latenze esatte sull'insieme; il dettaglio del run conserva il bilancio di ogni macchina (richieste emesse, completate, errori). La riga di comando (`--machines`) resta disponibile.
 
 ## Configurazione
 
@@ -429,7 +444,7 @@ sed -i '/alias stress=/d' ~/.bashrc ~/.zshrc
 
 ## Limiti noti
 
-- Generazione del carico **nel processo stesso**, su una sola macchina (`httpx`/asyncio): non è uno strumento distribuito — i tetti reali (vedi [Valori dei test](#valori-dei-test)) sono nettamente più modesti di quelli di un servizio SaaS di test di carico (loader.io ecc.), volutamente, per una postura di prodotto controllato. Su hardware modesto, i livelli Aggressivo/Violento/Massimo del Test di connessioni possono richiedere molto più tempo reale della durata scelta per emettere tutto il carico previsto — è allora la capacità di **questa macchina**, non quella della destinazione, a limitare la portata reale; usa la [Calibrazione locale](#calibrazione-locale) per conoscere i valori ragionevoli sul tuo hardware.
+- Carico distribuito solo in **rete locale** (o in una rete privata tipo VPN): ancora nessun passaggio da internet senza rete privata. Quanto regge una macchina dipende dal suo processore (misura del 21/11/2026 contro un target locale: circa 5.000 rich/s su 4 core, ben oltre il livello più alto, vedi [Valori dei test](#valori-dei-test)); [Calibrazione locale](#calibrazione-locale) misura quanto regge la tua, e una notifica «collo di bottiglia locale» segnala quando non regge più.
 - Il rilevamento automatico della famiglia di terminale si basa su variabili d'ambiente: xfce4-terminal non ha alcun marcatore affidabile noto finora (vedi [Terminali supportati](#terminali-supportati)).
 - `plugins/` è un punto di estensione previsto dall'architettura (caricamento di plugin integrati/esterni), non implementato nella V1: la struttura esiste, non viene fornito alcun plugin.
 - `var/` è relativa alla cartella del progetto (non XDG): pensata per un uso locale a utente singolo, non per la condivisione tra più utenti sulla stessa macchina.

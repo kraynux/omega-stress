@@ -66,8 +66,8 @@ def test_request_row_target_matches_requests_per_minute():
     maximum_request_row = next(
         r for r in rows if r.test_type == "Test requêtes" and r.level == "Maximum"
     )
-    assert maximum_request_row.target == "20000 req/min"
-    assert maximum_request_row.burst == "~333 req/s en rafale"
+    assert maximum_request_row.target == "50000 req/min"
+    assert maximum_request_row.burst == "~833 req/s en continu"
 
 
 def test_connection_row_target_matches_concurrent_connections():

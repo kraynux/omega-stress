@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "omega-stress"
-version = "1.6.0"
+version = "2.0.0"
 description = "Outil TUI + CLI de test de charge HTTP encadre, deuxieme outil de la suite omega-"
 readme = "README.md"
 license = { file = "LICENSE" }

@@ -9,6 +9,40 @@
 
 set -e
 
+# Contrats d'interconnexion (2026-11-21) : `synchro jeton` sort du JSON lu par omega-connect, sans bannière.
+# Charge distribuée (2026-11-21) : `worker` et `coordinateur` aussi (le mode poussé les lance par SSH).
+# Copie embarquee par omega-suite (<suite>/vendor/omega-stress) : pas de .venv a elle, omega-suite l'installe dans
+# le sien ; son etat est celui de l'onglet omega-stress de la suite (<suite>/var/stress). Decision de l'auteur,
+# 2026-11-22 : omega-stress fait partie d'omega-suite, s'y reconnait, s'y met a jour et sert a la charge distribuee.
+suite_context() {
+    local here="$1" suite
+    [ "$(basename "$(dirname "$here")")" = "vendor" ] || return 1
+    [ -d "$here/.venv" ] || [ -d "$here/venv" ] && return 1
+    suite="$(cd "$here/../.." && pwd)"
+    [ -f "$suite/omega-suite.sh" ] && [ -x "$suite/.venv/bin/python" ] || return 1
+    VENV_PYTHON="$suite/.venv/bin/python"
+    export OMEGA_STRESS_VAR_DIR="${OMEGA_STRESS_VAR_DIR:-${OMEGA_SUITE_VAR_DIR:-$suite/var}/stress}"
+    return 0
+}
+
+if [ "${1:-}" = "synchro" ] || [ "${1:-}" = "worker" ] || [ "${1:-}" = "coordinateur" ]; then
+    SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+    if suite_context "$SCRIPT_DIR"; then
+        :
+    elif [ -x "$SCRIPT_DIR/.venv/bin/python" ]; then
+        VENV_PYTHON="$SCRIPT_DIR/.venv/bin/python"
+    elif [ -x "$SCRIPT_DIR/venv/bin/python" ]; then
+        VENV_PYTHON="$SCRIPT_DIR/venv/bin/python"
+    else
+        VENV_PYTHON="$(command -v python3)"
+    fi
+    export PYTHONPATH="$SCRIPT_DIR/src"
+    # var/ d'omega-stress est relatif au dossier courant : toujours celui d'omega-stress (correctif
+    # 2026-11-21 : lances par omega-connect ou par SSH, `worker`/`coordinateur` ecrivaient ailleurs).
+    cd "$SCRIPT_DIR"
+    exec "$VENV_PYTHON" -m omega_stress "$@"
+fi
+
 # Couleurs pour le terminal
 RED='\033[0;31m'
 GREEN='\033[0;32m'
@@ -29,7 +63,9 @@ SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 cd "$SCRIPT_DIR"
 
 # 2. Détection de l'interpréteur Python (.venv ou venv ou système)
-if [ -d ".venv" ]; then
+if suite_context "$SCRIPT_DIR"; then
+    :
+elif [ -d ".venv" ]; then
     VENV_PYTHON="$SCRIPT_DIR/.venv/bin/python"
 elif [ -d "venv" ]; then
     VENV_PYTHON="$SCRIPT_DIR/venv/bin/python"

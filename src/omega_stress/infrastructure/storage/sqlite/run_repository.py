@@ -217,6 +217,10 @@ def _serialize_samples(samples: tuple[IntervalSample, ...]) -> str:
                 "active_connections": s.active_connections,
                 "errors": _serialize_error_breakdown(s.errors),
                 "system": _serialize_system_snapshot(s.system),
+                "emitted_count": s.emitted_count,
+                "not_emitted_count": s.not_emitted_count,
+                "late_emitted_count": s.late_emitted_count,
+                "latency_histogram": [list(pair) for pair in s.latency_histogram],
             }
             for s in samples
         ]
@@ -235,6 +239,8 @@ def _deserialize_samples(raw: str | None) -> tuple[IntervalSample, ...]:
     for item in json.loads(raw):
         errors_raw = item.pop("errors", None)
         system_raw = item.pop("system", None)
+        histogram_raw = item.get("latency_histogram") or ()
+        item["latency_histogram"] = tuple(tuple(pair) for pair in histogram_raw)
         samples.append(
             IntervalSample(
                 **item,

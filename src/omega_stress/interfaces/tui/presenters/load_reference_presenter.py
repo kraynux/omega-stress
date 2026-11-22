@@ -97,7 +97,7 @@ def load_reference_rows() -> tuple[LoadReferenceRow, ...]:
                 target=_("{requests_per_minute} req/min").format(
                     requests_per_minute=preset.requests_per_minute
                 ),
-                burst=_("~{value} req/s en rafale").format(
+                burst=_("~{value} req/s en continu").format(
                     value=_burst_per_second(preset.requests_per_minute)
                 ),
                 precheck=_precheck_label(level),

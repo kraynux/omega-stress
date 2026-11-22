@@ -2,7 +2,7 @@
 """Contrat de generation de charge et de publication des mesures d'intervalle."""
 from __future__ import annotations
 
-from collections.abc import AsyncIterator
+from collections.abc import AsyncGenerator
 from typing import Protocol
 
 from omega_stress.domain.load.models import LoadPlan
@@ -14,7 +14,7 @@ class LoadRunner(Protocol):
     infrastructure/runner/httpx_load_generator.py — seul point du projet
     ou `httpx` est importe."""
 
-    def run(self, plan: LoadPlan, *, target_url: str) -> AsyncIterator[IntervalSample]:
+    def run(self, plan: LoadPlan, *, target_url: str) -> AsyncGenerator[IntervalSample, None]:
         """Execute le plan et produit un IntervalSample par intervalle
         d'echantillonnage (frequence : domain/load/policies.py::
         SAMPLE_INTERVAL_SECONDS). L'appelant est responsable d'arreter la

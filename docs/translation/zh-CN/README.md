@@ -30,10 +30,12 @@
 ## 目录
 
 <p align="center">
-  <img src="https://raw.githubusercontent.com/kraynux/kraynux/refs/heads/main/docs/translation/zh-CN/omega-stress/A.png" width="24%" />
-  <img src="https://raw.githubusercontent.com/kraynux/kraynux/refs/heads/main/docs/translation/zh-CN/omega-stress/B.png" width="24%" />
-  <img src="https://raw.githubusercontent.com/kraynux/kraynux/refs/heads/main/docs/translation/zh-CN/omega-stress/C.png" width="24%" />
-  <img src="https://raw.githubusercontent.com/kraynux/kraynux/refs/heads/main/docs/translation/zh-CN/omega-stress/D.png" width="24%" />
+  <img src="https://raw.githubusercontent.com/kraynux/kraynux/refs/heads/main/docs/translation/zh-CN/omega-stress/A.png" width="32%" />
+  <img src="https://raw.githubusercontent.com/kraynux/kraynux/refs/heads/main/docs/translation/zh-CN/omega-stress/B.png" width="32%" />
+  <img src="https://raw.githubusercontent.com/kraynux/kraynux/refs/heads/main/docs/translation/zh-CN/omega-stress/C.png" width="32%" />
+  <img src="https://raw.githubusercontent.com/kraynux/kraynux/refs/heads/main/docs/translation/zh-CN/omega-stress/D.png" width="32%" />
+  <img src="https://raw.githubusercontent.com/kraynux/kraynux/refs/heads/main/docs/translation/zh-CN/omega-stress/E.png" width="32%" />
+  <img src="https://raw.githubusercontent.com/kraynux/kraynux/refs/heads/main/docs/translation/zh-CN/omega-stress/F.png" width="32%" />
 </p>
 
 - [简介](#简介)
@@ -45,6 +47,7 @@
 - [时长配置文件 D1-D6](#时长配置文件-d1-d6配置文件模式)
 - [安全模式](#安全模式)
 - [本地校准](#本地校准)
+- [分布式负载（局域网）](#分布式负载局域网)
 - [配置](#配置)
 - [测试与质量](#测试与质量)
 - [卸载](#卸载)
@@ -72,9 +75,9 @@
 ## 项目不做什么
 
 - 它不取代网络扫描工具 — 产品的用词和定位明确是“负载测试”，绝不是“扫描”。
-- 它不实现任何外部负载引擎（k6 等）— 使用原生 `httpx`/asyncio 生成负载。
+- 它不实现任何外部负载引擎（k6 等）— 使用原生 asyncio 生成负载。
 - 未设边界、未确认授权时，它绝不启动任何运行。
-- 它不是分布式负载工具：负载在单台机器、单个进程中生成 — 见[已知限制](#已知限制)。
+- 它本身不负责把机器彼此关联：那是 omega-connect 的职责，由它一次性准备好分布式负载 — 参见 [分布式负载](#分布式负载局域网)。
 
 ## 功能
 
@@ -105,7 +108,7 @@ src/omega_stress/
 ├── domain/           纯业务逻辑：负载、配置档案、运行、目标、主题、终端 — 无 I/O
 ├── application/      编排：commands（操作）、queries（读取）、执行流水线（guards/hooks）
 ├── ports/            适配器所需的 Protocol/ABC 契约（仓储、导出器、负载生成器……）
-├── infrastructure/   具体实现：SQLite、JSON/CSV/HTML 导出器、httpx/asyncio 生成器、终端检测、系统探针
+├── infrastructure/   具体实现：SQLite、JSON/CSV/HTML 导出器、asyncio 生成器、终端检测、系统探针
 ├── interfaces/       两个独立的展示适配器：TUI（Textual）和 CLI（argparse）
 ├── plugins/          预留的扩展点（插件加载）— 骨架已存在，V1 中未实现
 └── shared/           无业务依赖的通用工具（可注入的时钟、标识符生成）
@@ -166,6 +169,7 @@ cd ~/omega-stress && chmod +x install.sh && ./install.sh
 2. 安装依赖（`pip install -e .`；`pyproject.toml` 仍是唯一的权威来源）。
 3. 使 `omega-stress.sh` 和 `install.sh` 可执行。
 4. 将别名 `stress` 添加到 `~/.bashrc` 和 `~/.zshrc`（已存在时不会重复添加）。
+5. 创建身份卡 `var/omega-jeton.json`（`./omega-stress.sh synchro jeton`），omega-connect 读取它以连接套件中的工具；以您的账户写入，绝不包含在归档中。
 
 ## 安装（开发环境）
 
@@ -266,11 +270,11 @@ omega-stress calibrate show                                     # 显示最近�
 | 请求测试 | 微弱 | 吞吐量 | 250 次请求/分钟（≈4.2 次/秒） | 否 | 1 至 5 分钟 |
 | 请求测试 | 低 | 吞吐量 | 500 次请求/分钟（≈8.3 次/秒） | 否 | 1 至 5 分钟 |
 | 请求测试 | 中 | 吞吐量 | 1000 次请求/分钟（≈16.7 次/秒） | 否 | 1 至 5 分钟 |
-| 请求测试 | 高 | 吞吐量 | 2000 次请求/分钟（≈33.3 次/秒） | 否 | 1 至 5 分钟 |
+| 请求测试 | 高 | 吞吐量 | 3000 次请求/分钟（≈50 次/秒） | 否 | 1 至 5 分钟 |
 | 请求测试 | 强劲 | 吞吐量 | 6000 次请求/分钟（≈100 次/秒） | 可选 | 1 至 3 分钟（预检查通过后可达 5） |
-| 请求测试 | 激进 | 吞吐量 | 10,000 次请求/分钟（≈167 次/秒） | 可选 | 1 至 3 分钟（预检查通过后可达 5） |
-| 请求测试 | 猛烈 | 吞吐量 | 15,000 次请求/分钟（≈250 次/秒） | **强制** | 仅 1 至 3 分钟 |
-| 请求测试 | 最大 | 吞吐量 | 20,000 次请求/分钟（≈333 次/秒） | **强制** | 仅 1 至 3 分钟 |
+| 请求测试 | 激进 | 吞吐量 | 12,000 次请求/分钟（≈200 次/秒） | 可选 | 1 至 3 分钟（预检查通过后可达 5） |
+| 请求测试 | 猛烈 | 吞吐量 | 25,000 次请求/分钟（≈417 次/秒） | **强制** | 仅 1 至 3 分钟 |
+| 请求测试 | 最大 | 吞吐量 | 50,000 次请求/分钟（≈833 次/秒） | **强制** | 仅 1 至 3 分钟 |
 | 连接测试 | 微弱 | 并发连接数 | 25 个连接 | 否 | 1 至 5 分钟 |
 | 连接测试 | 低 | 并发连接数 | 50 个连接 | 否 | 1 至 5 分钟 |
 | 连接测试 | 中 | 并发连接数 | 100 个连接 | 否 | 1 至 5 分钟 |
@@ -282,11 +286,13 @@ omega-stress calibrate show                                     # 显示最近�
 | 负载测试（逐步加压） | 微弱 | 吞吐量，逐步爬升 | 峰值 250 次请求/分钟 | 否 | 1 至 5 分钟 |
 | 负载测试（逐步加压） | 低 | 吞吐量，逐步爬升 | 峰值 500 次请求/分钟 | 否 | 1 至 5 分钟 |
 | 负载测试（逐步加压） | 中 | 吞吐量，逐步爬升 | 峰值 1000 次请求/分钟 | 否 | 1 至 5 分钟 |
-| 负载测试（逐步加压） | 高 | 吞吐量，逐步爬升 | 峰值 2000 次请求/分钟 | 否 | 1 至 5 分钟 |
+| 负载测试（逐步加压） | 高 | 吞吐量，逐步爬升 | 峰值 3000 次请求/分钟 | 否 | 1 至 5 分钟 |
 | 负载测试（逐步加压） | 强劲 | 吞吐量，逐步爬升 | 峰值 6000 次请求/分钟 | 可选 | 1 至 3 分钟（预检查通过后可达 5） |
-| 负载测试（逐步加压） | 激进 | 吞吐量，逐步爬升 | 峰值 10,000 次请求/分钟 | 可选 | 1 至 3 分钟（预检查通过后可达 5） |
-| 负载测试（逐步加压） | 猛烈 | 吞吐量，逐步爬升 | 峰值 15,000 次请求/分钟 | **强制** | 仅 1 至 3 分钟 |
-| 负载测试（逐步加压） | 最大 | 吞吐量，逐步爬升 | 峰值 20,000 次请求/分钟 | **强制** | 仅 1 至 3 分钟 |
+| 负载测试（逐步加压） | 激进 | 吞吐量，逐步爬升 | 峰值 12,000 次请求/分钟 | 可选 | 1 至 3 分钟（预检查通过后可达 5） |
+| 负载测试（逐步加压） | 猛烈 | 吞吐量，逐步爬升 | 峰值 25,000 次请求/分钟 | **强制** | 仅 1 至 3 分钟 |
+| 负载测试（逐步加压） | 最大 | 吞吐量，逐步爬升 | 峰值 50,000 次请求/分钟 | **强制** | 仅 1 至 3 分钟 |
+
+连接测试：打开并**保持** N 个连接（keep-alive），每个连接大约每 10 秒发送一次请求，彼此错开。请求测试和负载测试：请求以稳定节奏发出，不等待响应（开环）；目标变慢会体现在延迟中，而不会被掩盖。如果是机器本身跟不上，“本地瓶颈”通知会提示您。
 
 - **预检查：否**：测试直接开始，没有时长条件。
 - **预检查：可选**（强劲/激进）：测试无需预检查即可开始（时长 1-3 分钟），但预检查通过后还会解锁 4-5 分钟的时长。
@@ -379,7 +385,7 @@ var/app.log             # 应用日志
 
 ## 本地校准
 
-测量**本机**（绝不是被测目标）的真实承载能力：内置于 Omega-Stress 的本地回环服务器会逐级承受不断增加的负载，负载由与真实测试相同的 `httpx`/asyncio 引擎生成。
+测量**本机**（绝不是被测目标）的真实承载能力：内置于 Omega-Stress 的本地回环服务器会逐级承受不断增加的负载，负载由与真实测试相同的 asyncio 引擎生成。
 
 - 共 7 级，从空闲（系统背景噪声）一直到 2000 个连接 / 每秒 12,000 次请求，每一级都按健康阈值评估（生成器 CPU 与整机 CPU、可用内存、错误率、达到的吞吐量）— 最后 2 级是有条件的，如果前一级不健康就会跳过。
 - 根据最后一个健康的级别得出安全范围（`VU_safe` / `RPS_safe`），留有安全余量（约 30 % 的储备），可信度随达到的深度提高。
@@ -392,6 +398,15 @@ var/app.log             # 应用日志
 omega-stress calibrate run     # 进行一次新的校准
 omega-stress calibrate show    # 显示最近一次已知的校准，不重新校准
 ```
+
+## 分布式负载（局域网）
+
+一台机器不够用了？其他装有 omega-stress 的机器可以与您的机器一起对目标施加负载，您的机器负责主控和测量。无需输入任何内容：一切都在屏幕上完成。
+
+- **在 omega-connect 中关联一次**（同步 → 分布式负载）：勾选协助的机器，选择其授权方式，按一个按钮。omega-connect 通过 SSH 传送一切（无需抄写），并只用一次密码，就为您的机器的防火墙仅开放 omega-stress 端口。
+- **由每台协助机器的所有者决定**：「每个新目标都询问」或「接受该主控机的一切」，以及最大速率和时长；无论请求什么，机器都会拒绝其余部分。
+- **从 omega-stress 启动**：「分布式负载」菜单选择参与的机器，并说明防火墙情况（谁开放的、哪些规则）；在每个测试屏幕中，「分布式负载模式」复选框让这些机器与您的机器一起对目标施加负载，只有勾选后您的机器才会同时施加负载。omega-stress 自行启动这些机器，并在结束时停止它们。
+- 单一曲线，全部机器上的延迟精确；运行详情保存每台机器的汇总（已发送、已完成的请求和错误）。命令行（`--machines`）仍可使用。
 
 ## 配置
 
@@ -429,7 +444,7 @@ sed -i '/alias stress=/d' ~/.bashrc ~/.zshrc
 
 ## 已知限制
 
-- 负载在**进程内**、单台机器上生成（`httpx`/asyncio）：这不是分布式工具 — 实际上限（见[测试数值](#测试数值)）明显低于 SaaS 负载测试服务（loader.io 等），这是有意为之的受控产品定位。在配置一般的硬件上，连接测试的激进/猛烈/最大级别发出全部目标负载所需的实际时间可能明显长于所选时长 — 此时限制实际吞吐量的是**本机**的能力，而不是目标；请使用[本地校准](#本地校准)了解适合你硬件的合理数值。
+- 分布式负载仅限**局域网**（或 VPN 之类的私有网络）：没有私有网络时还不能跨越互联网。机器能承受多少取决于其处理器（2026-11-21 针对本地目标的测量：4 核约 5,000 次/秒，远超最高级别，参见 [测试数值](#测试数值)）；[本地校准](#本地校准) 会测量您的机器能承受多少，当它跟不上时，“本地瓶颈”通知会提示。
 - 终端类型的自动检测依赖环境变量：xfce4-terminal 目前没有已知的可靠标记（见[支持的终端](#支持的终端)）。
 - `plugins/` 是架构预留的扩展点（加载内置/外部插件），V1 中未实现：骨架已存在，但不提供任何插件。
 - `var/` 相对于项目文件夹（不是 XDG）：面向本地单用户使用，不适合同一台机器上的多用户共享。

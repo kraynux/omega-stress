@@ -1,5 +1,6 @@
 # Copyright (c) 2026 kraynux - kraynux@proton.me - Licence MIT (voir fichier LICENSE)
 """Ecran d'accueil : menu principal vers les autres ecrans."""
+
 from __future__ import annotations
 
 from typing import TYPE_CHECKING
@@ -14,6 +15,7 @@ from textual.widgets import Button, Footer, Header
 from omega_stress.interfaces.tui.screens._base import OmegaScreen
 from omega_stress.interfaces.tui.screens.calibration_screen import CalibrationScreen
 from omega_stress.interfaces.tui.screens.connection_panel import ConnectionPanelScreen
+from omega_stress.interfaces.tui.screens.distributed_screen import DistributedScreen
 from omega_stress.interfaces.tui.screens.help_screen import HelpScreen
 from omega_stress.interfaces.tui.screens.history import HistoryScreen
 from omega_stress.interfaces.tui.screens.profiles import ProfilesScreen
@@ -32,18 +34,18 @@ _MENU_ITEMS: tuple[tuple[str, str], ...] = (
     ("profiles", _("Profils")),
     ("calibration", _("Calibrage")),
     ("targets", _("Cibles")),
-    ("history", _("Historique")),
+    ("distributed", _("Charge distribuée")),
     ("connection", _("Test connexions")),
-    ("settings", _("Réglages")),
+    ("history", _("Historique")),
     ("ramp", _("Test charge")),
-    ("help", _("Aide")),
+    ("settings", _("Réglages")),
     ("request", _("Test requêtes")),
-    ("quit", _("Quitter")),
+    ("help", _("Aide")),
 )
-"""Ordre demande explicitement pour la grille 2 colonnes (2026-09-16) :
-remplit la grille ligne par ligne, colonne gauche puis droite -
-Profils/Calibrage, Cibles/Historique, Test connexions/Reglages, Test
-charge/Aide, Test requetes/Quitter."""
+"""Grille 2 colonnes remplie ligne par ligne. Ordre de 2026-09-16, revu le 2026-11-21 (demande de
+l'auteur) : « Quitter » retire du menu (touches q et Echap), « Charge distribuee » sous
+« Calibrage » dans la colonne de droite. Gauche : Profils, Cibles, Test connexions, Test charge,
+Test requetes ; droite : Calibrage, Charge distribuee, Historique, Reglages, Aide."""
 
 
 class HomeScreen(OmegaScreen):
@@ -84,9 +86,6 @@ class HomeScreen(OmegaScreen):
         if event.button.id == "help":
             self.app.push_screen(HelpScreen(container=self._container))
             return
-        if event.button.id == "quit":
-            self.app.push_screen(QuitConfirmScreen(), self._quit_if_confirmed)
-            return
         screen = self._screen_for(event.button.id)
         if screen is not None:
             self.app.push_screen(screen)
@@ -125,7 +124,10 @@ class HomeScreen(OmegaScreen):
             return CalibrationScreen(container=self._container)
         if item_id == "settings":
             return SettingsScreen(container=self._container)
+        if item_id == "distributed" and getattr(self._container, "distributed", None) is not None:
+            return DistributedScreen(self._container.distributed)  # type: ignore[arg-type]
         return None
+
 
 # <-- INFO DEV ---------------------------------------------------------
 # Role :
@@ -256,4 +258,4 @@ class HomeScreen(OmegaScreen):
 # Comment il sera utilise :
 # - interfaces/tui/app.py, apres screens/splash.py (et apres
 #   terminal_warning.py si applicable).
-#---------------------------------------------------------------------->
+# ---------------------------------------------------------------------->

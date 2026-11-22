@@ -48,6 +48,7 @@ rsync -a \
     --exclude='docs/assets/' \
     --exclude='var/db/*' --exclude='var/exports/*' --exclude='var/screenshots/*' \
     --exclude='var/calibrations/*' --exclude='var/settings.json' --exclude='var/declaration.json' \
+    --exclude='var/omega-jeton.json' --exclude='var/distributed/' --exclude='/CLAUDE-SECURITY-*/' \
     --exclude='var/*.log' --exclude='var/*.jsonl' \
     --exclude='*~' --exclude='*.bak' --exclude='*.swp' \
     --exclude='.coverage' --exclude='htmlcov/' \

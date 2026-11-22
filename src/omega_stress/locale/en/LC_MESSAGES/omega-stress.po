@@ -9,7 +9,9 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Omega-Status: validated\n"
 
-#: src/omega_stress/application/commands/export_run_report.py:36 src/omega_stress/application/commands/replay_run.py:61 src/omega_stress/interfaces/tui/screens/run_details.py:63
+#: src/omega_stress/application/commands/export_run_report.py:36
+#: src/omega_stress/application/commands/replay_run.py:61
+#: src/omega_stress/interfaces/tui/screens/run_details.py:63
 msgid "Run {run_id!r} introuvable."
 msgstr "Run {run_id!r} not found."
 
@@ -26,7 +28,8 @@ msgid "Profil {profile_id!r} introuvable."
 msgstr "Profile {profile_id!r} not found."
 
 #: src/omega_stress/application/commands/replay_run.py:65
-msgid "Le run {run_id!r} ne référence aucun profil et ne peut pas être rejoué."
+msgid ""
+"Le run {run_id!r} ne référence aucun profil et ne peut pas être rejoué."
 msgstr "Run {run_id!r} references no profile and cannot be replayed."
 
 #: src/omega_stress/application/commands/replay_run.py:75
@@ -42,7 +45,8 @@ msgstr "Target {target_id!r} not found, cannot replay this run."
 msgid "Palier {name} : {value}{value2}"
 msgstr "Stage {name}: {value}{value2}"
 
-#: src/omega_stress/application/commands/run_calibration.py:100 src/omega_stress/interfaces/tui/presenters/calibration_presenter.py:108
+#: src/omega_stress/application/commands/run_calibration.py:100
+#: src/omega_stress/interfaces/tui/presenters/calibration_presenter.py:108
 msgid "dégradé"
 msgstr "degraded"
 
@@ -69,16 +73,22 @@ msgid "Impossible de clôturer le run {id} : {error}"
 msgstr "Could not close run {id}: {error}"
 
 #: src/omega_stress/application/pipeline/guards/authorization_guard.py:23
-msgid "Cible {target_id!r} non autorisée : ni épinglée, ni confirmation explicite fournie pour ce run."
-msgstr "Target {target_id!r} not authorized: neither pinned, nor explicitly confirmed for this run."
+msgid ""
+"Cible {target_id!r} non autorisée : ni épinglée, ni confirmation explicite "
+"fournie pour ce run."
+msgstr ""
+"Target {target_id!r} not authorized: neither pinned, nor explicitly "
+"confirmed for this run."
 
 #: src/omega_stress/application/pipeline/guards/capability_guard.py:22
 msgid "Capacité {capability_name!r} indisponible (statut : {value})."
 msgstr "Capability {capability_name!r} unavailable (status: {value})."
 
-#: src/omega_stress/application/pipeline/guards/precheck_guard.py:22 src/omega_stress/domain/load/validators.py:40
+#: src/omega_stress/application/pipeline/guards/precheck_guard.py:22
+#: src/omega_stress/domain/load/validators.py:40
 #, python-brace-format
-msgid "Le niveau {value} exige un pré-check automatique validé avant de démarrer."
+msgid ""
+"Le niveau {value} exige un pré-check automatique validé avant de démarrer."
 msgstr "Level {value} requires a passed automatic pre-check before starting."
 
 #: src/omega_stress/application/pipeline/hooks/notification_hook.py:16
@@ -87,8 +97,12 @@ msgid "Arrêt automatique : {reason}"
 msgstr "Automatic stop: {reason}"
 
 #: src/omega_stress/application/pipeline/hooks/notification_hook.py:21
-msgid "Le générateur local semble devenir le goulot d'étranglement (débit observé significativement inférieur au débit demandé)."
-msgstr "The local generator seems to be becoming the bottleneck (observed rate significantly below the requested rate)."
+msgid ""
+"Le générateur local semble devenir le goulot d'étranglement (débit observé "
+"significativement inférieur au débit demandé)."
+msgstr ""
+"The local generator seems to be becoming the bottleneck (observed rate "
+"significantly below the requested rate)."
 
 #: src/omega_stress/domain/calibration/validators.py:39
 msgid "Un calibrage ou un test est déjà en cours sur ce poste."
@@ -96,13 +110,23 @@ msgstr "A calibration or a test is already running on this machine."
 
 #: src/omega_stress/domain/calibration/validators.py:49
 #, python-brace-format
-msgid "CPU global {cpu_global_percent:.0f}% > seuil {CALIBRATION_PRECONDITION_CPU_GLOBAL_MAX_PERCENT:.0f}% : machine déjà sous pression."
-msgstr "Global CPU {cpu_global_percent:.0f}% > threshold {CALIBRATION_PRECONDITION_CPU_GLOBAL_MAX_PERCENT:.0f}%: machine already under pressure."
+msgid ""
+"CPU global {cpu_global_percent:.0f}% > seuil "
+"{CALIBRATION_PRECONDITION_CPU_GLOBAL_MAX_PERCENT:.0f}% : machine déjà sous "
+"pression."
+msgstr ""
+"Global CPU {cpu_global_percent:.0f}% > threshold "
+"{CALIBRATION_PRECONDITION_CPU_GLOBAL_MAX_PERCENT:.0f}%: machine already "
+"under pressure."
 
 #: src/omega_stress/domain/calibration/validators.py:66
 #, python-brace-format
-msgid "Mémoire disponible {memory_available_percent:.0f}% < seuil {CALIBRATION_PRECONDITION_MEMORY_AVAILABLE_MIN_PERCENT:.0f}%."
-msgstr "Available memory {memory_available_percent:.0f}% < threshold {CALIBRATION_PRECONDITION_MEMORY_AVAILABLE_MIN_PERCENT:.0f}%."
+msgid ""
+"Mémoire disponible {memory_available_percent:.0f}% < seuil "
+"{CALIBRATION_PRECONDITION_MEMORY_AVAILABLE_MIN_PERCENT:.0f}%."
+msgstr ""
+"Available memory {memory_available_percent:.0f}% < threshold "
+"{CALIBRATION_PRECONDITION_MEMORY_AVAILABLE_MIN_PERCENT:.0f}%."
 
 #: src/omega_stress/domain/calibration/validators.py:77
 msgid "Swap déjà activé ou en croissance : machine déjà sous pression."
@@ -110,32 +134,46 @@ msgstr "Swap already in use or growing: machine already under pressure."
 
 #: src/omega_stress/domain/calibration/validators.py:84
 #, python-brace-format
-msgid "Load average 1 min {load_average_1min:.1f} > {logical_cpu_count} coeurs logiques."
-msgstr "1-min load average {load_average_1min:.1f} > {logical_cpu_count} logical cores."
+msgid ""
+"Load average 1 min {load_average_1min:.1f} > {logical_cpu_count} coeurs "
+"logiques."
+msgstr ""
+"1-min load average {load_average_1min:.1f} > {logical_cpu_count} logical "
+"cores."
 
 #: src/omega_stress/domain/load/models.py:27
-msgid "max_error_rate doit être compris entre 0.0 et 1.0, reçu {max_error_rate!r}"
+msgid ""
+"max_error_rate doit être compris entre 0.0 et 1.0, reçu {max_error_rate!r}"
 msgstr "max_error_rate must be between 0.0 and 1.0, got {max_error_rate!r}"
 
 #: src/omega_stress/domain/load/models.py:33
-msgid "max_p95_latency_ms doit être strictement positif, reçu {max_p95_latency_ms!r}"
-msgstr "max_p95_latency_ms must be strictly positive, got {max_p95_latency_ms!r}"
+msgid ""
+"max_p95_latency_ms doit être strictement positif, reçu "
+"{max_p95_latency_ms!r}"
+msgstr ""
+"max_p95_latency_ms must be strictly positive, got {max_p95_latency_ms!r}"
 
 #: src/omega_stress/domain/load/models.py:57
 #, python-brace-format
-msgid "Durée {minutes} min non autorisée pour le niveau {value} (choix fermés : {allowed})"
-msgstr "Duration {minutes} min not allowed for level {value} (fixed choices: {allowed})"
+msgid ""
+"Durée {minutes} min non autorisée pour le niveau {value} (choix fermés : "
+"{allowed})"
+msgstr ""
+"Duration {minutes} min not allowed for level {value} (fixed choices: "
+"{allowed})"
 
 #: src/omega_stress/domain/load/models.py:83
 msgid "{field_name} doit être compris entre 0.0 et 1.0, reçu {value!r}"
 msgstr "{field_name} must be between 0.0 and 1.0, got {value!r}"
 
 #: src/omega_stress/domain/load/models.py:90
-msgid "duration_minutes doit être strictement positif, reçu {duration_minutes!r}"
+msgid ""
+"duration_minutes doit être strictement positif, reçu {duration_minutes!r}"
 msgstr "duration_minutes must be strictly positive, got {duration_minutes!r}"
 
 #: src/omega_stress/domain/load/validators.py:32
-msgid "Aucun run ne peut démarrer sans confirmation d'autorisation de la cible."
+msgid ""
+"Aucun run ne peut démarrer sans confirmation d'autorisation de la cible."
 msgstr "No run can start without authorization confirmation for the target."
 
 #: src/omega_stress/domain/load/validators.py:50
@@ -145,8 +183,12 @@ msgstr "Profile {name} is not compatible with the {value} family."
 
 #: src/omega_stress/domain/load/validators.py:59
 #, python-brace-format
-msgid "Durée {minutes} min incohérente avec le profil {name} ({total_minutes} min attendues)."
-msgstr "Duration {minutes} min inconsistent with profile {name} ({total_minutes} min expected)."
+msgid ""
+"Durée {minutes} min incohérente avec le profil {name} ({total_minutes} min "
+"attendues)."
+msgstr ""
+"Duration {minutes} min inconsistent with profile {name} ({total_minutes} min"
+" expected)."
 
 #: src/omega_stress/domain/load/validators.py:80
 #, python-brace-format
@@ -158,28 +200,46 @@ msgid "Un Test charge doit définir au moins une étape de rampe."
 msgstr "A Load test must define at least one ramp stage."
 
 #: src/omega_stress/domain/load/validators.py:95
-msgid "Seul un Test charge (ou un Test connexions avec profil de durée) peut définir des étapes de rampe."
-msgstr "Only a Load test (or a Connections test with a duration profile) can define ramp stages."
+msgid ""
+"Seul un Test charge (ou un Test connexions avec profil de durée) peut "
+"définir des étapes de rampe."
+msgstr ""
+"Only a Load test (or a Connections test with a duration profile) can define "
+"ramp stages."
 
 #: src/omega_stress/domain/load/validators.py:117
 #, python-brace-format
-msgid "Taux d'erreur observé {observed_error_rate:.1%} > seuil {max_error_rate:.1%}"
-msgstr "Observed error rate {observed_error_rate:.1%} > threshold {max_error_rate:.1%}"
+msgid ""
+"Taux d'erreur observé {observed_error_rate:.1%} > seuil {max_error_rate:.1%}"
+msgstr ""
+"Observed error rate {observed_error_rate:.1%} > threshold "
+"{max_error_rate:.1%}"
 
 #: src/omega_stress/domain/load/validators.py:132
 #, python-brace-format
-msgid "Latence p95 observée {observed_p95_latency_ms:.0f}ms > seuil {max_p95_latency_ms:.0f}ms"
-msgstr "Observed p95 latency {observed_p95_latency_ms:.0f}ms > threshold {max_p95_latency_ms:.0f}ms"
+msgid ""
+"Latence p95 observée {observed_p95_latency_ms:.0f}ms > seuil "
+"{max_p95_latency_ms:.0f}ms"
+msgstr ""
+"Observed p95 latency {observed_p95_latency_ms:.0f}ms > threshold "
+"{max_p95_latency_ms:.0f}ms"
 
 #: src/omega_stress/domain/load/validators.py:175
 #, python-brace-format
-msgid "Le niveau {value} pour le profil {name} ({total_minutes} min) exige la confirmation renforcée exacte."
-msgstr "Level {value} for profile {name} ({total_minutes} min) requires the exact reinforced confirmation."
+msgid ""
+"Le niveau {value} pour le profil {name} ({total_minutes} min) exige la "
+"confirmation renforcée exacte."
+msgstr ""
+"Level {value} for profile {name} ({total_minutes} min) requires the exact "
+"reinforced confirmation."
 
 #: src/omega_stress/domain/load/validators.py:184
 #, python-brace-format
-msgid "Le niveau {value} n'est pas proposé pour le profil {name} ({total_minutes} min)."
-msgstr "Level {value} is not offered for profile {name} ({total_minutes} min)."
+msgid ""
+"Le niveau {value} n'est pas proposé pour le profil {name} ({total_minutes} "
+"min)."
+msgstr ""
+"Level {value} is not offered for profile {name} ({total_minutes} min)."
 
 #: src/omega_stress/domain/load/validators.py:209
 #, python-brace-format
@@ -188,33 +248,63 @@ msgstr "{CRITICAL_WINDOW_SECONDS:.0f}s critical"
 
 #: src/omega_stress/domain/load/validators.py:227
 #, python-brace-format
-msgid "Taux de timeout {timeout_rate:.1%} sur fenêtre {window_label} >= seuil {WINDOW_TIMEOUT_RATE_ABORT_THRESHOLD:.0%}"
-msgstr "Timeout rate {timeout_rate:.1%} over window {window_label} >= threshold {WINDOW_TIMEOUT_RATE_ABORT_THRESHOLD:.0%}"
+msgid ""
+"Taux de timeout {timeout_rate:.1%} sur fenêtre {window_label} >= seuil "
+"{WINDOW_TIMEOUT_RATE_ABORT_THRESHOLD:.0%}"
+msgstr ""
+"Timeout rate {timeout_rate:.1%} over window {window_label} >= threshold "
+"{WINDOW_TIMEOUT_RATE_ABORT_THRESHOLD:.0%}"
 
 #: src/omega_stress/domain/load/validators.py:243
 #, python-brace-format
-msgid "Taux d'erreurs HTTP 5xx {http_5xx_rate:.1%} sur fenêtre {window_label} >= seuil {WINDOW_HTTP_5XX_RATE_ABORT_THRESHOLD:.0%}"
-msgstr "HTTP 5xx error rate {http_5xx_rate:.1%} over window {window_label} >= threshold {WINDOW_HTTP_5XX_RATE_ABORT_THRESHOLD:.0%}"
+msgid ""
+"Taux d'erreurs HTTP 5xx {http_5xx_rate:.1%} sur fenêtre {window_label} >= "
+"seuil {WINDOW_HTTP_5XX_RATE_ABORT_THRESHOLD:.0%}"
+msgstr ""
+"HTTP 5xx error rate {http_5xx_rate:.1%} over window {window_label} >= "
+"threshold {WINDOW_HTTP_5XX_RATE_ABORT_THRESHOLD:.0%}"
 
 #: src/omega_stress/domain/load/validators.py:259
 #, python-brace-format
-msgid "Taux d'erreurs total {total_error_rate:.1%} sur fenêtre {window_label} >= seuil {WINDOW_TOTAL_ERROR_RATE_ABORT_THRESHOLD:.0%}"
-msgstr "Total error rate {total_error_rate:.1%} over window {window_label} >= threshold {WINDOW_TOTAL_ERROR_RATE_ABORT_THRESHOLD:.0%}"
+msgid ""
+"Taux d'erreurs total {total_error_rate:.1%} sur fenêtre {window_label} >= "
+"seuil {WINDOW_TOTAL_ERROR_RATE_ABORT_THRESHOLD:.0%}"
+msgstr ""
+"Total error rate {total_error_rate:.1%} over window {window_label} >= "
+"threshold {WINDOW_TOTAL_ERROR_RATE_ABORT_THRESHOLD:.0%}"
 
 #: src/omega_stress/domain/load/validators.py:310
 #, python-brace-format
-msgid "CPU générateur >= {threshold_text} (~{GENERATOR_CPU_ABORT_RATIO_OF_SINGLE_CORE:.0%} d'un coeur) ET CPU machine >= {GENERATOR_CPU_ABORT_GLOBAL_THRESHOLD_PERCENT:.0f}% pendant {GENERATOR_CPU_ABORT_SUSTAINED_SAMPLES}s : la machine hôte elle-même est sous pression, pas seulement le générateur"
-msgstr "Generator CPU >= {threshold_text} (~{GENERATOR_CPU_ABORT_RATIO_OF_SINGLE_CORE:.0%} of one core) AND machine CPU >= {GENERATOR_CPU_ABORT_GLOBAL_THRESHOLD_PERCENT:.0f}% for {GENERATOR_CPU_ABORT_SUSTAINED_SAMPLES}s: the host machine itself is under pressure, not just the generator"
+msgid ""
+"CPU générateur >= {threshold_text} "
+"(~{GENERATOR_CPU_ABORT_RATIO_OF_SINGLE_CORE:.0%} d'un coeur) ET CPU machine "
+">= {GENERATOR_CPU_ABORT_GLOBAL_THRESHOLD_PERCENT:.0f}% pendant "
+"{GENERATOR_CPU_ABORT_SUSTAINED_SAMPLES}s : la machine hôte elle-même est "
+"sous pression, pas seulement le générateur"
+msgstr ""
+"Generator CPU >= {threshold_text} "
+"(~{GENERATOR_CPU_ABORT_RATIO_OF_SINGLE_CORE:.0%} of one core) AND machine "
+"CPU >= {GENERATOR_CPU_ABORT_GLOBAL_THRESHOLD_PERCENT:.0f}% for "
+"{GENERATOR_CPU_ABORT_SUSTAINED_SAMPLES}s: the host machine itself is under "
+"pressure, not just the generator"
 
 #: src/omega_stress/domain/load/validators.py:333
 #, python-brace-format
-msgid "Mémoire disponible {memory_available_percent:.0f}% < seuil {MEMORY_AVAILABLE_ABORT_THRESHOLD_PERCENT:.0f}%"
-msgstr "Available memory {memory_available_percent:.0f}% < threshold {MEMORY_AVAILABLE_ABORT_THRESHOLD_PERCENT:.0f}%"
+msgid ""
+"Mémoire disponible {memory_available_percent:.0f}% < seuil "
+"{MEMORY_AVAILABLE_ABORT_THRESHOLD_PERCENT:.0f}%"
+msgstr ""
+"Available memory {memory_available_percent:.0f}% < threshold "
+"{MEMORY_AVAILABLE_ABORT_THRESHOLD_PERCENT:.0f}%"
 
 #: src/omega_stress/domain/load/validators.py:353
 #, python-brace-format
-msgid "Descripteurs de fichiers {open_files}/{open_files_soft_limit} >= {OPEN_FILES_ABORT_RATIO:.0%} de la limite"
-msgstr "File descriptors {open_files}/{open_files_soft_limit} >= {OPEN_FILES_ABORT_RATIO:.0%} of the limit"
+msgid ""
+"Descripteurs de fichiers {open_files}/{open_files_soft_limit} >= "
+"{OPEN_FILES_ABORT_RATIO:.0%} de la limite"
+msgstr ""
+"File descriptors {open_files}/{open_files_soft_limit} >= "
+"{OPEN_FILES_ABORT_RATIO:.0%} of the limit"
 
 #: src/omega_stress/domain/profiles/validation.py:17
 msgid "Le nom du profil ne peut pas être vide."
@@ -222,16 +312,24 @@ msgstr "The profile name cannot be empty."
 
 #: src/omega_stress/domain/profiles/validation.py:26
 #, python-brace-format
-msgid "Durée {minutes} min non autorisée pour le niveau {value} dans ce profil (extended_duration_authorized={extended_duration_authorized})."
-msgstr "Duration {minutes} min not allowed for level {value} in this profile (extended_duration_authorized={extended_duration_authorized})."
+msgid ""
+"Durée {minutes} min non autorisée pour le niveau {value} dans ce profil "
+"(extended_duration_authorized={extended_duration_authorized})."
+msgstr ""
+"Duration {minutes} min not allowed for level {value} in this profile "
+"(extended_duration_authorized={extended_duration_authorized})."
 
 #: src/omega_stress/domain/reports/builders.py:17
 msgid "Le test s'est déroulé normalement, sans dépassement de seuil."
 msgstr "The test ran normally, with no threshold exceeded."
 
 #: src/omega_stress/domain/reports/builders.py:19
-msgid "Le test s'est terminé avec une dégradation observée, sans dépassement de seuil critique."
-msgstr "The test finished with an observed degradation, with no critical threshold exceeded."
+msgid ""
+"Le test s'est terminé avec une dégradation observée, sans dépassement de "
+"seuil critique."
+msgstr ""
+"The test finished with an observed degradation, with no critical threshold "
+"exceeded."
 
 #: src/omega_stress/domain/reports/builders.py:23
 msgid "Le test a été arrêté automatiquement suite à un dépassement de seuil."
@@ -247,17 +345,33 @@ msgstr "The test was stopped manually by the user."
 
 #: src/omega_stress/domain/reports/builders.py:93
 #, python-brace-format
-msgid "{error_count} erreur(s) sur {total_requests} requêtes : vérifier les journaux de la cible sur la période du test."
-msgstr "{error_count} error(s) out of {total_requests} requests: check the target's logs over the test period."
+msgid ""
+"{error_count} erreur(s) sur {total_requests} requêtes : vérifier les "
+"journaux de la cible sur la période du test."
+msgstr ""
+"{error_count} error(s) out of {total_requests} requests: check the target's "
+"logs over the test period."
 
 #: src/omega_stress/domain/reports/builders.py:106
-msgid "Débit observé significativement inférieur au débit demandé : le générateur local peut être devenu le goulot d'étranglement (voir plan produit, Configuration minimale du générateur)."
-msgstr "Observed rate significantly below the requested rate: the local generator may have become the bottleneck (see product plan, Minimum generator configuration)."
+msgid ""
+"Débit observé significativement inférieur au débit demandé : le générateur "
+"local peut être devenu le goulot d'étranglement (voir plan produit, "
+"Configuration minimale du générateur)."
+msgstr ""
+"Observed rate significantly below the requested rate: the local generator "
+"may have become the bottleneck (see product plan, Minimum generator "
+"configuration)."
 
 #: src/omega_stress/domain/reports/builders.py:118
 #, python-brace-format
-msgid "CPU du générateur monté à {peak_cpu_percent_generator:.0f} % au pic pendant le test : les résultats peuvent en partie refléter une limite du générateur local plutôt que celle de la cible."
-msgstr "Generator CPU peaked at {peak_cpu_percent_generator:.0f} % during the test: the results may partly reflect a limit of the local generator rather than of the target."
+msgid ""
+"CPU du générateur monté à {peak_cpu_percent_generator:.0f} % au pic pendant "
+"le test : les résultats peuvent en partie refléter une limite du générateur "
+"local plutôt que celle de la cible."
+msgstr ""
+"Generator CPU peaked at {peak_cpu_percent_generator:.0f} % during the test: "
+"the results may partly reflect a limit of the local generator rather than of"
+" the target."
 
 #: src/omega_stress/domain/reports/service.py:26
 msgid "Thème d'export {export_theme!r} inconnu (catalogue : {value})."
@@ -430,7 +544,8 @@ msgstr "Search for a command…"
 msgid "Masquer l'aide des raccourcis"
 msgstr "Hide the shortcuts help"
 
-#: src/omega_stress/interfaces/tui/app.py:190 src/omega_stress/interfaces/tui/app.py:194
+#: src/omega_stress/interfaces/tui/app.py:190
+#: src/omega_stress/interfaces/tui/app.py:194
 msgid "Raccourcis"
 msgstr "Shortcuts"
 
@@ -449,12 +564,26 @@ msgstr "No usable envelope ({reason})."
 
 #: src/omega_stress/interfaces/tui/presenters/calibration_presenter.py:31
 #, python-brace-format
-msgid "VU_safe {vu_safe} | RPS_safe {rps_safe} | confiance {confidence} (dernier palier sain : {last_healthy_name})"
-msgstr "VU_safe {vu_safe} | RPS_safe {rps_safe} | confidence {confidence} (last healthy stage: {last_healthy_name})"
+msgid ""
+"VU_safe {vu_safe} | RPS_safe {rps_safe} | confiance {confidence} (dernier "
+"palier sain : {last_healthy_name})"
+msgstr ""
+"VU_safe {vu_safe} | RPS_safe {rps_safe} | confidence {confidence} (last "
+"healthy stage: {last_healthy_name})"
 
 #: src/omega_stress/interfaces/tui/presenters/calibration_presenter.py:79
-msgid "Aucun calibrage exploitable pour cette machine — vous ne connaissez pas ses limites réelles. Nous recommandons d'en faire un depuis l'écran Calibrage avant de désactiver le mode sécurité sur un niveau intensif. Vous choisissez de dépasser les garde-fous de CETTE machine : la fiabilité du résultat et la stabilité de votre ordinateur restent sous votre responsabilité."
-msgstr "No usable calibration for this machine — you don't know its real limits. We recommend running one from the Calibration screen before turning off safety mode at an intensive level. You are choosing to go beyond the safeguards of THIS machine: the reliability of the result and the stability of your computer remain your responsibility."
+msgid ""
+"Aucun calibrage exploitable pour cette machine — vous ne connaissez pas ses "
+"limites réelles. Nous recommandons d'en faire un depuis l'écran Calibrage "
+"avant de désactiver le mode sécurité sur un niveau intensif. Vous choisissez"
+" de dépasser les garde-fous de CETTE machine : la fiabilité du résultat et "
+"la stabilité de votre ordinateur restent sous votre responsabilité."
+msgstr ""
+"No usable calibration for this machine — you don't know its real limits. We "
+"recommend running one from the Calibration screen before turning off safety "
+"mode at an intensive level. You are choosing to go beyond the safeguards of "
+"THIS machine: the reliability of the result and the stability of your "
+"computer remain your responsibility."
 
 #: src/omega_stress/interfaces/tui/presenters/calibration_presenter.py:87
 msgid "AU-DESSUS"
@@ -483,7 +612,8 @@ msgstr "{default_text} ({extra_text} with pre-check)"
 msgid "Non/Oui"
 msgstr "No/Yes"
 
-#: src/omega_stress/interfaces/tui/presenters/load_reference_presenter.py:93 src/omega_stress/interfaces/tui/screens/home.py:40
+#: src/omega_stress/interfaces/tui/presenters/load_reference_presenter.py:93
+#: src/omega_stress/interfaces/tui/screens/home.py:40
 msgid "Test requêtes"
 msgstr "Requests test"
 
@@ -498,10 +628,11 @@ msgstr "{requests_per_minute} req/min"
 
 #: src/omega_stress/interfaces/tui/presenters/load_reference_presenter.py:99
 #, python-brace-format
-msgid "~{value} req/s en rafale"
-msgstr "~{value} req/s in bursts"
+msgid "~{value} req/s en continu"
+msgstr "~{value} req/s, steady"
 
-#: src/omega_stress/interfaces/tui/presenters/load_reference_presenter.py:111 src/omega_stress/interfaces/tui/screens/home.py:36
+#: src/omega_stress/interfaces/tui/presenters/load_reference_presenter.py:111
+#: src/omega_stress/interfaces/tui/screens/home.py:36
 msgid "Test connexions"
 msgstr "Connections test"
 
@@ -519,7 +650,8 @@ msgstr "{concurrent_connections} connections"
 msgid "{concurrent_connections} en parallèle, chaque seconde"
 msgstr "{concurrent_connections} in parallel, every second"
 
-#: src/omega_stress/interfaces/tui/presenters/load_reference_presenter.py:129 src/omega_stress/interfaces/tui/screens/home.py:38
+#: src/omega_stress/interfaces/tui/presenters/load_reference_presenter.py:129
+#: src/omega_stress/interfaces/tui/screens/home.py:38
 msgid "Test charge"
 msgstr "Load test"
 
@@ -551,15 +683,20 @@ msgstr "Load"
 
 #: src/omega_stress/interfaces/tui/presenters/load_reference_presenter.py:194
 msgid "Seul le débit (req/min) pilote ce test ; la simultanéité en découle."
-msgstr "Only the rate (req/min) drives this test; concurrency follows from it."
+msgstr ""
+"Only the rate (req/min) drives this test; concurrency follows from it."
 
 #: src/omega_stress/interfaces/tui/presenters/load_reference_presenter.py:196
 msgid "Seule la simultanéité (connexions) pilote ce test ; aucun débit cible."
 msgstr "Only concurrency (connections) drives this test; no target rate."
 
 #: src/omega_stress/interfaces/tui/presenters/load_reference_presenter.py:198
-msgid "Seul le débit au pic pilote ce test, atteint progressivement : sur une durée choisie plus courte que la rampe indiquée, le pic n'est jamais atteint."
-msgstr "Only the peak rate drives this test, reached progressively: with a chosen duration shorter than the indicated ramp, the peak is never reached."
+msgid ""
+"Seul le débit au pic pilote ce test, atteint progressivement : sur une durée"
+" choisie plus courte que la rampe indiquée, le pic n'est jamais atteint."
+msgstr ""
+"Only the peak rate drives this test, reached progressively: with a chosen "
+"duration shorter than the indicated ramp, the peak is never reached."
 
 #: src/omega_stress/interfaces/tui/presenters/profile_presenter.py:17
 msgid "Figé"
@@ -591,8 +728,12 @@ msgstr "Running"
 
 #: src/omega_stress/interfaces/tui/presenters/run_presenter.py:61
 #, python-brace-format
-msgid "{observed_rate_per_minute:.0f} req/min | {errors}/{total} erreurs | p95 {p95:.0f} ms"
-msgstr "{observed_rate_per_minute:.0f} req/min | {errors}/{total} errors | p95 {p95:.0f} ms"
+msgid ""
+"{observed_rate_per_minute:.0f} req/min | {errors}/{total} erreurs | p95 "
+"{p95:.0f} ms"
+msgstr ""
+"{observed_rate_per_minute:.0f} req/min | {errors}/{total} errors | p95 "
+"{p95:.0f} ms"
 
 #: src/omega_stress/interfaces/tui/presenters/run_presenter.py:85
 #, python-brace-format
@@ -621,8 +762,15 @@ msgid "CALIBRAGE"
 msgstr "CALIBRATION"
 
 #: src/omega_stress/interfaces/tui/screens/calibration_screen.py:79
-msgid "Mesure la capacité réelle de CETTE machine (pas la cible testée) via un serveur de boucle locale, par paliers de charge croissante. Le résultat n'est pas encore appliqué aux tests réels : consultation seule pour l'instant."
-msgstr "Measures the real capacity of THIS machine (not the tested target) through a local loopback server, in stages of increasing load. The result is not applied to real tests yet: for information only for now."
+msgid ""
+"Mesure la capacité réelle de CETTE machine (pas la cible testée) via un "
+"serveur de boucle locale, par paliers de charge croissante. Le résultat "
+"n'est pas encore appliqué aux tests réels : consultation seule pour "
+"l'instant."
+msgstr ""
+"Measures the real capacity of THIS machine (not the tested target) through a"
+" local loopback server, in stages of increasing load. The result is not "
+"applied to real tests yet: for information only for now."
 
 #: src/omega_stress/interfaces/tui/screens/calibration_screen.py:88
 msgid "Lancer le calibrage"
@@ -654,25 +802,38 @@ msgstr "Yes, confirm"
 msgid "Non, annuler"
 msgstr "No, cancel"
 
-#: src/omega_stress/interfaces/tui/screens/connection_panel.py:49 src/omega_stress/interfaces/tui/screens/ramp_panel.py:49 src/omega_stress/interfaces/tui/screens/request_panel.py:49
+#: src/omega_stress/interfaces/tui/screens/connection_panel.py:49
+#: src/omega_stress/interfaces/tui/screens/ramp_panel.py:49
+#: src/omega_stress/interfaces/tui/screens/request_panel.py:49
 #, python-brace-format
 msgid "{value:.1f}"
 msgstr "{value:.1f}"
 
-#: src/omega_stress/interfaces/tui/screens/connection_panel.py:51 src/omega_stress/interfaces/tui/screens/connection_panel.py:213 src/omega_stress/interfaces/tui/screens/ramp_panel.py:51 src/omega_stress/interfaces/tui/screens/ramp_panel.py:208 src/omega_stress/interfaces/tui/screens/request_panel.py:51 src/omega_stress/interfaces/tui/screens/request_panel.py:217
+#: src/omega_stress/interfaces/tui/screens/connection_panel.py:51
+#: src/omega_stress/interfaces/tui/screens/connection_panel.py:213
+#: src/omega_stress/interfaces/tui/screens/ramp_panel.py:51
+#: src/omega_stress/interfaces/tui/screens/ramp_panel.py:208
+#: src/omega_stress/interfaces/tui/screens/request_panel.py:51
+#: src/omega_stress/interfaces/tui/screens/request_panel.py:217
 #, python-brace-format
 msgid "{m} min"
 msgstr "{m} min"
 
-#: src/omega_stress/interfaces/tui/screens/connection_panel.py:54 src/omega_stress/interfaces/tui/screens/ramp_panel.py:54 src/omega_stress/interfaces/tui/screens/request_panel.py:57
+#: src/omega_stress/interfaces/tui/screens/connection_panel.py:54
+#: src/omega_stress/interfaces/tui/screens/ramp_panel.py:54
+#: src/omega_stress/interfaces/tui/screens/request_panel.py:57
 msgid "Manuel (1-5 min)"
 msgstr "Manual (1-5 min)"
 
-#: src/omega_stress/interfaces/tui/screens/connection_panel.py:54 src/omega_stress/interfaces/tui/screens/ramp_panel.py:54 src/omega_stress/interfaces/tui/screens/request_panel.py:57
+#: src/omega_stress/interfaces/tui/screens/connection_panel.py:54
+#: src/omega_stress/interfaces/tui/screens/ramp_panel.py:54
+#: src/omega_stress/interfaces/tui/screens/request_panel.py:57
 msgid "Profil D1-D6"
 msgstr "Profile D1-D6"
 
-#: src/omega_stress/interfaces/tui/screens/connection_panel.py:57 src/omega_stress/interfaces/tui/screens/ramp_panel.py:57 src/omega_stress/interfaces/tui/screens/request_panel.py:60
+#: src/omega_stress/interfaces/tui/screens/connection_panel.py:57
+#: src/omega_stress/interfaces/tui/screens/ramp_panel.py:57
+#: src/omega_stress/interfaces/tui/screens/request_panel.py:60
 #, python-brace-format
 msgid "{upper} {name} ({total_minutes} min)"
 msgstr "{upper} {name} ({total_minutes} min)"
@@ -681,111 +842,173 @@ msgstr "{upper} {name} ({total_minutes} min)"
 msgid "TEST CONNEXIONS"
 msgstr "CONNECTIONS TEST"
 
-#: src/omega_stress/interfaces/tui/screens/connection_panel.py:107 src/omega_stress/interfaces/tui/screens/ramp_panel.py:107 src/omega_stress/interfaces/tui/screens/request_panel.py:113
+#: src/omega_stress/interfaces/tui/screens/connection_panel.py:107
+#: src/omega_stress/interfaces/tui/screens/ramp_panel.py:107
+#: src/omega_stress/interfaces/tui/screens/request_panel.py:113
 msgid "Profil figé (optionnel)"
 msgstr "Frozen profile (optional)"
 
-#: src/omega_stress/interfaces/tui/screens/connection_panel.py:111 src/omega_stress/interfaces/tui/screens/ramp_panel.py:111 src/omega_stress/interfaces/tui/screens/request_panel.py:117
+#: src/omega_stress/interfaces/tui/screens/connection_panel.py:111
+#: src/omega_stress/interfaces/tui/screens/ramp_panel.py:111
+#: src/omega_stress/interfaces/tui/screens/request_panel.py:117
 msgid "Critères du test"
 msgstr "Test criteria"
 
-#: src/omega_stress/interfaces/tui/screens/connection_panel.py:112 src/omega_stress/interfaces/tui/screens/profile_wizard.py:47 src/omega_stress/interfaces/tui/screens/ramp_panel.py:112 src/omega_stress/interfaces/tui/screens/request_panel.py:118 src/omega_stress/infrastructure/exporters/templates/report.html.jinja:62
+#: src/omega_stress/interfaces/tui/screens/connection_panel.py:112
+#: src/omega_stress/interfaces/tui/screens/profile_wizard.py:47
+#: src/omega_stress/interfaces/tui/screens/ramp_panel.py:112
+#: src/omega_stress/interfaces/tui/screens/request_panel.py:118
+#: src/omega_stress/infrastructure/exporters/templates/report.html.jinja:62
 msgid "Intensité"
 msgstr "Intensity"
 
-#: src/omega_stress/interfaces/tui/screens/connection_panel.py:115 src/omega_stress/interfaces/tui/screens/ramp_panel.py:115 src/omega_stress/interfaces/tui/screens/request_panel.py:121
+#: src/omega_stress/interfaces/tui/screens/connection_panel.py:115
+#: src/omega_stress/interfaces/tui/screens/ramp_panel.py:115
+#: src/omega_stress/interfaces/tui/screens/request_panel.py:121
 msgid "Mode durée"
 msgstr "Duration mode"
 
-#: src/omega_stress/interfaces/tui/screens/connection_panel.py:121 src/omega_stress/interfaces/tui/screens/profile_wizard.py:48 src/omega_stress/interfaces/tui/screens/ramp_panel.py:121 src/omega_stress/interfaces/tui/screens/request_panel.py:127
+#: src/omega_stress/interfaces/tui/screens/connection_panel.py:121
+#: src/omega_stress/interfaces/tui/screens/profile_wizard.py:48
+#: src/omega_stress/interfaces/tui/screens/ramp_panel.py:121
+#: src/omega_stress/interfaces/tui/screens/request_panel.py:127
 msgid "Durée (minutes)"
 msgstr "Duration (minutes)"
 
-#: src/omega_stress/interfaces/tui/screens/connection_panel.py:127 src/omega_stress/interfaces/tui/screens/ramp_panel.py:127 src/omega_stress/interfaces/tui/screens/request_panel.py:133
+#: src/omega_stress/interfaces/tui/screens/connection_panel.py:127
+#: src/omega_stress/interfaces/tui/screens/ramp_panel.py:127
+#: src/omega_stress/interfaces/tui/screens/request_panel.py:133
 msgid "Profil de durée"
 msgstr "Duration profile"
 
-#: src/omega_stress/interfaces/tui/screens/connection_panel.py:132 src/omega_stress/interfaces/tui/screens/ramp_panel.py:132 src/omega_stress/interfaces/tui/screens/request_panel.py:138
+#: src/omega_stress/interfaces/tui/screens/connection_panel.py:132
+#: src/omega_stress/interfaces/tui/screens/ramp_panel.py:132
+#: src/omega_stress/interfaces/tui/screens/request_panel.py:138
 msgid "Confirmation renforcée requise pour ce niveau :"
 msgstr "Reinforced confirmation required for this level:"
 
-#: src/omega_stress/interfaces/tui/screens/connection_panel.py:133 src/omega_stress/interfaces/tui/screens/ramp_panel.py:133 src/omega_stress/interfaces/tui/screens/request_panel.py:139
+#: src/omega_stress/interfaces/tui/screens/connection_panel.py:133
+#: src/omega_stress/interfaces/tui/screens/ramp_panel.py:133
+#: src/omega_stress/interfaces/tui/screens/request_panel.py:139
 msgid "Texte de confirmation exact"
 msgstr "Exact confirmation text"
 
-#: src/omega_stress/interfaces/tui/screens/connection_panel.py:136 src/omega_stress/interfaces/tui/screens/ramp_panel.py:136 src/omega_stress/interfaces/tui/screens/request_panel.py:142
+#: src/omega_stress/interfaces/tui/screens/connection_panel.py:136
+#: src/omega_stress/interfaces/tui/screens/ramp_panel.py:136
+#: src/omega_stress/interfaces/tui/screens/request_panel.py:142
 msgid "Taux d'erreur maximal"
 msgstr "Maximum error rate"
 
-#: src/omega_stress/interfaces/tui/screens/connection_panel.py:146 src/omega_stress/interfaces/tui/screens/ramp_panel.py:146 src/omega_stress/interfaces/tui/screens/request_panel.py:152 src/omega_stress/interfaces/tui/widgets/load_reference_table.py:26
+#: src/omega_stress/interfaces/tui/screens/connection_panel.py:146
+#: src/omega_stress/interfaces/tui/screens/ramp_panel.py:146
+#: src/omega_stress/interfaces/tui/screens/request_panel.py:152
+#: src/omega_stress/interfaces/tui/widgets/load_reference_table.py:26
 msgid "Pré-check"
 msgstr "Pre-check"
 
 #: src/omega_stress/interfaces/tui/screens/connection_panel.py:196
-msgid "Aucun profil figé pour Test connexions (des profils figés existent pour d'autres types de test — Requêtes/Rampe)."
-msgstr "No frozen profile for the Connections test (frozen profiles exist for other test types — Requests/Ramp)."
+msgid ""
+"Aucun profil figé pour Test connexions (des profils figés existent pour "
+"d'autres types de test — Requêtes/Rampe)."
+msgstr ""
+"No frozen profile for the Connections test (frozen profiles exist for other "
+"test types — Requests/Ramp)."
 
-#: src/omega_stress/interfaces/tui/screens/connection_panel.py:202 src/omega_stress/interfaces/tui/screens/ramp_panel.py:197 src/omega_stress/interfaces/tui/screens/request_panel.py:203
-msgid "Aucun profil figé pour l'instant (des profils existent mais aucun n'est figé)."
+#: src/omega_stress/interfaces/tui/screens/connection_panel.py:202
+#: src/omega_stress/interfaces/tui/screens/ramp_panel.py:197
+#: src/omega_stress/interfaces/tui/screens/request_panel.py:203
+msgid ""
+"Aucun profil figé pour l'instant (des profils existent mais aucun n'est "
+"figé)."
 msgstr "No frozen profile yet (profiles exist but none is frozen)."
 
-#: src/omega_stress/interfaces/tui/screens/connection_panel.py:205 src/omega_stress/interfaces/tui/screens/ramp_panel.py:200 src/omega_stress/interfaces/tui/screens/request_panel.py:206
+#: src/omega_stress/interfaces/tui/screens/connection_panel.py:205
+#: src/omega_stress/interfaces/tui/screens/ramp_panel.py:200
+#: src/omega_stress/interfaces/tui/screens/request_panel.py:206
 msgid "Aucun profil figé pour l'instant — créez-en un depuis l'écran Profils."
 msgstr "No frozen profile yet — create one from the Profiles screen."
 
-#: src/omega_stress/interfaces/tui/screens/connection_panel.py:221 src/omega_stress/interfaces/tui/screens/ramp_panel.py:216 src/omega_stress/interfaces/tui/screens/request_panel.py:225
+#: src/omega_stress/interfaces/tui/screens/connection_panel.py:221
+#: src/omega_stress/interfaces/tui/screens/ramp_panel.py:216
+#: src/omega_stress/interfaces/tui/screens/request_panel.py:225
 #, python-brace-format
-msgid "Durée ramenée à {value} min : {value2} ne propose pas {keep_value} min."
-msgstr "Duration reduced to {value} min: {value2} does not offer {keep_value} min."
+msgid ""
+"Durée ramenée à {value} min : {value2} ne propose pas {keep_value} min."
+msgstr ""
+"Duration reduced to {value} min: {value2} does not offer {keep_value} min."
 
-#: src/omega_stress/interfaces/tui/screens/connection_panel.py:377 src/omega_stress/interfaces/tui/screens/ramp_panel.py:364 src/omega_stress/interfaces/tui/screens/request_panel.py:377
+#: src/omega_stress/interfaces/tui/screens/connection_panel.py:377
+#: src/omega_stress/interfaces/tui/screens/ramp_panel.py:364
+#: src/omega_stress/interfaces/tui/screens/request_panel.py:377
 #, python-brace-format
 msgid "Cible fixée par le profil « {name} » : {address}"
 msgstr "Target set by profile “{name}”: {address}"
 
-#: src/omega_stress/interfaces/tui/screens/connection_panel.py:396 src/omega_stress/interfaces/tui/screens/ramp_panel.py:383 src/omega_stress/interfaces/tui/screens/request_panel.py:396
+#: src/omega_stress/interfaces/tui/screens/connection_panel.py:396
+#: src/omega_stress/interfaces/tui/screens/ramp_panel.py:383
+#: src/omega_stress/interfaces/tui/screens/request_panel.py:396
 msgid "Choisissez ou saisissez une cible avant le pré-check."
 msgstr "Choose or enter a target before the pre-check."
 
-#: src/omega_stress/interfaces/tui/screens/connection_panel.py:400 src/omega_stress/interfaces/tui/screens/ramp_panel.py:387 src/omega_stress/interfaces/tui/screens/request_panel.py:400
+#: src/omega_stress/interfaces/tui/screens/connection_panel.py:400
+#: src/omega_stress/interfaces/tui/screens/ramp_panel.py:387
+#: src/omega_stress/interfaces/tui/screens/request_panel.py:400
 msgid "Pré-check en cours…"
 msgstr "Pre-check running…"
 
-#: src/omega_stress/interfaces/tui/screens/connection_panel.py:419 src/omega_stress/interfaces/tui/screens/ramp_panel.py:406 src/omega_stress/interfaces/tui/screens/request_panel.py:419
+#: src/omega_stress/interfaces/tui/screens/connection_panel.py:419
+#: src/omega_stress/interfaces/tui/screens/ramp_panel.py:406
+#: src/omega_stress/interfaces/tui/screens/request_panel.py:419
 #, python-brace-format
 msgid "Pré-check échoué : {error}"
 msgstr "Pre-check failed: {error}"
 
-#: src/omega_stress/interfaces/tui/screens/connection_panel.py:422 src/omega_stress/interfaces/tui/screens/ramp_panel.py:409 src/omega_stress/interfaces/tui/screens/request_panel.py:422
+#: src/omega_stress/interfaces/tui/screens/connection_panel.py:422
+#: src/omega_stress/interfaces/tui/screens/ramp_panel.py:409
+#: src/omega_stress/interfaces/tui/screens/request_panel.py:422
 #, python-brace-format
 msgid "Pré-check réussi ({value}) — vous pouvez lancer le test."
 msgstr "Pre-check passed ({value}) — you can launch the test."
 
-#: src/omega_stress/interfaces/tui/screens/connection_panel.py:437 src/omega_stress/interfaces/tui/screens/ramp_panel.py:424 src/omega_stress/interfaces/tui/screens/request_panel.py:437
+#: src/omega_stress/interfaces/tui/screens/connection_panel.py:437
+#: src/omega_stress/interfaces/tui/screens/ramp_panel.py:424
+#: src/omega_stress/interfaces/tui/screens/request_panel.py:437
 msgid "Lancement en cours…"
 msgstr "Launching…"
 
-#: src/omega_stress/interfaces/tui/screens/connection_panel.py:440 src/omega_stress/interfaces/tui/screens/ramp_panel.py:427 src/omega_stress/interfaces/tui/screens/request_panel.py:440
+#: src/omega_stress/interfaces/tui/screens/connection_panel.py:440
+#: src/omega_stress/interfaces/tui/screens/ramp_panel.py:427
+#: src/omega_stress/interfaces/tui/screens/request_panel.py:440
 msgid "Choisissez ou saisissez une cible."
 msgstr "Choose or enter a target."
 
-#: src/omega_stress/interfaces/tui/screens/connection_panel.py:446 src/omega_stress/interfaces/tui/screens/ramp_panel.py:433 src/omega_stress/interfaces/tui/screens/request_panel.py:446
+#: src/omega_stress/interfaces/tui/screens/connection_panel.py:446
+#: src/omega_stress/interfaces/tui/screens/ramp_panel.py:433
+#: src/omega_stress/interfaces/tui/screens/request_panel.py:446
 msgid "Choisissez un niveau d'intensité."
 msgstr "Choose an intensity level."
 
-#: src/omega_stress/interfaces/tui/screens/connection_panel.py:451 src/omega_stress/interfaces/tui/screens/ramp_panel.py:438 src/omega_stress/interfaces/tui/screens/request_panel.py:451
+#: src/omega_stress/interfaces/tui/screens/connection_panel.py:451
+#: src/omega_stress/interfaces/tui/screens/ramp_panel.py:438
+#: src/omega_stress/interfaces/tui/screens/request_panel.py:451
 msgid "Choisissez un taux d'erreur."
 msgstr "Choose an error rate."
 
-#: src/omega_stress/interfaces/tui/screens/connection_panel.py:457 src/omega_stress/interfaces/tui/screens/ramp_panel.py:444 src/omega_stress/interfaces/tui/screens/request_panel.py:457
+#: src/omega_stress/interfaces/tui/screens/connection_panel.py:457
+#: src/omega_stress/interfaces/tui/screens/ramp_panel.py:444
+#: src/omega_stress/interfaces/tui/screens/request_panel.py:457
 msgid "Choisissez un profil de durée."
 msgstr "Choose a duration profile."
 
-#: src/omega_stress/interfaces/tui/screens/connection_panel.py:465 src/omega_stress/interfaces/tui/screens/ramp_panel.py:452 src/omega_stress/interfaces/tui/screens/request_panel.py:465
+#: src/omega_stress/interfaces/tui/screens/connection_panel.py:465
+#: src/omega_stress/interfaces/tui/screens/ramp_panel.py:452
+#: src/omega_stress/interfaces/tui/screens/request_panel.py:465
 msgid "Choisissez une durée."
 msgstr "Choose a duration."
 
-#: src/omega_stress/interfaces/tui/screens/connection_panel.py:499 src/omega_stress/interfaces/tui/screens/ramp_panel.py:486 src/omega_stress/interfaces/tui/screens/request_panel.py:499
+#: src/omega_stress/interfaces/tui/screens/connection_panel.py:499
+#: src/omega_stress/interfaces/tui/screens/ramp_panel.py:486
+#: src/omega_stress/interfaces/tui/screens/request_panel.py:499
 #, python-brace-format
 msgid "Terminé — {value} (voir le détail)."
 msgstr "Finished — {value} (see the details)."
@@ -816,40 +1039,82 @@ msgid "Test requêtes / connexions / charge"
 msgstr "Requests / connections / load test"
 
 #: src/omega_stress/interfaces/tui/screens/help_screen.py:32
-msgid "Trois familles de test encadrées : débit constant, nombre de connexions simultanées, ou montée progressive. Chaque lancement exige une cible (saisie manuelle ou cible épinglée) et une confirmation d'autorisation, sauf cible déjà épinglée-autorisée."
-msgstr "Three supervised test families: constant rate, number of concurrent connections, or progressive ramp-up. Each launch requires a target (manual entry or pinned target) and an authorization confirmation, unless the target is already pinned-authorized."
+msgid ""
+"Trois familles de test encadrées : débit constant, nombre de connexions "
+"simultanées, ou montée progressive. Chaque lancement exige une cible (saisie"
+" manuelle ou cible épinglée) et une confirmation d'autorisation, sauf cible "
+"déjà épinglée-autorisée."
+msgstr ""
+"Three supervised test families: constant rate, number of concurrent "
+"connections, or progressive ramp-up. Each launch requires a target (manual "
+"entry or pinned target) and an authorization confirmation, unless the target"
+" is already pinned-authorized."
 
 #: src/omega_stress/interfaces/tui/screens/help_screen.py:44
-msgid "Épingler une adresse dispense de recocher la confirmation d'autorisation à chaque lancement sur cette même cible."
-msgstr "Pinning an address spares you from ticking the authorization confirmation again for every launch on that same target."
+msgid ""
+"Épingler une adresse dispense de recocher la confirmation d'autorisation à "
+"chaque lancement sur cette même cible."
+msgstr ""
+"Pinning an address spares you from ticking the authorization confirmation "
+"again for every launch on that same target."
 
 #: src/omega_stress/interfaces/tui/screens/help_screen.py:49
-msgid "Liste tous les runs passés : détail complet, ou relecture (uniquement pour un run lié à un profil figé)."
-msgstr "Lists all past runs: full details, or replay (only for a run linked to a frozen profile)."
+msgid ""
+"Liste tous les runs passés : détail complet, ou relecture (uniquement pour "
+"un run lié à un profil figé)."
+msgstr ""
+"Lists all past runs: full details, or replay (only for a run linked to a "
+"frozen profile)."
 
-#: src/omega_stress/interfaces/tui/screens/help_screen.py:59 src/omega_stress/interfaces/tui/screens/help_screen.py:119
+#: src/omega_stress/interfaces/tui/screens/help_screen.py:59
+#: src/omega_stress/interfaces/tui/screens/help_screen.py:119
 msgid "Profils de durée D1-D6 (mode profil)"
 msgstr "Duration profiles D1-D6 (profile mode)"
 
 #: src/omega_stress/interfaces/tui/screens/help_screen.py:60
-msgid "En plus de la durée manuelle (1 à 5 min selon le niveau), chaque écran de lancement propose un mode profil : une durée fixe nommée (1 à 120 min) qui limite les niveaux accessibles, avec un niveau supplémentaire débloqué par une confirmation renforcée (texte exact à saisir). Voir le tableau ci-dessous."
-msgstr "In addition to the manual duration (1 to 5 min depending on the level), each launch screen offers a profile mode: a fixed named duration (1 to 120 min) that limits the available levels, with one extra level unlocked by a reinforced confirmation (exact text to type). See the table below."
+msgid ""
+"En plus de la durée manuelle (1 à 5 min selon le niveau), chaque écran de "
+"lancement propose un mode profil : une durée fixe nommée (1 à 120 min) qui "
+"limite les niveaux accessibles, avec un niveau supplémentaire débloqué par "
+"une confirmation renforcée (texte exact à saisir). Voir le tableau ci-"
+"dessous."
+msgstr ""
+"In addition to the manual duration (1 to 5 min depending on the level), each"
+" launch screen offers a profile mode: a fixed named duration (1 to 120 min) "
+"that limits the available levels, with one extra level unlocked by a "
+"reinforced confirmation (exact text to type). See the table below."
 
-#: src/omega_stress/interfaces/tui/screens/help_screen.py:66 src/omega_stress/interfaces/tui/screens/home.py:33
+#: src/omega_stress/interfaces/tui/screens/help_screen.py:66
+#: src/omega_stress/interfaces/tui/screens/home.py:33
 msgid "Calibrage"
 msgstr "Calibration"
 
 #: src/omega_stress/interfaces/tui/screens/help_screen.py:67
-msgid "Mesure la capacité réelle de CETTE machine (pas la cible testée) via un serveur de boucle locale, par paliers de charge croissante. Le résultat (VU_safe/RPS_safe) n'est pas appliqué automatiquement aux tests réels : consultable depuis l'écran Calibrage, et utile comme repère quand le mode sécurité est désactivé (voir ci-dessous)."
-msgstr "Measures the real capacity of THIS machine (not the tested target) through a local loopback server, in stages of increasing load. The result (VU_safe/RPS_safe) is not applied automatically to real tests: it can be viewed from the Calibration screen, and is useful as a reference when safety mode is off (see below)."
+msgid ""
+"Mesure la capacité réelle de CETTE machine (pas la cible testée) via un "
+"serveur de boucle locale, par paliers de charge croissante. Le résultat "
+"(VU_safe/RPS_safe) n'est pas appliqué automatiquement aux tests réels : "
+"consultable depuis l'écran Calibrage, et utile comme repère quand le mode "
+"sécurité est désactivé (voir ci-dessous)."
+msgstr ""
+"Measures the real capacity of THIS machine (not the tested target) through a"
+" local loopback server, in stages of increasing load. The result "
+"(VU_safe/RPS_safe) is not applied automatically to real tests: it can be "
+"viewed from the Calibration screen, and is useful as a reference when safety"
+" mode is off (see below)."
 
-#: src/omega_stress/interfaces/tui/screens/help_screen.py:74 src/omega_stress/infrastructure/exporters/templates/report.html.jinja:69
+#: src/omega_stress/interfaces/tui/screens/help_screen.py:74
+#: src/omega_stress/infrastructure/exporters/templates/report.html.jinja:69
 msgid "Mode sécurité"
 msgstr "Safety mode"
 
 #: src/omega_stress/interfaces/tui/screens/help_screen.py:76
-msgid " Si un calibrage a été effectué sur cette machine, l'écran de lancement compare le niveau choisi à son enveloppe dès que la case est décochée."
-msgstr " If a calibration has been run on this machine, the launch screen compares the chosen level with its envelope as soon as the box is unticked."
+msgid ""
+" Si un calibrage a été effectué sur cette machine, l'écran de lancement "
+"compare le niveau choisi à son enveloppe dès que la case est décochée."
+msgstr ""
+" If a calibration has been run on this machine, the launch screen compares "
+"the chosen level with its envelope as soon as the box is unticked."
 
 #: src/omega_stress/interfaces/tui/screens/help_screen.py:105
 msgid "Repères de charge (valeurs exactes par niveau)"
@@ -931,7 +1196,8 @@ msgstr "DELETE THIS PROFILE?"
 
 #: src/omega_stress/interfaces/tui/screens/profiles.py:118
 msgid "Définitif. Un run passé lié à ce profil ne pourra plus être rejoué."
-msgstr "Permanent. A past run linked to this profile can no longer be replayed."
+msgstr ""
+"Permanent. A past run linked to this profile can no longer be replayed."
 
 #: src/omega_stress/interfaces/tui/screens/profiles.py:130
 msgid "Profil supprimé."
@@ -954,33 +1220,47 @@ msgid "TEST REQUÊTES"
 msgstr "REQUESTS TEST"
 
 #: src/omega_stress/interfaces/tui/screens/request_panel.py:197
-msgid "Aucun profil figé pour Test requêtes (des profils figés existent pour d'autres types de test — Connexions/Rampe)."
-msgstr "No frozen profile for the Requests test (frozen profiles exist for other test types — Connections/Ramp)."
+msgid ""
+"Aucun profil figé pour Test requêtes (des profils figés existent pour "
+"d'autres types de test — Connexions/Rampe)."
+msgstr ""
+"No frozen profile for the Requests test (frozen profiles exist for other "
+"test types — Connections/Ramp)."
 
 #: src/omega_stress/interfaces/tui/screens/run_details.py:39
 msgid "DÉTAIL DU RUN"
 msgstr "RUN DETAILS"
 
-#: src/omega_stress/interfaces/tui/screens/run_details.py:41 src/omega_stress/interfaces/tui/widgets/history_table.py:16 src/omega_stress/infrastructure/exporters/templates/report.html.jinja:74
+#: src/omega_stress/interfaces/tui/screens/run_details.py:41
+#: src/omega_stress/interfaces/tui/widgets/history_table.py:16
+#: src/omega_stress/infrastructure/exporters/templates/report.html.jinja:74
 msgid "Verdict"
 msgstr "Verdict"
 
-#: src/omega_stress/interfaces/tui/screens/run_details.py:42 src/omega_stress/interfaces/tui/widgets/progress_panel.py:23 src/omega_stress/infrastructure/exporters/templates/report.html.jinja:82
+#: src/omega_stress/interfaces/tui/screens/run_details.py:42
+#: src/omega_stress/interfaces/tui/widgets/progress_panel.py:23
+#: src/omega_stress/infrastructure/exporters/templates/report.html.jinja:82
 msgid "Débit observé"
 msgstr "Observed rate"
 
-#: src/omega_stress/interfaces/tui/screens/run_details.py:44 src/omega_stress/interfaces/tui/widgets/progress_panel.py:25 src/omega_stress/infrastructure/exporters/templates/report.html.jinja:84
+#: src/omega_stress/interfaces/tui/screens/run_details.py:44
+#: src/omega_stress/interfaces/tui/widgets/progress_panel.py:25
+#: src/omega_stress/infrastructure/exporters/templates/report.html.jinja:84
 msgid "Latence p95"
 msgstr "p95 latency"
 
-#: src/omega_stress/interfaces/tui/screens/run_details.py:70 src/omega_stress/interfaces/tui/widgets/progress_panel.py:30
+#: src/omega_stress/interfaces/tui/screens/run_details.py:70
+#: src/omega_stress/interfaces/tui/widgets/progress_panel.py:30
 #, python-brace-format
 msgid "{observed_rate_per_minute:.0f} req/min"
 msgstr "{observed_rate_per_minute:.0f} req/min"
 
 #: src/omega_stress/interfaces/tui/screens/run_details.py:85
-msgid " (personnalisé — au moins un critère réel diffère du profil figé référence)"
-msgstr " (custom — at least one real criterion differs from the reference frozen profile)"
+msgid ""
+" (personnalisé — au moins un critère réel diffère du profil figé référence)"
+msgstr ""
+" (custom — at least one real criterion differs from the reference frozen "
+"profile)"
 
 #: src/omega_stress/interfaces/tui/screens/run_details.py:90
 #, python-brace-format
@@ -1032,12 +1312,17 @@ msgstr ""
 "{sample_count} measurements recorded (full details: JSON/HTML export)."
 
 #: src/omega_stress/interfaces/tui/screens/run_details.py:133
-msgid "Chronologie — temps | taux d'erreur (barre) | erreurs/requêtes par palier\n"
+msgid ""
+"Chronologie — temps | taux d'erreur (barre) | erreurs/requêtes par palier\n"
 msgstr "Timeline — time | error rate (bar) | errors/requests per stage\n"
 
 #: src/omega_stress/interfaces/tui/screens/run_details.py:139
-msgid "Aucune mesure enregistrée : le test s'est terminé avant la première mesure (voir le diagnostic ci-dessus)."
-msgstr "No measurement recorded: the test ended before the first measurement (see the diagnosis above)."
+msgid ""
+"Aucune mesure enregistrée : le test s'est terminé avant la première mesure "
+"(voir le diagnostic ci-dessus)."
+msgstr ""
+"No measurement recorded: the test ended before the first measurement (see "
+"the diagnosis above)."
 
 #: src/omega_stress/interfaces/tui/screens/settings_screen.py:84
 msgid "Dossier d'export par défaut"
@@ -1060,8 +1345,11 @@ msgid "Les cibles épinglées ne sont pas concernées."
 msgstr "Pinned targets are not affected."
 
 #: src/omega_stress/interfaces/tui/screens/settings_screen.py:132
-msgid "Y compris les cibles épinglées : les autorisations déjà accordées seront perdues."
-msgstr "Including pinned targets: the authorizations already granted will be lost."
+msgid ""
+"Y compris les cibles épinglées : les autorisations déjà accordées seront "
+"perdues."
+msgstr ""
+"Including pinned targets: the authorizations already granted will be lost."
 
 #: src/omega_stress/interfaces/tui/screens/settings_screen.py:142
 msgid "Tous les runs enregistrés seront effacés définitivement."
@@ -1100,7 +1388,8 @@ msgstr "{base_url} pinned."
 msgid "Je confirme être autorisé à tester cette cible"
 msgstr "I confirm I am authorized to test this target"
 
-#: src/omega_stress/interfaces/tui/widgets/duration_preset_table.py:24 src/omega_stress/interfaces/tui/widgets/history_table.py:16
+#: src/omega_stress/interfaces/tui/widgets/duration_preset_table.py:24
+#: src/omega_stress/interfaces/tui/widgets/history_table.py:16
 msgid "ID"
 msgstr "ID"
 
@@ -1133,7 +1422,8 @@ msgstr "Started"
 msgid "en cours"
 msgstr "running"
 
-#: src/omega_stress/interfaces/tui/widgets/load_reference_table.py:21 src/omega_stress/infrastructure/exporters/templates/report.html.jinja:61
+#: src/omega_stress/interfaces/tui/widgets/load_reference_table.py:21
+#: src/omega_stress/infrastructure/exporters/templates/report.html.jinja:61
 msgid "Type de test"
 msgstr "Test type"
 
@@ -1157,7 +1447,8 @@ msgstr "Actual concurrency"
 msgid "Durées disponibles"
 msgstr "Available durations"
 
-#: src/omega_stress/interfaces/tui/widgets/profile_list.py:16 src/omega_stress/infrastructure/exporters/templates/report.html.jinja:65
+#: src/omega_stress/interfaces/tui/widgets/profile_list.py:16
+#: src/omega_stress/infrastructure/exporters/templates/report.html.jinja:65
 msgid "Durée"
 msgstr "Duration"
 
@@ -1170,7 +1461,8 @@ msgstr "{duration_minutes} min"
 msgid "CPU / RAM"
 msgstr "CPU / RAM"
 
-#: src/omega_stress/interfaces/tui/widgets/run_progress.py:45 src/omega_stress/interfaces/tui/widgets/run_progress.py:58
+#: src/omega_stress/interfaces/tui/widgets/run_progress.py:45
+#: src/omega_stress/interfaces/tui/widgets/run_progress.py:58
 #, python-brace-format
 msgid "Test en cours… (reste {value})"
 msgstr "Test running… ({value} left)"
@@ -1229,8 +1521,23 @@ msgid "maximum"
 msgstr "maximum"
 
 #: src/omega_stress/domain/load/policies.py:241
-msgid "Le mode sécurité (actif par défaut) arrête automatiquement un test si CETTE machine - pas la cible testée - semble en danger (CPU/mémoire du générateur). Le désactiver ne change rien aux protections de la cible (taux d'erreur, latence : toujours activés) : seul le risque de ralentir ou geler temporairement VOTRE ordinateur pendant la durée du test augmente, surtout sur les niveaux intensifs (Connexions Agressif et au-delà, Requêtes Maximum). À désactiver si vous savez que votre machine peut encaisser plus que ce que le mode sécurité suppose par défaut."
-msgstr "Safety mode (on by default) automatically stops a test if THIS machine - not the tested target - seems in danger (generator CPU/memory). Turning it off changes nothing about the target's protections (error rate, latency: always on): only the risk of slowing down or temporarily freezing YOUR computer during the test increases, especially at intensive levels (Connections Aggressive and above, Requests Maximum). Turn it off if you know your machine can handle more than what safety mode assumes by default."
+msgid ""
+"Le mode sécurité (actif par défaut) arrête automatiquement un test si CETTE "
+"machine - pas la cible testée - semble en danger (CPU/mémoire du "
+"générateur). Le désactiver ne change rien aux protections de la cible (taux "
+"d'erreur, latence : toujours activés) : seul le risque de ralentir ou geler "
+"temporairement VOTRE ordinateur pendant la durée du test augmente, surtout "
+"sur les niveaux intensifs (Connexions Agressif et au-delà, Requêtes "
+"Maximum). À désactiver si vous savez que votre machine peut encaisser plus "
+"que ce que le mode sécurité suppose par défaut."
+msgstr ""
+"Safety mode (on by default) automatically stops a test if THIS machine - not"
+" the tested target - seems in danger (generator CPU/memory). Turning it off "
+"changes nothing about the target's protections (error rate, latency: always "
+"on): only the risk of slowing down or temporarily freezing YOUR computer "
+"during the test increases, especially at intensive levels (Connections "
+"Aggressive and above, Requests Maximum). Turn it off if you know your "
+"machine can handle more than what safety mode assumes by default."
 
 #: src/omega_stress/infrastructure/runner/httpx_load_generator.py:117
 msgid "Cible {target_url!r} injoignable dès le départ : {exc}"
@@ -1242,20 +1549,46 @@ msgstr "Could not unpin target {target_id!r}: {exc}"
 
 #: src/omega_stress/interfaces/tui/presenters/calibration_presenter.py:89
 #, python-brace-format
-msgid "Dernier calibrage : {safe_value} {unit} jugés sûrs pour cette machine (confiance {confidence}). Ce niveau vise {target_value:.0f} {unit} — {comparison} de cette enveloppe. Au-delà, la fiabilité du résultat (nombre de connexions/requêtes/charge réellement atteint) peut baisser, et votre machine pourrait ralentir ou geler temporairement : c'est votre responsabilité."
-msgstr "Last calibration: {safe_value} {unit} deemed safe for this machine (confidence {confidence}). This level targets {target_value:.0f} {unit} — {comparison} this envelope. Beyond it, the reliability of the result (number of connections/requests/load actually reached) may drop, and your machine could slow down or freeze temporarily: it is your responsibility."
+msgid ""
+"Dernier calibrage : {safe_value} {unit} jugés sûrs pour cette machine "
+"(confiance {confidence}). Ce niveau vise {target_value:.0f} {unit} — "
+"{comparison} de cette enveloppe. Au-delà, la fiabilité du résultat (nombre "
+"de connexions/requêtes/charge réellement atteint) peut baisser, et votre "
+"machine pourrait ralentir ou geler temporairement : c'est votre "
+"responsabilité."
+msgstr ""
+"Last calibration: {safe_value} {unit} deemed safe for this machine "
+"(confidence {confidence}). This level targets {target_value:.0f} {unit} — "
+"{comparison} this envelope. Beyond it, the reliability of the result (number"
+" of connections/requests/load actually reached) may drop, and your machine "
+"could slow down or freeze temporarily: it is your responsibility."
 
 #: src/omega_stress/interfaces/tui/screens/help_screen.py:39
-msgid "Un profil fige un jeu de paramètres (cible, type de test, intensité, durée, seuils) pour le réutiliser tel quel — créer, puis figer, un profil depuis cet écran."
-msgstr "A profile freezes a set of parameters (target, test type, intensity, duration, thresholds) to reuse it as is — create, then freeze, a profile from this screen."
+msgid ""
+"Un profil fige un jeu de paramètres (cible, type de test, intensité, durée, "
+"seuils) pour le réutiliser tel quel — créer, puis figer, un profil depuis "
+"cet écran."
+msgstr ""
+"A profile freezes a set of parameters (target, test type, intensity, "
+"duration, thresholds) to reuse it as is — create, then freeze, a profile "
+"from this screen."
 
 #: src/omega_stress/interfaces/tui/screens/help_screen.py:54
-msgid "Depuis le détail d'un run terminé : JSON (données brutes, réimportables), CSV (analyse tabulaire), ou HTML (rapport lisible avec chronologie complète par intervalle)."
-msgstr "From a finished run's details: JSON (raw data, re-importable), CSV (tabular analysis), or HTML (readable report with a full timeline per interval)."
+msgid ""
+"Depuis le détail d'un run terminé : JSON (données brutes, réimportables), "
+"CSV (analyse tabulaire), ou HTML (rapport lisible avec chronologie complète "
+"par intervalle)."
+msgstr ""
+"From a finished run's details: JSON (raw data, re-importable), CSV (tabular "
+"analysis), or HTML (readable report with a full timeline per interval)."
 
 #: src/omega_stress/interfaces/tui/screens/ramp_panel.py:191
-msgid "Aucun profil figé pour Test charge (des profils figés existent pour d'autres types de test — Connexions/Requêtes)."
-msgstr "No frozen profile for the Load test (frozen profiles exist for other test types — Connections/Requests)."
+msgid ""
+"Aucun profil figé pour Test charge (des profils figés existent pour d'autres"
+" types de test — Connexions/Requêtes)."
+msgstr ""
+"No frozen profile for the Load test (frozen profiles exist for other test "
+"types — Connections/Requests)."
 
 #: src/omega_stress/interfaces/tui/screens/targets.py:49
 msgid "Désépingler la cible sélectionnée"
@@ -1267,13 +1600,21 @@ msgstr "Target unpinned."
 
 #: src/omega_stress/interfaces/tui/presenters/calibration_presenter.py:49
 #, python-brace-format
-msgid "Âge du calibrage : {age_days} j — renouvellement OBLIGATOIRE (> {CALIBRATION_VALIDITY_DAYS_MANDATORY} j)."
-msgstr "Calibration age: {age_days} d — renewal REQUIRED (> {CALIBRATION_VALIDITY_DAYS_MANDATORY} d)."
+msgid ""
+"Âge du calibrage : {age_days} j — renouvellement OBLIGATOIRE (> "
+"{CALIBRATION_VALIDITY_DAYS_MANDATORY} j)."
+msgstr ""
+"Calibration age: {age_days} d — renewal REQUIRED (> "
+"{CALIBRATION_VALIDITY_DAYS_MANDATORY} d)."
 
 #: src/omega_stress/interfaces/tui/presenters/calibration_presenter.py:57
 #, python-brace-format
-msgid "Âge du calibrage : {age_days} j — renouvellement recommandé (> {CALIBRATION_VALIDITY_DAYS_RECOMMENDED} j)."
-msgstr "Calibration age: {age_days} d — renewal recommended (> {CALIBRATION_VALIDITY_DAYS_RECOMMENDED} d)."
+msgid ""
+"Âge du calibrage : {age_days} j — renouvellement recommandé (> "
+"{CALIBRATION_VALIDITY_DAYS_RECOMMENDED} j)."
+msgstr ""
+"Calibration age: {age_days} d — renewal recommended (> "
+"{CALIBRATION_VALIDITY_DAYS_RECOMMENDED} d)."
 
 #: src/omega_stress/interfaces/tui/presenters/calibration_presenter.py:63
 #, python-brace-format
@@ -1449,3 +1790,327 @@ msgstr "Throughput (req/min)"
 #: src/omega_stress/infrastructure/exporters/templates/report.html.jinja:139
 msgid "Diagnostic"
 msgstr "Diagnostic"
+
+msgid "Le moteur d'émission n'a pas démarré."
+msgstr "The emission engine did not start."
+
+#, python-brace-format
+msgid "version {version}"
+msgstr "version {version}"
+
+msgid "Le serveur de calibrage local n'a pas démarré."
+msgstr "The local calibration server did not start."
+
+msgid "Accord demandé par {machine}"
+msgstr "Consent requested by {machine}"
+
+msgid ""
+"{machine} demande votre accord pour charger {target}. Autoriser cette cible "
+"pour toujours sur {machine} ?"
+msgstr ""
+"{machine} asks for your consent to load {target}. Allow this target for good"
+" on {machine}?"
+
+msgid ""
+"omega-stress — mot de passe sudo pour le pare-feu de cette machine (il ne "
+"s'affiche pas pendant la saisie). L'interface revient ensuite."
+msgstr ""
+"omega-stress — sudo password for this machine's firewall (it is not shown "
+"while typing). The interface comes back afterwards."
+
+msgid "nftables seul"
+msgstr "nftables only"
+
+msgid "aucun pare-feu actif"
+msgstr "no active firewall"
+
+msgid "Machine"
+msgstr "Machine"
+
+msgid "Joignable"
+msgstr "Reachable"
+
+msgid "Reliée"
+msgstr "Linked"
+
+msgid "Accord"
+msgstr "Consent"
+
+msgid "Débit max"
+msgstr "Max rate"
+
+msgid "Lecture des machines…"
+msgstr "Reading the machines…"
+
+msgid "Un terminal est nécessaire pour le mot de passe (sudo)."
+msgstr "A terminal is needed for the password (sudo)."
+
+msgid "Mot de passe refusé ou annulé : rien n'a été modifié."
+msgstr "Password refused or cancelled: nothing was changed."
+
+msgid "Pare-feu mis à jour."
+msgstr "Firewall updated."
+
+msgid "CHARGE DISTRIBUÉE"
+msgstr "DISTRIBUTED LOAD"
+
+msgid ""
+"Les machines qui aident cette machine à charger la cible. Pour en relier ou "
+"en retirer une : omega-connect → Synchronisation → Charge distribuée."
+msgstr ""
+"The machines that help this machine load the target. To link or remove one: "
+"omega-connect → Synchronisation → Distributed load."
+
+msgid "Pare-feu de cette machine"
+msgstr "Firewall of this machine"
+
+msgid ""
+"Aucune machine reliée : reliez-en dans omega-connect (Synchronisation → "
+"Charge distribuée)."
+msgstr ""
+"No machine linked: link some in omega-connect (Synchronisation → Distributed"
+" load)."
+
+msgid "tout accepter"
+msgstr "accept all"
+
+msgid "demander"
+msgstr "ask"
+
+msgid "{firewall} : port d'omega-stress ouvert au réseau local."
+msgstr "{firewall}: omega-stress port open to the local network."
+
+msgid ""
+"nftables seul : installez omega-fire pour ouvrir le port d'omega-stress (sa "
+"configuration n'est jamais réécrite à la main)."
+msgstr ""
+"nftables only: install omega-fire to open the omega-stress port (its "
+"configuration is never rewritten by hand)."
+
+msgid "Pare-feu : échec ({detail})."
+msgstr "Firewall: failed ({detail})."
+
+msgid "Ouvrir le pare-feu"
+msgstr "Open the firewall"
+
+msgid "Refermer le pare-feu"
+msgstr "Close the firewall"
+
+msgid "Actualiser"
+msgstr "Refresh"
+
+msgid "{count} machine(s) reliée(s)."
+msgstr "{count} machine(s) linked."
+
+msgid ""
+"{firewall} : port d'omega-stress fermé — les machines qui aident ne peuvent "
+"pas joindre cette machine."
+msgstr ""
+"{firewall}: omega-stress port closed — the helping machines cannot reach "
+"this machine."
+
+msgid "{firewall} : rien à ouvrir."
+msgstr "{firewall}: nothing to open."
+
+msgid "Machines qui chargent la cible"
+msgstr "Machines that load the target"
+
+msgid "cette machine"
+msgstr "this machine"
+
+msgid "Machines…"
+msgstr "Machines…"
+
+msgid "aucune autorisation sur cette machine"
+msgstr "no authorization on this machine"
+
+msgid "ce pilote n'est pas accepté par cette machine"
+msgstr "this leader is not accepted by this machine"
+
+msgid "Aucune machine pour charger la cible."
+msgstr "No machine to load the target."
+
+msgid "Aucune machine n'a accepté le test."
+msgstr "No machine accepted the test."
+
+msgid ""
+"Part des machines écartées redistribuée aux autres, dans leurs limites."
+msgstr ""
+"Share of the excluded machines given to the others, within their limits."
+
+msgid "Mode poussé : --annonce <adresse du coordinateur> requis."
+msgstr "Push mode: --annonce <coordinator address> required."
+
+msgid "durée au-delà de sa limite ({value} min)"
+msgstr "duration beyond its limit ({value} min)"
+
+msgid "débit au-delà de sa limite ({value} req/min)"
+msgstr "rate beyond its limit ({value} req/min)"
+
+msgid "connexions au-delà de sa limite ({value})"
+msgstr "connections beyond its limit ({value})"
+
+msgid "pas de réponse"
+msgstr "no answer"
+
+msgid ""
+"Débit demandé ({asked} req/min) au-delà de la capacité des machines ({most} "
+"req/min au plus) : test refusé."
+msgstr ""
+"Requested rate ({asked} req/min) beyond the machines' capacity ({most} "
+"req/min at most): test refused."
+
+msgid "En attente de {count} machine(s) qui aident…"
+msgstr "Waiting for {count} helping machine(s)…"
+
+msgid "cible {target} non autorisée sur cette machine"
+msgstr "target {target} not allowed on this machine"
+
+msgid "Machine {machine} écartée : {reason}"
+msgstr "Machine {machine} excluded: {reason}"
+
+msgid "Machine inconnue ou sans accès SSH : {machine}"
+msgstr "Unknown machine or no SSH access: {machine}"
+
+msgid "{joined} machine(s) sur {expected} ont rejoint le pilote."
+msgstr "{joined} machine(s) out of {expected} joined the leader."
+
+msgid "{machine} injoignable : {error}"
+msgstr "{machine} unreachable: {error}"
+
+msgid ""
+"Machine {machine} perdue à la seconde {second} : mesure incomplète à partir "
+"de là."
+msgstr ""
+"Machine {machine} lost at second {second}: measurement incomplete from then "
+"on."
+
+msgid "Absentes : {names}."
+msgstr "Missing: {names}."
+
+msgid "Charge distribuée (plusieurs machines)"
+msgstr "Distributed load (several machines)"
+
+msgid "Charge distribuée — "
+msgstr "Distributed load — "
+
+msgid ""
+"{machine} : {emitted} requêtes émises, {completed} terminées, {errors} "
+"erreur(s)"
+msgstr ""
+"{machine}: {emitted} requests sent, {completed} completed, {errors} error(s)"
+
+msgid "Départ — machines qui chargent : {machines}."
+msgstr "Start — machines loading: {machines}."
+
+msgid "{machine} : écartée ({reason})"
+msgstr "{machine}: excluded ({reason})"
+
+msgid "(perdue à la seconde {second})"
+msgstr "(lost at second {second})"
+
+msgid "{machine} a rejoint le pilote."
+msgstr "{machine} joined the leader."
+
+msgid "ajoutée"
+msgstr "added"
+
+msgid "déjà présente"
+msgstr "already present"
+
+msgid "ignorée"
+msgstr "ignored"
+
+msgid "échec"
+msgstr "failed"
+
+msgid "retirée"
+msgstr "removed"
+
+msgid "absente"
+msgstr "absent"
+
+msgid "Cocher"
+msgstr "Tick"
+
+msgid "Participe"
+msgstr "Takes part"
+
+msgid ""
+"Détail des règles non enregistré (ouverture faite avant ce compte rendu)."
+msgstr "Rule details not recorded (opened before this report existed)."
+
+msgid "Choisissez une machine dans la liste."
+msgstr "Choose a machine in the list."
+
+msgid "Ouvert pour {networks} — par {who}, le {when}"
+msgstr "Open for {networks} — by {who}, on {when}"
+
+msgid ""
+"Port fermé : les machines qui aident ne peuvent pas joindre cette machine."
+msgstr "Port closed: the helping machines cannot reach this machine."
+
+msgid "Règles posées :"
+msgstr "Rules set:"
+
+msgid "Refermé par {who}, le {when}"
+msgstr "Closed by {who}, on {when}"
+
+msgid ""
+"Cochez les machines qui participent aux prochains tests (Entrée ou Espace). "
+"La liaison des machines se fait uniquement dans omega-connect "
+"(Synchronisation → Charge distribuée)."
+msgstr ""
+"Tick the machines that take part in the next tests (Enter or Space). "
+"Machines are linked only in omega-connect (Synchronisation → Distributed "
+"load)."
+
+msgid ""
+"Son accès à cette machine est retiré : elle ne participera plus aux tests. "
+"omega-connect peut la relier de nouveau (Synchronisation → Charge "
+"distribuée), et y retirer aussi la liaison (« Délier »)."
+msgstr ""
+"Its access to this machine is removed: it will no longer take part in tests."
+" omega-connect can link it again (Synchronisation → Distributed load), and "
+"also remove the link there (« Unlink »)."
+
+msgid "Gestionnaire : {firewall} ; port {port}/tcp"
+msgstr "Manager: {firewall}; port {port}/tcp"
+
+msgid "Supprimer la machine"
+msgstr "Remove the machine"
+
+msgid "Supprimer {machine} ?"
+msgstr "Remove {machine}?"
+
+msgid "Ouvert pour {networks}"
+msgstr "Open for {networks}"
+
+msgid "Rien à ouvrir."
+msgstr "Nothing to open."
+
+msgid "Charge distribuée"
+msgstr "Distributed load"
+
+msgid "Mode charge distribuée"
+msgstr "Distributed load mode"
+
+msgid ""
+"Aucune machine reliée : la liaison se fait uniquement dans omega-connect "
+"(Synchronisation → Charge distribuée)."
+msgstr ""
+"No machine linked: machines are linked only in omega-connect "
+"(Synchronisation → Distributed load)."
+
+msgid ""
+"Quand une machine ne suffit plus, d'autres machines où omega-stress est installé peuvent charger la cible avec celle-ci. Elles se relient une seule fois, uniquement dans omega-connect (Synchronisation → Charge distribuée) : rien à taper ici.\n"
+"- Menu « Charge distribuée » : les machines reliées ; cochez celles qui participent aux prochains tests, « cette machine » comprise (décochée par défaut : elle pilote et mesure). « Supprimer la machine » retire son accès. Le pare-feu de cette machine y est décrit (gestionnaire, règles, qui l'a ouvert et quand), avec « Ouvrir » / « Refermer » (un mot de passe sudo, tapé dans le terminal ; seul le port d'omega-stress, pour votre réseau local).\n"
+"- Dans chaque écran de test, sous « Mode sécurité » : cochez « Mode charge distribuée » ; la ligne des machines s'affiche, pré-cochée d'après ce choix, et peut être changée pour ce test. Sans machine cochée, le test reste local.\n"
+"- Au lancement, omega-stress démarre lui-même les machines (par SSH) et les arrête à la fin ; la barre de notification dit qui a rejoint et qui charge. Le détail du run (Historique) garde le bilan de chaque machine : requêtes émises, terminées, erreurs ; une machine qui refuse ou qui tombe est signalée.\n"
+"- Accord « Demander » : la première fois qu'une cible est demandée à une machine, une question s'affiche ; « Oui » l'autorise pour toujours sur cette machine."
+msgstr ""
+"When one machine is no longer enough, other machines where omega-stress is installed can load the target together with this one. They are linked once, only in omega-connect (Synchronisation → Distributed load): nothing to type here.\n"
+"- « Distributed load » menu: the linked machines; tick those that take part in the next tests, « this machine » included (unticked by default: it leads and measures). « Remove the machine » removes its access. This machine's firewall is described there (manager, rules, who opened it and when), with « Open » / « Close » (one sudo password, typed in the terminal; only the omega-stress port, for your local network).\n"
+"- In each test screen, under « Safety mode »: tick « Distributed load mode »; the machines line appears, pre-ticked from that choice, and can be changed for this test. With no machine ticked, the test stays local.\n"
+"- At launch, omega-stress starts the machines itself (over SSH) and stops them at the end; the notification bar says who joined and who is loading. The run detail (History) keeps each machine's summary: requests sent, completed, errors; a machine that refuses or drops out is reported.\n"
+"- « Ask » consent: the first time a target is requested from a machine, a question appears; « Yes » allows it for good on that machine."

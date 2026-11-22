@@ -370,3 +370,41 @@ def is_precheck_available(level: IntensityLevel) -> bool:
 #   Capability qu'il produit (jamais de seuil chiffre code en dur cote
 #   infrastructure).
 #---------------------------------------------------------------------->
+
+
+# --- Moteur en boucle ouverte (Phase 0 du plan de charge distribuee, 2026-11-21)
+# -------------------------------
+OPEN_LOOP_REQUESTS_PER_PROCESS: float = 1000.0
+"""Debit confie a un processus d'emission (client HTTP/1.1 leger sur connexions reutilisees).
+Mesure du 2026-11-21 (4 coeurs, cible locale asyncio) : 1 processus tient 2 000 req/s a l'heure,
+3 processus 5 000 req/s ; avec httpx, ~150 req/s par processus. Sert seulement a choisir le NOMBRE
+de processus (marge gardee), jamais a plafonner la demande.
+"""
+OPEN_LOOP_CONNECTIONS_PER_PROCESS: int = 1000
+"""Connexions tenues (Test connexions, lecture B) confiees a un meme processus d'emission."""
+OPEN_LOOP_INFLIGHT_CAP_PER_PROCESS: int = 5000
+"""Garde-fou memoire : requetes en vol au plus par processus. Au-dela, la requete prevue est comptee
+« non emise »
+(IntervalSample.not_emitted_count), jamais retardee en silence. Remplace, pour ce moteur, le plafond
+de 200 de
+GENERATOR_MAX_CONCURRENT_REQUESTS_PER_INTERVAL, qui protegeait l'interface : l'emission ne tourne
+plus dans sa
+boucle."""
+CONNECTION_REQUEST_PERIOD_SECONDS: float = 10.0
+"""Test connexions, lecture B (decision de l'auteur, 2026-11-21) : chaque connexion tenue envoie une
+requete toutes les ~10 s, les connexions etant decalees les unes des autres."""
+OPEN_LOOP_WORKER_REPORT_TIMEOUT_SECONDS: float = 5.0
+"""Un processus d'emission qui ne rend pas ses comptes dans ce delai est signale (mesure
+incomplete)."""
+EMISSION_LATE_MS: float = 50.0
+"""Une requete partie plus de 50 ms apres son instant prevu est « en retard » : signe que le
+generateur sature."""
+EMISSION_LATE_RATIO_BOTTLENECK: float = 0.10
+"""Au-dela de 10 % de requetes en retard sur une seconde, la machine qui emet est le goulot (pas la
+cible)."""
+OPEN_LOOP_POOL_CONNECTIONS_PER_PROCESS: int = 500
+"""Connexions HTTP ouvertes au plus par processus d'emission (Test requetes / Test charge).
+Mesure du
+2026-11-21 : sans borne, un processus en retard ouvrait une connexion par requete en attente et
+s'effondrait (200 req/s demandees : 60 terminees, 487 en vol). Au-dela, la requete attend une
+connexion libre : son attente compte dans sa latence, rien n'est masque."""

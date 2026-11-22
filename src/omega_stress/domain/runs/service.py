@@ -8,6 +8,7 @@ from datetime import datetime
 from omega_stress.core.enums import RunVerdict
 from omega_stress.core.results import Err, Ok, Result
 from omega_stress.domain.errors import ValidationError
+from omega_stress.domain.load.histogram import merge, percentile_ms
 from omega_stress.domain.runs.models import (
     ErrorBreakdown,
     IntervalSample,
@@ -56,13 +57,14 @@ def aggregate_samples(
             samples=samples,
         )
 
+    p50, p95, p99 = _run_percentiles(samples)
     return LoadResult(
         verdict=verdict,
         requested_rate_per_minute=requested_rate_per_minute,
         observed_rate_per_minute=sum(s.observed_rate_per_minute for s in samples) / len(samples),
-        p50_latency_ms=sum(s.p50_latency_ms for s in samples) / len(samples),
-        p95_latency_ms=max(s.p95_latency_ms for s in samples),
-        p99_latency_ms=max(s.p99_latency_ms for s in samples),
+        p50_latency_ms=p50,
+        p95_latency_ms=p95,
+        p99_latency_ms=p99,
         error_count=sum(s.error_count for s in samples),
         total_requests=sum(s.request_count for s in samples),
         events=events,
@@ -72,6 +74,20 @@ def aggregate_samples(
             s.system.cpu_percent_generator for s in samples if s.system is not None
         ),
         peak_memory_rss_mb=_peak(s.system.memory_rss_mb for s in samples if s.system is not None),
+    )
+
+
+def _run_percentiles(samples: tuple[IntervalSample, ...]) -> tuple[float, float, float]:
+    """Percentiles du run ENTIER (Phase 1, 2026-11-21) : si les echantillons portent leur
+    histogramme, celui-ci est fusionne et les percentiles sont exacts. Sinon (runs anciens) :
+    ancienne lecture prudente (moyenne des p50, maximum des p95/p99)."""
+    if any(s.latency_histogram for s in samples):
+        merged = merge(s.latency_histogram for s in samples)
+        return percentile_ms(merged, 0.50), percentile_ms(merged, 0.95), percentile_ms(merged, 0.99)
+    return (
+        sum(s.p50_latency_ms for s in samples) / len(samples),
+        max(s.p95_latency_ms for s in samples),
+        max(s.p99_latency_ms for s in samples),
     )
 
 

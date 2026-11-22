@@ -31,10 +31,15 @@ from omega_stress.interfaces.tui.presenters.calibration_presenter import (
     envelope_comparison_message,
 )
 from omega_stress.interfaces.tui.presenters.level_presenter import level_label
-from omega_stress.interfaces.tui.presenters.run_presenter import verdict_label
+from omega_stress.interfaces.tui.presenters.run_presenter import (
+    participation_message,
+    verdict_label,
+)
 from omega_stress.interfaces.tui.screens._base import OmegaScreen
+from omega_stress.interfaces.tui.screens._distributed_panel import DistributedPanelMixin
 from omega_stress.interfaces.tui.screens.run_details import RunDetailsScreen
 from omega_stress.interfaces.tui.widgets.authorization_checkbox import AuthorizationCheckbox
+from omega_stress.interfaces.tui.widgets.machines_picker import MachinesPicker
 from omega_stress.interfaces.tui.widgets.notification_bar import NotificationBar
 from omega_stress.interfaces.tui.widgets.progress_panel import ProgressPanel
 from omega_stress.interfaces.tui.widgets.run_progress import RunProgress
@@ -88,7 +93,7 @@ class _PanelProgressNotifier:
         self._progress.update_elapsed(sample.at_second)
 
 
-class RampPanelScreen(OmegaScreen):
+class RampPanelScreen(DistributedPanelMixin, OmegaScreen):
     """Formulaire de lancement d'un Test charge en mode manuel borne."""
 
     def __init__(self, *, container: DependencyContainer) -> None:
@@ -140,6 +145,12 @@ class RampPanelScreen(OmegaScreen):
             yield AuthorizationCheckbox(id="authorization")
             yield Static(SAFETY_MODE_DESCRIPTION, classes="omega-subtitle")
             yield SafetyModeCheckbox(id="safety-mode")
+            yield MachinesPicker(
+                self._helper_machines(),
+                open_screen=self._open_distributed,
+                participating=self._participating(),
+                id="machines",
+            )
             yield Static("", id="calibration-comparison")
             with Horizontal(classes="omega-actions"):
                 with Container(id="precheck-frame", classes="omega-btn-frame"):
@@ -475,6 +486,8 @@ class RampPanelScreen(OmegaScreen):
             duration_preset_id=duration_preset_id,
             reinforced_confirmation_text=confirmation_text,
             safety_mode=self.query_one(SafetyModeCheckbox).value,
+            distributed=self.query_one(MachinesPicker).choice(),
+            approve=self._approve,
         )
         run_progress.stop()
         self.query_one("#stop-frame", Container).display = False
@@ -482,8 +495,10 @@ class RampPanelScreen(OmegaScreen):
         if isinstance(outcome, Err):
             result_label.update(str(outcome.error))
             return
+        machines = participation_message(outcome.value)
         result_label.update(
             _("Terminé — {value} (voir le détail).").format(value=verdict_label(outcome.value))
+            + (f"\n{machines}" if machines else "")
         )
         self.app.push_screen(RunDetailsScreen(container=self._container, run_id=outcome.value.id))
 

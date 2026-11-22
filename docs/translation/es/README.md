@@ -30,10 +30,12 @@ El proyecto sigue los principios de la **Clean Architecture**, con una separaci�
 ## Índice
 
 <p align="center">
-  <img src="https://raw.githubusercontent.com/kraynux/kraynux/refs/heads/main/docs/translation/es/omega-stress/A.png" width="24%" />
-  <img src="https://raw.githubusercontent.com/kraynux/kraynux/refs/heads/main/docs/translation/es/omega-stress/B.png" width="24%" />
-  <img src="https://raw.githubusercontent.com/kraynux/kraynux/refs/heads/main/docs/translation/es/omega-stress/C.png" width="24%" />
-  <img src="https://raw.githubusercontent.com/kraynux/kraynux/refs/heads/main/docs/translation/es/omega-stress/D.png" width="24%" />
+  <img src="https://raw.githubusercontent.com/kraynux/kraynux/refs/heads/main/docs/translation/es/omega-stress/A.png" width="32%" />
+  <img src="https://raw.githubusercontent.com/kraynux/kraynux/refs/heads/main/docs/translation/es/omega-stress/B.png" width="32%" />
+  <img src="https://raw.githubusercontent.com/kraynux/kraynux/refs/heads/main/docs/translation/es/omega-stress/C.png" width="32%" />
+  <img src="https://raw.githubusercontent.com/kraynux/kraynux/refs/heads/main/docs/translation/es/omega-stress/D.png" width="32%" />
+  <img src="https://raw.githubusercontent.com/kraynux/kraynux/refs/heads/main/docs/translation/es/omega-stress/E.png" width="32%" />
+  <img src="https://raw.githubusercontent.com/kraynux/kraynux/refs/heads/main/docs/translation/es/omega-stress/F.png" width="32%" />
 </p>
 
 - [Presentación](#presentación)
@@ -45,6 +47,7 @@ El proyecto sigue los principios de la **Clean Architecture**, con una separaci�
 - [Perfiles de duración D1-D6](#perfiles-de-duración-d1-d6-modo-perfil)
 - [Modo seguridad](#modo-seguridad)
 - [Calibrado local](#calibrado-local)
+- [Carga distribuida (red local)](#carga-distribuida-red-local)
 - [Configuración](#configuración)
 - [Pruebas y calidad](#pruebas-y-calidad)
 - [Desinstalación](#desinstalación)
@@ -72,9 +75,9 @@ El proyecto sigue los principios de la **Clean Architecture**, con una separaci�
 ## Lo que el proyecto no hace
 
 - No sustituye a una herramienta de escaneo de red — vocabulario y postura del producto asumidos como «prueba de carga», nunca «escaneo».
-- No implementa ningún motor de carga externo (k6, etc.) — generación nativa `httpx`/asyncio.
+- No implementa ningún motor de carga externo (k6, etc.) — generación nativa asyncio.
 - No inicia ninguna ejecución sin límites ni confirmación de autorización.
-- No es una herramienta de carga distribuida: la generación se ejecuta en una sola máquina, en un solo proceso — ver [Limitaciones conocidas](#limitaciones-conocidas).
+- No enlaza por sí mismo las máquinas entre sí: es el papel de omega-connect, que prepara la carga distribuida de una vez por todas — ver [Carga distribuida](#carga-distribuida-red-local).
 
 ## Funcionalidades
 
@@ -105,7 +108,7 @@ src/omega_stress/
 ├── domain/           Lógica de negocio pura: carga, perfiles, ejecuciones, objetivos, temas, terminal — sin E/S
 ├── application/      Orquestación: commands (acciones), queries (lecturas), pipeline de ejecución (guards/hooks)
 ├── ports/            Contratos Protocol/ABC que esperan los adaptadores (repositorios, exportadores, generador de carga...)
-├── infrastructure/   Implementaciones concretas: SQLite, exportadores JSON/CSV/HTML, generador httpx/asyncio, detección del terminal, sonda del sistema
+├── infrastructure/   Implementaciones concretas: SQLite, exportadores JSON/CSV/HTML, generador asyncio, detección del terminal, sonda del sistema
 ├── interfaces/       Dos adaptadores de presentación independientes: TUI (Textual) y CLI (argparse)
 ├── plugins/          Punto de extensión reservado (carga de plugins) — estructura presente, no implementada en la V1
 └── shared/           Utilidades transversales sin dependencia de negocio (reloj inyectable, generación de identificadores)
@@ -166,6 +169,7 @@ cd ~/omega-stress && chmod +x install.sh && ./install.sh
 2. Instala las dependencias (`pip install -e .`; `pyproject.toml` sigue siendo la única fuente de verdad).
 3. Hace ejecutables `omega-stress.sh` e `install.sh`.
 4. Añade el alias `stress` a `~/.bashrc` y `~/.zshrc` (sin duplicado si ya está presente).
+5. Crea la tarjeta de identidad `var/omega-jeton.json` (`./omega-stress.sh synchro jeton`), que lee omega-connect para enlazar las herramientas de la suite; escrita con su cuenta, nunca incluida en el archivo.
 
 ## Instalación (desarrollo)
 
@@ -266,11 +270,11 @@ Añada `--json` a `history`/`export`/`calibrate` para una salida legible por má
 | Prueba de peticiones | Débil | Caudal | 250 pet/min (≈4,2 pet/s) | No | 1 a 5 min |
 | Prueba de peticiones | Bajo | Caudal | 500 pet/min (≈8,3 pet/s) | No | 1 a 5 min |
 | Prueba de peticiones | Medio | Caudal | 1000 pet/min (≈16,7 pet/s) | No | 1 a 5 min |
-| Prueba de peticiones | Alto | Caudal | 2000 pet/min (≈33,3 pet/s) | No | 1 a 5 min |
+| Prueba de peticiones | Alto | Caudal | 3000 pet/min (≈50 pet/s) | No | 1 a 5 min |
 | Prueba de peticiones | Potente | Caudal | 6000 pet/min (≈100 pet/s) | Opcional | 1 a 3 min (5 con pre-check superado) |
-| Prueba de peticiones | Agresivo | Caudal | 10 000 pet/min (≈167 pet/s) | Opcional | 1 a 3 min (5 con pre-check superado) |
-| Prueba de peticiones | Violento | Caudal | 15 000 pet/min (≈250 pet/s) | **Obligatorio** | Solo 1 a 3 min |
-| Prueba de peticiones | Máximo | Caudal | 20 000 pet/min (≈333 pet/s) | **Obligatorio** | Solo 1 a 3 min |
+| Prueba de peticiones | Agresivo | Caudal | 12 000 pet/min (≈200 pet/s) | Opcional | 1 a 3 min (5 con pre-check superado) |
+| Prueba de peticiones | Violento | Caudal | 25 000 pet/min (≈417 pet/s) | **Obligatorio** | Solo 1 a 3 min |
+| Prueba de peticiones | Máximo | Caudal | 50 000 pet/min (≈833 pet/s) | **Obligatorio** | Solo 1 a 3 min |
 | Prueba de conexiones | Débil | Conexiones simultáneas | 25 conexiones | No | 1 a 5 min |
 | Prueba de conexiones | Bajo | Conexiones simultáneas | 50 conexiones | No | 1 a 5 min |
 | Prueba de conexiones | Medio | Conexiones simultáneas | 100 conexiones | No | 1 a 5 min |
@@ -282,11 +286,13 @@ Añada `--json` a `history`/`export`/`calibrate` para una salida legible por má
 | Prueba de carga (subida progresiva) | Débil | Caudal, en rampa | pico de 250 pet/min | No | 1 a 5 min |
 | Prueba de carga (subida progresiva) | Bajo | Caudal, en rampa | pico de 500 pet/min | No | 1 a 5 min |
 | Prueba de carga (subida progresiva) | Medio | Caudal, en rampa | pico de 1000 pet/min | No | 1 a 5 min |
-| Prueba de carga (subida progresiva) | Alto | Caudal, en rampa | pico de 2000 pet/min | No | 1 a 5 min |
+| Prueba de carga (subida progresiva) | Alto | Caudal, en rampa | pico de 3000 pet/min | No | 1 a 5 min |
 | Prueba de carga (subida progresiva) | Potente | Caudal, en rampa | pico de 6000 pet/min | Opcional | 1 a 3 min (5 con pre-check superado) |
-| Prueba de carga (subida progresiva) | Agresivo | Caudal, en rampa | pico de 10 000 pet/min | Opcional | 1 a 3 min (5 con pre-check superado) |
-| Prueba de carga (subida progresiva) | Violento | Caudal, en rampa | pico de 15 000 pet/min | **Obligatorio** | Solo 1 a 3 min |
-| Prueba de carga (subida progresiva) | Máximo | Caudal, en rampa | pico de 20 000 pet/min | **Obligatorio** | Solo 1 a 3 min |
+| Prueba de carga (subida progresiva) | Agresivo | Caudal, en rampa | pico de 12 000 pet/min | Opcional | 1 a 3 min (5 con pre-check superado) |
+| Prueba de carga (subida progresiva) | Violento | Caudal, en rampa | pico de 25 000 pet/min | **Obligatorio** | Solo 1 a 3 min |
+| Prueba de carga (subida progresiva) | Máximo | Caudal, en rampa | pico de 50 000 pet/min | **Obligatorio** | Solo 1 a 3 min |
+
+Prueba de conexiones: N conexiones abiertas y **mantenidas** (keep-alive), cada una envía una petición cada ~10 s, escalonadas. Prueba de peticiones y prueba de carga: las peticiones salen a ritmo constante sin esperar las respuestas (bucle abierto); un destino que se ralentiza se ve en las latencias en lugar de quedar oculto. Si es la propia máquina la que ya no da abasto, una notificación «cuello de botella local» lo indica.
 
 - **Pre-check No**: la prueba arranca directamente, sin condición de duración.
 - **Pre-check Opcional** (Potente/Agresivo): la prueba arranca sin pre-check (duraciones de 1-3 min), pero un pre-check superado desbloquea también las duraciones de 4-5 min.
@@ -379,7 +385,7 @@ Disponible también en CLI mediante `--unsafe` (ausente por defecto = modo segur
 
 ## Calibrado local
 
-Mide la capacidad real de **esta máquina** (nunca del objetivo probado): un servidor de bucle local integrado en Omega-Stress recibe una carga creciente por escalones, generada por el mismo motor `httpx`/asyncio que las pruebas reales.
+Mide la capacidad real de **esta máquina** (nunca del objetivo probado): un servidor de bucle local integrado en Omega-Stress recibe una carga creciente por escalones, generada por el mismo motor asyncio que las pruebas reales.
 
 - 7 escalones, desde el reposo (ruido de fondo del sistema) hasta 2000 conexiones / 12 000 pet/s, cada uno evaluado frente a umbrales de salud (CPU del generador Y global, memoria disponible, tasa de error, caudal alcanzado) — los 2 últimos escalones son condicionales y se omiten si el escalón anterior no está sano.
 - Produce una envolvente segura (`VU_safe` / `RPS_safe`) a partir del último escalón sano, con un margen de seguridad (~30 % de reserva) y un nivel de confianza que crece con la profundidad alcanzada.
@@ -392,6 +398,15 @@ Accesible desde la pantalla **Calibrado** de la TUI (botón «Lanzar el calibrad
 omega-stress calibrate run     # lanza un nuevo calibrado
 omega-stress calibrate show    # muestra el último calibrado conocido, sin lanzar otro
 ```
+
+## Carga distribuida (red local)
+
+¿Una sola máquina ya no basta? Otras máquinas donde omega-stress está instalado pueden cargar el objetivo junto con la suya, que dirige y mide. Nada que escribir: todo se hace desde las pantallas.
+
+- **Enlazar una sola vez, en omega-connect** (Sincronización → Carga distribuida): marque las máquinas que ayudan, elija su acuerdo, un botón. omega-connect lo envía todo por SSH (nada que copiar) y abre el cortafuegos de su máquina solo al puerto de omega-stress, con una contraseña.
+- **Decide el propietario de cada máquina que ayuda**: « preguntar para cada nuevo objetivo » o « aceptar todo de este director », caudal y duración máximos; la máquina rechaza el resto, se le pida lo que se le pida.
+- **Lanzar desde omega-stress**: el menú « Carga distribuida » elige las máquinas que participan y describe el cortafuegos (quién lo abrió, qué reglas); en cada pantalla de prueba, la casilla « Modo carga distribuida » hace que carguen el objetivo con su máquina, que solo carga también si la marca. omega-stress arranca él mismo las máquinas y las detiene al final.
+- Una sola curva y latencias exactas en el conjunto; el detalle del run guarda el balance de cada máquina (peticiones emitidas, terminadas, errores). La línea de comandos (`--machines`) sigue disponible.
 
 ## Configuración
 
@@ -429,7 +444,7 @@ sed -i '/alias stress=/d' ~/.bashrc ~/.zshrc
 
 ## Limitaciones conocidas
 
-- Generación de carga **en el propio proceso**, en una sola máquina (`httpx`/asyncio): no es una herramienta distribuida — los topes reales (ver [Valores de las pruebas](#valores-de-las-pruebas)) son claramente más modestos que los de un servicio SaaS de pruebas de carga (loader.io, etc.), a propósito, por postura de producto controlado. En hardware modesto, los niveles Agresivo/Violento/Máximo de la Prueba de conexiones pueden tardar bastante más tiempo real que la duración elegida en emitir toda la carga prevista — es entonces la capacidad de **esta máquina**, no la del objetivo, la que limita el caudal real; use el [Calibrado local](#calibrado-local) para conocer los valores razonables en su hardware.
+- Carga distribuida solo en **red local** (o en una red privada tipo VPN): todavía sin paso por internet sin red privada. Lo que aguanta una máquina depende de su procesador (medido el 21/11/2026 contra un destino local: unas 5 000 pet/s con 4 núcleos, muy por encima del nivel más alto, ver [Valores de las pruebas](#valores-de-las-pruebas)); [Calibrado local](#calibrado-local) mide lo que aguanta la suya, y una notificación «cuello de botella local» avisa cuando ya no da abasto.
 - La detección automática de la familia de terminal se basa en variables de entorno: xfce4-terminal no tiene ningún marcador fiable conocido hasta la fecha (ver [Terminales compatibles](#terminales-compatibles)).
 - `plugins/` es un punto de extensión previsto por la arquitectura (carga de plugins integrados/externos), no implementado en la V1: la estructura existe, no se entrega ningún plugin.
 - `var/` es relativo a la carpeta del proyecto (no XDG): pensado para un uso local monousuario, no para compartirlo entre varios usuarios de la misma máquina.

@@ -30,10 +30,12 @@ Dự án theo các nguyên tắc của **Clean Architecture**, tách bạch rõ 
 ## Mục lục
 
 <p align="center">
-  <img src="https://raw.githubusercontent.com/kraynux/kraynux/refs/heads/main/docs/translation/vi/omega-stress/A.png" width="24%" />
-  <img src="https://raw.githubusercontent.com/kraynux/kraynux/refs/heads/main/docs/translation/vi/omega-stress/B.png" width="24%" />
-  <img src="https://raw.githubusercontent.com/kraynux/kraynux/refs/heads/main/docs/translation/vi/omega-stress/C.png" width="24%" />
-  <img src="https://raw.githubusercontent.com/kraynux/kraynux/refs/heads/main/docs/translation/vi/omega-stress/D.png" width="24%" />
+  <img src="https://raw.githubusercontent.com/kraynux/kraynux/refs/heads/main/docs/translation/vi/omega-stress/A.png" width="32%" />
+  <img src="https://raw.githubusercontent.com/kraynux/kraynux/refs/heads/main/docs/translation/vi/omega-stress/B.png" width="32%" />
+  <img src="https://raw.githubusercontent.com/kraynux/kraynux/refs/heads/main/docs/translation/vi/omega-stress/C.png" width="32%" />
+  <img src="https://raw.githubusercontent.com/kraynux/kraynux/refs/heads/main/docs/translation/vi/omega-stress/D.png" width="32%" />
+  <img src="https://raw.githubusercontent.com/kraynux/kraynux/refs/heads/main/docs/translation/vi/omega-stress/E.png" width="32%" />
+  <img src="https://raw.githubusercontent.com/kraynux/kraynux/refs/heads/main/docs/translation/vi/omega-stress/F.png" width="32%" />
 </p>
 
 - [Giới thiệu](#giới-thiệu)
@@ -45,6 +47,7 @@ Dự án theo các nguyên tắc của **Clean Architecture**, tách bạch rõ 
 - [Hồ sơ thời lượng D1-D6](#hồ-sơ-thời-lượng-d1-d6-chế-độ-hồ-sơ)
 - [Chế độ an toàn](#chế-độ-an-toàn)
 - [Hiệu chuẩn cục bộ](#hiệu-chuẩn-cục-bộ)
+- [Tải phân tán (mạng cục bộ)](#tải-phân-tán-mạng-cục-bộ)
 - [Cấu hình](#cấu-hình)
 - [Kiểm thử và chất lượng](#kiểm-thử-và-chất-lượng)
 - [Gỡ cài đặt](#gỡ-cài-đặt)
@@ -72,9 +75,9 @@ Dự án theo các nguyên tắc của **Clean Architecture**, tách bạch rõ 
 ## Những gì dự án không làm
 
 - Nó không thay thế công cụ quét mạng — từ ngữ và định vị sản phẩm được chủ ý là “kiểm thử tải”, không bao giờ là “quét”.
-- Nó không triển khai bất kỳ động cơ tải bên ngoài nào (k6, v.v.) — tạo tải gốc bằng `httpx`/asyncio.
+- Nó không triển khai bất kỳ động cơ tải bên ngoài nào (k6, v.v.) — tạo tải gốc bằng asyncio.
 - Nó không bao giờ khởi chạy khi chưa có giới hạn và chưa có xác nhận cấp phép.
-- Nó không phải công cụ tải phân tán: việc tạo tải chạy trên một máy, trong một tiến trình — xem [Giới hạn đã biết](#giới-hạn-đã-biết).
+- Nó không tự liên kết các máy với nhau: đó là việc của omega-connect, công cụ chuẩn bị tải phân tán một lần cho xong — xem [Tải phân tán](#tải-phân-tán-mạng-cục-bộ).
 
 ## Tính năng
 
@@ -105,7 +108,7 @@ src/omega_stress/
 ├── domain/           Logic nghiệp vụ thuần: tải, hồ sơ, lần chạy, mục tiêu, giao diện màu, terminal — không I/O
 ├── application/      Điều phối: commands (hành động), queries (đọc), pipeline thực thi (guards/hooks)
 ├── ports/            Hợp đồng Protocol/ABC mà các bộ chuyển đổi cần (kho lưu trữ, bộ xuất, bộ tạo tải...)
-├── infrastructure/   Triển khai cụ thể: SQLite, bộ xuất JSON/CSV/HTML, bộ tạo httpx/asyncio, nhận diện terminal, đầu dò hệ thống
+├── infrastructure/   Triển khai cụ thể: SQLite, bộ xuất JSON/CSV/HTML, bộ tạo asyncio, nhận diện terminal, đầu dò hệ thống
 ├── interfaces/       Hai bộ chuyển đổi trình bày độc lập: TUI (Textual) và CLI (argparse)
 ├── plugins/          Điểm mở rộng dành sẵn (nạp plugin) — đã có khung, chưa triển khai ở V1
 └── shared/           Tiện ích dùng chung không phụ thuộc nghiệp vụ (đồng hồ có thể tiêm, tạo mã định danh)
@@ -166,6 +169,7 @@ cd ~/omega-stress && chmod +x install.sh && ./install.sh
 2. Cài các phụ thuộc (`pip install -e .`; `pyproject.toml` vẫn là nguồn chuẩn duy nhất).
 3. Cấp quyền thực thi cho `omega-stress.sh` và `install.sh`.
 4. Thêm bí danh `stress` vào `~/.bashrc` và `~/.zshrc` (không trùng lặp nếu đã có).
+5. Tạo thẻ định danh `var/omega-jeton.json` (`./omega-stress.sh synchro jeton`), được omega-connect đọc để liên kết các công cụ của bộ; ghi bằng tài khoản của bạn, không bao giờ có trong tệp lưu trữ.
 
 ## Cài đặt (phát triển)
 
@@ -266,11 +270,11 @@ Thêm `--json` vào `history`/`export`/`calibrate` để có đầu ra máy đ�
 | Kiểm thử yêu cầu | Yếu | Thông lượng | 250 yc/phút (≈4,2 yc/giây) | Không | 1 đến 5 phút |
 | Kiểm thử yêu cầu | Thấp | Thông lượng | 500 yc/phút (≈8,3 yc/giây) | Không | 1 đến 5 phút |
 | Kiểm thử yêu cầu | Trung bình | Thông lượng | 1000 yc/phút (≈16,7 yc/giây) | Không | 1 đến 5 phút |
-| Kiểm thử yêu cầu | Cao | Thông lượng | 2000 yc/phút (≈33,3 yc/giây) | Không | 1 đến 5 phút |
+| Kiểm thử yêu cầu | Cao | Thông lượng | 3000 yc/phút (≈50 yc/giây) | Không | 1 đến 5 phút |
 | Kiểm thử yêu cầu | Mạnh | Thông lượng | 6000 yc/phút (≈100 yc/giây) | Tùy chọn | 1 đến 3 phút (5 nếu đã qua kiểm tra trước) |
-| Kiểm thử yêu cầu | Hung hãn | Thông lượng | 10.000 yc/phút (≈167 yc/giây) | Tùy chọn | 1 đến 3 phút (5 nếu đã qua kiểm tra trước) |
-| Kiểm thử yêu cầu | Dữ dội | Thông lượng | 15.000 yc/phút (≈250 yc/giây) | **Bắt buộc** | Chỉ 1 đến 3 phút |
-| Kiểm thử yêu cầu | Tối đa | Thông lượng | 20.000 yc/phút (≈333 yc/giây) | **Bắt buộc** | Chỉ 1 đến 3 phút |
+| Kiểm thử yêu cầu | Hung hãn | Thông lượng | 12.000 yc/phút (≈200 yc/giây) | Tùy chọn | 1 đến 3 phút (5 nếu đã qua kiểm tra trước) |
+| Kiểm thử yêu cầu | Dữ dội | Thông lượng | 25.000 yc/phút (≈417 yc/giây) | **Bắt buộc** | Chỉ 1 đến 3 phút |
+| Kiểm thử yêu cầu | Tối đa | Thông lượng | 50.000 yc/phút (≈833 yc/giây) | **Bắt buộc** | Chỉ 1 đến 3 phút |
 | Kiểm thử kết nối | Yếu | Kết nối đồng thời | 25 kết nối | Không | 1 đến 5 phút |
 | Kiểm thử kết nối | Thấp | Kết nối đồng thời | 50 kết nối | Không | 1 đến 5 phút |
 | Kiểm thử kết nối | Trung bình | Kết nối đồng thời | 100 kết nối | Không | 1 đến 5 phút |
@@ -282,11 +286,13 @@ Thêm `--json` vào `history`/`export`/`calibrate` để có đầu ra máy đ�
 | Kiểm thử tải (tăng dần) | Yếu | Thông lượng, tăng dần | đỉnh 250 yc/phút | Không | 1 đến 5 phút |
 | Kiểm thử tải (tăng dần) | Thấp | Thông lượng, tăng dần | đỉnh 500 yc/phút | Không | 1 đến 5 phút |
 | Kiểm thử tải (tăng dần) | Trung bình | Thông lượng, tăng dần | đỉnh 1000 yc/phút | Không | 1 đến 5 phút |
-| Kiểm thử tải (tăng dần) | Cao | Thông lượng, tăng dần | đỉnh 2000 yc/phút | Không | 1 đến 5 phút |
+| Kiểm thử tải (tăng dần) | Cao | Thông lượng, tăng dần | đỉnh 3000 yc/phút | Không | 1 đến 5 phút |
 | Kiểm thử tải (tăng dần) | Mạnh | Thông lượng, tăng dần | đỉnh 6000 yc/phút | Tùy chọn | 1 đến 3 phút (5 nếu đã qua kiểm tra trước) |
-| Kiểm thử tải (tăng dần) | Hung hãn | Thông lượng, tăng dần | đỉnh 10.000 yc/phút | Tùy chọn | 1 đến 3 phút (5 nếu đã qua kiểm tra trước) |
-| Kiểm thử tải (tăng dần) | Dữ dội | Thông lượng, tăng dần | đỉnh 15.000 yc/phút | **Bắt buộc** | Chỉ 1 đến 3 phút |
-| Kiểm thử tải (tăng dần) | Tối đa | Thông lượng, tăng dần | đỉnh 20.000 yc/phút | **Bắt buộc** | Chỉ 1 đến 3 phút |
+| Kiểm thử tải (tăng dần) | Hung hãn | Thông lượng, tăng dần | đỉnh 12.000 yc/phút | Tùy chọn | 1 đến 3 phút (5 nếu đã qua kiểm tra trước) |
+| Kiểm thử tải (tăng dần) | Dữ dội | Thông lượng, tăng dần | đỉnh 25.000 yc/phút | **Bắt buộc** | Chỉ 1 đến 3 phút |
+| Kiểm thử tải (tăng dần) | Tối đa | Thông lượng, tăng dần | đỉnh 50.000 yc/phút | **Bắt buộc** | Chỉ 1 đến 3 phút |
+
+Kiểm thử kết nối: N kết nối được mở và **giữ** (keep-alive), mỗi kết nối gửi khoảng một yêu cầu mỗi 10 giây, so le nhau. Kiểm thử yêu cầu và kiểm thử tải: các yêu cầu được gửi đi theo nhịp đều mà không chờ phản hồi (vòng hở); mục tiêu chậm lại sẽ thấy rõ ở độ trễ thay vì bị che khuất. Nếu chính máy không theo kịp nữa, thông báo “nút thắt cục bộ” sẽ cho biết.
 
 - **Kiểm tra trước: Không**: bài kiểm thử bắt đầu ngay, không có điều kiện về thời lượng.
 - **Kiểm tra trước: Tùy chọn** (Mạnh/Hung hãn): bài kiểm thử bắt đầu mà không cần kiểm tra trước (thời lượng 1-3 phút), nhưng một lần kiểm tra trước đã qua sẽ mở khóa thêm thời lượng 4-5 phút.
@@ -379,7 +385,7 @@ Cũng có trong CLI qua `--unsafe` (mặc định không có = chế độ an to
 
 ## Hiệu chuẩn cục bộ
 
-Đo năng lực thực của **máy này** (không bao giờ là của mục tiêu được kiểm thử): một máy chủ vòng lặp cục bộ tích hợp trong Omega-Stress nhận tải tăng dần theo bậc, do cùng động cơ `httpx`/asyncio như các bài kiểm thử thật tạo ra.
+Đo năng lực thực của **máy này** (không bao giờ là của mục tiêu được kiểm thử): một máy chủ vòng lặp cục bộ tích hợp trong Omega-Stress nhận tải tăng dần theo bậc, do cùng động cơ asyncio như các bài kiểm thử thật tạo ra.
 
 - 7 bậc, từ nghỉ (nhiễu nền của hệ thống) tới 2000 kết nối / 12.000 yc/giây, mỗi bậc được đánh giá theo ngưỡng sức khỏe (CPU của bộ tạo tải VÀ tổng, bộ nhớ còn trống, tỉ lệ lỗi, thông lượng đạt được) — 2 bậc cuối có điều kiện, bị bỏ qua nếu bậc trước không ổn.
 - Tạo ra một ngưỡng an toàn (`VU_safe` / `RPS_safe`) từ bậc ổn cuối cùng, kèm biên an toàn (~30 % dự phòng) và mức độ tin cậy tăng theo độ sâu đạt được.
@@ -392,6 +398,15 @@ Truy cập từ màn hình **Hiệu chuẩn** của TUI (nút “Bắt đầu hi
 omega-stress calibrate run     # chạy một lần hiệu chuẩn mới
 omega-stress calibrate show    # hiện lần hiệu chuẩn gần nhất đã biết, không chạy lại
 ```
+
+## Tải phân tán (mạng cục bộ)
+
+Một máy không còn đủ? Các máy khác có cài omega-stress có thể cùng máy của bạn tạo tải lên mục tiêu; máy của bạn điều phối và đo. Không cần gõ gì: mọi thứ làm từ các màn hình.
+
+- **Liên kết một lần, trong omega-connect** (Đồng bộ → Tải phân tán): đánh dấu các máy hỗ trợ, chọn kiểu đồng ý, một nút. omega-connect gửi mọi thứ qua SSH (không phải chép gì) và mở tường lửa của máy bạn chỉ cho cổng omega-stress, với một mật khẩu.
+- **Chủ của mỗi máy hỗ trợ quyết định**: « hỏi cho mỗi mục tiêu mới » hoặc « chấp nhận mọi thứ từ máy điều phối này », tốc độ và thời lượng tối đa; máy từ chối phần còn lại, bất kể được yêu cầu gì.
+- **Khởi chạy từ omega-stress**: menu « Tải phân tán » chọn các máy tham gia và mô tả tường lửa (ai đã mở, quy tắc nào); trong mỗi màn hình kiểm tra, ô « Chế độ tải phân tán » cho chúng cùng máy của bạn tạo tải lên mục tiêu, máy của bạn chỉ tạo tải nếu bạn đánh dấu. omega-stress tự khởi động các máy và dừng chúng khi kết thúc.
+- Một đường cong duy nhất và độ trễ chính xác trên toàn bộ; chi tiết lần chạy giữ tổng kết của từng máy (yêu cầu đã gửi, đã hoàn tất, lỗi). Dòng lệnh (`--machines`) vẫn dùng được.
 
 ## Cấu hình
 
@@ -429,7 +444,7 @@ sed -i '/alias stress=/d' ~/.bashrc ~/.zshrc
 
 ## Giới hạn đã biết
 
-- Tạo tải **ngay trong tiến trình**, trên một máy (`httpx`/asyncio): đây không phải công cụ phân tán — các mức trần thực tế (xem [Giá trị kiểm thử](#giá-trị-kiểm-thử)) thấp hơn rõ rệt so với một dịch vụ kiểm thử tải SaaS (loader.io, v.v.), một cách có chủ ý, theo định vị sản phẩm có kiểm soát. Trên phần cứng khiêm tốn, các mức Hung hãn/Dữ dội/Tối đa của Kiểm thử kết nối có thể mất nhiều thời gian thực hơn hẳn thời lượng đã chọn để phát đủ toàn bộ tải nhắm tới — khi đó năng lực của **máy này**, chứ không phải của mục tiêu, mới giới hạn thông lượng thực; hãy dùng [Hiệu chuẩn cục bộ](#hiệu-chuẩn-cục-bộ) để biết các giá trị hợp lý cho phần cứng của bạn.
+- Tải phân tán chỉ trên **mạng cục bộ** (hoặc mạng riêng kiểu VPN): chưa đi qua internet khi không có mạng riêng. Khả năng của một máy phụ thuộc vào bộ xử lý (đo ngày 21/11/2026 với mục tiêu cục bộ: khoảng 5.000 yc/giây trên 4 lõi, vượt xa mức cao nhất, xem [Giá trị kiểm thử](#giá-trị-kiểm-thử)); [Hiệu chuẩn cục bộ](#hiệu-chuẩn-cục-bộ) đo khả năng của máy bạn, và thông báo “nút thắt cục bộ” cho biết khi máy không theo kịp nữa.
 - Việc tự động nhận diện loại terminal dựa vào biến môi trường: xfce4-terminal tới nay chưa có dấu hiệu đáng tin cậy nào được biết (xem [Terminal được hỗ trợ](#terminal-được-hỗ-trợ)).
 - `plugins/` là điểm mở rộng mà kiến trúc dự liệu (nạp plugin tích hợp/bên ngoài), chưa triển khai ở V1: khung đã có, chưa có plugin nào được phát hành.
 - `var/` tương đối với thư mục dự án (không theo XDG): được thiết kế cho một người dùng dùng cục bộ, không cho nhiều người dùng chia sẻ trên cùng một máy.

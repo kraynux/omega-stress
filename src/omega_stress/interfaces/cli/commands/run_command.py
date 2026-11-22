@@ -13,6 +13,7 @@ from omega_stress.application.commands.run_ramp_load import run_ramp_load
 from omega_stress.application.commands.run_request_load import run_request_load
 from omega_stress.core.enums import DurationPresetId, IntensityLevel
 from omega_stress.core.results import Err, Ok, Result
+from omega_stress.domain.distributed.policies import DISTRIBUTED_PORT
 from omega_stress.domain.load.duration_presets import duration_preset
 from omega_stress.domain.load.models import Thresholds
 from omega_stress.domain.runs.models import IntervalSample
@@ -115,6 +116,32 @@ def _add_load_launch_arguments(parser: argparse.ArgumentParser) -> None:
     parser.add_argument(
         "--json", action="store_true", help="Sortie machine (JSON) plutot que texte humain"
     )
+    distributed = parser.add_argument_group("charge distribuee (Phase 2)")
+    distributed.add_argument(
+        "--distribue", type=int, default=0, metavar="N",
+        help="Repartit la charge sur N workers appaires ; cette machine coordonne sans emettre",
+    )
+    distributed.add_argument("--port-coordinateur", type=int, default=DISTRIBUTED_PORT)
+    distributed.add_argument(
+        "--ssh", action="append", default=[], metavar="USER@HOTE:/CHEMIN",
+        help="Mode pousse : lance le worker par SSH (repetable)",
+    )
+    distributed.add_argument(
+        "--annonce", default="", metavar="ADRESSE",
+        help="Mode pousse : adresse de cette machine vue des workers",
+    )
+    distributed.add_argument(
+        "--machines", default="", metavar="ID,ID",
+        help="Machines qui aident, reliees par omega-connect (lancees par SSH a chaque test)",
+    )
+    distributed.add_argument(
+        "--cette-machine", action="store_true",
+        help="Avec --machines : cette machine charge aussi (sinon elle ne fait que mesurer)",
+    )
+    distributed.add_argument(
+        "--confirmation-distribuee", default=None, metavar="PHRASE",
+        help="Phrase exacte « CHARGE DISTRIBUEE <N> WORKERS » exigee pour tout run distribue",
+    )
 
 
 async def _handle_precheck(
@@ -140,7 +167,11 @@ async def _handle_precheck(
 async def _handle_request(
     args: argparse.Namespace, container: DependencyContainer
 ) -> Result[str, str]:
-    result = await run_request_load(**_load_kwargs(args, container))
+    try:
+        kwargs = _load_kwargs(args, container)
+    except DistributedConfirmationError as error:
+        return Err(str(error))
+    result = await run_request_load(**kwargs)
     sys.stderr.write("\n")
     return _finish(result, args)
 
@@ -148,7 +179,11 @@ async def _handle_request(
 async def _handle_connection(
     args: argparse.Namespace, container: DependencyContainer
 ) -> Result[str, str]:
-    result = await run_connection_load(**_load_kwargs(args, container))
+    try:
+        kwargs = _load_kwargs(args, container)
+    except DistributedConfirmationError as error:
+        return Err(str(error))
+    result = await run_connection_load(**kwargs)
     sys.stderr.write("\n")
     return _finish(result, args)
 
@@ -156,7 +191,11 @@ async def _handle_connection(
 async def _handle_ramp(
     args: argparse.Namespace, container: DependencyContainer
 ) -> Result[str, str]:
-    result = await run_ramp_load(**_load_kwargs(args, container))
+    try:
+        kwargs = _load_kwargs(args, container)
+    except DistributedConfirmationError as error:
+        return Err(str(error))
+    result = await run_ramp_load(**kwargs)
     sys.stderr.write("\n")
     return _finish(result, args)
 
@@ -195,6 +234,55 @@ def _ensure_capabilities_probed(container: DependencyContainer) -> None:
         container.capability_registry.register(capability)
 
 
+def distributed_phrase(workers: int) -> str:
+    return f"CHARGE DISTRIBUEE {workers} WORKERS"
+
+
+def _load_runner(args: argparse.Namespace, container: DependencyContainer) -> object:
+    """Moteur local, ou pilote de charge distribuee (meme port LoadRunner) si --machines ou
+    --distribue."""
+    machines = tuple(m for m in getattr(args, "machines", "").split(",") if m.strip())
+    remote = len(machines) + getattr(args, "distribue", 0) + len(getattr(args, "ssh", []))
+    if not remote:
+        return container.load_runner
+    if args.confirmation_distribuee != distributed_phrase(remote):
+        raise DistributedConfirmationError(
+            "Run distribue refuse : --confirmation-distribuee "
+            f"\"{distributed_phrase(remote)}\" exigee (phrase exacte)."
+        )
+    factory = container.distributed_load_runner_factory
+    assert factory is not None
+    return factory(
+        port=args.port_coordinateur,
+        machines=machines,
+        pulled_workers=args.distribue,
+        include_local=args.cette_machine,
+        ssh_targets=tuple(args.ssh),
+        announce=args.annonce,
+        notify=_print_notification,
+        approve=_ask_on_terminal,
+    )
+
+
+async def _ask_on_terminal(machine: str, target: str) -> bool:
+    """Accord « Demander » en ligne de commande : question posee dans le terminal ; sans terminal,
+    refus (jamais d'accord implicite)."""
+    if not sys.stdin.isatty():
+        return False
+    import asyncio
+
+    question = (
+        f"\n{machine} demande votre accord pour charger {target} : "
+        "autoriser toujours ? [o/N] "
+    )
+    answer = await asyncio.get_running_loop().run_in_executor(None, input, question)
+    return answer.strip().lower() in ("o", "oui", "y", "yes")
+
+
+class DistributedConfirmationError(ValueError):
+    pass
+
+
 def _load_kwargs(args: argparse.Namespace, container: DependencyContainer) -> dict:
     _ensure_capabilities_probed(container)
     duration_preset_id = (
@@ -220,7 +308,7 @@ def _load_kwargs(args: argparse.Namespace, container: DependencyContainer) -> di
         precheck_validated=args.precheck_validated,
         profile_id=args.profile_id,
         target_repository=container.target_repository,
-        load_runner=container.load_runner,
+        load_runner=_load_runner(args, container),
         run_progress_notifier=_CliProgressNotifier(),
         run_repository=container.run_repository,
         audit_sink=container.audit_logger.record,

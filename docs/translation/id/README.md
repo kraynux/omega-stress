@@ -30,10 +30,12 @@ Proyek ini mengikuti prinsip **Clean Architecture**, dengan pemisahan jelas anta
 ## Daftar isi
 
 <p align="center">
-  <img src="https://raw.githubusercontent.com/kraynux/kraynux/refs/heads/main/docs/translation/id/omega-stress/A.png" width="24%" />
-  <img src="https://raw.githubusercontent.com/kraynux/kraynux/refs/heads/main/docs/translation/id/omega-stress/B.png" width="24%" />
-  <img src="https://raw.githubusercontent.com/kraynux/kraynux/refs/heads/main/docs/translation/id/omega-stress/C.png" width="24%" />
-  <img src="https://raw.githubusercontent.com/kraynux/kraynux/refs/heads/main/docs/translation/id/omega-stress/D.png" width="24%" />
+  <img src="https://raw.githubusercontent.com/kraynux/kraynux/refs/heads/main/docs/translation/id/omega-stress/A.png" width="32%" />
+  <img src="https://raw.githubusercontent.com/kraynux/kraynux/refs/heads/main/docs/translation/id/omega-stress/B.png" width="32%" />
+  <img src="https://raw.githubusercontent.com/kraynux/kraynux/refs/heads/main/docs/translation/id/omega-stress/C.png" width="32%" />
+  <img src="https://raw.githubusercontent.com/kraynux/kraynux/refs/heads/main/docs/translation/id/omega-stress/D.png" width="32%" />
+  <img src="https://raw.githubusercontent.com/kraynux/kraynux/refs/heads/main/docs/translation/id/omega-stress/E.png" width="32%" />
+  <img src="https://raw.githubusercontent.com/kraynux/kraynux/refs/heads/main/docs/translation/id/omega-stress/F.png" width="32%" />
 </p>
 
 - [Gambaran umum](#gambaran-umum)
@@ -45,6 +47,7 @@ Proyek ini mengikuti prinsip **Clean Architecture**, dengan pemisahan jelas anta
 - [Profil durasi D1-D6](#profil-durasi-d1-d6-mode-profil)
 - [Mode keamanan](#mode-keamanan)
 - [Kalibrasi lokal](#kalibrasi-lokal)
+- [Beban terdistribusi (jaringan lokal)](#beban-terdistribusi-jaringan-lokal)
 - [Konfigurasi](#konfigurasi)
 - [Pengujian dan kualitas](#pengujian-dan-kualitas)
 - [Penghapusan instalasi](#penghapusan-instalasi)
@@ -72,9 +75,9 @@ Proyek ini mengikuti prinsip **Clean Architecture**, dengan pemisahan jelas anta
 ## Yang tidak dilakukan proyek ini
 
 - Tidak menggantikan alat pemindai jaringan — kosakata dan sikap produk sengaja “uji beban”, tidak pernah “pemindaian”.
-- Tidak mengimplementasikan mesin beban eksternal apa pun (k6, dll.) — pembangkitan bawaan dengan `httpx`/asyncio.
+- Tidak mengimplementasikan mesin beban eksternal apa pun (k6, dll.) — pembangkitan bawaan dengan asyncio.
 - Tidak pernah memulai eksekusi tanpa batas dan tanpa konfirmasi otorisasi.
-- Bukan alat beban terdistribusi: pembangkitan berjalan di satu mesin, dalam satu proses — lihat [Keterbatasan yang diketahui](#keterbatasan-yang-diketahui).
+- Ia tidak menautkan mesin-mesin satu sama lain sendiri: itu tugas omega-connect, yang menyiapkan beban terdistribusi sekali untuk selamanya — lihat [Beban terdistribusi](#beban-terdistribusi-jaringan-lokal).
 
 ## Fitur
 
@@ -105,7 +108,7 @@ src/omega_stress/
 ├── domain/           Logika bisnis murni: beban, profil, eksekusi, target, tema, terminal — tanpa I/O
 ├── application/      Orkestrasi: commands (aksi), queries (pembacaan), pipeline eksekusi (guards/hooks)
 ├── ports/            Kontrak Protocol/ABC yang diharapkan adaptor (repositori, pengekspor, pembangkit beban...)
-├── infrastructure/   Implementasi konkret: SQLite, pengekspor JSON/CSV/HTML, pembangkit httpx/asyncio, deteksi terminal, probe sistem
+├── infrastructure/   Implementasi konkret: SQLite, pengekspor JSON/CSV/HTML, pembangkit asyncio, deteksi terminal, probe sistem
 ├── interfaces/       Dua adaptor presentasi yang independen: TUI (Textual) dan CLI (argparse)
 ├── plugins/          Titik perluasan yang dicadangkan (pemuatan plugin) — kerangka sudah ada, belum diimplementasikan di V1
 └── shared/           Utilitas lintas bagian tanpa dependensi bisnis (jam yang dapat diinjeksi, pembuatan pengenal)
@@ -166,6 +169,7 @@ cd ~/omega-stress && chmod +x install.sh && ./install.sh
 2. Memasang dependensi (`pip install -e .`; `pyproject.toml` tetap menjadi satu-satunya sumber kebenaran).
 3. Menjadikan `omega-stress.sh` dan `install.sh` dapat dieksekusi.
 4. Menambahkan alias `stress` ke `~/.bashrc` dan `~/.zshrc` (tanpa duplikat jika sudah ada).
+5. Membuat kartu identitas `var/omega-jeton.json` (`./omega-stress.sh synchro jeton`), yang dibaca omega-connect untuk menghubungkan alat-alat suite; ditulis dengan akun Anda, tidak pernah disertakan dalam arsip.
 
 ## Instalasi (pengembangan)
 
@@ -266,11 +270,11 @@ Tambahkan `--json` pada `history`/`export`/`calibrate` untuk keluaran yang dapat
 | Uji permintaan | Lemah | Laju | 250 perm/mnt (≈4,2 perm/dtk) | Tidak | 1 hingga 5 menit |
 | Uji permintaan | Rendah | Laju | 500 perm/mnt (≈8,3 perm/dtk) | Tidak | 1 hingga 5 menit |
 | Uji permintaan | Sedang | Laju | 1000 perm/mnt (≈16,7 perm/dtk) | Tidak | 1 hingga 5 menit |
-| Uji permintaan | Tinggi | Laju | 2000 perm/mnt (≈33,3 perm/dtk) | Tidak | 1 hingga 5 menit |
+| Uji permintaan | Tinggi | Laju | 3000 perm/mnt (≈50 perm/dtk) | Tidak | 1 hingga 5 menit |
 | Uji permintaan | Kuat | Laju | 6000 perm/mnt (≈100 perm/dtk) | Opsional | 1 hingga 3 menit (5 jika lolos pra-pemeriksaan) |
-| Uji permintaan | Agresif | Laju | 10.000 perm/mnt (≈167 perm/dtk) | Opsional | 1 hingga 3 menit (5 jika lolos pra-pemeriksaan) |
-| Uji permintaan | Brutal | Laju | 15.000 perm/mnt (≈250 perm/dtk) | **Wajib** | Hanya 1 hingga 3 menit |
-| Uji permintaan | Maksimum | Laju | 20.000 perm/mnt (≈333 perm/dtk) | **Wajib** | Hanya 1 hingga 3 menit |
+| Uji permintaan | Agresif | Laju | 12.000 perm/mnt (≈200 perm/dtk) | Opsional | 1 hingga 3 menit (5 jika lolos pra-pemeriksaan) |
+| Uji permintaan | Brutal | Laju | 25.000 perm/mnt (≈417 perm/dtk) | **Wajib** | Hanya 1 hingga 3 menit |
+| Uji permintaan | Maksimum | Laju | 50.000 perm/mnt (≈833 perm/dtk) | **Wajib** | Hanya 1 hingga 3 menit |
 | Uji koneksi | Lemah | Koneksi serentak | 25 koneksi | Tidak | 1 hingga 5 menit |
 | Uji koneksi | Rendah | Koneksi serentak | 50 koneksi | Tidak | 1 hingga 5 menit |
 | Uji koneksi | Sedang | Koneksi serentak | 100 koneksi | Tidak | 1 hingga 5 menit |
@@ -282,11 +286,13 @@ Tambahkan `--json` pada `history`/`export`/`calibrate` untuk keluaran yang dapat
 | Uji beban (kenaikan bertahap) | Lemah | Laju, bertahap naik | puncak 250 perm/mnt | Tidak | 1 hingga 5 menit |
 | Uji beban (kenaikan bertahap) | Rendah | Laju, bertahap naik | puncak 500 perm/mnt | Tidak | 1 hingga 5 menit |
 | Uji beban (kenaikan bertahap) | Sedang | Laju, bertahap naik | puncak 1000 perm/mnt | Tidak | 1 hingga 5 menit |
-| Uji beban (kenaikan bertahap) | Tinggi | Laju, bertahap naik | puncak 2000 perm/mnt | Tidak | 1 hingga 5 menit |
+| Uji beban (kenaikan bertahap) | Tinggi | Laju, bertahap naik | puncak 3000 perm/mnt | Tidak | 1 hingga 5 menit |
 | Uji beban (kenaikan bertahap) | Kuat | Laju, bertahap naik | puncak 6000 perm/mnt | Opsional | 1 hingga 3 menit (5 jika lolos pra-pemeriksaan) |
-| Uji beban (kenaikan bertahap) | Agresif | Laju, bertahap naik | puncak 10.000 perm/mnt | Opsional | 1 hingga 3 menit (5 jika lolos pra-pemeriksaan) |
-| Uji beban (kenaikan bertahap) | Brutal | Laju, bertahap naik | puncak 15.000 perm/mnt | **Wajib** | Hanya 1 hingga 3 menit |
-| Uji beban (kenaikan bertahap) | Maksimum | Laju, bertahap naik | puncak 20.000 perm/mnt | **Wajib** | Hanya 1 hingga 3 menit |
+| Uji beban (kenaikan bertahap) | Agresif | Laju, bertahap naik | puncak 12.000 perm/mnt | Opsional | 1 hingga 3 menit (5 jika lolos pra-pemeriksaan) |
+| Uji beban (kenaikan bertahap) | Brutal | Laju, bertahap naik | puncak 25.000 perm/mnt | **Wajib** | Hanya 1 hingga 3 menit |
+| Uji beban (kenaikan bertahap) | Maksimum | Laju, bertahap naik | puncak 50.000 perm/mnt | **Wajib** | Hanya 1 hingga 3 menit |
+
+Uji koneksi: N koneksi dibuka dan **dipertahankan** (keep-alive), masing-masing mengirim sekitar satu permintaan setiap 10 detik, berselang. Uji permintaan dan uji beban: permintaan keluar dengan ritme tetap tanpa menunggu jawaban (loop terbuka); target yang melambat terlihat di latensi alih-alih tersembunyi. Jika mesin itu sendiri tidak lagi mampu mengikuti, notifikasi “hambatan lokal” memberitahukannya.
 
 - **Pra-pemeriksaan Tidak**: uji langsung dimulai, tanpa syarat durasi.
 - **Pra-pemeriksaan Opsional** (Kuat/Agresif): uji dimulai tanpa pra-pemeriksaan (durasi 1-3 menit), tetapi pra-pemeriksaan yang lolos juga membuka durasi 4-5 menit.
@@ -379,7 +385,7 @@ Tersedia juga di CLI lewat `--unsafe` (tidak ada secara bawaan = mode keamanan a
 
 ## Kalibrasi lokal
 
-Mengukur kapasitas nyata **mesin ini** (bukan target yang diuji): server loopback lokal yang tertanam dalam Omega-Stress menerima beban yang meningkat bertahap, dibangkitkan oleh mesin `httpx`/asyncio yang sama dengan uji sungguhan.
+Mengukur kapasitas nyata **mesin ini** (bukan target yang diuji): server loopback lokal yang tertanam dalam Omega-Stress menerima beban yang meningkat bertahap, dibangkitkan oleh mesin asyncio yang sama dengan uji sungguhan.
 
 - 7 tahap, dari diam (derau latar sistem) hingga 2000 koneksi / 12.000 perm/dtk, masing-masing dinilai terhadap ambang kesehatan (CPU pembangkit DAN keseluruhan, memori tersedia, tingkat galat, laju yang dicapai) — 2 tahap terakhir bersyarat, dilewati jika tahap sebelumnya tidak sehat.
 - Menghasilkan batas aman (`VU_safe` / `RPS_safe`) dari tahap sehat terakhir, dengan margin keamanan (~30 % cadangan) dan tingkat keyakinan yang naik seiring kedalaman yang dicapai.
@@ -392,6 +398,15 @@ Dapat diakses dari layar **Kalibrasi** di TUI (tombol “Mulai kalibrasi”, kem
 omega-stress calibrate run     # menjalankan kalibrasi baru
 omega-stress calibrate show    # menampilkan kalibrasi terakhir yang diketahui, tanpa menjalankan yang baru
 ```
+
+## Beban terdistribusi (jaringan lokal)
+
+Satu mesin tidak lagi cukup? Mesin lain yang memasang omega-stress dapat membebani target bersama mesin Anda, yang memimpin dan mengukur. Tidak ada yang perlu diketik: semuanya dari layar.
+
+- **Tautkan sekali, di omega-connect** (Sinkronisasi → Beban terdistribusi): centang mesin yang membantu, pilih persetujuannya, satu tombol. omega-connect mengirim semuanya lewat SSH (tidak ada yang disalin) dan membuka firewall mesin Anda hanya untuk port omega-stress, dengan satu kata sandi.
+- **Pemilik setiap mesin yang membantu yang memutuskan**: « tanyakan untuk setiap target baru » atau « terima semuanya dari pemimpin ini », laju dan durasi maksimum; mesin menolak sisanya, apa pun yang diminta.
+- **Jalankan dari omega-stress**: menu « Beban terdistribusi » memilih mesin yang ikut dan menjelaskan firewall (siapa yang membukanya, aturan apa); di setiap layar pengujian, kotak « Mode beban terdistribusi » membuat mesin-mesin itu membebani target bersama mesin Anda, yang ikut membebani hanya jika Anda mencentangnya. omega-stress sendiri menyalakan mesin dan menghentikannya di akhir.
+- Satu kurva dan latensi akurat untuk keseluruhan; detail run menyimpan ringkasan tiap mesin (permintaan dikirim, selesai, galat). Baris perintah (`--machines`) tetap tersedia.
 
 ## Konfigurasi
 
@@ -429,7 +444,7 @@ sed -i '/alias stress=/d' ~/.bashrc ~/.zshrc
 
 ## Keterbatasan yang diketahui
 
-- Pembangkitan beban **di dalam proses itu sendiri**, di satu mesin (`httpx`/asyncio): ini bukan alat terdistribusi — batas atas yang nyata (lihat [Nilai pengujian](#nilai-pengujian)) jauh lebih sederhana daripada layanan uji beban SaaS (loader.io, dll.), dengan sengaja, sebagai sikap produk yang terkendali. Pada perangkat keras sederhana, level Agresif/Brutal/Maksimum pada Uji koneksi dapat memerlukan waktu nyata yang jauh lebih lama daripada durasi yang dipilih untuk mengirim seluruh beban yang ditargetkan — saat itu kapasitas **mesin ini**, bukan target, yang membatasi laju nyata; gunakan [Kalibrasi lokal](#kalibrasi-lokal) untuk mengetahui nilai yang wajar bagi perangkat keras Anda.
+- Beban terdistribusi hanya di **jaringan lokal** (atau jaringan pribadi seperti VPN): belum bisa melintasi internet tanpa jaringan pribadi. Kemampuan sebuah mesin bergantung pada prosesornya (diukur 21/11/2026 terhadap target lokal: sekitar 5.000 perm/dtk dengan 4 inti, jauh di atas level tertinggi, lihat [Nilai pengujian](#nilai-pengujian)); [Kalibrasi lokal](#kalibrasi-lokal) mengukur kemampuan mesin Anda, dan notifikasi “hambatan lokal” memberi tahu saat mesin tidak lagi mampu mengikuti.
 - Deteksi otomatis keluarga terminal bergantung pada variabel lingkungan: xfce4-terminal sejauh ini belum memiliki penanda andal yang diketahui (lihat [Terminal yang didukung](#terminal-yang-didukung)).
 - `plugins/` adalah titik perluasan yang direncanakan arsitektur (pemuatan plugin bawaan/eksternal), belum diimplementasikan di V1: kerangkanya ada, belum ada plugin yang disertakan.
 - `var/` relatif terhadap folder proyek (bukan XDG): dirancang untuk penggunaan lokal oleh satu pengguna, bukan untuk dibagi oleh banyak pengguna di mesin yang sama.

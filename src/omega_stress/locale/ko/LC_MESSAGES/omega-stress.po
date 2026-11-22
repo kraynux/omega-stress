@@ -9,7 +9,9 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 "X-Omega-Status: validated\n"
 
-#: src/omega_stress/application/commands/export_run_report.py:36 src/omega_stress/application/commands/replay_run.py:61 src/omega_stress/interfaces/tui/screens/run_details.py:63
+#: src/omega_stress/application/commands/export_run_report.py:36
+#: src/omega_stress/application/commands/replay_run.py:61
+#: src/omega_stress/interfaces/tui/screens/run_details.py:63
 msgid "Run {run_id!r} introuvable."
 msgstr "실행 {run_id!r}을(를) 찾을 수 없습니다."
 
@@ -26,7 +28,8 @@ msgid "Profil {profile_id!r} introuvable."
 msgstr "프로필 {profile_id!r}을(를) 찾을 수 없습니다."
 
 #: src/omega_stress/application/commands/replay_run.py:65
-msgid "Le run {run_id!r} ne référence aucun profil et ne peut pas être rejoué."
+msgid ""
+"Le run {run_id!r} ne référence aucun profil et ne peut pas être rejoué."
 msgstr "실행 {run_id!r}은(는) 어떤 프로필도 참조하지 않아 다시 실행할 수 없습니다."
 
 #: src/omega_stress/application/commands/replay_run.py:75
@@ -42,7 +45,8 @@ msgstr "대상 {target_id!r}을(를) 찾을 수 없어 이 실행을 다시 실�
 msgid "Palier {name} : {value}{value2}"
 msgstr "단계 {name}: {value}{value2}"
 
-#: src/omega_stress/application/commands/run_calibration.py:100 src/omega_stress/interfaces/tui/presenters/calibration_presenter.py:108
+#: src/omega_stress/application/commands/run_calibration.py:100
+#: src/omega_stress/interfaces/tui/presenters/calibration_presenter.py:108
 msgid "dégradé"
 msgstr "저하"
 
@@ -69,16 +73,20 @@ msgid "Impossible de clôturer le run {id} : {error}"
 msgstr "실행 {id}을(를) 종료할 수 없습니다: {error}"
 
 #: src/omega_stress/application/pipeline/guards/authorization_guard.py:23
-msgid "Cible {target_id!r} non autorisée : ni épinglée, ni confirmation explicite fournie pour ce run."
+msgid ""
+"Cible {target_id!r} non autorisée : ni épinglée, ni confirmation explicite "
+"fournie pour ce run."
 msgstr "대상 {target_id!r}은(는) 허가되지 않았습니다: 고정되지 않았고 이 실행에 대한 명시적 확인도 없습니다."
 
 #: src/omega_stress/application/pipeline/guards/capability_guard.py:22
 msgid "Capacité {capability_name!r} indisponible (statut : {value})."
 msgstr "기능 {capability_name!r}을(를) 사용할 수 없습니다(상태: {value})."
 
-#: src/omega_stress/application/pipeline/guards/precheck_guard.py:22 src/omega_stress/domain/load/validators.py:40
+#: src/omega_stress/application/pipeline/guards/precheck_guard.py:22
+#: src/omega_stress/domain/load/validators.py:40
 #, python-brace-format
-msgid "Le niveau {value} exige un pré-check automatique validé avant de démarrer."
+msgid ""
+"Le niveau {value} exige un pré-check automatique validé avant de démarrer."
 msgstr "레벨 {value}은(는) 시작 전에 자동 사전 점검을 통과해야 합니다."
 
 #: src/omega_stress/application/pipeline/hooks/notification_hook.py:16
@@ -87,7 +95,9 @@ msgid "Arrêt automatique : {reason}"
 msgstr "자동 중지: {reason}"
 
 #: src/omega_stress/application/pipeline/hooks/notification_hook.py:21
-msgid "Le générateur local semble devenir le goulot d'étranglement (débit observé significativement inférieur au débit demandé)."
+msgid ""
+"Le générateur local semble devenir le goulot d'étranglement (débit observé "
+"significativement inférieur au débit demandé)."
 msgstr "로컬 생성기가 병목이 되고 있는 것으로 보입니다(관찰된 처리량이 요청한 값보다 크게 낮음)."
 
 #: src/omega_stress/domain/calibration/validators.py:39
@@ -96,13 +106,22 @@ msgstr "이 컴퓨터에서 이미 보정 또는 테스트가 진행 중입니�
 
 #: src/omega_stress/domain/calibration/validators.py:49
 #, python-brace-format
-msgid "CPU global {cpu_global_percent:.0f}% > seuil {CALIBRATION_PRECONDITION_CPU_GLOBAL_MAX_PERCENT:.0f}% : machine déjà sous pression."
-msgstr "전체 CPU {cpu_global_percent:.0f}% > 임계값 {CALIBRATION_PRECONDITION_CPU_GLOBAL_MAX_PERCENT:.0f}%: 머신이 이미 부하 상태입니다."
+msgid ""
+"CPU global {cpu_global_percent:.0f}% > seuil "
+"{CALIBRATION_PRECONDITION_CPU_GLOBAL_MAX_PERCENT:.0f}% : machine déjà sous "
+"pression."
+msgstr ""
+"전체 CPU {cpu_global_percent:.0f}% > 임계값 "
+"{CALIBRATION_PRECONDITION_CPU_GLOBAL_MAX_PERCENT:.0f}%: 머신이 이미 부하 상태입니다."
 
 #: src/omega_stress/domain/calibration/validators.py:66
 #, python-brace-format
-msgid "Mémoire disponible {memory_available_percent:.0f}% < seuil {CALIBRATION_PRECONDITION_MEMORY_AVAILABLE_MIN_PERCENT:.0f}%."
-msgstr "사용 가능한 메모리 {memory_available_percent:.0f}% < 임계값 {CALIBRATION_PRECONDITION_MEMORY_AVAILABLE_MIN_PERCENT:.0f}%."
+msgid ""
+"Mémoire disponible {memory_available_percent:.0f}% < seuil "
+"{CALIBRATION_PRECONDITION_MEMORY_AVAILABLE_MIN_PERCENT:.0f}%."
+msgstr ""
+"사용 가능한 메모리 {memory_available_percent:.0f}% < 임계값 "
+"{CALIBRATION_PRECONDITION_MEMORY_AVAILABLE_MIN_PERCENT:.0f}%."
 
 #: src/omega_stress/domain/calibration/validators.py:77
 msgid "Swap déjà activé ou en croissance : machine déjà sous pression."
@@ -110,20 +129,27 @@ msgstr "스왑이 이미 사용 중이거나 증가 중: 머신이 이미 부하
 
 #: src/omega_stress/domain/calibration/validators.py:84
 #, python-brace-format
-msgid "Load average 1 min {load_average_1min:.1f} > {logical_cpu_count} coeurs logiques."
+msgid ""
+"Load average 1 min {load_average_1min:.1f} > {logical_cpu_count} coeurs "
+"logiques."
 msgstr "1분 평균 부하 {load_average_1min:.1f} > 논리 코어 {logical_cpu_count}개."
 
 #: src/omega_stress/domain/load/models.py:27
-msgid "max_error_rate doit être compris entre 0.0 et 1.0, reçu {max_error_rate!r}"
+msgid ""
+"max_error_rate doit être compris entre 0.0 et 1.0, reçu {max_error_rate!r}"
 msgstr "max_error_rate는 0.0에서 1.0 사이여야 합니다. 받은 값: {max_error_rate!r}"
 
 #: src/omega_stress/domain/load/models.py:33
-msgid "max_p95_latency_ms doit être strictement positif, reçu {max_p95_latency_ms!r}"
+msgid ""
+"max_p95_latency_ms doit être strictement positif, reçu "
+"{max_p95_latency_ms!r}"
 msgstr "max_p95_latency_ms는 0보다 커야 합니다. 받은 값: {max_p95_latency_ms!r}"
 
 #: src/omega_stress/domain/load/models.py:57
 #, python-brace-format
-msgid "Durée {minutes} min non autorisée pour le niveau {value} (choix fermés : {allowed})"
+msgid ""
+"Durée {minutes} min non autorisée pour le niveau {value} (choix fermés : "
+"{allowed})"
 msgstr "레벨 {value}에는 {minutes}분이 허용되지 않습니다(선택지: {allowed})"
 
 #: src/omega_stress/domain/load/models.py:83
@@ -131,15 +157,29 @@ msgid "{field_name} doit être compris entre 0.0 et 1.0, reçu {value!r}"
 msgstr "{field_name}은(는) 0.0에서 1.0 사이여야 합니다. 받은 값: {value!r}"
 
 #: src/omega_stress/domain/load/models.py:90
-msgid "duration_minutes doit être strictement positif, reçu {duration_minutes!r}"
+msgid ""
+"duration_minutes doit être strictement positif, reçu {duration_minutes!r}"
 msgstr "duration_minutes는 0보다 커야 합니다. 받은 값: {duration_minutes!r}"
 
 #: src/omega_stress/domain/load/policies.py:241
-msgid "Le mode sécurité (actif par défaut) arrête automatiquement un test si CETTE machine - pas la cible testée - semble en danger (CPU/mémoire du générateur). Le désactiver ne change rien aux protections de la cible (taux d'erreur, latence : toujours activés) : seul le risque de ralentir ou geler temporairement VOTRE ordinateur pendant la durée du test augmente, surtout sur les niveaux intensifs (Connexions Agressif et au-delà, Requêtes Maximum). À désactiver si vous savez que votre machine peut encaisser plus que ce que le mode sécurité suppose par défaut."
-msgstr "안전 모드(기본 활성)는 테스트 대상이 아닌 이 머신 자체가 위험해 보이면(생성기의 CPU/메모리) 테스트를 자동으로 중지합니다. 비활성화해도 대상 보호(오류율, 지연 시간: 항상 활성)는 바뀌지 않습니다: 테스트 동안 내 컴퓨터가 느려지거나 일시적으로 멈출 위험만 커지며, 특히 고강도 레벨(연결 공격적 이상, 요청 최대)에서 그렇습니다. 안전 모드가 기본으로 가정하는 것보다 더 많은 부하를 머신이 견딜 수 있다고 확신할 때 비활성화하세요."
+msgid ""
+"Le mode sécurité (actif par défaut) arrête automatiquement un test si CETTE "
+"machine - pas la cible testée - semble en danger (CPU/mémoire du "
+"générateur). Le désactiver ne change rien aux protections de la cible (taux "
+"d'erreur, latence : toujours activés) : seul le risque de ralentir ou geler "
+"temporairement VOTRE ordinateur pendant la durée du test augmente, surtout "
+"sur les niveaux intensifs (Connexions Agressif et au-delà, Requêtes "
+"Maximum). À désactiver si vous savez que votre machine peut encaisser plus "
+"que ce que le mode sécurité suppose par défaut."
+msgstr ""
+"안전 모드(기본 활성)는 테스트 대상이 아닌 이 머신 자체가 위험해 보이면(생성기의 CPU/메모리) 테스트를 자동으로 중지합니다. "
+"비활성화해도 대상 보호(오류율, 지연 시간: 항상 활성)는 바뀌지 않습니다: 테스트 동안 내 컴퓨터가 느려지거나 일시적으로 멈출 위험만 "
+"커지며, 특히 고강도 레벨(연결 공격적 이상, 요청 최대)에서 그렇습니다. 안전 모드가 기본으로 가정하는 것보다 더 많은 부하를 머신이 "
+"견딜 수 있다고 확신할 때 비활성화하세요."
 
 #: src/omega_stress/domain/load/validators.py:32
-msgid "Aucun run ne peut démarrer sans confirmation d'autorisation de la cible."
+msgid ""
+"Aucun run ne peut démarrer sans confirmation d'autorisation de la cible."
 msgstr "대상에 대한 권한 확인 없이는 어떤 실행도 시작할 수 없습니다."
 
 #: src/omega_stress/domain/load/validators.py:50
@@ -149,7 +189,9 @@ msgstr "프로필 {name}은(는) 계열 {value}과(와) 호환되지 않습니�
 
 #: src/omega_stress/domain/load/validators.py:59
 #, python-brace-format
-msgid "Durée {minutes} min incohérente avec le profil {name} ({total_minutes} min attendues)."
+msgid ""
+"Durée {minutes} min incohérente avec le profil {name} ({total_minutes} min "
+"attendues)."
 msgstr "{minutes}분은 프로필 {name}과(와) 맞지 않습니다({total_minutes}분 필요)."
 
 #: src/omega_stress/domain/load/validators.py:80
@@ -162,27 +204,38 @@ msgid "Un Test charge doit définir au moins une étape de rampe."
 msgstr "부하 테스트는 증가 단계를 하나 이상 정의해야 합니다."
 
 #: src/omega_stress/domain/load/validators.py:95
-msgid "Seul un Test charge (ou un Test connexions avec profil de durée) peut définir des étapes de rampe."
+msgid ""
+"Seul un Test charge (ou un Test connexions avec profil de durée) peut "
+"définir des étapes de rampe."
 msgstr "증가 단계는 부하 테스트(또는 시간 프로필이 있는 연결 테스트)만 정의할 수 있습니다."
 
 #: src/omega_stress/domain/load/validators.py:117
 #, python-brace-format
-msgid "Taux d'erreur observé {observed_error_rate:.1%} > seuil {max_error_rate:.1%}"
+msgid ""
+"Taux d'erreur observé {observed_error_rate:.1%} > seuil {max_error_rate:.1%}"
 msgstr "관찰된 오류율 {observed_error_rate:.1%} > 임계값 {max_error_rate:.1%}"
 
 #: src/omega_stress/domain/load/validators.py:132
 #, python-brace-format
-msgid "Latence p95 observée {observed_p95_latency_ms:.0f}ms > seuil {max_p95_latency_ms:.0f}ms"
-msgstr "관찰된 p95 지연 시간 {observed_p95_latency_ms:.0f}ms > 임계값 {max_p95_latency_ms:.0f}ms"
+msgid ""
+"Latence p95 observée {observed_p95_latency_ms:.0f}ms > seuil "
+"{max_p95_latency_ms:.0f}ms"
+msgstr ""
+"관찰된 p95 지연 시간 {observed_p95_latency_ms:.0f}ms > 임계값 "
+"{max_p95_latency_ms:.0f}ms"
 
 #: src/omega_stress/domain/load/validators.py:175
 #, python-brace-format
-msgid "Le niveau {value} pour le profil {name} ({total_minutes} min) exige la confirmation renforcée exacte."
+msgid ""
+"Le niveau {value} pour le profil {name} ({total_minutes} min) exige la "
+"confirmation renforcée exacte."
 msgstr "프로필 {name}({total_minutes}분)의 레벨 {value}에는 정확한 강화 확인이 필요합니다."
 
 #: src/omega_stress/domain/load/validators.py:184
 #, python-brace-format
-msgid "Le niveau {value} n'est pas proposé pour le profil {name} ({total_minutes} min)."
+msgid ""
+"Le niveau {value} n'est pas proposé pour le profil {name} ({total_minutes} "
+"min)."
 msgstr "프로필 {name}({total_minutes}분)에서는 레벨 {value}을(를) 제공하지 않습니다."
 
 #: src/omega_stress/domain/load/validators.py:209
@@ -192,33 +245,63 @@ msgstr "{CRITICAL_WINDOW_SECONDS:.0f}s 위험"
 
 #: src/omega_stress/domain/load/validators.py:227
 #, python-brace-format
-msgid "Taux de timeout {timeout_rate:.1%} sur fenêtre {window_label} >= seuil {WINDOW_TIMEOUT_RATE_ABORT_THRESHOLD:.0%}"
-msgstr "창 {window_label}의 시간 초과율 {timeout_rate:.1%} >= 임계값 {WINDOW_TIMEOUT_RATE_ABORT_THRESHOLD:.0%}"
+msgid ""
+"Taux de timeout {timeout_rate:.1%} sur fenêtre {window_label} >= seuil "
+"{WINDOW_TIMEOUT_RATE_ABORT_THRESHOLD:.0%}"
+msgstr ""
+"창 {window_label}의 시간 초과율 {timeout_rate:.1%} >= 임계값 "
+"{WINDOW_TIMEOUT_RATE_ABORT_THRESHOLD:.0%}"
 
 #: src/omega_stress/domain/load/validators.py:243
 #, python-brace-format
-msgid "Taux d'erreurs HTTP 5xx {http_5xx_rate:.1%} sur fenêtre {window_label} >= seuil {WINDOW_HTTP_5XX_RATE_ABORT_THRESHOLD:.0%}"
-msgstr "창 {window_label}의 HTTP 5xx 오류율 {http_5xx_rate:.1%} >= 임계값 {WINDOW_HTTP_5XX_RATE_ABORT_THRESHOLD:.0%}"
+msgid ""
+"Taux d'erreurs HTTP 5xx {http_5xx_rate:.1%} sur fenêtre {window_label} >= "
+"seuil {WINDOW_HTTP_5XX_RATE_ABORT_THRESHOLD:.0%}"
+msgstr ""
+"창 {window_label}의 HTTP 5xx 오류율 {http_5xx_rate:.1%} >= 임계값 "
+"{WINDOW_HTTP_5XX_RATE_ABORT_THRESHOLD:.0%}"
 
 #: src/omega_stress/domain/load/validators.py:259
 #, python-brace-format
-msgid "Taux d'erreurs total {total_error_rate:.1%} sur fenêtre {window_label} >= seuil {WINDOW_TOTAL_ERROR_RATE_ABORT_THRESHOLD:.0%}"
-msgstr "창 {window_label}의 전체 오류율 {total_error_rate:.1%} >= 임계값 {WINDOW_TOTAL_ERROR_RATE_ABORT_THRESHOLD:.0%}"
+msgid ""
+"Taux d'erreurs total {total_error_rate:.1%} sur fenêtre {window_label} >= "
+"seuil {WINDOW_TOTAL_ERROR_RATE_ABORT_THRESHOLD:.0%}"
+msgstr ""
+"창 {window_label}의 전체 오류율 {total_error_rate:.1%} >= 임계값 "
+"{WINDOW_TOTAL_ERROR_RATE_ABORT_THRESHOLD:.0%}"
 
 #: src/omega_stress/domain/load/validators.py:310
 #, python-brace-format
-msgid "CPU générateur >= {threshold_text} (~{GENERATOR_CPU_ABORT_RATIO_OF_SINGLE_CORE:.0%} d'un coeur) ET CPU machine >= {GENERATOR_CPU_ABORT_GLOBAL_THRESHOLD_PERCENT:.0f}% pendant {GENERATOR_CPU_ABORT_SUSTAINED_SAMPLES}s : la machine hôte elle-même est sous pression, pas seulement le générateur"
-msgstr "생성기 CPU >= {threshold_text}(코어 하나의 약 {GENERATOR_CPU_ABORT_RATIO_OF_SINGLE_CORE:.0%}) 그리고 머신 CPU >= {GENERATOR_CPU_ABORT_GLOBAL_THRESHOLD_PERCENT:.0f}%가 {GENERATOR_CPU_ABORT_SUSTAINED_SAMPLES}s 동안 지속: 생성기만이 아니라 호스트 머신 자체가 부하 상태입니다"
+msgid ""
+"CPU générateur >= {threshold_text} "
+"(~{GENERATOR_CPU_ABORT_RATIO_OF_SINGLE_CORE:.0%} d'un coeur) ET CPU machine "
+">= {GENERATOR_CPU_ABORT_GLOBAL_THRESHOLD_PERCENT:.0f}% pendant "
+"{GENERATOR_CPU_ABORT_SUSTAINED_SAMPLES}s : la machine hôte elle-même est "
+"sous pression, pas seulement le générateur"
+msgstr ""
+"생성기 CPU >= {threshold_text}(코어 하나의 약 "
+"{GENERATOR_CPU_ABORT_RATIO_OF_SINGLE_CORE:.0%}) 그리고 머신 CPU >= "
+"{GENERATOR_CPU_ABORT_GLOBAL_THRESHOLD_PERCENT:.0f}%가 "
+"{GENERATOR_CPU_ABORT_SUSTAINED_SAMPLES}s 동안 지속: 생성기만이 아니라 호스트 머신 자체가 부하 "
+"상태입니다"
 
 #: src/omega_stress/domain/load/validators.py:333
 #, python-brace-format
-msgid "Mémoire disponible {memory_available_percent:.0f}% < seuil {MEMORY_AVAILABLE_ABORT_THRESHOLD_PERCENT:.0f}%"
-msgstr "사용 가능한 메모리 {memory_available_percent:.0f}% < 임계값 {MEMORY_AVAILABLE_ABORT_THRESHOLD_PERCENT:.0f}%"
+msgid ""
+"Mémoire disponible {memory_available_percent:.0f}% < seuil "
+"{MEMORY_AVAILABLE_ABORT_THRESHOLD_PERCENT:.0f}%"
+msgstr ""
+"사용 가능한 메모리 {memory_available_percent:.0f}% < 임계값 "
+"{MEMORY_AVAILABLE_ABORT_THRESHOLD_PERCENT:.0f}%"
 
 #: src/omega_stress/domain/load/validators.py:353
 #, python-brace-format
-msgid "Descripteurs de fichiers {open_files}/{open_files_soft_limit} >= {OPEN_FILES_ABORT_RATIO:.0%} de la limite"
-msgstr "파일 디스크립터 {open_files}/{open_files_soft_limit} >= 한도의 {OPEN_FILES_ABORT_RATIO:.0%}"
+msgid ""
+"Descripteurs de fichiers {open_files}/{open_files_soft_limit} >= "
+"{OPEN_FILES_ABORT_RATIO:.0%} de la limite"
+msgstr ""
+"파일 디스크립터 {open_files}/{open_files_soft_limit} >= 한도의 "
+"{OPEN_FILES_ABORT_RATIO:.0%}"
 
 #: src/omega_stress/domain/profiles/validation.py:17
 msgid "Le nom du profil ne peut pas être vide."
@@ -226,15 +309,21 @@ msgstr "프로필 이름은 비워 둘 수 없습니다."
 
 #: src/omega_stress/domain/profiles/validation.py:26
 #, python-brace-format
-msgid "Durée {minutes} min non autorisée pour le niveau {value} dans ce profil (extended_duration_authorized={extended_duration_authorized})."
-msgstr "이 프로필에서는 레벨 {value}에 {minutes}분이 허용되지 않습니다(extended_duration_authorized={extended_duration_authorized})."
+msgid ""
+"Durée {minutes} min non autorisée pour le niveau {value} dans ce profil "
+"(extended_duration_authorized={extended_duration_authorized})."
+msgstr ""
+"이 프로필에서는 레벨 {value}에 {minutes}분이 허용되지 "
+"않습니다(extended_duration_authorized={extended_duration_authorized})."
 
 #: src/omega_stress/domain/reports/builders.py:17
 msgid "Le test s'est déroulé normalement, sans dépassement de seuil."
 msgstr "테스트가 임계값을 넘지 않고 정상적으로 진행되었습니다."
 
 #: src/omega_stress/domain/reports/builders.py:19
-msgid "Le test s'est terminé avec une dégradation observée, sans dépassement de seuil critique."
+msgid ""
+"Le test s'est terminé avec une dégradation observée, sans dépassement de "
+"seuil critique."
 msgstr "테스트가 저하가 관찰된 상태로 끝났지만 위험 임계값은 넘지 않았습니다."
 
 #: src/omega_stress/domain/reports/builders.py:23
@@ -251,17 +340,28 @@ msgstr "사용자가 테스트를 수동으로 중지했습니다."
 
 #: src/omega_stress/domain/reports/builders.py:93
 #, python-brace-format
-msgid "{error_count} erreur(s) sur {total_requests} requêtes : vérifier les journaux de la cible sur la période du test."
+msgid ""
+"{error_count} erreur(s) sur {total_requests} requêtes : vérifier les "
+"journaux de la cible sur la période du test."
 msgstr "요청 {total_requests}개 중 오류 {error_count}개: 테스트 기간의 대상 로그를 확인하세요."
 
 #: src/omega_stress/domain/reports/builders.py:106
-msgid "Débit observé significativement inférieur au débit demandé : le générateur local peut être devenu le goulot d'étranglement (voir plan produit, Configuration minimale du générateur)."
-msgstr "관찰된 처리량이 요청한 값보다 크게 낮습니다: 로컬 생성기가 병목이 되었을 수 있습니다(제품 계획의 '생성기 최소 구성' 참고)."
+msgid ""
+"Débit observé significativement inférieur au débit demandé : le générateur "
+"local peut être devenu le goulot d'étranglement (voir plan produit, "
+"Configuration minimale du générateur)."
+msgstr ""
+"관찰된 처리량이 요청한 값보다 크게 낮습니다: 로컬 생성기가 병목이 되었을 수 있습니다(제품 계획의 '생성기 최소 구성' 참고)."
 
 #: src/omega_stress/domain/reports/builders.py:118
 #, python-brace-format
-msgid "CPU du générateur monté à {peak_cpu_percent_generator:.0f} % au pic pendant le test : les résultats peuvent en partie refléter une limite du générateur local plutôt que celle de la cible."
-msgstr "테스트 중 생성기 CPU가 최고 {peak_cpu_percent_generator:.0f} %까지 올랐습니다: 결과가 대상이 아닌 로컬 생성기의 한계를 부분적으로 반영할 수 있습니다."
+msgid ""
+"CPU du générateur monté à {peak_cpu_percent_generator:.0f} % au pic pendant "
+"le test : les résultats peuvent en partie refléter une limite du générateur "
+"local plutôt que celle de la cible."
+msgstr ""
+"테스트 중 생성기 CPU가 최고 {peak_cpu_percent_generator:.0f} %까지 올랐습니다: 결과가 대상이 아닌 로컬 "
+"생성기의 한계를 부분적으로 반영할 수 있습니다."
 
 #: src/omega_stress/domain/reports/service.py:26
 msgid "Thème d'export {export_theme!r} inconnu (catalogue : {value})."
@@ -442,7 +542,8 @@ msgstr "명령 검색…"
 msgid "Masquer l'aide des raccourcis"
 msgstr "단축키 도움말 숨기기"
 
-#: src/omega_stress/interfaces/tui/app.py:190 src/omega_stress/interfaces/tui/app.py:194
+#: src/omega_stress/interfaces/tui/app.py:190
+#: src/omega_stress/interfaces/tui/app.py:194
 msgid "Raccourcis"
 msgstr "단축키"
 
@@ -461,12 +562,23 @@ msgstr "사용할 수 있는 한계 범위가 없습니다({reason})."
 
 #: src/omega_stress/interfaces/tui/presenters/calibration_presenter.py:31
 #, python-brace-format
-msgid "VU_safe {vu_safe} | RPS_safe {rps_safe} | confiance {confidence} (dernier palier sain : {last_healthy_name})"
-msgstr "VU_safe {vu_safe} | RPS_safe {rps_safe} | 신뢰도 {confidence} (마지막 정상 단계: {last_healthy_name})"
+msgid ""
+"VU_safe {vu_safe} | RPS_safe {rps_safe} | confiance {confidence} (dernier "
+"palier sain : {last_healthy_name})"
+msgstr ""
+"VU_safe {vu_safe} | RPS_safe {rps_safe} | 신뢰도 {confidence} (마지막 정상 단계: "
+"{last_healthy_name})"
 
 #: src/omega_stress/interfaces/tui/presenters/calibration_presenter.py:79
-msgid "Aucun calibrage exploitable pour cette machine — vous ne connaissez pas ses limites réelles. Nous recommandons d'en faire un depuis l'écran Calibrage avant de désactiver le mode sécurité sur un niveau intensif. Vous choisissez de dépasser les garde-fous de CETTE machine : la fiabilité du résultat et la stabilité de votre ordinateur restent sous votre responsabilité."
-msgstr "이 머신에 사용할 수 있는 보정이 없습니다 — 실제 한계를 알 수 없습니다. 고강도 레벨에서 안전 모드를 끄기 전에 보정 화면에서 보정을 하길 권장합니다. 이 머신의 안전장치를 넘기로 선택하셨습니다: 결과의 신뢰성과 컴퓨터의 안정성은 사용자 책임입니다."
+msgid ""
+"Aucun calibrage exploitable pour cette machine — vous ne connaissez pas ses "
+"limites réelles. Nous recommandons d'en faire un depuis l'écran Calibrage "
+"avant de désactiver le mode sécurité sur un niveau intensif. Vous choisissez"
+" de dépasser les garde-fous de CETTE machine : la fiabilité du résultat et "
+"la stabilité de votre ordinateur restent sous votre responsabilité."
+msgstr ""
+"이 머신에 사용할 수 있는 보정이 없습니다 — 실제 한계를 알 수 없습니다. 고강도 레벨에서 안전 모드를 끄기 전에 보정 화면에서 보정을"
+" 하길 권장합니다. 이 머신의 안전장치를 넘기로 선택하셨습니다: 결과의 신뢰성과 컴퓨터의 안정성은 사용자 책임입니다."
 
 #: src/omega_stress/interfaces/tui/presenters/calibration_presenter.py:87
 msgid "AU-DESSUS"
@@ -478,8 +590,17 @@ msgstr "미만"
 
 #: src/omega_stress/interfaces/tui/presenters/calibration_presenter.py:89
 #, python-brace-format
-msgid "Dernier calibrage : {safe_value} {unit} jugés sûrs pour cette machine (confiance {confidence}). Ce niveau vise {target_value:.0f} {unit} — {comparison} de cette enveloppe. Au-delà, la fiabilité du résultat (nombre de connexions/requêtes/charge réellement atteint) peut baisser, et votre machine pourrait ralentir ou geler temporairement : c'est votre responsabilité."
-msgstr "마지막 보정: {safe_value} {unit}이(가) 이 머신에 안전한 것으로 판단되었습니다(신뢰도 {confidence}). 이 레벨의 목표는 {target_value:.0f} {unit}으로, 이 한계 범위 {comparison}입니다. 이를 넘으면 결과의 신뢰성(실제로 도달한 연결/요청/부하)이 떨어질 수 있고, 머신이 느려지거나 일시적으로 멈출 수 있습니다: 이는 사용자 책임입니다."
+msgid ""
+"Dernier calibrage : {safe_value} {unit} jugés sûrs pour cette machine "
+"(confiance {confidence}). Ce niveau vise {target_value:.0f} {unit} — "
+"{comparison} de cette enveloppe. Au-delà, la fiabilité du résultat (nombre "
+"de connexions/requêtes/charge réellement atteint) peut baisser, et votre "
+"machine pourrait ralentir ou geler temporairement : c'est votre "
+"responsabilité."
+msgstr ""
+"마지막 보정: {safe_value} {unit}이(가) 이 머신에 안전한 것으로 판단되었습니다(신뢰도 {confidence}). 이 "
+"레벨의 목표는 {target_value:.0f} {unit}으로, 이 한계 범위 {comparison}입니다. 이를 넘으면 결과의 "
+"신뢰성(실제로 도달한 연결/요청/부하)이 떨어질 수 있고, 머신이 느려지거나 일시적으로 멈출 수 있습니다: 이는 사용자 책임입니다."
 
 #: src/omega_stress/interfaces/tui/presenters/calibration_presenter.py:111
 #, python-brace-format
@@ -532,7 +653,8 @@ msgstr "{default_text} (사전 점검 시 {extra_text})"
 msgid "Non/Oui"
 msgstr "아니요/예"
 
-#: src/omega_stress/interfaces/tui/presenters/load_reference_presenter.py:93 src/omega_stress/interfaces/tui/screens/home.py:40
+#: src/omega_stress/interfaces/tui/presenters/load_reference_presenter.py:93
+#: src/omega_stress/interfaces/tui/screens/home.py:40
 msgid "Test requêtes"
 msgstr "요청 테스트"
 
@@ -547,10 +669,11 @@ msgstr "{requests_per_minute} 요청/분"
 
 #: src/omega_stress/interfaces/tui/presenters/load_reference_presenter.py:99
 #, python-brace-format
-msgid "~{value} req/s en rafale"
-msgstr "버스트 시 약 {value} 요청/초"
+msgid "~{value} req/s en continu"
+msgstr "~{value} req/초, 일정하게"
 
-#: src/omega_stress/interfaces/tui/presenters/load_reference_presenter.py:111 src/omega_stress/interfaces/tui/screens/home.py:36
+#: src/omega_stress/interfaces/tui/presenters/load_reference_presenter.py:111
+#: src/omega_stress/interfaces/tui/screens/home.py:36
 msgid "Test connexions"
 msgstr "연결 테스트"
 
@@ -568,7 +691,8 @@ msgstr "연결 {concurrent_connections}개"
 msgid "{concurrent_connections} en parallèle, chaque seconde"
 msgstr "매초 {concurrent_connections}개 병렬"
 
-#: src/omega_stress/interfaces/tui/presenters/load_reference_presenter.py:129 src/omega_stress/interfaces/tui/screens/home.py:38
+#: src/omega_stress/interfaces/tui/presenters/load_reference_presenter.py:129
+#: src/omega_stress/interfaces/tui/screens/home.py:38
 msgid "Test charge"
 msgstr "부하 테스트"
 
@@ -607,8 +731,12 @@ msgid "Seule la simultanéité (connexions) pilote ce test ; aucun débit cible.
 msgstr "이 테스트는 동시성(연결)으로만 제어되며, 목표 처리량은 없습니다."
 
 #: src/omega_stress/interfaces/tui/presenters/load_reference_presenter.py:198
-msgid "Seul le débit au pic pilote ce test, atteint progressivement : sur une durée choisie plus courte que la rampe indiquée, le pic n'est jamais atteint."
-msgstr "이 테스트는 점진적으로 도달하는 최고 처리량으로만 제어됩니다: 선택한 시간이 표시된 증가 시간보다 짧으면 최고치에 절대 도달하지 않습니다."
+msgid ""
+"Seul le débit au pic pilote ce test, atteint progressivement : sur une durée"
+" choisie plus courte que la rampe indiquée, le pic n'est jamais atteint."
+msgstr ""
+"이 테스트는 점진적으로 도달하는 최고 처리량으로만 제어됩니다: 선택한 시간이 표시된 증가 시간보다 짧으면 최고치에 절대 도달하지 "
+"않습니다."
 
 #: src/omega_stress/interfaces/tui/presenters/profile_presenter.py:17
 msgid "Figé"
@@ -640,8 +768,11 @@ msgstr "진행 중"
 
 #: src/omega_stress/interfaces/tui/presenters/run_presenter.py:61
 #, python-brace-format
-msgid "{observed_rate_per_minute:.0f} req/min | {errors}/{total} erreurs | p95 {p95:.0f} ms"
-msgstr "{observed_rate_per_minute:.0f} 요청/분 | 오류 {errors}/{total} | p95 {p95:.0f} ms"
+msgid ""
+"{observed_rate_per_minute:.0f} req/min | {errors}/{total} erreurs | p95 "
+"{p95:.0f} ms"
+msgstr ""
+"{observed_rate_per_minute:.0f} 요청/분 | 오류 {errors}/{total} | p95 {p95:.0f} ms"
 
 #: src/omega_stress/interfaces/tui/presenters/run_presenter.py:85
 #, python-brace-format
@@ -670,8 +801,14 @@ msgid "CALIBRAGE"
 msgstr "보정"
 
 #: src/omega_stress/interfaces/tui/screens/calibration_screen.py:79
-msgid "Mesure la capacité réelle de CETTE machine (pas la cible testée) via un serveur de boucle locale, par paliers de charge croissante. Le résultat n'est pas encore appliqué aux tests réels : consultation seule pour l'instant."
-msgstr "로컬 루프백 서버를 통해 단계적으로 부하를 높여 이 머신(테스트 대상이 아님)의 실제 성능을 측정합니다. 결과는 아직 실제 테스트에 적용되지 않습니다: 현재는 조회 전용입니다."
+msgid ""
+"Mesure la capacité réelle de CETTE machine (pas la cible testée) via un "
+"serveur de boucle locale, par paliers de charge croissante. Le résultat "
+"n'est pas encore appliqué aux tests réels : consultation seule pour "
+"l'instant."
+msgstr ""
+"로컬 루프백 서버를 통해 단계적으로 부하를 높여 이 머신(테스트 대상이 아님)의 실제 성능을 측정합니다. 결과는 아직 실제 테스트에 "
+"적용되지 않습니다: 현재는 조회 전용입니다."
 
 #: src/omega_stress/interfaces/tui/screens/calibration_screen.py:88
 msgid "Lancer le calibrage"
@@ -703,25 +840,38 @@ msgstr "예, 확인"
 msgid "Non, annuler"
 msgstr "아니요, 취소"
 
-#: src/omega_stress/interfaces/tui/screens/connection_panel.py:49 src/omega_stress/interfaces/tui/screens/ramp_panel.py:49 src/omega_stress/interfaces/tui/screens/request_panel.py:49
+#: src/omega_stress/interfaces/tui/screens/connection_panel.py:49
+#: src/omega_stress/interfaces/tui/screens/ramp_panel.py:49
+#: src/omega_stress/interfaces/tui/screens/request_panel.py:49
 #, python-brace-format
 msgid "{value:.1f}"
 msgstr "{value:.1f}"
 
-#: src/omega_stress/interfaces/tui/screens/connection_panel.py:51 src/omega_stress/interfaces/tui/screens/connection_panel.py:213 src/omega_stress/interfaces/tui/screens/ramp_panel.py:51 src/omega_stress/interfaces/tui/screens/ramp_panel.py:208 src/omega_stress/interfaces/tui/screens/request_panel.py:51 src/omega_stress/interfaces/tui/screens/request_panel.py:217
+#: src/omega_stress/interfaces/tui/screens/connection_panel.py:51
+#: src/omega_stress/interfaces/tui/screens/connection_panel.py:213
+#: src/omega_stress/interfaces/tui/screens/ramp_panel.py:51
+#: src/omega_stress/interfaces/tui/screens/ramp_panel.py:208
+#: src/omega_stress/interfaces/tui/screens/request_panel.py:51
+#: src/omega_stress/interfaces/tui/screens/request_panel.py:217
 #, python-brace-format
 msgid "{m} min"
 msgstr "{m}분"
 
-#: src/omega_stress/interfaces/tui/screens/connection_panel.py:54 src/omega_stress/interfaces/tui/screens/ramp_panel.py:54 src/omega_stress/interfaces/tui/screens/request_panel.py:57
+#: src/omega_stress/interfaces/tui/screens/connection_panel.py:54
+#: src/omega_stress/interfaces/tui/screens/ramp_panel.py:54
+#: src/omega_stress/interfaces/tui/screens/request_panel.py:57
 msgid "Manuel (1-5 min)"
 msgstr "수동 (1-5분)"
 
-#: src/omega_stress/interfaces/tui/screens/connection_panel.py:54 src/omega_stress/interfaces/tui/screens/ramp_panel.py:54 src/omega_stress/interfaces/tui/screens/request_panel.py:57
+#: src/omega_stress/interfaces/tui/screens/connection_panel.py:54
+#: src/omega_stress/interfaces/tui/screens/ramp_panel.py:54
+#: src/omega_stress/interfaces/tui/screens/request_panel.py:57
 msgid "Profil D1-D6"
 msgstr "프로필 D1-D6"
 
-#: src/omega_stress/interfaces/tui/screens/connection_panel.py:57 src/omega_stress/interfaces/tui/screens/ramp_panel.py:57 src/omega_stress/interfaces/tui/screens/request_panel.py:60
+#: src/omega_stress/interfaces/tui/screens/connection_panel.py:57
+#: src/omega_stress/interfaces/tui/screens/ramp_panel.py:57
+#: src/omega_stress/interfaces/tui/screens/request_panel.py:60
 #, python-brace-format
 msgid "{upper} {name} ({total_minutes} min)"
 msgstr "{upper} {name} ({total_minutes}분)"
@@ -730,111 +880,170 @@ msgstr "{upper} {name} ({total_minutes}분)"
 msgid "TEST CONNEXIONS"
 msgstr "연결 테스트"
 
-#: src/omega_stress/interfaces/tui/screens/connection_panel.py:107 src/omega_stress/interfaces/tui/screens/ramp_panel.py:107 src/omega_stress/interfaces/tui/screens/request_panel.py:113
+#: src/omega_stress/interfaces/tui/screens/connection_panel.py:107
+#: src/omega_stress/interfaces/tui/screens/ramp_panel.py:107
+#: src/omega_stress/interfaces/tui/screens/request_panel.py:113
 msgid "Profil figé (optionnel)"
 msgstr "고정 프로필 (선택)"
 
-#: src/omega_stress/interfaces/tui/screens/connection_panel.py:111 src/omega_stress/interfaces/tui/screens/ramp_panel.py:111 src/omega_stress/interfaces/tui/screens/request_panel.py:117
+#: src/omega_stress/interfaces/tui/screens/connection_panel.py:111
+#: src/omega_stress/interfaces/tui/screens/ramp_panel.py:111
+#: src/omega_stress/interfaces/tui/screens/request_panel.py:117
 msgid "Critères du test"
 msgstr "테스트 조건"
 
-#: src/omega_stress/interfaces/tui/screens/connection_panel.py:112 src/omega_stress/interfaces/tui/screens/profile_wizard.py:47 src/omega_stress/interfaces/tui/screens/ramp_panel.py:112 src/omega_stress/interfaces/tui/screens/request_panel.py:118 src/omega_stress/infrastructure/exporters/templates/report.html.jinja:62
+#: src/omega_stress/interfaces/tui/screens/connection_panel.py:112
+#: src/omega_stress/interfaces/tui/screens/profile_wizard.py:47
+#: src/omega_stress/interfaces/tui/screens/ramp_panel.py:112
+#: src/omega_stress/interfaces/tui/screens/request_panel.py:118
+#: src/omega_stress/infrastructure/exporters/templates/report.html.jinja:62
 msgid "Intensité"
 msgstr "강도"
 
-#: src/omega_stress/interfaces/tui/screens/connection_panel.py:115 src/omega_stress/interfaces/tui/screens/ramp_panel.py:115 src/omega_stress/interfaces/tui/screens/request_panel.py:121
+#: src/omega_stress/interfaces/tui/screens/connection_panel.py:115
+#: src/omega_stress/interfaces/tui/screens/ramp_panel.py:115
+#: src/omega_stress/interfaces/tui/screens/request_panel.py:121
 msgid "Mode durée"
 msgstr "시간 모드"
 
-#: src/omega_stress/interfaces/tui/screens/connection_panel.py:121 src/omega_stress/interfaces/tui/screens/profile_wizard.py:48 src/omega_stress/interfaces/tui/screens/ramp_panel.py:121 src/omega_stress/interfaces/tui/screens/request_panel.py:127
+#: src/omega_stress/interfaces/tui/screens/connection_panel.py:121
+#: src/omega_stress/interfaces/tui/screens/profile_wizard.py:48
+#: src/omega_stress/interfaces/tui/screens/ramp_panel.py:121
+#: src/omega_stress/interfaces/tui/screens/request_panel.py:127
 msgid "Durée (minutes)"
 msgstr "시간 (분)"
 
-#: src/omega_stress/interfaces/tui/screens/connection_panel.py:127 src/omega_stress/interfaces/tui/screens/ramp_panel.py:127 src/omega_stress/interfaces/tui/screens/request_panel.py:133
+#: src/omega_stress/interfaces/tui/screens/connection_panel.py:127
+#: src/omega_stress/interfaces/tui/screens/ramp_panel.py:127
+#: src/omega_stress/interfaces/tui/screens/request_panel.py:133
 msgid "Profil de durée"
 msgstr "시간 프로필"
 
-#: src/omega_stress/interfaces/tui/screens/connection_panel.py:132 src/omega_stress/interfaces/tui/screens/ramp_panel.py:132 src/omega_stress/interfaces/tui/screens/request_panel.py:138
+#: src/omega_stress/interfaces/tui/screens/connection_panel.py:132
+#: src/omega_stress/interfaces/tui/screens/ramp_panel.py:132
+#: src/omega_stress/interfaces/tui/screens/request_panel.py:138
 msgid "Confirmation renforcée requise pour ce niveau :"
 msgstr "이 레벨에는 강화 확인이 필요합니다:"
 
-#: src/omega_stress/interfaces/tui/screens/connection_panel.py:133 src/omega_stress/interfaces/tui/screens/ramp_panel.py:133 src/omega_stress/interfaces/tui/screens/request_panel.py:139
+#: src/omega_stress/interfaces/tui/screens/connection_panel.py:133
+#: src/omega_stress/interfaces/tui/screens/ramp_panel.py:133
+#: src/omega_stress/interfaces/tui/screens/request_panel.py:139
 msgid "Texte de confirmation exact"
 msgstr "정확한 확인 문구"
 
-#: src/omega_stress/interfaces/tui/screens/connection_panel.py:136 src/omega_stress/interfaces/tui/screens/ramp_panel.py:136 src/omega_stress/interfaces/tui/screens/request_panel.py:142
+#: src/omega_stress/interfaces/tui/screens/connection_panel.py:136
+#: src/omega_stress/interfaces/tui/screens/ramp_panel.py:136
+#: src/omega_stress/interfaces/tui/screens/request_panel.py:142
 msgid "Taux d'erreur maximal"
 msgstr "최대 오류율"
 
-#: src/omega_stress/interfaces/tui/screens/connection_panel.py:146 src/omega_stress/interfaces/tui/screens/ramp_panel.py:146 src/omega_stress/interfaces/tui/screens/request_panel.py:152 src/omega_stress/interfaces/tui/widgets/load_reference_table.py:26
+#: src/omega_stress/interfaces/tui/screens/connection_panel.py:146
+#: src/omega_stress/interfaces/tui/screens/ramp_panel.py:146
+#: src/omega_stress/interfaces/tui/screens/request_panel.py:152
+#: src/omega_stress/interfaces/tui/widgets/load_reference_table.py:26
 msgid "Pré-check"
 msgstr "사전 점검"
 
 #: src/omega_stress/interfaces/tui/screens/connection_panel.py:196
-msgid "Aucun profil figé pour Test connexions (des profils figés existent pour d'autres types de test — Requêtes/Rampe)."
+msgid ""
+"Aucun profil figé pour Test connexions (des profils figés existent pour "
+"d'autres types de test — Requêtes/Rampe)."
 msgstr "연결 테스트용 고정 프로필이 없습니다(다른 테스트 유형 — 요청/증가 — 용 고정 프로필은 있습니다)."
 
-#: src/omega_stress/interfaces/tui/screens/connection_panel.py:202 src/omega_stress/interfaces/tui/screens/ramp_panel.py:197 src/omega_stress/interfaces/tui/screens/request_panel.py:203
-msgid "Aucun profil figé pour l'instant (des profils existent mais aucun n'est figé)."
+#: src/omega_stress/interfaces/tui/screens/connection_panel.py:202
+#: src/omega_stress/interfaces/tui/screens/ramp_panel.py:197
+#: src/omega_stress/interfaces/tui/screens/request_panel.py:203
+msgid ""
+"Aucun profil figé pour l'instant (des profils existent mais aucun n'est "
+"figé)."
 msgstr "아직 고정 프로필이 없습니다(프로필은 있으나 고정된 것이 없음)."
 
-#: src/omega_stress/interfaces/tui/screens/connection_panel.py:205 src/omega_stress/interfaces/tui/screens/ramp_panel.py:200 src/omega_stress/interfaces/tui/screens/request_panel.py:206
+#: src/omega_stress/interfaces/tui/screens/connection_panel.py:205
+#: src/omega_stress/interfaces/tui/screens/ramp_panel.py:200
+#: src/omega_stress/interfaces/tui/screens/request_panel.py:206
 msgid "Aucun profil figé pour l'instant — créez-en un depuis l'écran Profils."
 msgstr "아직 고정 프로필이 없습니다 — 프로필 화면에서 만드세요."
 
-#: src/omega_stress/interfaces/tui/screens/connection_panel.py:221 src/omega_stress/interfaces/tui/screens/ramp_panel.py:216 src/omega_stress/interfaces/tui/screens/request_panel.py:225
+#: src/omega_stress/interfaces/tui/screens/connection_panel.py:221
+#: src/omega_stress/interfaces/tui/screens/ramp_panel.py:216
+#: src/omega_stress/interfaces/tui/screens/request_panel.py:225
 #, python-brace-format
-msgid "Durée ramenée à {value} min : {value2} ne propose pas {keep_value} min."
+msgid ""
+"Durée ramenée à {value} min : {value2} ne propose pas {keep_value} min."
 msgstr "시간을 {value}분으로 맞췄습니다: {value2}에는 {keep_value}분이 없습니다."
 
-#: src/omega_stress/interfaces/tui/screens/connection_panel.py:377 src/omega_stress/interfaces/tui/screens/ramp_panel.py:364 src/omega_stress/interfaces/tui/screens/request_panel.py:377
+#: src/omega_stress/interfaces/tui/screens/connection_panel.py:377
+#: src/omega_stress/interfaces/tui/screens/ramp_panel.py:364
+#: src/omega_stress/interfaces/tui/screens/request_panel.py:377
 #, python-brace-format
 msgid "Cible fixée par le profil « {name} » : {address}"
 msgstr "프로필 \"{name}\"이(가) 지정한 대상: {address}"
 
-#: src/omega_stress/interfaces/tui/screens/connection_panel.py:396 src/omega_stress/interfaces/tui/screens/ramp_panel.py:383 src/omega_stress/interfaces/tui/screens/request_panel.py:396
+#: src/omega_stress/interfaces/tui/screens/connection_panel.py:396
+#: src/omega_stress/interfaces/tui/screens/ramp_panel.py:383
+#: src/omega_stress/interfaces/tui/screens/request_panel.py:396
 msgid "Choisissez ou saisissez une cible avant le pré-check."
 msgstr "사전 점검 전에 대상을 선택하거나 입력하세요."
 
-#: src/omega_stress/interfaces/tui/screens/connection_panel.py:400 src/omega_stress/interfaces/tui/screens/ramp_panel.py:387 src/omega_stress/interfaces/tui/screens/request_panel.py:400
+#: src/omega_stress/interfaces/tui/screens/connection_panel.py:400
+#: src/omega_stress/interfaces/tui/screens/ramp_panel.py:387
+#: src/omega_stress/interfaces/tui/screens/request_panel.py:400
 msgid "Pré-check en cours…"
 msgstr "사전 점검 중…"
 
-#: src/omega_stress/interfaces/tui/screens/connection_panel.py:419 src/omega_stress/interfaces/tui/screens/ramp_panel.py:406 src/omega_stress/interfaces/tui/screens/request_panel.py:419
+#: src/omega_stress/interfaces/tui/screens/connection_panel.py:419
+#: src/omega_stress/interfaces/tui/screens/ramp_panel.py:406
+#: src/omega_stress/interfaces/tui/screens/request_panel.py:419
 #, python-brace-format
 msgid "Pré-check échoué : {error}"
 msgstr "사전 점검 실패: {error}"
 
-#: src/omega_stress/interfaces/tui/screens/connection_panel.py:422 src/omega_stress/interfaces/tui/screens/ramp_panel.py:409 src/omega_stress/interfaces/tui/screens/request_panel.py:422
+#: src/omega_stress/interfaces/tui/screens/connection_panel.py:422
+#: src/omega_stress/interfaces/tui/screens/ramp_panel.py:409
+#: src/omega_stress/interfaces/tui/screens/request_panel.py:422
 #, python-brace-format
 msgid "Pré-check réussi ({value}) — vous pouvez lancer le test."
 msgstr "사전 점검 성공({value}) — 테스트를 시작할 수 있습니다."
 
-#: src/omega_stress/interfaces/tui/screens/connection_panel.py:437 src/omega_stress/interfaces/tui/screens/ramp_panel.py:424 src/omega_stress/interfaces/tui/screens/request_panel.py:437
+#: src/omega_stress/interfaces/tui/screens/connection_panel.py:437
+#: src/omega_stress/interfaces/tui/screens/ramp_panel.py:424
+#: src/omega_stress/interfaces/tui/screens/request_panel.py:437
 msgid "Lancement en cours…"
 msgstr "시작 중…"
 
-#: src/omega_stress/interfaces/tui/screens/connection_panel.py:440 src/omega_stress/interfaces/tui/screens/ramp_panel.py:427 src/omega_stress/interfaces/tui/screens/request_panel.py:440
+#: src/omega_stress/interfaces/tui/screens/connection_panel.py:440
+#: src/omega_stress/interfaces/tui/screens/ramp_panel.py:427
+#: src/omega_stress/interfaces/tui/screens/request_panel.py:440
 msgid "Choisissez ou saisissez une cible."
 msgstr "대상을 선택하거나 입력하세요."
 
-#: src/omega_stress/interfaces/tui/screens/connection_panel.py:446 src/omega_stress/interfaces/tui/screens/ramp_panel.py:433 src/omega_stress/interfaces/tui/screens/request_panel.py:446
+#: src/omega_stress/interfaces/tui/screens/connection_panel.py:446
+#: src/omega_stress/interfaces/tui/screens/ramp_panel.py:433
+#: src/omega_stress/interfaces/tui/screens/request_panel.py:446
 msgid "Choisissez un niveau d'intensité."
 msgstr "강도 레벨을 선택하세요."
 
-#: src/omega_stress/interfaces/tui/screens/connection_panel.py:451 src/omega_stress/interfaces/tui/screens/ramp_panel.py:438 src/omega_stress/interfaces/tui/screens/request_panel.py:451
+#: src/omega_stress/interfaces/tui/screens/connection_panel.py:451
+#: src/omega_stress/interfaces/tui/screens/ramp_panel.py:438
+#: src/omega_stress/interfaces/tui/screens/request_panel.py:451
 msgid "Choisissez un taux d'erreur."
 msgstr "오류율을 선택하세요."
 
-#: src/omega_stress/interfaces/tui/screens/connection_panel.py:457 src/omega_stress/interfaces/tui/screens/ramp_panel.py:444 src/omega_stress/interfaces/tui/screens/request_panel.py:457
+#: src/omega_stress/interfaces/tui/screens/connection_panel.py:457
+#: src/omega_stress/interfaces/tui/screens/ramp_panel.py:444
+#: src/omega_stress/interfaces/tui/screens/request_panel.py:457
 msgid "Choisissez un profil de durée."
 msgstr "시간 프로필을 선택하세요."
 
-#: src/omega_stress/interfaces/tui/screens/connection_panel.py:465 src/omega_stress/interfaces/tui/screens/ramp_panel.py:452 src/omega_stress/interfaces/tui/screens/request_panel.py:465
+#: src/omega_stress/interfaces/tui/screens/connection_panel.py:465
+#: src/omega_stress/interfaces/tui/screens/ramp_panel.py:452
+#: src/omega_stress/interfaces/tui/screens/request_panel.py:465
 msgid "Choisissez une durée."
 msgstr "시간을 선택하세요."
 
-#: src/omega_stress/interfaces/tui/screens/connection_panel.py:499 src/omega_stress/interfaces/tui/screens/ramp_panel.py:486 src/omega_stress/interfaces/tui/screens/request_panel.py:499
+#: src/omega_stress/interfaces/tui/screens/connection_panel.py:499
+#: src/omega_stress/interfaces/tui/screens/ramp_panel.py:486
+#: src/omega_stress/interfaces/tui/screens/request_panel.py:499
 #, python-brace-format
 msgid "Terminé — {value} (voir le détail)."
 msgstr "완료 — {value}(상세 보기)."
@@ -865,47 +1074,87 @@ msgid "Test requêtes / connexions / charge"
 msgstr "요청 / 연결 / 부하 테스트"
 
 #: src/omega_stress/interfaces/tui/screens/help_screen.py:32
-msgid "Trois familles de test encadrées : débit constant, nombre de connexions simultanées, ou montée progressive. Chaque lancement exige une cible (saisie manuelle ou cible épinglée) et une confirmation d'autorisation, sauf cible déjà épinglée-autorisée."
-msgstr "통제된 세 가지 테스트 계열: 일정한 처리량, 동시 연결 수, 또는 점진적 증가. 실행할 때마다 대상(직접 입력 또는 고정된 대상)과 권한 확인이 필요하며, 이미 고정되고 허가된 대상은 예외입니다."
+msgid ""
+"Trois familles de test encadrées : débit constant, nombre de connexions "
+"simultanées, ou montée progressive. Chaque lancement exige une cible (saisie"
+" manuelle ou cible épinglée) et une confirmation d'autorisation, sauf cible "
+"déjà épinglée-autorisée."
+msgstr ""
+"통제된 세 가지 테스트 계열: 일정한 처리량, 동시 연결 수, 또는 점진적 증가. 실행할 때마다 대상(직접 입력 또는 고정된 대상)과 "
+"권한 확인이 필요하며, 이미 고정되고 허가된 대상은 예외입니다."
 
 #: src/omega_stress/interfaces/tui/screens/help_screen.py:39
-msgid "Un profil fige un jeu de paramètres (cible, type de test, intensité, durée, seuils) pour le réutiliser tel quel — créer, puis figer, un profil depuis cet écran."
-msgstr "프로필은 매개변수 묶음(대상, 테스트 유형, 강도, 시간, 임계값)을 고정해 그대로 재사용하게 해 줍니다 — 이 화면에서 프로필을 만든 뒤 고정하세요."
+msgid ""
+"Un profil fige un jeu de paramètres (cible, type de test, intensité, durée, "
+"seuils) pour le réutiliser tel quel — créer, puis figer, un profil depuis "
+"cet écran."
+msgstr ""
+"프로필은 매개변수 묶음(대상, 테스트 유형, 강도, 시간, 임계값)을 고정해 그대로 재사용하게 해 줍니다 — 이 화면에서 프로필을 만든 "
+"뒤 고정하세요."
 
 #: src/omega_stress/interfaces/tui/screens/help_screen.py:44
-msgid "Épingler une adresse dispense de recocher la confirmation d'autorisation à chaque lancement sur cette même cible."
+msgid ""
+"Épingler une adresse dispense de recocher la confirmation d'autorisation à "
+"chaque lancement sur cette même cible."
 msgstr "주소를 고정하면 같은 대상에서 실행할 때마다 권한 확인을 다시 체크할 필요가 없습니다."
 
 #: src/omega_stress/interfaces/tui/screens/help_screen.py:49
-msgid "Liste tous les runs passés : détail complet, ou relecture (uniquement pour un run lié à un profil figé)."
+msgid ""
+"Liste tous les runs passés : détail complet, ou relecture (uniquement pour "
+"un run lié à un profil figé)."
 msgstr "지난 모든 실행 목록: 전체 상세, 또는 다시 실행(고정 프로필에 연결된 실행만)."
 
 #: src/omega_stress/interfaces/tui/screens/help_screen.py:54
-msgid "Depuis le détail d'un run terminé : JSON (données brutes, réimportables), CSV (analyse tabulaire), ou HTML (rapport lisible avec chronologie complète par intervalle)."
-msgstr "끝난 실행의 상세에서: JSON(원시 데이터, 다시 가져오기 가능), CSV(표 분석), HTML(구간별 전체 타임라인이 포함된 읽기 쉬운 보고서)."
+msgid ""
+"Depuis le détail d'un run terminé : JSON (données brutes, réimportables), "
+"CSV (analyse tabulaire), ou HTML (rapport lisible avec chronologie complète "
+"par intervalle)."
+msgstr ""
+"끝난 실행의 상세에서: JSON(원시 데이터, 다시 가져오기 가능), CSV(표 분석), HTML(구간별 전체 타임라인이 포함된 읽기 "
+"쉬운 보고서)."
 
-#: src/omega_stress/interfaces/tui/screens/help_screen.py:59 src/omega_stress/interfaces/tui/screens/help_screen.py:119
+#: src/omega_stress/interfaces/tui/screens/help_screen.py:59
+#: src/omega_stress/interfaces/tui/screens/help_screen.py:119
 msgid "Profils de durée D1-D6 (mode profil)"
 msgstr "시간 프로필 D1-D6 (프로필 모드)"
 
 #: src/omega_stress/interfaces/tui/screens/help_screen.py:60
-msgid "En plus de la durée manuelle (1 à 5 min selon le niveau), chaque écran de lancement propose un mode profil : une durée fixe nommée (1 à 120 min) qui limite les niveaux accessibles, avec un niveau supplémentaire débloqué par une confirmation renforcée (texte exact à saisir). Voir le tableau ci-dessous."
-msgstr "수동 시간(레벨에 따라 1~5분) 외에도 각 실행 화면에는 프로필 모드가 있습니다: 이름이 붙은 고정 시간(1~120분)으로 사용 가능한 레벨을 제한하며, 강화 확인(정확히 입력할 문구)으로 추가 레벨이 열립니다. 아래 표를 참고하세요."
+msgid ""
+"En plus de la durée manuelle (1 à 5 min selon le niveau), chaque écran de "
+"lancement propose un mode profil : une durée fixe nommée (1 à 120 min) qui "
+"limite les niveaux accessibles, avec un niveau supplémentaire débloqué par "
+"une confirmation renforcée (texte exact à saisir). Voir le tableau ci-"
+"dessous."
+msgstr ""
+"수동 시간(레벨에 따라 1~5분) 외에도 각 실행 화면에는 프로필 모드가 있습니다: 이름이 붙은 고정 시간(1~120분)으로 사용 가능한"
+" 레벨을 제한하며, 강화 확인(정확히 입력할 문구)으로 추가 레벨이 열립니다. 아래 표를 참고하세요."
 
-#: src/omega_stress/interfaces/tui/screens/help_screen.py:66 src/omega_stress/interfaces/tui/screens/home.py:33
+#: src/omega_stress/interfaces/tui/screens/help_screen.py:66
+#: src/omega_stress/interfaces/tui/screens/home.py:33
 msgid "Calibrage"
 msgstr "보정"
 
 #: src/omega_stress/interfaces/tui/screens/help_screen.py:67
-msgid "Mesure la capacité réelle de CETTE machine (pas la cible testée) via un serveur de boucle locale, par paliers de charge croissante. Le résultat (VU_safe/RPS_safe) n'est pas appliqué automatiquement aux tests réels : consultable depuis l'écran Calibrage, et utile comme repère quand le mode sécurité est désactivé (voir ci-dessous)."
-msgstr "로컬 루프백 서버를 통해 단계적으로 부하를 높여 이 머신(테스트 대상이 아님)의 실제 성능을 측정합니다. 결과(VU_safe/RPS_safe)는 실제 테스트에 자동 적용되지 않습니다: 보정 화면에서 볼 수 있으며, 안전 모드를 끈 경우 기준점으로 유용합니다(아래 참고)."
+msgid ""
+"Mesure la capacité réelle de CETTE machine (pas la cible testée) via un "
+"serveur de boucle locale, par paliers de charge croissante. Le résultat "
+"(VU_safe/RPS_safe) n'est pas appliqué automatiquement aux tests réels : "
+"consultable depuis l'écran Calibrage, et utile comme repère quand le mode "
+"sécurité est désactivé (voir ci-dessous)."
+msgstr ""
+"로컬 루프백 서버를 통해 단계적으로 부하를 높여 이 머신(테스트 대상이 아님)의 실제 성능을 측정합니다. "
+"결과(VU_safe/RPS_safe)는 실제 테스트에 자동 적용되지 않습니다: 보정 화면에서 볼 수 있으며, 안전 모드를 끈 경우 "
+"기준점으로 유용합니다(아래 참고)."
 
-#: src/omega_stress/interfaces/tui/screens/help_screen.py:74 src/omega_stress/infrastructure/exporters/templates/report.html.jinja:69
+#: src/omega_stress/interfaces/tui/screens/help_screen.py:74
+#: src/omega_stress/infrastructure/exporters/templates/report.html.jinja:69
 msgid "Mode sécurité"
 msgstr "안전 모드"
 
 #: src/omega_stress/interfaces/tui/screens/help_screen.py:76
-msgid " Si un calibrage a été effectué sur cette machine, l'écran de lancement compare le niveau choisi à son enveloppe dès que la case est décochée."
+msgid ""
+" Si un calibrage a été effectué sur cette machine, l'écran de lancement "
+"compare le niveau choisi à son enveloppe dès que la case est décochée."
 msgstr " 이 머신에서 보정을 했다면, 체크를 해제하는 즉시 실행 화면이 선택한 레벨을 그 한계 범위와 비교합니다."
 
 #: src/omega_stress/interfaces/tui/screens/help_screen.py:105
@@ -1007,7 +1256,9 @@ msgid "TEST CHARGE"
 msgstr "부하 테스트"
 
 #: src/omega_stress/interfaces/tui/screens/ramp_panel.py:191
-msgid "Aucun profil figé pour Test charge (des profils figés existent pour d'autres types de test — Connexions/Requêtes)."
+msgid ""
+"Aucun profil figé pour Test charge (des profils figés existent pour d'autres"
+" types de test — Connexions/Requêtes)."
 msgstr "부하 테스트용 고정 프로필이 없습니다(다른 테스트 유형 — 연결/요청 — 용 고정 프로필은 있습니다)."
 
 #: src/omega_stress/interfaces/tui/screens/request_panel.py:112
@@ -1015,32 +1266,42 @@ msgid "TEST REQUÊTES"
 msgstr "요청 테스트"
 
 #: src/omega_stress/interfaces/tui/screens/request_panel.py:197
-msgid "Aucun profil figé pour Test requêtes (des profils figés existent pour d'autres types de test — Connexions/Rampe)."
+msgid ""
+"Aucun profil figé pour Test requêtes (des profils figés existent pour "
+"d'autres types de test — Connexions/Rampe)."
 msgstr "요청 테스트용 고정 프로필이 없습니다(다른 테스트 유형 — 연결/증가 — 용 고정 프로필은 있습니다)."
 
 #: src/omega_stress/interfaces/tui/screens/run_details.py:39
 msgid "DÉTAIL DU RUN"
 msgstr "실행 상세"
 
-#: src/omega_stress/interfaces/tui/screens/run_details.py:41 src/omega_stress/interfaces/tui/widgets/history_table.py:16 src/omega_stress/infrastructure/exporters/templates/report.html.jinja:74
+#: src/omega_stress/interfaces/tui/screens/run_details.py:41
+#: src/omega_stress/interfaces/tui/widgets/history_table.py:16
+#: src/omega_stress/infrastructure/exporters/templates/report.html.jinja:74
 msgid "Verdict"
 msgstr "Verdict"
 
-#: src/omega_stress/interfaces/tui/screens/run_details.py:42 src/omega_stress/interfaces/tui/widgets/progress_panel.py:23 src/omega_stress/infrastructure/exporters/templates/report.html.jinja:82
+#: src/omega_stress/interfaces/tui/screens/run_details.py:42
+#: src/omega_stress/interfaces/tui/widgets/progress_panel.py:23
+#: src/omega_stress/infrastructure/exporters/templates/report.html.jinja:82
 msgid "Débit observé"
 msgstr "관찰된 처리량"
 
-#: src/omega_stress/interfaces/tui/screens/run_details.py:44 src/omega_stress/interfaces/tui/widgets/progress_panel.py:25 src/omega_stress/infrastructure/exporters/templates/report.html.jinja:84
+#: src/omega_stress/interfaces/tui/screens/run_details.py:44
+#: src/omega_stress/interfaces/tui/widgets/progress_panel.py:25
+#: src/omega_stress/infrastructure/exporters/templates/report.html.jinja:84
 msgid "Latence p95"
 msgstr "p95 지연 시간"
 
-#: src/omega_stress/interfaces/tui/screens/run_details.py:70 src/omega_stress/interfaces/tui/widgets/progress_panel.py:30
+#: src/omega_stress/interfaces/tui/screens/run_details.py:70
+#: src/omega_stress/interfaces/tui/widgets/progress_panel.py:30
 #, python-brace-format
 msgid "{observed_rate_per_minute:.0f} req/min"
 msgstr "{observed_rate_per_minute:.0f} 요청/분"
 
 #: src/omega_stress/interfaces/tui/screens/run_details.py:85
-msgid " (personnalisé — au moins un critère réel diffère du profil figé référence)"
+msgid ""
+" (personnalisé — au moins un critère réel diffère du profil figé référence)"
 msgstr " (사용자 지정 — 실제 조건 중 하나 이상이 기준 고정 프로필과 다름)"
 
 #: src/omega_stress/interfaces/tui/screens/run_details.py:90
@@ -1093,11 +1354,14 @@ msgstr ""
 "기록된 측정 {sample_count}건(전체 상세: JSON/HTML 내보내기)."
 
 #: src/omega_stress/interfaces/tui/screens/run_details.py:133
-msgid "Chronologie — temps | taux d'erreur (barre) | erreurs/requêtes par palier\n"
+msgid ""
+"Chronologie — temps | taux d'erreur (barre) | erreurs/requêtes par palier\n"
 msgstr "타임라인 — 시간 | 오류율(막대) | 단계별 오류/요청\n"
 
 #: src/omega_stress/interfaces/tui/screens/run_details.py:139
-msgid "Aucune mesure enregistrée : le test s'est terminé avant la première mesure (voir le diagnostic ci-dessus)."
+msgid ""
+"Aucune mesure enregistrée : le test s'est terminé avant la première mesure "
+"(voir le diagnostic ci-dessus)."
 msgstr "기록된 측정이 없습니다: 첫 측정 전에 테스트가 끝났습니다(위의 진단 참고)."
 
 #: src/omega_stress/interfaces/tui/screens/settings_screen.py:84
@@ -1121,7 +1385,9 @@ msgid "Les cibles épinglées ne sont pas concernées."
 msgstr "고정된 대상은 영향을 받지 않습니다."
 
 #: src/omega_stress/interfaces/tui/screens/settings_screen.py:132
-msgid "Y compris les cibles épinglées : les autorisations déjà accordées seront perdues."
+msgid ""
+"Y compris les cibles épinglées : les autorisations déjà accordées seront "
+"perdues."
 msgstr "고정된 대상 포함: 이미 부여한 권한이 사라집니다."
 
 #: src/omega_stress/interfaces/tui/screens/settings_screen.py:142
@@ -1169,7 +1435,8 @@ msgstr "대상의 고정을 해제했습니다."
 msgid "Je confirme être autorisé à tester cette cible"
 msgstr "이 대상을 테스트할 권한이 있음을 확인합니다"
 
-#: src/omega_stress/interfaces/tui/widgets/duration_preset_table.py:24 src/omega_stress/interfaces/tui/widgets/history_table.py:16
+#: src/omega_stress/interfaces/tui/widgets/duration_preset_table.py:24
+#: src/omega_stress/interfaces/tui/widgets/history_table.py:16
 msgid "ID"
 msgstr "ID"
 
@@ -1202,7 +1469,8 @@ msgstr "시작"
 msgid "en cours"
 msgstr "진행 중"
 
-#: src/omega_stress/interfaces/tui/widgets/load_reference_table.py:21 src/omega_stress/infrastructure/exporters/templates/report.html.jinja:61
+#: src/omega_stress/interfaces/tui/widgets/load_reference_table.py:21
+#: src/omega_stress/infrastructure/exporters/templates/report.html.jinja:61
 msgid "Type de test"
 msgstr "테스트 유형"
 
@@ -1226,7 +1494,8 @@ msgstr "실제 동시성"
 msgid "Durées disponibles"
 msgstr "선택 가능한 시간"
 
-#: src/omega_stress/interfaces/tui/widgets/profile_list.py:16 src/omega_stress/infrastructure/exporters/templates/report.html.jinja:65
+#: src/omega_stress/interfaces/tui/widgets/profile_list.py:16
+#: src/omega_stress/infrastructure/exporters/templates/report.html.jinja:65
 msgid "Durée"
 msgstr "시간"
 
@@ -1239,7 +1508,8 @@ msgstr "{duration_minutes}분"
 msgid "CPU / RAM"
 msgstr "CPU / RAM"
 
-#: src/omega_stress/interfaces/tui/widgets/run_progress.py:45 src/omega_stress/interfaces/tui/widgets/run_progress.py:58
+#: src/omega_stress/interfaces/tui/widgets/run_progress.py:45
+#: src/omega_stress/interfaces/tui/widgets/run_progress.py:58
 #, python-brace-format
 msgid "Test en cours… (reste {value})"
 msgstr "테스트 중… (남은 시간 {value})"
@@ -1267,13 +1537,19 @@ msgstr "마지막 사용"
 
 #: src/omega_stress/interfaces/tui/presenters/calibration_presenter.py:49
 #, python-brace-format
-msgid "Âge du calibrage : {age_days} j — renouvellement OBLIGATOIRE (> {CALIBRATION_VALIDITY_DAYS_MANDATORY} j)."
-msgstr "보정 경과 일수: {age_days}일 — 갱신 필수(> {CALIBRATION_VALIDITY_DAYS_MANDATORY}일)."
+msgid ""
+"Âge du calibrage : {age_days} j — renouvellement OBLIGATOIRE (> "
+"{CALIBRATION_VALIDITY_DAYS_MANDATORY} j)."
+msgstr ""
+"보정 경과 일수: {age_days}일 — 갱신 필수(> {CALIBRATION_VALIDITY_DAYS_MANDATORY}일)."
 
 #: src/omega_stress/interfaces/tui/presenters/calibration_presenter.py:57
 #, python-brace-format
-msgid "Âge du calibrage : {age_days} j — renouvellement recommandé (> {CALIBRATION_VALIDITY_DAYS_RECOMMENDED} j)."
-msgstr "보정 경과 일수: {age_days}일 — 갱신 권장(> {CALIBRATION_VALIDITY_DAYS_RECOMMENDED}일)."
+msgid ""
+"Âge du calibrage : {age_days} j — renouvellement recommandé (> "
+"{CALIBRATION_VALIDITY_DAYS_RECOMMENDED} j)."
+msgstr ""
+"보정 경과 일수: {age_days}일 — 갱신 권장(> {CALIBRATION_VALIDITY_DAYS_RECOMMENDED}일)."
 
 #: src/omega_stress/interfaces/tui/presenters/calibration_presenter.py:63
 #, python-brace-format
@@ -1449,3 +1725,308 @@ msgstr "처리량 (요청/분)"
 #: src/omega_stress/infrastructure/exporters/templates/report.html.jinja:139
 msgid "Diagnostic"
 msgstr "진단"
+
+msgid "Le moteur d'émission n'a pas démarré."
+msgstr "송신 엔진이 시작되지 않았습니다."
+
+#, python-brace-format
+msgid "version {version}"
+msgstr "버전 {version}"
+
+msgid "Le serveur de calibrage local n'a pas démarré."
+msgstr "로컬 보정 서버가 시작되지 않았습니다."
+
+msgid "Accord demandé par {machine}"
+msgstr "{machine}의 동의 요청"
+
+msgid ""
+"{machine} demande votre accord pour charger {target}. Autoriser cette cible "
+"pour toujours sur {machine} ?"
+msgstr ""
+"{machine}이(가) {target}에 부하를 걸도록 동의를 요청합니다. {machine}에서 이 대상을 계속 허용할까요?"
+
+msgid ""
+"omega-stress — mot de passe sudo pour le pare-feu de cette machine (il ne "
+"s'affiche pas pendant la saisie). L'interface revient ensuite."
+msgstr "omega-stress — 이 머신 방화벽용 sudo 비밀번호(입력 중 표시되지 않음). 그 후 인터페이스로 돌아옵니다."
+
+msgid "nftables seul"
+msgstr "nftables만"
+
+msgid "aucun pare-feu actif"
+msgstr "활성 방화벽 없음"
+
+msgid "Machine"
+msgstr "머신"
+
+msgid "Joignable"
+msgstr "접속 가능"
+
+msgid "Reliée"
+msgstr "연결됨"
+
+msgid "Accord"
+msgstr "동의"
+
+msgid "Débit max"
+msgstr "최대 속도"
+
+msgid "Lecture des machines…"
+msgstr "머신 읽는 중…"
+
+msgid "Un terminal est nécessaire pour le mot de passe (sudo)."
+msgstr "비밀번호(sudo)를 입력하려면 터미널이 필요합니다."
+
+msgid "Mot de passe refusé ou annulé : rien n'a été modifié."
+msgstr "비밀번호가 거부되었거나 취소됨: 아무것도 바뀌지 않았습니다."
+
+msgid "Pare-feu mis à jour."
+msgstr "방화벽을 업데이트했습니다."
+
+msgid "CHARGE DISTRIBUÉE"
+msgstr "분산 부하"
+
+msgid ""
+"Les machines qui aident cette machine à charger la cible. Pour en relier ou "
+"en retirer une : omega-connect → Synchronisation → Charge distribuée."
+msgstr ""
+"이 머신이 대상에 부하를 거는 것을 돕는 머신들입니다. 연결하거나 제거하려면: omega-connect → 동기화 → 분산 부하."
+
+msgid "Pare-feu de cette machine"
+msgstr "이 머신의 방화벽"
+
+msgid ""
+"Aucune machine reliée : reliez-en dans omega-connect (Synchronisation → "
+"Charge distribuée)."
+msgstr "연결된 머신이 없습니다: omega-connect에서 연결하세요(동기화 → 분산 부하)."
+
+msgid "tout accepter"
+msgstr "모두 수락"
+
+msgid "demander"
+msgstr "묻기"
+
+msgid "{firewall} : port d'omega-stress ouvert au réseau local."
+msgstr "{firewall}: omega-stress 포트가 로컬 네트워크에 열려 있습니다."
+
+msgid ""
+"nftables seul : installez omega-fire pour ouvrir le port d'omega-stress (sa "
+"configuration n'est jamais réécrite à la main)."
+msgstr ""
+"nftables만 있음: omega-stress 포트를 열려면 omega-fire를 설치하세요(설정을 손으로 다시 쓰지 않습니다)."
+
+msgid "Pare-feu : échec ({detail})."
+msgstr "방화벽: 실패({detail})."
+
+msgid "Ouvrir le pare-feu"
+msgstr "방화벽 열기"
+
+msgid "Refermer le pare-feu"
+msgstr "방화벽 닫기"
+
+msgid "Actualiser"
+msgstr "새로 고침"
+
+msgid "{count} machine(s) reliée(s)."
+msgstr "연결된 머신 {count}대."
+
+msgid ""
+"{firewall} : port d'omega-stress fermé — les machines qui aident ne peuvent "
+"pas joindre cette machine."
+msgstr "{firewall}: omega-stress 포트가 닫혀 있습니다 — 돕는 머신이 이 머신에 접속할 수 없습니다."
+
+msgid "{firewall} : rien à ouvrir."
+msgstr "{firewall}: 열 것이 없습니다."
+
+msgid "Machines qui chargent la cible"
+msgstr "대상에 부하를 거는 머신"
+
+msgid "cette machine"
+msgstr "이 머신"
+
+msgid "Machines…"
+msgstr "머신…"
+
+msgid "aucune autorisation sur cette machine"
+msgstr "이 머신에 권한 없음"
+
+msgid "ce pilote n'est pas accepté par cette machine"
+msgstr "이 머신이 이 지휘 머신을 허용하지 않음"
+
+msgid "Aucune machine pour charger la cible."
+msgstr "대상에 부하를 걸 머신이 없습니다."
+
+msgid "Aucune machine n'a accepté le test."
+msgstr "테스트를 수락한 머신이 없습니다."
+
+msgid ""
+"Part des machines écartées redistribuée aux autres, dans leurs limites."
+msgstr "제외된 머신의 몫을 다른 머신에 한도 안에서 나눴습니다."
+
+msgid "Mode poussé : --annonce <adresse du coordinateur> requis."
+msgstr "푸시 모드: --annonce <코디네이터 주소>가 필요합니다."
+
+msgid "durée au-delà de sa limite ({value} min)"
+msgstr "시간이 한도를 넘음({value}분)"
+
+msgid "débit au-delà de sa limite ({value} req/min)"
+msgstr "속도가 한도를 넘음({value} req/min)"
+
+msgid "connexions au-delà de sa limite ({value})"
+msgstr "연결 수가 한도를 넘음({value})"
+
+msgid "pas de réponse"
+msgstr "응답 없음"
+
+msgid ""
+"Débit demandé ({asked} req/min) au-delà de la capacité des machines ({most} "
+"req/min au plus) : test refusé."
+msgstr "요청한 속도({asked} req/min)가 머신의 능력(최대 {most} req/min)을 넘습니다: 테스트 거부."
+
+msgid "En attente de {count} machine(s) qui aident…"
+msgstr "돕는 머신 {count}대를 기다리는 중…"
+
+msgid "cible {target} non autorisée sur cette machine"
+msgstr "이 머신에서 대상 {target}은(는) 허용되지 않음"
+
+msgid "Machine {machine} écartée : {reason}"
+msgstr "머신 {machine} 제외: {reason}"
+
+msgid "Machine inconnue ou sans accès SSH : {machine}"
+msgstr "알 수 없는 머신 또는 SSH 접근 없음: {machine}"
+
+msgid "{joined} machine(s) sur {expected} ont rejoint le pilote."
+msgstr "머신 {expected}대 중 {joined}대가 지휘 머신에 연결했습니다."
+
+msgid "{machine} injoignable : {error}"
+msgstr "{machine}에 접속할 수 없음: {error}"
+
+msgid ""
+"Machine {machine} perdue à la seconde {second} : mesure incomplète à partir "
+"de là."
+msgstr "머신 {machine}을(를) {second}초에 잃음: 이후 측정은 불완전합니다."
+
+msgid "Absentes : {names}."
+msgstr "누락: {names}."
+
+msgid "Charge distribuée (plusieurs machines)"
+msgstr "분산 부하 (여러 머신)"
+
+msgid "Charge distribuée — "
+msgstr "분산 부하 — "
+
+msgid ""
+"{machine} : {emitted} requêtes émises, {completed} terminées, {errors} "
+"erreur(s)"
+msgstr "{machine}: 요청 {emitted}건 전송, {completed}건 완료, 오류 {errors}건"
+
+msgid "Départ — machines qui chargent : {machines}."
+msgstr "시작 — 부하를 거는 머신: {machines}."
+
+msgid "{machine} : écartée ({reason})"
+msgstr "{machine}: 제외됨({reason})"
+
+msgid "(perdue à la seconde {second})"
+msgstr "({second}초에 잃음)"
+
+msgid "{machine} a rejoint le pilote."
+msgstr "{machine}이(가) 지휘 머신에 연결했습니다."
+
+msgid "ajoutée"
+msgstr "추가됨"
+
+msgid "déjà présente"
+msgstr "이미 있음"
+
+msgid "ignorée"
+msgstr "무시됨"
+
+msgid "échec"
+msgstr "실패"
+
+msgid "retirée"
+msgstr "제거됨"
+
+msgid "absente"
+msgstr "없음"
+
+msgid "Cocher"
+msgstr "체크"
+
+msgid "Participe"
+msgstr "참여"
+
+msgid ""
+"Détail des règles non enregistré (ouverture faite avant ce compte rendu)."
+msgstr "규칙 세부 정보가 기록되지 않음(이 보고 기능 이전에 개방)."
+
+msgid "Choisissez une machine dans la liste."
+msgstr "목록에서 머신을 선택하세요."
+
+msgid "Ouvert pour {networks} — par {who}, le {when}"
+msgstr "{networks}에 개방 — {who}, {when}"
+
+msgid ""
+"Port fermé : les machines qui aident ne peuvent pas joindre cette machine."
+msgstr "포트 닫힘: 돕는 머신이 이 머신에 접속할 수 없습니다."
+
+msgid "Règles posées :"
+msgstr "설정한 규칙:"
+
+msgid "Refermé par {who}, le {when}"
+msgstr "닫힘 — {who}, {when}"
+
+msgid ""
+"Cochez les machines qui participent aux prochains tests (Entrée ou Espace). "
+"La liaison des machines se fait uniquement dans omega-connect "
+"(Synchronisation → Charge distribuée)."
+msgstr ""
+"다음 테스트에 참여할 머신을 체크하세요(Enter 또는 Space). 머신 연결은 omega-connect에서만 합니다(동기화 → 분산 "
+"부하)."
+
+msgid ""
+"Son accès à cette machine est retiré : elle ne participera plus aux tests. "
+"omega-connect peut la relier de nouveau (Synchronisation → Charge "
+"distribuée), et y retirer aussi la liaison (« Délier »)."
+msgstr ""
+"이 머신에 대한 접근이 제거되어 더 이상 테스트에 참여하지 않습니다. omega-connect에서 다시 연결할 수 있고(동기화 → 분산 "
+"부하), 그곳에서 연결도 해제할 수 있습니다(« 연결 해제 »)."
+
+msgid "Gestionnaire : {firewall} ; port {port}/tcp"
+msgstr "관리: {firewall}; 포트 {port}/tcp"
+
+msgid "Supprimer la machine"
+msgstr "머신 제거"
+
+msgid "Supprimer {machine} ?"
+msgstr "{machine}을(를) 제거할까요?"
+
+msgid "Ouvert pour {networks}"
+msgstr "{networks}에 개방"
+
+msgid "Rien à ouvrir."
+msgstr "열 것이 없습니다."
+
+msgid "Charge distribuée"
+msgstr "분산 부하"
+
+msgid "Mode charge distribuée"
+msgstr "분산 부하 모드"
+
+msgid ""
+"Aucune machine reliée : la liaison se fait uniquement dans omega-connect "
+"(Synchronisation → Charge distribuée)."
+msgstr "연결된 머신이 없습니다: 머신 연결은 omega-connect에서만 합니다(동기화 → 분산 부하)."
+
+msgid ""
+"Quand une machine ne suffit plus, d'autres machines où omega-stress est installé peuvent charger la cible avec celle-ci. Elles se relient une seule fois, uniquement dans omega-connect (Synchronisation → Charge distribuée) : rien à taper ici.\n"
+"- Menu « Charge distribuée » : les machines reliées ; cochez celles qui participent aux prochains tests, « cette machine » comprise (décochée par défaut : elle pilote et mesure). « Supprimer la machine » retire son accès. Le pare-feu de cette machine y est décrit (gestionnaire, règles, qui l'a ouvert et quand), avec « Ouvrir » / « Refermer » (un mot de passe sudo, tapé dans le terminal ; seul le port d'omega-stress, pour votre réseau local).\n"
+"- Dans chaque écran de test, sous « Mode sécurité » : cochez « Mode charge distribuée » ; la ligne des machines s'affiche, pré-cochée d'après ce choix, et peut être changée pour ce test. Sans machine cochée, le test reste local.\n"
+"- Au lancement, omega-stress démarre lui-même les machines (par SSH) et les arrête à la fin ; la barre de notification dit qui a rejoint et qui charge. Le détail du run (Historique) garde le bilan de chaque machine : requêtes émises, terminées, erreurs ; une machine qui refuse ou qui tombe est signalée.\n"
+"- Accord « Demander » : la première fois qu'une cible est demandée à une machine, une question s'affiche ; « Oui » l'autorise pour toujours sur cette machine."
+msgstr ""
+"머신 한 대로 부족할 때, omega-stress가 설치된 다른 머신들이 이 머신과 함께 대상에 부하를 걸 수 있습니다. 연결은 한 번만, omega-connect에서만 합니다(동기화 → 분산 부하): 여기서 입력할 것은 없습니다.\n"
+"- « 분산 부하 » 메뉴: 연결된 머신들. 다음 테스트에 참여할 머신을 체크하세요. « 이 머신 »도 포함됩니다(기본값은 체크 안 함: 지휘하고 측정). « 머신 제거 »는 그 머신의 접근을 제거합니다. 이 머신의 방화벽도 여기에 나옵니다(관리, 규칙, 누가 언제 열었는지). « 열기 » / « 닫기 »로 조작합니다(터미널에서 sudo 비밀번호 한 번 입력; omega-stress 포트만, 로컬 네트워크에만).\n"
+"- 각 테스트 화면의 « 안전 모드 » 아래: « 분산 부하 모드 »를 체크하면 그 선택대로 체크된 머신 줄이 나타나며, 이번 테스트에 맞게 바꿀 수 있습니다. 체크된 머신이 없으면 테스트는 로컬로 진행됩니다.\n"
+"- 시작하면 omega-stress가 머신들을 직접(SSH로) 시작하고 끝나면 멈춥니다. 알림 표시줄에 누가 연결했고 누가 부하를 거는지 표시됩니다. 실행 세부 정보(기록)에 머신별 요약(보낸 요청, 완료된 요청, 오류)이 남습니다. 거부하거나 이탈한 머신은 보고됩니다.\n"
+"- « 묻기 » 동의: 어떤 머신에 대상이 처음 요청되면 질문이 나타나고, « 예 »를 누르면 그 머신에서 계속 허용됩니다."

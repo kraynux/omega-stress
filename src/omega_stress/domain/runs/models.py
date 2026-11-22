@@ -92,6 +92,20 @@ class IntervalSample:
     active_connections: int = 0
     errors: ErrorBreakdown = field(default_factory=ErrorBreakdown)
     system: SystemSnapshot | None = None
+    emitted_count: int = 0
+    """Requetes reellement EMISES pendant l'intervalle (boucle ouverte, 2026-11-21) ; request_count
+    compte celles TERMINEES (une requete emise peut se terminer a la seconde suivante)."""
+    not_emitted_count: int = 0
+    """Requetes prevues mais NON emises : plafond de requetes en vol atteint (garde-fou memoire)
+    ; jamais
+    retardees en silence."""
+    late_emitted_count: int = 0
+    """Requetes parties plus de EMISSION_LATE_MS apres leur instant prevu : le generateur
+    lui-meme ne suit pas
+    (goulot local), a distinguer d'une cible lente."""
+    latency_histogram: tuple[tuple[int, int], ...] = ()
+    """Latences de l'intervalle (domain/load/histogram.py) : percentiles exacts du run entier
+    par fusion."""
 
 
 @dataclass(frozen=True, slots=True)

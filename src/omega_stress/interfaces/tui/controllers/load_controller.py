@@ -4,6 +4,7 @@ les ecrans de lancement du TUI (request_panel.py, connection_panel.py,
 ramp_panel.py, history.py)."""
 from __future__ import annotations
 
+from collections.abc import Awaitable, Callable
 from typing import TYPE_CHECKING
 
 from omega_stress.application.commands._launch_support import LaunchError
@@ -97,6 +98,8 @@ async def launch_request(
     duration_preset_id: DurationPresetId | None = None,
     reinforced_confirmation_text: str | None = None,
     safety_mode: bool = True,
+    distributed: tuple[tuple[str, ...], bool] | None = None,
+    approve: Callable[[str, str], Awaitable[bool]] | None = None,
 ) -> Result[RunDTO, LoadLaunchError]:
     """Lance un Test requetes depuis screens/request_panel.py."""
     ensure_capabilities_probed(container)
@@ -116,6 +119,8 @@ async def launch_request(
             duration_preset_id=duration_preset_id,
             reinforced_confirmation_text=reinforced_confirmation_text,
             safety_mode=safety_mode,
+            distributed=distributed,
+            approve=approve,
         )
     )
 
@@ -136,6 +141,8 @@ async def launch_connection(
     duration_preset_id: DurationPresetId | None = None,
     reinforced_confirmation_text: str | None = None,
     safety_mode: bool = True,
+    distributed: tuple[tuple[str, ...], bool] | None = None,
+    approve: Callable[[str, str], Awaitable[bool]] | None = None,
 ) -> Result[RunDTO, LoadLaunchError]:
     """Lance un Test connexions depuis screens/connection_panel.py."""
     ensure_capabilities_probed(container)
@@ -155,6 +162,8 @@ async def launch_connection(
             duration_preset_id=duration_preset_id,
             reinforced_confirmation_text=reinforced_confirmation_text,
             safety_mode=safety_mode,
+            distributed=distributed,
+            approve=approve,
         )
     )
 
@@ -175,6 +184,8 @@ async def launch_ramp(
     duration_preset_id: DurationPresetId | None = None,
     reinforced_confirmation_text: str | None = None,
     safety_mode: bool = True,
+    distributed: tuple[tuple[str, ...], bool] | None = None,
+    approve: Callable[[str, str], Awaitable[bool]] | None = None,
 ) -> Result[RunDTO, LoadLaunchError]:
     """Lance un Test charge (montee progressive) depuis screens/ramp_panel.py."""
     ensure_capabilities_probed(container)
@@ -194,6 +205,8 @@ async def launch_ramp(
             duration_preset_id=duration_preset_id,
             reinforced_confirmation_text=reinforced_confirmation_text,
             safety_mode=safety_mode,
+            distributed=distributed,
+            approve=approve,
         )
     )
 
@@ -285,6 +298,8 @@ def _load_kwargs(
     duration_preset_id: DurationPresetId | None = None,
     reinforced_confirmation_text: str | None = None,
     safety_mode: bool = True,
+    distributed: tuple[tuple[str, ...], bool] | None = None,
+    approve: Callable[[str, str], Awaitable[bool]] | None = None,
 ) -> dict:
     return dict(
         target_id=target_id,
@@ -299,7 +314,7 @@ def _load_kwargs(
         reinforced_confirmation_text=reinforced_confirmation_text,
         safety_mode=safety_mode,
         target_repository=container.target_repository,
-        load_runner=container.load_runner,
+        load_runner=_runner(container, distributed, notification_sink, approve),
         run_progress_notifier=run_progress_notifier,
         run_repository=container.run_repository,
         audit_sink=container.audit_logger.record,
@@ -309,6 +324,24 @@ def _load_kwargs(
         capability_registry=container.capability_registry,
         profile_repository=container.profile_repository,
     )
+
+
+def _runner(
+    container: DependencyContainer,
+    distributed: tuple[tuple[str, ...], bool] | None,
+    notification_sink: NotificationSink,
+    approve: Callable[[str, str], Awaitable[bool]] | None,
+) -> object:
+    """Moteur local, ou pilote de charge distribuee (meme port LoadRunner) : machines qui aident
+    lancees par SSH, cette machine seulement si cochee ; accord demande par l'interface."""
+    if distributed is None:
+        return container.load_runner
+    factory = getattr(container, "distributed_load_runner_factory", None)
+    if factory is None:
+        return container.load_runner
+    machines, include_local = distributed
+    return factory(machines=machines, include_local=include_local, notify=notification_sink,
+                   approve=approve)
 
 # <-- INFO DEV ---------------------------------------------------------
 # Role :

@@ -30,10 +30,12 @@ Das Projekt folgt den Prinzipien der **Clean Architecture**, mit einer klaren Tr
 ## Inhaltsverzeichnis
 
 <p align="center">
-  <img src="https://raw.githubusercontent.com/kraynux/kraynux/refs/heads/main/docs/translation/de/omega-stress/A.png" width="24%" />
-  <img src="https://raw.githubusercontent.com/kraynux/kraynux/refs/heads/main/docs/translation/de/omega-stress/B.png" width="24%" />
-  <img src="https://raw.githubusercontent.com/kraynux/kraynux/refs/heads/main/docs/translation/de/omega-stress/C.png" width="24%" />
-  <img src="https://raw.githubusercontent.com/kraynux/kraynux/refs/heads/main/docs/translation/de/omega-stress/D.png" width="24%" />
+  <img src="https://raw.githubusercontent.com/kraynux/kraynux/refs/heads/main/docs/translation/de/omega-stress/A.png" width="32%" />
+  <img src="https://raw.githubusercontent.com/kraynux/kraynux/refs/heads/main/docs/translation/de/omega-stress/B.png" width="32%" />
+  <img src="https://raw.githubusercontent.com/kraynux/kraynux/refs/heads/main/docs/translation/de/omega-stress/C.png" width="32%" />
+  <img src="https://raw.githubusercontent.com/kraynux/kraynux/refs/heads/main/docs/translation/de/omega-stress/D.png" width="32%" />
+  <img src="https://raw.githubusercontent.com/kraynux/kraynux/refs/heads/main/docs/translation/de/omega-stress/E.png" width="32%" />
+  <img src="https://raw.githubusercontent.com/kraynux/kraynux/refs/heads/main/docs/translation/de/omega-stress/F.png" width="32%" />
 </p>
 
 - [Überblick](#überblick)
@@ -45,6 +47,7 @@ Das Projekt folgt den Prinzipien der **Clean Architecture**, mit einer klaren Tr
 - [Dauerprofile D1-D6](#dauerprofile-d1-d6-profilmodus)
 - [Sicherheitsmodus](#sicherheitsmodus)
 - [Lokale Kalibrierung](#lokale-kalibrierung)
+- [Verteilte Last (lokales Netzwerk)](#verteilte-last-lokales-netzwerk)
 - [Konfiguration](#konfiguration)
 - [Tests und Qualität](#tests-und-qualität)
 - [Deinstallation](#deinstallation)
@@ -72,9 +75,9 @@ Das Projekt folgt den Prinzipien der **Clean Architecture**, mit einer klaren Tr
 ## Was das Projekt nicht tut
 
 - Es ersetzt kein Netzwerkscan-Werkzeug — Produktvokabular und Haltung lauten bewusst „Lasttest“, nie „Scan“.
-- Es implementiert keine externe Last-Engine (k6 usw.) — native Erzeugung mit `httpx`/asyncio.
+- Es implementiert keine externe Last-Engine (k6 usw.) — native Erzeugung mit asyncio.
 - Es startet keinen Lauf ohne Grenzen und ohne Autorisierungsbestätigung.
-- Es ist kein verteiltes Lastwerkzeug: Die Erzeugung läuft auf einem einzigen Rechner, in einem einzigen Prozess — siehe [Bekannte Einschränkungen](#bekannte-einschränkungen).
+- Es verbindet die Rechner nicht selbst miteinander: Das ist die Aufgabe von omega-connect, das die verteilte Last ein für alle Mal vorbereitet — siehe [Verteilte Last](#verteilte-last-lokales-netzwerk).
 
 ## Funktionen
 
@@ -105,7 +108,7 @@ src/omega_stress/
 ├── domain/           Reine Fachlogik: Last, Profile, Läufe, Ziele, Themes, Terminal — ohne E/A
 ├── application/      Orchestrierung: commands (Aktionen), queries (Abfragen), Ausführungspipeline (guards/hooks)
 ├── ports/            Von den Adaptern erwartete Protocol-/ABC-Verträge (Repositories, Exporter, Lastgenerator...)
-├── infrastructure/   Konkrete Implementierungen: SQLite, JSON-/CSV-/HTML-Exporter, httpx/asyncio-Generator, Terminalerkennung, Systemsonde
+├── infrastructure/   Konkrete Implementierungen: SQLite, JSON-/CSV-/HTML-Exporter, asyncio-Generator, Terminalerkennung, Systemsonde
 ├── interfaces/       Zwei unabhängige Präsentationsadapter: TUI (Textual) und CLI (argparse)
 ├── plugins/          Reservierter Erweiterungspunkt (Laden von Plugins) — Grundgerüst vorhanden, in V1 nicht umgesetzt
 └── shared/           Übergreifende Hilfsmittel ohne fachliche Abhängigkeit (injizierbare Uhr, Erzeugung von Kennungen)
@@ -166,6 +169,7 @@ cd ~/omega-stress && chmod +x install.sh && ./install.sh
 2. Installiert die Abhängigkeiten (`pip install -e .`; `pyproject.toml` bleibt die einzige maßgebliche Quelle).
 3. Macht `omega-stress.sh` und `install.sh` ausführbar.
 4. Fügt den Alias `stress` zu `~/.bashrc` und `~/.zshrc` hinzu (ohne Duplikat, falls schon vorhanden).
+5. Erstellt die Identitätskarte `var/omega-jeton.json` (`./omega-stress.sh synchro jeton`), die omega-connect liest, um die Werkzeuge der Suite zu verbinden; unter Ihrem Konto geschrieben, nie im Archiv enthalten.
 
 ## Installation (Entwicklung)
 
@@ -266,11 +270,11 @@ Fügen Sie `--json` zu `history`/`export`/`calibrate` hinzu, um eine maschinenle
 | Anfragetest | Schwach | Durchsatz | 250 Anfr./min (≈4,2 Anfr./s) | Nein | 1 bis 5 min |
 | Anfragetest | Niedrig | Durchsatz | 500 Anfr./min (≈8,3 Anfr./s) | Nein | 1 bis 5 min |
 | Anfragetest | Mittel | Durchsatz | 1000 Anfr./min (≈16,7 Anfr./s) | Nein | 1 bis 5 min |
-| Anfragetest | Hoch | Durchsatz | 2000 Anfr./min (≈33,3 Anfr./s) | Nein | 1 bis 5 min |
+| Anfragetest | Hoch | Durchsatz | 3000 Anfr./min (≈50 Anfr./s) | Nein | 1 bis 5 min |
 | Anfragetest | Stark | Durchsatz | 6000 Anfr./min (≈100 Anfr./s) | Optional | 1 bis 3 min (5 mit bestandenem Pre-Check) |
-| Anfragetest | Aggressiv | Durchsatz | 10.000 Anfr./min (≈167 Anfr./s) | Optional | 1 bis 3 min (5 mit bestandenem Pre-Check) |
-| Anfragetest | Heftig | Durchsatz | 15.000 Anfr./min (≈250 Anfr./s) | **Zwingend** | Nur 1 bis 3 min |
-| Anfragetest | Maximal | Durchsatz | 20.000 Anfr./min (≈333 Anfr./s) | **Zwingend** | Nur 1 bis 3 min |
+| Anfragetest | Aggressiv | Durchsatz | 12.000 Anfr./min (≈200 Anfr./s) | Optional | 1 bis 3 min (5 mit bestandenem Pre-Check) |
+| Anfragetest | Heftig | Durchsatz | 25.000 Anfr./min (≈417 Anfr./s) | **Zwingend** | Nur 1 bis 3 min |
+| Anfragetest | Maximal | Durchsatz | 50.000 Anfr./min (≈833 Anfr./s) | **Zwingend** | Nur 1 bis 3 min |
 | Verbindungstest | Schwach | Gleichzeitige Verbindungen | 25 Verbindungen | Nein | 1 bis 5 min |
 | Verbindungstest | Niedrig | Gleichzeitige Verbindungen | 50 Verbindungen | Nein | 1 bis 5 min |
 | Verbindungstest | Mittel | Gleichzeitige Verbindungen | 100 Verbindungen | Nein | 1 bis 5 min |
@@ -282,11 +286,13 @@ Fügen Sie `--json` zu `history`/`export`/`calibrate` hinzu, um eine maschinenle
 | Lasttest (schrittweiser Anstieg) | Schwach | Durchsatz, als Rampe | Spitze 250 Anfr./min | Nein | 1 bis 5 min |
 | Lasttest (schrittweiser Anstieg) | Niedrig | Durchsatz, als Rampe | Spitze 500 Anfr./min | Nein | 1 bis 5 min |
 | Lasttest (schrittweiser Anstieg) | Mittel | Durchsatz, als Rampe | Spitze 1000 Anfr./min | Nein | 1 bis 5 min |
-| Lasttest (schrittweiser Anstieg) | Hoch | Durchsatz, als Rampe | Spitze 2000 Anfr./min | Nein | 1 bis 5 min |
+| Lasttest (schrittweiser Anstieg) | Hoch | Durchsatz, als Rampe | Spitze 3000 Anfr./min | Nein | 1 bis 5 min |
 | Lasttest (schrittweiser Anstieg) | Stark | Durchsatz, als Rampe | Spitze 6000 Anfr./min | Optional | 1 bis 3 min (5 mit bestandenem Pre-Check) |
-| Lasttest (schrittweiser Anstieg) | Aggressiv | Durchsatz, als Rampe | Spitze 10.000 Anfr./min | Optional | 1 bis 3 min (5 mit bestandenem Pre-Check) |
-| Lasttest (schrittweiser Anstieg) | Heftig | Durchsatz, als Rampe | Spitze 15.000 Anfr./min | **Zwingend** | Nur 1 bis 3 min |
-| Lasttest (schrittweiser Anstieg) | Maximal | Durchsatz, als Rampe | Spitze 20.000 Anfr./min | **Zwingend** | Nur 1 bis 3 min |
+| Lasttest (schrittweiser Anstieg) | Aggressiv | Durchsatz, als Rampe | Spitze 12.000 Anfr./min | Optional | 1 bis 3 min (5 mit bestandenem Pre-Check) |
+| Lasttest (schrittweiser Anstieg) | Heftig | Durchsatz, als Rampe | Spitze 25.000 Anfr./min | **Zwingend** | Nur 1 bis 3 min |
+| Lasttest (schrittweiser Anstieg) | Maximal | Durchsatz, als Rampe | Spitze 50.000 Anfr./min | **Zwingend** | Nur 1 bis 3 min |
+
+Verbindungstest: N Verbindungen geöffnet und **gehalten** (Keep-alive), jede sendet etwa alle 10 s eine Anfrage, zeitlich versetzt. Anfragetest und Lasttest: Die Anfragen gehen in gleichmäßigem Takt hinaus, ohne auf Antworten zu warten (offener Regelkreis); ein langsamer werdendes Ziel zeigt sich in den Latenzen, statt verborgen zu bleiben. Hält der Rechner selbst nicht mehr mit, meldet das ein Hinweis „lokaler Engpass“.
 
 - **Pre-Check Nein**: Der Test startet direkt, ohne Bedingung an die Dauer.
 - **Pre-Check Optional** (Stark/Aggressiv): Der Test startet ohne Pre-Check (Dauern 1-3 min), ein bestandener Pre-Check schaltet aber zusätzlich die Dauern 4-5 min frei.
@@ -379,7 +385,7 @@ Auch in der CLI über `--unsafe` verfügbar (standardmäßig nicht gesetzt = Sic
 
 ## Lokale Kalibrierung
 
-Misst die tatsächliche Kapazität **dieses Rechners** (nie des getesteten Ziels): Ein in Omega-Stress eingebauter lokaler Loopback-Server erhält in Stufen eine steigende Last, erzeugt von derselben `httpx`/asyncio-Engine wie die echten Tests.
+Misst die tatsächliche Kapazität **dieses Rechners** (nie des getesteten Ziels): Ein in Omega-Stress eingebauter lokaler Loopback-Server erhält in Stufen eine steigende Last, erzeugt von derselben asyncio-Engine wie die echten Tests.
 
 - 7 Stufen, vom Ruhezustand (Grundrauschen des Systems) bis zu 2000 Verbindungen / 12.000 Anfr./s, jede gegen Gesundheitsschwellen bewertet (CPU des Generators UND gesamt, verfügbarer Speicher, Fehlerquote, erreichter Durchsatz) — die letzten 2 Stufen sind bedingt und werden übersprungen, wenn die vorige Stufe nicht gesund ist.
 - Ergibt eine sichere Hülle (`VU_safe` / `RPS_safe`) aus der letzten gesunden Stufe, mit Sicherheitsmarge (~30 % Reserve) und einer Vertrauensstufe, die mit der erreichten Tiefe wächst.
@@ -392,6 +398,15 @@ Erreichbar über den Bildschirm **Kalibrierung** der TUI (Schaltfläche „Kalib
 omega-stress calibrate run     # startet eine neue Kalibrierung
 omega-stress calibrate show    # zeigt die letzte bekannte Kalibrierung, ohne neu zu messen
 ```
+
+## Verteilte Last (lokales Netzwerk)
+
+Ein Rechner reicht nicht mehr? Andere Rechner mit installiertem omega-stress können das Ziel gemeinsam mit Ihrem belasten, der steuert und misst. Nichts zu tippen: Alles geschieht über die Bildschirme.
+
+- **Einmal verbinden, in omega-connect** (Synchronisation → Verteilte Last): helfende Rechner anhaken, ihre Zustimmung wählen, ein Knopf. omega-connect überträgt alles per SSH (nichts abzuschreiben) und öffnet die Firewall Ihres Rechners nur für den omega-stress-Port, mit einem Passwort.
+- **Der Besitzer jedes helfenden Rechners entscheidet**: „bei jedem neuen Ziel fragen“ oder „alles von diesem Steuerrechner annehmen“, maximale Rate und Dauer; der Rechner lehnt alles andere ab, egal was verlangt wird.
+- **Aus omega-stress starten**: Das Menü „Verteilte Last“ wählt die teilnehmenden Rechner und beschreibt die Firewall (wer sie geöffnet hat, welche Regeln); in jedem Testbildschirm lässt das Kästchen „Modus verteilte Last“ sie das Ziel mit Ihrem Rechner belasten, der nur mitbelastet, wenn Sie ihn anhaken. omega-stress startet die Rechner selbst und stoppt sie am Ende.
+- Eine einzige Kurve und exakte Latenzen über alle Rechner; das Run-Detail bewahrt die Bilanz jedes Rechners (gesendete und abgeschlossene Anfragen, Fehler). Die Kommandozeile (`--machines`) bleibt verfügbar.
 
 ## Konfiguration
 
@@ -429,7 +444,7 @@ sed -i '/alias stress=/d' ~/.bashrc ~/.zshrc
 
 ## Bekannte Einschränkungen
 
-- Lasterzeugung **im eigenen Prozess**, auf einem einzigen Rechner (`httpx`/asyncio): Es ist kein verteiltes Werkzeug — die tatsächlichen Obergrenzen (siehe [Testwerte](#testwerte)) sind deutlich bescheidener als bei einem SaaS-Lasttestdienst (loader.io usw.), bewusst, als kontrollierte Produkthaltung. Auf bescheidener Hardware können die Stufen Aggressiv/Heftig/Maximal des Verbindungstests deutlich mehr reale Zeit als die gewählte Dauer brauchen, um die gesamte vorgesehene Last abzugeben — dann begrenzt die Kapazität **dieses Rechners**, nicht die des Ziels, den tatsächlichen Durchsatz; nutzen Sie die [Lokale Kalibrierung](#lokale-kalibrierung), um vernünftige Werte für Ihre Hardware zu kennen.
+- Verteilte Last nur im **lokalen Netzwerk** (oder einem privaten Netz wie einem VPN): noch kein Weg über das Internet ohne privates Netz. Was ein Rechner schafft, hängt von seinem Prozessor ab (gemessen am 21.11.2026 gegen ein lokales Ziel: etwa 5.000 Anfr./s auf 4 Kernen, weit über der höchsten Stufe, siehe [Testwerte](#testwerte)); [Lokale Kalibrierung](#lokale-kalibrierung) misst, was Ihrer schafft, und ein Hinweis „lokaler Engpass“ meldet, wenn er nicht mehr mithält.
 - Die automatische Erkennung der Terminalfamilie beruht auf Umgebungsvariablen: xfce4-terminal hat bisher keine bekannte zuverlässige Markierung (siehe [Unterstützte Terminals](#unterstützte-terminals)).
 - `plugins/` ist ein von der Architektur vorgesehener Erweiterungspunkt (Laden eingebauter/externer Plugins), in V1 nicht umgesetzt: Das Grundgerüst existiert, es wird kein Plugin mitgeliefert.
 - `var/` ist relativ zum Projektordner (nicht XDG): gedacht für lokale Einzelnutzung, nicht für die gemeinsame Nutzung durch mehrere Benutzer auf demselben Rechner.

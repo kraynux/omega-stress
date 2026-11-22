@@ -7,54 +7,84 @@ Internet, Wi-Fi, CDN, DNS, WAF, proxy, latence distante ou capacite d'un
 serveur tiers."""
 from __future__ import annotations
 
-import http.server
-import threading
+import asyncio
+import contextlib
+import multiprocessing
+import os
+import signal
+import sys
 from types import TracebackType
+from typing import Any
 
 from omega_stress.domain.calibration.policies import (
     CALIBRATION_PAYLOAD_SIZE_BYTES,
     CALIBRATION_TARGET_PATH,
 )
+from omega_stress.infrastructure.process_start import start_process
 from omega_stress.shared.i18n import _
 
 _PAYLOAD = b"o" * CALIBRATION_PAYLOAD_SIZE_BYTES
+_OK = (
+    b"HTTP/1.1 200 OK\r\nContent-Type: application/octet-stream\r\n"
+    + f"Content-Length: {CALIBRATION_PAYLOAD_SIZE_BYTES}\r\n\r\n".encode("ascii")
+    + _PAYLOAD
+)
+_NOT_FOUND = b"HTTP/1.1 404 Not Found\r\nContent-Length: 0\r\n\r\n"
+_START_TIMEOUT_SECONDS = 30.0
 
 
-class _CalibrationRequestHandler(http.server.BaseHTTPRequestHandler):
-    protocol_version = "HTTP/1.1"  # active le keep-alive (document : "Keep-alive : active")
+def _serve(conn: Any) -> None:
+    """Processus du serveur (2026-11-21) : asyncio, keep-alive, une reponse fixe. Separe de
+    l'interface et du pilote du moteur : il ne leur dispute plus le GIL. Les journaux par
+    requete restent desactives (document : « Logs par requete : desactives »)."""
+    signal.signal(signal.SIGINT, signal.SIG_IGN)
+    sys.stdout = sys.stderr = open(os.devnull, "w")  # noqa: SIM115
+    asyncio.run(_main(conn))
 
-    def do_GET(self) -> None:
-        if self.path != CALIBRATION_TARGET_PATH:
-            self.send_response(404)
-            self.end_headers()
-            return
-        self.send_response(200)
-        self.send_header(_("Content-Type"), "application/octet-stream")
-        self.send_header(_("Content-Length"), str(CALIBRATION_PAYLOAD_SIZE_BYTES))
-        self.end_headers()
-        self.wfile.write(_PAYLOAD)
 
-    def log_message(self, format: str, *args: object) -> None:
-        """No-op : document, "Logs par requete : desactives" — un
-        calibrage peut emettre des milliers de requetes, journaliser
-        chacune sur stderr (comportement par defaut de BaseHTTPRequestHandler)
-        noierait toute autre sortie de l'application."""
+async def _main(conn: Any) -> None:
+    async def handle(reader: asyncio.StreamReader, writer: asyncio.StreamWriter) -> None:
+        try:
+            while True:
+                head = await reader.readuntil(b"\r\n\r\n")
+                parts = head.split(b"\r\n", 1)[0].split(b" ")
+                path = parts[1].decode("latin-1") if len(parts) > 1 else ""
+                writer.write(_OK if path == CALIBRATION_TARGET_PATH else _NOT_FOUND)
+                await writer.drain()
+        except (asyncio.IncompleteReadError, asyncio.LimitOverrunError, ConnectionError):
+            pass
+        finally:
+            writer.close()
+
+    server = await asyncio.start_server(handle, "127.0.0.1", 0, backlog=4096)
+    conn.send(server.sockets[0].getsockname()[1])
+    loop = asyncio.get_running_loop()
+    with contextlib.suppress(EOFError, OSError):
+        await loop.run_in_executor(None, conn.recv)  # ordre d'arret, ou fermeture du tuyau
+    server.close()
 
 
 class CalibrationLocalServer:
-    """Gestionnaire de contexte : demarre/arrete le serveur de boucle
-    locale. Port EPHEMERE (bind sur 0, choisi par l'OS) — simplifie la
-    precondition "port local de calibrage indisponible" du document
-    produit (rien a verifier explicitement, l'OS garantit un port libre
-    au moment du bind)."""
+    """Gestionnaire de contexte : demarre/arrete le serveur de boucle locale, dans son propre
+    processus (2026-11-21 ; avant : http.server a un fil par connexion dans le processus de
+    l'interface, qui s'effondrait sous la charge du moteur en boucle ouverte et faussait le
+    calibrage). Port EPHEMERE (bind sur 0, choisi par l'OS) — simplifie la precondition « port
+    local de calibrage indisponible » du document produit."""
 
     def __init__(self) -> None:
-        self._httpd = http.server.ThreadingHTTPServer(("127.0.0.1", 0), _CalibrationRequestHandler)
-        self._thread: threading.Thread | None = None
+        context = multiprocessing.get_context("spawn")
+        self._conn, child = context.Pipe()
+        self._process = context.Process(target=_serve, args=(child,), daemon=True)
+        self._child = child
+        self._port = 0
 
     def __enter__(self) -> CalibrationLocalServer:
-        self._thread = threading.Thread(target=self._httpd.serve_forever, daemon=True)
-        self._thread.start()
+        start_process(self._process)
+        self._child.close()
+        if not self._conn.poll(_START_TIMEOUT_SECONDS):
+            self._process.terminate()
+            raise RuntimeError(_("Le serveur de calibrage local n'a pas démarré."))
+        self._port = int(self._conn.recv())
         return self
 
     def __exit__(
@@ -63,15 +93,18 @@ class CalibrationLocalServer:
         exc_value: BaseException | None,
         traceback: TracebackType | None,
     ) -> None:
-        self._httpd.shutdown()
-        self._httpd.server_close()
-        if self._thread is not None:
-            self._thread.join(timeout=5.0)
+        with contextlib.suppress(BrokenPipeError, OSError):
+            self._conn.send("stop")
+        self._process.join(timeout=5.0)
+        if self._process.is_alive():
+            self._process.terminate()
+            self._process.join(timeout=2.0)
+        self._conn.close()
 
     @property
     def base_url(self) -> str:
-        port = self._httpd.server_address[1]
-        return f"http://127.0.0.1:{port}"
+        return f"http://127.0.0.1:{self._port}"
+
 
 # <-- INFO DEV ---------------------------------------------------------
 # Role :

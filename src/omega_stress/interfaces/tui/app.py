@@ -14,6 +14,7 @@ from textual.binding import Binding
 from textual.command import CommandPalette
 
 from omega_stress.application.queries.detect_terminal import detect_terminal
+from omega_stress.core.constants import OMEGA_STRESS_VERSION
 from omega_stress.interfaces.tui.controllers import theme_controller
 from omega_stress.interfaces.tui.controllers.startup_controller import (
     StartupState,
@@ -41,7 +42,7 @@ if TYPE_CHECKING:
     # app/bootstrap.py, jamais assemble ni importe ici a l'execution.
     from omega_stress.app.dependency_container import DependencyContainer
 
-TITLE = _("🗲 OMEGA-STRESS")
+TITLE = _("🗲 OMEGA-STRESS") + " " + _("version {version}").format(version=OMEGA_STRESS_VERSION)
 
 
 class OmegaStressApp(App[None]):

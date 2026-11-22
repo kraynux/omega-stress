@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import asyncio
 import time
-from collections.abc import AsyncIterator, Awaitable, Callable
+from collections.abc import AsyncGenerator, Awaitable, Callable
 from dataclasses import replace
 
 import httpx
@@ -76,7 +76,7 @@ class HttpxLoadGenerator:
         # jamais psutil.
         self._system_sampler = system_sampler if system_sampler is not None else LiveSystemSampler()
 
-    async def run(self, plan: LoadPlan, *, target_url: str) -> AsyncIterator[IntervalSample]:
+    async def run(self, plan: LoadPlan, *, target_url: str) -> AsyncGenerator[IntervalSample, None]:
         async with httpx.AsyncClient(
             timeout=self._timeout_seconds,
             transport=self._transport,

@@ -5,6 +5,7 @@ from __future__ import annotations
 import sqlite3
 from collections.abc import Callable
 from dataclasses import dataclass, field
+from functools import partial
 from pathlib import Path
 
 from omega_lib.infrastructure.declaration import build_contact_support
@@ -17,17 +18,22 @@ from omega_stress.core.enums import ExportFormat
 from omega_stress.domain.calibration.models import CalibrationFingerprint
 from omega_stress.infrastructure.calibration.fingerprint import compute_fingerprint
 from omega_stress.infrastructure.calibration.local_server import CalibrationLocalServer
+from omega_stress.infrastructure.calibration.open_loop_stage_runner import (
+    OpenLoopCalibrationStageRunner,
+)
 from omega_stress.infrastructure.calibration.preconditions_probe import (
     LiveCalibrationPreconditionsProbe,
 )
-from omega_stress.infrastructure.calibration.stage_runner import HttpxCalibrationStageRunner
 from omega_stress.infrastructure.config import paths
+from omega_stress.infrastructure.distributed.coordinator import DistributedLoadGenerator
+from omega_stress.infrastructure.distributed.services import DistributedServices
+from omega_stress.infrastructure.distributed.store import DistributedStore
 from omega_stress.infrastructure.exporters.csv_exporter import CsvReportExporter
 from omega_stress.infrastructure.exporters.html_exporter import HtmlReportExporter
 from omega_stress.infrastructure.exporters.json_exporter import JsonReportExporter
 from omega_stress.infrastructure.logging.audit_logger import AuditLogger
 from omega_stress.infrastructure.probe.local_probe import LocalSystemProbe
-from omega_stress.infrastructure.runner.httpx_load_generator import HttpxLoadGenerator
+from omega_stress.infrastructure.runner.open_loop.generator import OpenLoopLoadGenerator
 from omega_stress.infrastructure.storage.files.json_calibration_store import JsonCalibrationStore
 from omega_stress.infrastructure.storage.files.json_settings_store import JsonSettingsStore
 from omega_stress.infrastructure.storage.sqlite.connection import open_connection
@@ -38,6 +44,7 @@ from omega_stress.infrastructure.storage.sqlite.run_repository import SqliteRunR
 from omega_stress.infrastructure.storage.sqlite.target_repository import SqliteTargetRepository
 from omega_stress.ports.calibration_local_server import CalibrationServer
 from omega_stress.ports.calibration_stage_runner import CalibrationStageRunner
+from omega_stress.ports.load_runner import LoadRunner
 from omega_stress.ports.report_exporter import ReportExporter
 
 SOFTWARE = "omega-stress"
@@ -62,7 +69,7 @@ class DependencyContainer:
     settings_store: JsonSettingsStore
     terminal_detector: SystemTerminalDetector
     system_probe: LocalSystemProbe
-    load_runner: HttpxLoadGenerator
+    load_runner: OpenLoopLoadGenerator
     audit_logger: AuditLogger
     capability_registry: CapabilityRegistry
     calibration_repository: JsonCalibrationStore
@@ -70,6 +77,8 @@ class DependencyContainer:
     compute_calibration_fingerprint: Callable[[], CalibrationFingerprint]
     calibration_server_factory: Callable[[], CalibrationServer]
     calibration_stage_runner_factory: Callable[[], CalibrationStageRunner]
+    distributed_load_runner_factory: Callable[..., LoadRunner] | None = None
+    distributed: DistributedServices | None = None
     export_dir: Path = field(default_factory=paths.exports_dir)
     screenshot_dir: Path = field(default_factory=paths.screenshots_dir)
     exporters: dict[ExportFormat, ReportExporter] = field(default_factory=dict)
@@ -99,14 +108,18 @@ def build_container(*, var_dir: Path | None = None) -> DependencyContainer:
         settings_store=JsonSettingsStore(paths.settings_path(base)),
         terminal_detector=SystemTerminalDetector(),
         system_probe=LocalSystemProbe(),
-        load_runner=HttpxLoadGenerator(),
+        load_runner=OpenLoopLoadGenerator(),
         audit_logger=AuditLogger(base / "audit.jsonl"),
         capability_registry=CapabilityRegistry(),
         calibration_repository=JsonCalibrationStore(paths.calibrations_dir(base)),
         calibration_preconditions_probe=LiveCalibrationPreconditionsProbe(),
         compute_calibration_fingerprint=compute_fingerprint,
         calibration_server_factory=CalibrationLocalServer,
-        calibration_stage_runner_factory=HttpxCalibrationStageRunner,
+        calibration_stage_runner_factory=OpenLoopCalibrationStageRunner,
+        distributed=DistributedServices(base),
+        distributed_load_runner_factory=partial(
+            DistributedLoadGenerator, DistributedStore(base)
+        ),
         export_dir=paths.exports_dir(base),
         screenshot_dir=paths.screenshots_dir(base),
         exporters={

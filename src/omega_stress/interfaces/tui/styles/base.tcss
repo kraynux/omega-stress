@@ -329,12 +329,21 @@ Button:focus {
  * second signal INDEPENDANT de la couleur (utile si un theme particulier
  * rend malgre tout le contraste de couleur insuffisant a l'oeil). */
 ToggleButton > .toggle--button {
-    color: $foreground;
-    text-style: dim;
+    color: $panel-lighten-3;
+    background: $panel-lighten-3;
+    text-style: bold;
 }
 
 ToggleButton.-on > .toggle--button {
-    color: $text-success;
+    color: $background;
+    background: $success;
+    text-style: bold;
+}
+
+/* Retour de l'auteur (2026-11-21) : « les cases sont vraiment petites, il faut coller ses yeux a
+ * l'ecran pour voir si elles sont cochees ». Decochee : case vide claire (fond et glyphe de la meme
+ * teinte, le X disparait) ; cochee : case pleine verte, X fonce en gras, et libelle en gras. */
+ToggleButton.-on > .toggle--label {
     text-style: bold;
 }
 

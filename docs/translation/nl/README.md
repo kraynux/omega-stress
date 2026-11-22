@@ -30,10 +30,12 @@ Het project volgt de principes van **Clean Architecture**, met een duidelijke sc
 ## Inhoud
 
 <p align="center">
-  <img src="https://raw.githubusercontent.com/kraynux/kraynux/refs/heads/main/docs/translation/nl/omega-stress/A.png" width="24%" />
-  <img src="https://raw.githubusercontent.com/kraynux/kraynux/refs/heads/main/docs/translation/nl/omega-stress/B.png" width="24%" />
-  <img src="https://raw.githubusercontent.com/kraynux/kraynux/refs/heads/main/docs/translation/nl/omega-stress/C.png" width="24%" />
-  <img src="https://raw.githubusercontent.com/kraynux/kraynux/refs/heads/main/docs/translation/nl/omega-stress/D.png" width="24%" />
+  <img src="https://raw.githubusercontent.com/kraynux/kraynux/refs/heads/main/docs/translation/nl/omega-stress/A.png" width="32%" />
+  <img src="https://raw.githubusercontent.com/kraynux/kraynux/refs/heads/main/docs/translation/nl/omega-stress/B.png" width="32%" />
+  <img src="https://raw.githubusercontent.com/kraynux/kraynux/refs/heads/main/docs/translation/nl/omega-stress/C.png" width="32%" />
+  <img src="https://raw.githubusercontent.com/kraynux/kraynux/refs/heads/main/docs/translation/nl/omega-stress/D.png" width="32%" />
+  <img src="https://raw.githubusercontent.com/kraynux/kraynux/refs/heads/main/docs/translation/nl/omega-stress/E.png" width="32%" />
+  <img src="https://raw.githubusercontent.com/kraynux/kraynux/refs/heads/main/docs/translation/nl/omega-stress/F.png" width="32%" />
 </p>
 
 - [Presentatie](#presentatie)
@@ -45,6 +47,7 @@ Het project volgt de principes van **Clean Architecture**, met een duidelijke sc
 - [Duurprofielen D1-D6](#duurprofielen-d1-d6-profielmodus)
 - [Veiligheidsmodus](#veiligheidsmodus)
 - [Lokale kalibratie](#lokale-kalibratie)
+- [Gedistribueerde belasting (lokaal netwerk)](#gedistribueerde-belasting-lokaal-netwerk)
 - [Configuratie](#configuratie)
 - [Tests en kwaliteit](#tests-en-kwaliteit)
 - [Verwijderen](#verwijderen)
@@ -72,9 +75,9 @@ Het project volgt de principes van **Clean Architecture**, met een duidelijke sc
 ## Wat het project niet doet
 
 - Het vervangt geen netwerkscantool — vocabulaire en houding van het product zijn bewust „belastingtest”, nooit „scan”.
-- Het bevat geen externe belastingengine (k6 enz.) — native generatie met `httpx`/asyncio.
+- Het bevat geen externe belastingengine (k6 enz.) — native generatie met asyncio.
 - Het start nooit een uitvoering zonder grenzen en zonder bevestiging van autorisatie.
-- Het is geen gedistribueerde belastingtool: de generatie draait op één machine, in één proces — zie [Bekende beperkingen](#bekende-beperkingen).
+- Het koppelt de machines niet zelf aan elkaar: dat is de taak van omega-connect, dat de gedistribueerde belasting eens en voor altijd voorbereidt — zie [Gedistribueerde belasting](#gedistribueerde-belasting-lokaal-netwerk).
 
 ## Functies
 
@@ -105,7 +108,7 @@ src/omega_stress/
 ├── domain/           Pure bedrijfslogica: belasting, profielen, uitvoeringen, doelen, thema's, terminal — zonder I/O
 ├── application/      Orkestratie: commands (acties), queries (leesacties), uitvoeringspipeline (guards/hooks)
 ├── ports/            Protocol-/ABC-contracten die de adapters verwachten (repositories, exporteurs, belastinggenerator...)
-├── infrastructure/   Concrete implementaties: SQLite, JSON-/CSV-/HTML-exporteurs, httpx/asyncio-generator, terminaldetectie, systeemsonde
+├── infrastructure/   Concrete implementaties: SQLite, JSON-/CSV-/HTML-exporteurs, asyncio-generator, terminaldetectie, systeemsonde
 ├── interfaces/       Twee onafhankelijke presentatie-adapters: TUI (Textual) en CLI (argparse)
 ├── plugins/          Gereserveerd uitbreidingspunt (laden van plugins) — basisstructuur aanwezig, niet uitgewerkt in V1
 └── shared/           Gedeelde hulpmiddelen zonder bedrijfsafhankelijkheid (injecteerbare klok, aanmaken van identificaties)
@@ -166,6 +169,7 @@ cd ~/omega-stress && chmod +x install.sh && ./install.sh
 2. Installeert de afhankelijkheden (`pip install -e .`; `pyproject.toml` blijft de enige bron van waarheid).
 3. Maakt `omega-stress.sh` en `install.sh` uitvoerbaar.
 4. Voegt de alias `stress` toe aan `~/.bashrc` en `~/.zshrc` (zonder dubbel als hij er al staat).
+5. Maakt de identiteitskaart `var/omega-jeton.json` (`./omega-stress.sh synchro jeton`), die omega-connect leest om de tools van de suite te koppelen; geschreven onder uw account, nooit meegeleverd in het archief.
 
 ## Installatie (ontwikkeling)
 
@@ -266,11 +270,11 @@ Voeg `--json` toe aan `history`/`export`/`calibrate` voor machineleesbare uitvoe
 | Verzoekentest | Zwak | Doorvoer | 250 verz./min (≈4,2 verz./s) | Nee | 1 tot 5 min |
 | Verzoekentest | Laag | Doorvoer | 500 verz./min (≈8,3 verz./s) | Nee | 1 tot 5 min |
 | Verzoekentest | Gemiddeld | Doorvoer | 1000 verz./min (≈16,7 verz./s) | Nee | 1 tot 5 min |
-| Verzoekentest | Hoog | Doorvoer | 2000 verz./min (≈33,3 verz./s) | Nee | 1 tot 5 min |
+| Verzoekentest | Hoog | Doorvoer | 3000 verz./min (≈50 verz./s) | Nee | 1 tot 5 min |
 | Verzoekentest | Krachtig | Doorvoer | 6000 verz./min (≈100 verz./s) | Optioneel | 1 tot 3 min (5 met geslaagde pre-check) |
-| Verzoekentest | Agressief | Doorvoer | 10.000 verz./min (≈167 verz./s) | Optioneel | 1 tot 3 min (5 met geslaagde pre-check) |
-| Verzoekentest | Heftig | Doorvoer | 15.000 verz./min (≈250 verz./s) | **Verplicht** | Alleen 1 tot 3 min |
-| Verzoekentest | Maximaal | Doorvoer | 20.000 verz./min (≈333 verz./s) | **Verplicht** | Alleen 1 tot 3 min |
+| Verzoekentest | Agressief | Doorvoer | 12.000 verz./min (≈200 verz./s) | Optioneel | 1 tot 3 min (5 met geslaagde pre-check) |
+| Verzoekentest | Heftig | Doorvoer | 25.000 verz./min (≈417 verz./s) | **Verplicht** | Alleen 1 tot 3 min |
+| Verzoekentest | Maximaal | Doorvoer | 50.000 verz./min (≈833 verz./s) | **Verplicht** | Alleen 1 tot 3 min |
 | Verbindingstest | Zwak | Gelijktijdige verbindingen | 25 verbindingen | Nee | 1 tot 5 min |
 | Verbindingstest | Laag | Gelijktijdige verbindingen | 50 verbindingen | Nee | 1 tot 5 min |
 | Verbindingstest | Gemiddeld | Gelijktijdige verbindingen | 100 verbindingen | Nee | 1 tot 5 min |
@@ -282,11 +286,13 @@ Voeg `--json` toe aan `history`/`export`/`calibrate` voor machineleesbare uitvoe
 | Belastingtest (geleidelijke opbouw) | Zwak | Doorvoer, als oploop | piek 250 verz./min | Nee | 1 tot 5 min |
 | Belastingtest (geleidelijke opbouw) | Laag | Doorvoer, als oploop | piek 500 verz./min | Nee | 1 tot 5 min |
 | Belastingtest (geleidelijke opbouw) | Gemiddeld | Doorvoer, als oploop | piek 1000 verz./min | Nee | 1 tot 5 min |
-| Belastingtest (geleidelijke opbouw) | Hoog | Doorvoer, als oploop | piek 2000 verz./min | Nee | 1 tot 5 min |
+| Belastingtest (geleidelijke opbouw) | Hoog | Doorvoer, als oploop | piek 3000 verz./min | Nee | 1 tot 5 min |
 | Belastingtest (geleidelijke opbouw) | Krachtig | Doorvoer, als oploop | piek 6000 verz./min | Optioneel | 1 tot 3 min (5 met geslaagde pre-check) |
-| Belastingtest (geleidelijke opbouw) | Agressief | Doorvoer, als oploop | piek 10.000 verz./min | Optioneel | 1 tot 3 min (5 met geslaagde pre-check) |
-| Belastingtest (geleidelijke opbouw) | Heftig | Doorvoer, als oploop | piek 15.000 verz./min | **Verplicht** | Alleen 1 tot 3 min |
-| Belastingtest (geleidelijke opbouw) | Maximaal | Doorvoer, als oploop | piek 20.000 verz./min | **Verplicht** | Alleen 1 tot 3 min |
+| Belastingtest (geleidelijke opbouw) | Agressief | Doorvoer, als oploop | piek 12.000 verz./min | Optioneel | 1 tot 3 min (5 met geslaagde pre-check) |
+| Belastingtest (geleidelijke opbouw) | Heftig | Doorvoer, als oploop | piek 25.000 verz./min | **Verplicht** | Alleen 1 tot 3 min |
+| Belastingtest (geleidelijke opbouw) | Maximaal | Doorvoer, als oploop | piek 50.000 verz./min | **Verplicht** | Alleen 1 tot 3 min |
+
+Verbindingstest: N verbindingen geopend en **vastgehouden** (keep-alive), elk stuurt ongeveer één verzoek per 10 s, gespreid. Verzoekentest en loadtest: verzoeken vertrekken in een vast ritme zonder op antwoorden te wachten (open lus); een doel dat vertraagt is zichtbaar in de latenties in plaats van verborgen. Houdt de machine zelf het niet meer bij, dan meldt een melding ‘lokaal knelpunt’ dat.
 
 - **Pre-check Nee**: de test start direct, zonder voorwaarde aan de duur.
 - **Pre-check Optioneel** (Krachtig/Agressief): de test start zonder pre-check (duren van 1-3 min), maar een geslaagde pre-check ontgrendelt ook de duren van 4-5 min.
@@ -379,7 +385,7 @@ Ook in de CLI beschikbaar via `--unsafe` (standaard afwezig = veiligheidsmodus a
 
 ## Lokale kalibratie
 
-Meet de werkelijke capaciteit van **deze machine** (nooit van het geteste doel): een in Omega-Stress ingebouwde lokale loopbackserver krijgt in treden een toenemende belasting, gegenereerd door dezelfde `httpx`/asyncio-engine als de echte tests.
+Meet de werkelijke capaciteit van **deze machine** (nooit van het geteste doel): een in Omega-Stress ingebouwde lokale loopbackserver krijgt in treden een toenemende belasting, gegenereerd door dezelfde asyncio-engine als de echte tests.
 
 - 7 treden, van rust (achtergrondruis van het systeem) tot 2000 verbindingen / 12.000 verz./s, elk getoetst aan gezondheidsdrempels (CPU van de generator ÉN totaal, beschikbaar geheugen, foutpercentage, bereikte doorvoer) — de laatste 2 treden zijn voorwaardelijk en worden overgeslagen als de vorige trede niet gezond is.
 - Levert een veilige envelop op (`VU_safe` / `RPS_safe`) uit de laatste gezonde trede, met een veiligheidsmarge (~30 % reserve) en een vertrouwensniveau dat groeit met de bereikte diepte.
@@ -392,6 +398,15 @@ Bereikbaar via het scherm **Kalibratie** van de TUI (knop „De kalibratie start
 omega-stress calibrate run     # start een nieuwe kalibratie
 omega-stress calibrate show    # toont de laatst bekende kalibratie, zonder een nieuwe te starten
 ```
+
+## Gedistribueerde belasting (lokaal netwerk)
+
+Is één machine niet meer genoeg? Andere machines met omega-stress kunnen het doel samen met de uwe belasten, die stuurt en meet. Niets te typen: alles gaat via de schermen.
+
+- **Eén keer koppelen, in omega-connect** (Synchronisatie → Gedistribueerde belasting): vink de helpende machines aan, kies hun toestemming, één knop. omega-connect verstuurt alles via SSH (niets over te nemen) en opent de firewall van uw machine alleen voor de omega-stress-poort, met één wachtwoord.
+- **De eigenaar van elke helpende machine beslist**: « vragen bij elk nieuw doel » of « alles accepteren van deze stuurmachine », maximale snelheid en duur; de machine weigert de rest, wat er ook gevraagd wordt.
+- **Starten vanuit omega-stress**: het menu « Gedistribueerde belasting » kiest de machines die meedoen en beschrijft de firewall (wie hem opende, welke regels); in elk testscherm laat het vakje « Modus gedistribueerde belasting » ze het doel samen met uw machine belasten, die alleen meebelast als u haar aanvinkt. omega-stress start de machines zelf en stopt ze aan het eind.
+- Eén curve en exacte latenties over het geheel; het detail van de run bewaart de balans van elke machine (verzonden en voltooide verzoeken, fouten). De opdrachtregel (`--machines`) blijft beschikbaar.
 
 ## Configuratie
 
@@ -429,7 +444,7 @@ sed -i '/alias stress=/d' ~/.bashrc ~/.zshrc
 
 ## Bekende beperkingen
 
-- Belasting gegenereerd **binnen het eigen proces**, op één machine (`httpx`/asyncio): het is geen gedistribueerde tool — de werkelijke plafonds (zie [Testwaarden](#testwaarden)) liggen duidelijk lager dan bij een SaaS-dienst voor belastingtests (loader.io enz.), bewust, als gecontroleerde producthouding. Op bescheiden hardware kunnen de niveaus Agressief/Heftig/Maximaal van de Verbindingstest duidelijk meer werkelijke tijd nodig hebben dan de gekozen duur om de volledige beoogde belasting te versturen — dan begrenst de capaciteit van **deze machine**, niet die van het doel, de werkelijke doorvoer; gebruik de [Lokale kalibratie](#lokale-kalibratie) om redelijke waarden voor uw hardware te kennen.
+- Gedistribueerde belasting alleen op een **lokaal netwerk** (of een privénetwerk zoals een VPN): nog niet over het internet zonder privénetwerk. Wat een machine aankan hangt af van haar processor (gemeten op 21-11-2026 tegen een lokaal doel: ongeveer 5.000 verz./s op 4 kernen, ruim boven het hoogste niveau, zie [Testwaarden](#testwaarden)); [Lokale kalibratie](#lokale-kalibratie) meet wat de uwe aankan, en een melding ‘lokaal knelpunt’ laat weten wanneer ze het niet meer bijhoudt.
 - De automatische detectie van de terminalfamilie berust op omgevingsvariabelen: xfce4-terminal heeft tot nu toe geen bekend betrouwbaar kenmerk (zie [Ondersteunde terminals](#ondersteunde-terminals)).
 - `plugins/` is een uitbreidingspunt dat de architectuur voorziet (laden van ingebouwde/externe plugins), niet uitgewerkt in V1: de basisstructuur bestaat, er wordt geen plugin meegeleverd.
 - `var/` is relatief ten opzichte van de projectmap (niet XDG): bedoeld voor lokaal gebruik door één gebruiker, niet voor gedeeld gebruik door meerdere gebruikers op dezelfde machine.

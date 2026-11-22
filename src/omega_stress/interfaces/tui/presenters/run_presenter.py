@@ -5,6 +5,7 @@ from __future__ import annotations
 import math
 
 from omega_stress.application.dto.run_dto import IntervalSampleDTO, RunDTO
+from omega_stress.application.pipeline.executor import DISTRIBUTED_EVENT
 from omega_stress.core.enums import RunVerdict
 from omega_stress.domain.reports.builders import verdict_headline
 from omega_stress.shared.i18n import _
@@ -44,9 +45,16 @@ def diagnostic_message(run: RunDTO) -> str:
     """Raison du dernier evenement du run (echec technique ou arret
     automatique), ou chaine vide s'il n'y en a aucun — cas normal d'un
     run en cours, reussi, ou degrade sans evenement notable."""
-    if not run.events:
+    causes = [event for event in run.events if event.kind != DISTRIBUTED_EVENT]
+    if not causes:
         return ""
-    return _(run.events[-1].message)
+    return _(causes[-1].message)
+
+
+def participation_message(run: RunDTO) -> str:
+    """Bilan par machine d'un run distribue (requetes emises / terminees par machine) ; vide
+    sinon."""
+    return next((event.message for event in run.events if event.kind == DISTRIBUTED_EVENT), "")
 
 
 def metrics_summary(run: RunDTO) -> str:
