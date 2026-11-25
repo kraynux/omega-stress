@@ -31,3 +31,7 @@ var/**
 # Couverture de tests
 .coverage
 htmlcov/
+
+# Archives construites : jamais dans le dépôt (2026-11-26)
+dist/
+*.tar.gz

@@ -8,7 +8,7 @@ Format inspiré de [Keep a Changelog](https://keepachangelog.com/).
 
 - La version affichée (accueil, en-tête, aide) est lue dans `pyproject.toml`, seule source (même source que
   « Contact et support ») : plus de copie à tenir à jour (2026-11-22).
-- **omega-stress embarqué par omega-suite** (décision de l'auteur, 2026-11-22 : omega-stress fait partie
+- **omega-stress embarqué par omega-suite** (décision, 2026-11-22 : omega-stress fait partie
   d'omega-suite) : dans `<suite>/vendor/omega-stress`, `omega-stress.sh` prend le `.venv` de la suite et son
   `var/stress` (le même état que l'onglet omega-stress de la suite). omega-connect le reconnaît, le met à jour avec
   omega-suite, et il aide à la charge distribuée comme un omega-stress autonome. Autonome, rien ne change.
@@ -51,7 +51,7 @@ Format inspiré de [Keep a Changelog](https://keepachangelog.com/).
     le terminal (`sudo -v`, puis `sudo -n`), jamais de sudo sans terminal ; nftables seul sans omega-fire : rien
     n'est touché ;
   - aide F1, textes des 17 langues ; commandes `coordinateur …` / `worker …` en JSON pour omega-connect.
-  - retours de l'auteur après le premier essai réel : menu principal « Charge distribuée » (sous Calibrage ;
+  - retours d'utilisation après le premier essai réel : menu principal « Charge distribuée » (sous Calibrage ;
     « Quitter » retiré du menu, touches `q` / `Échap` inchangées) : machines reliées, case « Participe » par
     machine et pour « cette machine » (choix gardé), « Supprimer la machine », compte rendu du pare-feu
     (gestionnaire, port, réseaux, qui l'a ouvert et quand, règles posées avec leur numéro chez omega-fire) ;
@@ -89,7 +89,7 @@ Format inspiré de [Keep a Changelog](https://keepachangelog.com/).
   certaines machines (Archcraft), une connexion SSH sans terminal n'a presque rien dans son PATH ; le PATH standard
   ne s'appliquait qu'au `cd` qui précède le lanceur (« env: bash: No such file or directory »). Il est maintenant
   rétabli pour toute la commande (état, démarrage de la machine, accord) ; les tests imitent ce PATH presque vide.
-- **Charge distribuée : liaison écrite au mauvais endroit** (essai réel de l'auteur, 2026-11-21) : lancées par
+- **Charge distribuée : liaison écrite au mauvais endroit** (essai réel, 2026-11-21) : lancées par
   omega-connect ou par SSH, les commandes `worker` et `coordinateur` rangeaient leurs fichiers dans le `var/` du
   dossier courant (celui d'omega-connect, ou le dossier personnel sur la machine qui aide) ; omega-stress ne voyait
   alors aucune machine reliée et le test restait local. Le lanceur se place toujours dans le dossier d'omega-stress,
@@ -97,7 +97,7 @@ Format inspiré de [Keep a Changelog](https://keepachangelog.com/).
 - **Bilan par machine** d'un test distribué : « X a rejoint le pilote », « Départ — machines qui chargent : … »
   pendant le test ; à la fin, requêtes émises / terminées / erreurs de chaque machine, gardé avec le run (détail du
   run, ligne dédiée ; exports).
-- **Aucun test ni calibrage ne partait depuis l'interface** (moteur 2.0.0, essai réel de l'auteur, 2026-11-21) :
+- **Aucun test ni calibrage ne partait depuis l'interface** (moteur 2.0.0, essai réel, 2026-11-21) :
   « Erreur inattendue — ValueError: bad value(s) in fds_to_keep ». Sous Textual, la sortie d'erreur est une capture
   sans descripteur, que multiprocessing transmettait aux processus d'émission. Les vrais flux sont remis en place le
   temps du démarrage (`infrastructure/process_start.py`). La ligne de commande n'était pas touchée.
@@ -108,7 +108,7 @@ Format inspiré de [Keep a Changelog](https://keepachangelog.com/).
 
 ### Modifié
 
-- **Niveaux de débit** (décision de l'auteur, 2026-11-21) : Test requêtes et pics du Test charge, Haut 3 000,
+- **Niveaux de débit** (décision, 2026-11-21) : Test requêtes et pics du Test charge, Haut 3 000,
   Agressif 12 000, Violent 25 000, Maximum 50 000 req/min (avant : 2 000 / 10 000 / 15 000 / 20 000). Violent
   et Maximum visent la charge distribuée à venir ; une machine seule va où elle peut, et la notification
   « goulot local » le dit. Tableau de référence : « en continu » au lieu de « en rafale ».
